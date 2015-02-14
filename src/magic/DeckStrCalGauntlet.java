@@ -14,13 +14,15 @@ import magic.model.MagicRandom;
 import magic.ui.GameController;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class DeckStrCal {
+public class DeckStrCalGauntlet {
 
     private static int games = 10;
-    private static int repeat = 1;
-    private static int str1 = 2;
-    private static int str2 = 2;
+    private static int str1 = 1;
+    private static int str2 = 1;
     private static int life = 20;
     private static int seed;
     private static String deck1 = "";
@@ -78,13 +80,6 @@ public class DeckStrCal {
                     life = Integer.parseInt(next);
                 } catch (final NumberFormatException ex) {
                     System.err.println("ERROR! starting life is not an integer");
-                    validArgs = false;
-                }
-            } else if ("--repeat".equals(curr)) {
-                try { //parse CLI option
-                    repeat = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! repeat is not an integer");
                     validArgs = false;
                 }
             } else if ("--seed".equals(curr)) {
@@ -172,18 +167,22 @@ public class DeckStrCal {
         MagicMain.initializeEngine();
         MagicGameLog.initialize();
 
-        for (int i = 0; i < repeat; i++) {
-            runDuel();
+        for (final File fileEntry : (new File("Magarena/decks/prebuilt/")).listFiles()) {
+            if (fileEntry.isFile()) {
+	            runDuel(fileEntry.getAbsolutePath());
+                System.out.println(fileEntry.getName());
+            }
         }
-        
         MagicGameLog.close();
     }
 
-    private static void runDuel() {
+    private static void runDuel(String deckname) {
 //    	FiremindAI fmai = (FiremindAI) ai1.getAI();
 //    	fmai.scoringSet = new ScoringSet();
         final MagicDuel testDuel = setupDuel();
 
+    	DeckUtils.loadDeck(deckname, testDuel.getPlayer(0));
+    	DeckUtils.loadDeck(deckname, testDuel.getPlayer(1));
         System.out.println(
                  "#deck1" +
                 "\tai1" +

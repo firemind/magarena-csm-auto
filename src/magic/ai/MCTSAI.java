@@ -1,6 +1,8 @@
 package magic.ai;
 
 import magic.data.LRUCache;
+import magic.firemind.GameState;
+import magic.firemind.ScoringSet;
 import magic.model.MagicGame;
 import magic.model.MagicGameLog;
 import magic.model.MagicPlayer;
@@ -377,6 +379,13 @@ public class MCTSAI implements MagicAI {
                 final int idx = curr.size();
                 final Object[] choice = choices.get(idx);
                 game.executeNextEvent(choice);
+                
+                // added by mike
+//                GameState gsMe = new GameState(game.getScorePlayer(), new ScoringSet());
+//                GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), new ScoringSet());
+//                final MCTSGameTree child = new MCTSGameTree(curr, idx, gsMe.getScore()-gsOp.getScore());
+                
+                
                 final MCTSGameTree child = new MCTSGameTree(curr, idx, game.getScore());
                 assert (child.desc = MCTSGameTree.obj2String(choice[0])).equals(child.desc);
                 curr.addChild(child);

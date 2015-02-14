@@ -111,6 +111,13 @@ public final class PlayerProfiles {
         profile.setAiLevel(6);
         profile.save();
         setPlayerAvatar(profile, PlayerProfiles.AVATAR_MiniMax);
+        // Firemind AI
+        profile = new AiPlayer();
+        profile.setPlayerName("Firemind AI");
+        profile.setAiType(MagicAIImpl.FIREMIND);
+        profile.setAiLevel(6);
+        profile.save();
+        setPlayerAvatar(profile, PlayerProfiles.AVATAR_MiniMax);
         // Monty Carlo
         profile = new AiPlayer();
         profile.setPlayerName("Monty Carlo");

@@ -114,18 +114,18 @@ public class MMAB implements MagicAI {
 
         // Logging.
         final long timeTaken = System.currentTimeMillis() - startTime;
-        log("MMAB" +
-            " cheat=" + CHEAT +
-            " index=" + scorePlayer.getIndex() +
-            " life=" + scorePlayer.getLife() +
-            " turn=" + sourceGame.getTurn() +
-            " phase=" + sourceGame.getPhase().getType() +
-            " slice=" + (slice/1000000) +
-            " time=" + timeTaken
-            );
-        for (final ArtificialChoiceResults achoice : achoices) {
-            log((achoice == bestAchoice ? "* " : "  ") + achoice);
-        }
+//        log("MMAB" +
+//            " cheat=" + CHEAT +
+//            " index=" + scorePlayer.getIndex() +
+//            " life=" + scorePlayer.getLife() +
+//            " turn=" + sourceGame.getTurn() +
+//            " phase=" + sourceGame.getPhase().getType() +
+//            " slice=" + (slice/1000000) +
+//            " time=" + timeTaken
+//            );
+//        for (final ArtificialChoiceResults achoice : achoices) {
+//            log((achoice == bestAchoice ? "* " : "  ") + achoice);
+//        }
 
         return sourceGame.map(bestAchoice.choiceResults);
     }

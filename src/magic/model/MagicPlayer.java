@@ -1,5 +1,6 @@
 package magic.model;
 
+import magic.firemind.ScoringSet;
 import magic.model.action.MagicLoseGameAction;
 import magic.model.choice.MagicBuilderManaCost;
 import magic.model.event.MagicActivationPriority;
@@ -391,7 +392,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
         //library order depends on player index, game no, random seed
         final long seed = magic.MurmurHash3.hash(new long[] {
-            2 * index - 1,
+            1, //2 * index - 1,
             MagicGame.getCount(),
             (System.getProperty("rndSeed") != null) ?
                 Long.parseLong(System.getProperty("rndSeed")) :
@@ -534,6 +535,11 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
             }
         }
         return count;
+    }
+    
+
+    public int getNrOfPermanents() {
+        return permanents.size();
     }
 
     public int getNrOfPermanents(final MagicType type) {

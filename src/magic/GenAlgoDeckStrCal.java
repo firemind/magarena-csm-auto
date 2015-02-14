@@ -14,8 +14,15 @@ import magic.model.MagicRandom;
 import magic.ui.GameController;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-public class DeckStrCal {
+import javafx.collections.transformation.SortedList;
+
+public class GenAlgoDeckStrCal {
 
     private static int games = 10;
     private static int repeat = 1;
@@ -28,6 +35,12 @@ public class DeckStrCal {
     private static MagicAIImpl ai1 = MagicAIImpl.FIREMIND;
     private static MagicAIImpl ai2 = MagicAIImpl.MMAB;
 
+    private static ScoringSet currentScoringSet = new ScoringSet(); 
+    private static SortedSet<ScoringSet> allScoringSets = new TreeSet(new Comparator<ScoringSet>(){
+        public int compare(ScoringSet p1, ScoringSet p2) {
+            return p2.fitness- p1.fitness;
+        }
+    }); 
     // Command line parsing.
     private static boolean parseArguments(final String[] args) {
         boolean validArgs = true;
@@ -135,9 +148,10 @@ public class DeckStrCal {
         testDuel.initialize();
         testDuel.setDifficulty(0, str1);
         testDuel.setDifficulty(1, str2);
-
+        
         // Set the AI
         testDuel.setAIs(new MagicAI[]{ai1.getAI(), ai2.getAI()});
+
         testDuel.getPlayer(0).setArtificial(true);
         testDuel.getPlayer(1).setArtificial(true);
 
@@ -152,7 +166,25 @@ public class DeckStrCal {
         return testDuel;
     }
 
-    public static void main(final String[] args) {
+    private static ScoringSet crossover(ScoringSet setA, ScoringSet setB) {
+		ScoringSet newScoringSet = new ScoringSet();
+    	for(String key: newScoringSet.keys()){
+    		newScoringSet.put(key, Math.random() >= 0.5 ? setA.get(key) : setB.get(key));
+    	}
+		return newScoringSet;
+	}
+    
+    private static ScoringSet mutate(ScoringSet origScoringSet) {
+		ScoringSet newScoringSet = new ScoringSet(origScoringSet);
+    	for(String key: newScoringSet.mutatableKeys()){
+    		if(Math.random() < 0.2){
+        		newScoringSet.put(key, newScoringSet.get(key) + (Math.random() >= 0.5 ? 1 : -1));
+    		}
+    	}
+		return newScoringSet;
+	}
+
+	public static void main(final String[] args) {
         // setup the handler for any uncaught exception
         final MagicGameReport reporter = new MagicGameReport();
         reporter.disableNotification();
@@ -171,23 +203,46 @@ public class DeckStrCal {
         // Load cards and cubes.
         MagicMain.initializeEngine();
         MagicGameLog.initialize();
-
-        for (int i = 0; i < repeat; i++) {
-            runDuel();
-        }
         
+        currentScoringSet.fitness = games/2;
+		allScoringSets.add(currentScoringSet);
+        for (int i = 0; i < repeat; i++) {
+        	for(int j=0;j<8;j++){
+        		currentScoringSet = mutate(allScoringSets.first());
+        		if(!allScoringSets.contains(currentScoringSet)){
+        			runDuel();
+        		}
+        	}
+        	for(int j=0;j<8;j++){
+        		if(!allScoringSets.contains(currentScoringSet)){
+        			currentScoringSet = crossover(pickBreedingCandidate(), pickBreedingCandidate());
+        		}
+                runDuel();
+        	}
+        }
+        currentScoringSet.print();
         MagicGameLog.close();
     }
 
+	private static ScoringSet pickBreedingCandidate(){
+		while(true){
+			for(ScoringSet set : allScoringSets){
+				if (Math.random() >= 0.5){
+					return set;
+				}
+			}
+		}
+	}
     private static void runDuel() {
-//    	FiremindAI fmai = (FiremindAI) ai1.getAI();
-//    	fmai.scoringSet = new ScoringSet();
+        //currentScoringSet.print();
+        FiremindAI fmai = (FiremindAI) ai1.getAI();
+        fmai.scoringSet = currentScoringSet;
         final MagicDuel testDuel = setupDuel();
 
         System.out.println(
                  "#deck1" +
                 "\tai1" +
-                "\tstr1" +
+                "\t\tstr1" +
                 "\tdeck2" +
                 "\tai2" +
                 "\tstr2" +
@@ -198,6 +253,17 @@ public class DeckStrCal {
 
         int played = 0;
         while (testDuel.getGamesPlayed() < testDuel.getGamesTotal()) {
+        	if(testDuel.getGamesPlayed() == 0)
+        		loadDecks("burn", testDuel);
+        	if(testDuel.getGamesPlayed() == 10)
+        		loadDecks("merfolk", testDuel);
+        	if(testDuel.getGamesPlayed() == 20)
+        		loadDecks("affinity", testDuel);
+        	if(testDuel.getGamesPlayed() == 30)
+        		loadDecks("domain", testDuel);
+        	if(testDuel.getGamesPlayed() == 40)
+        		loadDecks("soul_sisters", testDuel);
+        	
             final MagicGame game=testDuel.nextGame();
             game.setArtificial(true);
             final GameController controller=new GameController(game);
@@ -207,23 +273,23 @@ public class DeckStrCal {
 
             controller.runGame();
             if (testDuel.getGamesPlayed() > played) {
-                System.err.println(
-                        deck1 + "\t" +
-                        ai1 + "\t" +
-                        str1 + "\t" +
-                        deck2 + "\t" +
-                        ai2 + "\t" +
-                        str2 + "\t" +
-                        testDuel.getGamesTotal() + "\t" +
-                        testDuel.getGamesWon() + "\t" +
-                        (testDuel.getGamesPlayed() - testDuel.getGamesWon())
-                );
+            	printDuelState(testDuel);
+
                 played = testDuel.getGamesPlayed();
             }
         }
-        System.out.println(
+
+    	printDuelState(testDuel);
+
+        currentScoringSet.fitness = testDuel.getGamesWon();
+		allScoringSets.add(currentScoringSet);
+        currentScoringSet.print();
+    }
+
+	private static void printDuelState(MagicDuel testDuel) {
+        System.err.println(
                 deck1 + "\t" +
-                ai1 + "\t" +
+                ai1 + "\t\t" +
                 str1 + "\t" +
                 deck2 + "\t" +
                 ai2 + "\t" +
@@ -232,5 +298,10 @@ public class DeckStrCal {
                 testDuel.getGamesWon() + "\t" +
                 (testDuel.getGamesPlayed() - testDuel.getGamesWon())
         );
-    }
+		
+	}
+	private static void loadDecks(String deck, MagicDuel testDuel){
+        DeckUtils.loadDeck(deck+".dec", testDuel.getPlayer(0));
+        DeckUtils.loadDeck(deck+".dec", testDuel.getPlayer(1));
+	}
 }

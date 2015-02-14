@@ -1,0 +1,250 @@
+package magic.ai;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import magic.firemind.GameState;
+import magic.firemind.ScoringSet;
+import magic.model.MagicGame;
+import magic.model.MagicGameLog;
+import magic.model.MagicPlayer;
+import magic.model.event.MagicEvent;
+
+public class FiremindAI implements MagicAI {
+
+    private static final long SEC_TO_NANO=1000000000L;
+    private static final short MAXDEPTH=20;
+    private static final int THREADS = Runtime.getRuntime().availableProcessors();
+    private final boolean CHEAT;
+    private final boolean DECKSTR;
+    public ScoringSet scoringSet = new ScoringSet();
+    
+    public FiremindAI(final boolean cheat) {
+        this(cheat, false);
+    }
+    
+    private FiremindAI(final boolean cheat, final boolean deckStr) {
+        CHEAT = cheat;
+        DECKSTR = deckStr;
+    }
+	@Override
+	public Object[] findNextEventChoiceResults(MagicGame sourceGame,
+			MagicPlayer scorePlayer) {
+        final long startTime = System.currentTimeMillis();
+		final MagicGame aiGame = new MagicGame(sourceGame, scorePlayer);
+		final MagicEvent event = aiGame.getNextEvent();
+		List<Object[]> choices = event.getArtificialChoiceResults(aiGame);
+        final int size = choices.size();
+        assert size != 0 : "ERROR: no choices available for FMAI";
+
+        // single choice result.
+        if (size == 1) {
+            return sourceGame.map(choices.get(0));
+        }
+        // submit jobs
+        final ArtificialPruneScoreRef scoreRef = new ArtificialPruneScoreRef(new ArtificialMultiPruneScore());
+        final ArtificialScoreBoard scoreBoard = new ArtificialScoreBoard();
+        final ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+        final List<ArtificialChoiceResults> achoices=new ArrayList<ArtificialChoiceResults>();
+        final int artificialLevel = sourceGame.getArtificialLevel(scorePlayer.getIndex());
+        final int rounds = (size + THREADS - 1) / THREADS;
+        final long slice = artificialLevel * SEC_TO_NANO / rounds;
+        
+        for (final Object[] choice : choices) {
+            final ArtificialChoiceResults achoice=new ArtificialChoiceResults(choice);
+            achoices.add(achoice);
+            
+            final MagicGame workerGame=new MagicGame(sourceGame,scorePlayer);
+//            if (!CHEAT) {
+//                workerGame.hideHiddenCards();
+//            }
+            if (DECKSTR) {
+                workerGame.setMainPhases(artificialLevel);
+            }
+            workerGame.setFastChoices(true);
+            final FiremindAIWorker worker=new FiremindAIWorker(
+                Thread.currentThread().getId(),
+                workerGame,
+                scoreBoard,
+                CHEAT,
+                scoringSet
+            );
+            
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    worker.evaluateGame(achoice, scoreRef.get(), System.nanoTime() + slice);
+                    scoreRef.update(achoice.aiScore.getScore());
+                }
+            });
+        }
+
+        executor.shutdown();
+        try {
+            // wait for artificialLevel + 1 seconds for jobs to finish
+            executor.awaitTermination(artificialLevel + 1, TimeUnit.SECONDS);
+        } catch (final InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            // force termination of workers
+            executor.shutdownNow();
+        }
+
+        // select the best scoring choice result.
+        ArtificialScore bestScore = ArtificialScore.INVALID_SCORE;
+        ArtificialChoiceResults bestAchoice = achoices.get(0);
+        for (final ArtificialChoiceResults achoice : achoices) {
+            if (bestScore.isBetter(achoice.aiScore,true)) {
+                bestScore = achoice.aiScore;
+                bestAchoice = achoice;
+            }
+        }
+
+        // Logging.
+        final long timeTaken = System.currentTimeMillis() - startTime;
+        log("FMAI" +
+            " cheat=" + CHEAT +
+            " index=" + scorePlayer.getIndex() +
+            " life=" + scorePlayer.getLife() +
+            " turn=" + sourceGame.getTurn() +
+            " phase=" + sourceGame.getPhase().getType() +
+            " slice=" + (slice/1000000) +
+            " time=" + timeTaken
+            );
+        for (final ArtificialChoiceResults achoice : achoices) {
+            log((achoice == bestAchoice ? "* " : "  ") + achoice);
+        }
+
+        return sourceGame.map(bestAchoice.choiceResults);
+    }
+
+    private void log(final String message) {
+        MagicGameLog.log(message);
+    }
+    
+    class FiremindAIWorker {
+
+        private final boolean CHEAT;
+        private final long id;
+        private final MagicGame game;
+        private final ArtificialScoreBoard scoreBoard;
+        private final ScoringSet scoringSet;
+
+        private int gameCount;
+
+        FiremindAIWorker(final long id,final MagicGame game,final ArtificialScoreBoard scoreBoard, final boolean CHEAT, ScoringSet scoringSet) {
+            this.id=id;
+            this.game=game;
+            this.scoreBoard=scoreBoard;
+            this.CHEAT=CHEAT;
+            this.scoringSet = scoringSet;
+        }
+
+        private ArtificialScore runGame(final Object[] nextChoiceResults, final ArtificialPruneScore pruneScore, final int depth, final long maxTime) {
+            game.snapshot();
+
+            if (nextChoiceResults!=null) {
+                game.executeNextEvent(nextChoiceResults);
+            }
+
+            if (depth == MAXDEPTH || System.nanoTime() > maxTime || Thread.currentThread().isInterrupted()) {
+                GameState gsMe = new GameState(game.getScorePlayer(), scoringSet);
+                GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), scoringSet);
+                final ArtificialScore aiScore=new ArtificialScore(gsMe.getScore()-gsOp.getScore(),depth);
+                game.restore();
+                gameCount++;
+                return aiScore;
+            }
+
+            // Play game until given end turn for all possible choices.
+            while (!game.isFinished()) {
+                if (!game.hasNextEvent()) {
+                    game.executePhase();
+
+                    // Caching of best score for game situations.
+                    if (game.cacheState()) {
+                        final long gameId=game.getGameId(pruneScore.getScore());
+                        ArtificialScore bestScore=scoreBoard.getGameScore(gameId);
+                        if (bestScore==null) {
+                            bestScore=runGame(null,pruneScore,depth,maxTime);
+                            scoreBoard.setGameScore(gameId,bestScore.getScore(-depth));
+                        } else {
+                            bestScore=bestScore.getScore(depth);
+                        }
+                        game.restore();
+                        return bestScore;
+                    }
+                    continue;
+                }
+
+                final MagicEvent event=game.getNextEvent();
+
+                if (!event.hasChoice()) {
+                    game.executeNextEvent();
+                    continue;
+                }
+
+                //final long startExpansion = System.nanoTime();
+                final List<Object[]> choiceResultsList=event.getArtificialChoiceResults(game);
+                //final long timeExpansion = System.nanoTime() - startExpansion;
+
+                /*
+                System.out.println(
+                    "EXPANSION" +
+                    " cheat=" + CHEAT +
+                    " choice=" + event.getChoice().getClass().getSimpleName() +
+                    " time=" + timeExpansion
+                );
+                */
+
+                final int nrOfChoices=choiceResultsList.size();
+
+                assert nrOfChoices > 0 : "nrOfChoices is 0";
+
+                if (nrOfChoices==1) {
+                    game.executeNextEvent(choiceResultsList.get(0));
+                    continue;
+                }
+
+                final boolean best=game.getScorePlayer()==event.getPlayer();
+                ArtificialScore bestScore=ArtificialScore.INVALID_SCORE;
+                ArtificialPruneScore newPruneScore=pruneScore;
+                long end = System.nanoTime();
+                final long slice = (maxTime - end) / nrOfChoices;
+                for (final Object[] choiceResults : choiceResultsList) {
+                    end += slice;
+                    final ArtificialScore score=runGame(choiceResults, newPruneScore, depth + 1, end);
+                    if (bestScore.isBetter(score,best)) {
+                        bestScore=score;
+                        // Stop when best score can no longer become the best score at previous levels.
+                        if (pruneScore.pruneScore(bestScore.getScore(),best)) {
+                            break;
+                        }
+                        newPruneScore=newPruneScore.getPruneScore(bestScore.getScore(),best);
+                    }
+                }
+                game.restore();
+                return bestScore;
+            }
+
+            // Game is finished.
+            final ArtificialScore aiScore=new ArtificialScore(game.getScore(),depth);
+            game.restore();
+            gameCount++;
+            return aiScore;
+        }
+
+        void evaluateGame(final ArtificialChoiceResults aiChoiceResults, final ArtificialPruneScore pruneScore, long maxTime) {
+            gameCount = 0;
+
+            aiChoiceResults.worker    = id;
+            aiChoiceResults.aiScore   = runGame(game.map(aiChoiceResults.choiceResults),pruneScore,0,maxTime);
+            aiChoiceResults.gameCount = gameCount;
+
+            game.undoAllActions();
+        }
+    }
+}

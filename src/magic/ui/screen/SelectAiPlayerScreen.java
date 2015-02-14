@@ -55,6 +55,12 @@ public class SelectAiPlayerScreen
         profile.setAiType(MagicAIImpl.MMAB);
         profile.setAiLevel(6);
         profile.save();
+        // Firemind AI
+        profile = new AiPlayer();
+        profile.setPlayerName("Firemind AI");
+        profile.setAiType(MagicAIImpl.FIREMIND);
+        profile.setAiLevel(6);
+        profile.save();
         // Monty Carlo
         profile = new AiPlayer();
         profile.setPlayerName("Monty Carlo");

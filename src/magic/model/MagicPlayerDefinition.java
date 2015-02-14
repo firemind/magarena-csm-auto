@@ -2,6 +2,7 @@ package magic.model;
 
 import magic.data.CardDefinitions;
 import magic.data.DeckGenerators;
+import magic.firemind.ScoringSet;
 import magic.generator.RandomDeckGenerator;
 import magic.model.player.AiPlayer;
 import magic.model.player.PlayerProfile;
