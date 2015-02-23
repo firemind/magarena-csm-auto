@@ -1,12 +1,10 @@
 [
-    new AtYourUpkeepTrigger() {
-        public boolean ifCondition(final MagicPermanent permanent, final MagicPlayer you) {
-            final MagicTargetFilter<MagicPermanent> other = PERMANENT_YOU_CONTROL.except(permanent);
-            return you.controlsPermanent(other) == false && you.getHandSize() == 0;
-        }
+    new MagicAtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
-            return ifCondition(permanent, upkeepPlayer) ?
+            return upkeepPlayer.controlsPermanent(new MagicOtherPermanentTargetFilter(
+                MagicTargetFilterFactory.PERMANENT_YOU_CONTROL, permanent)) == false &&
+                upkeepPlayer.getHandSize() == 0 ?
                 new MagicEvent(
                     permanent,
                     this,
@@ -17,9 +15,7 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            if (ifCondition(event.getPermanent(), event.getPlayer())) {
-                game.doAction(new LoseGameAction(event.getPlayer().getOpponent()));
-            }
-        }
+            game.doAction(new MagicLoseGameAction(event.getPlayer().getOpponent()));
+        };
     }
 ]
