@@ -1,13 +1,11 @@
 name=Fatal Attraction
-image=http://magiccards.info/scans/en/fut/98.jpg
-value=2.776
+image=http://mtgimage.com/card/fatal%20attraction.jpg
+value=2.500
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{R}
-ability=Enchant creature;\
-        When SN enters the battlefield, SN deals 2 damage to enchanted creature.;\
-        At the beginning of your upkeep, SN deals 4 damage to enchanted creature.
 timing=aura
 enchant=destroy,neg creature
-oracle=Enchant creature\nWhen Fatal Attraction enters the battlefield, it deals 2 damage to enchanted creature.\nAt the beginning of your upkeep, Fatal Attraction deals 4 damage to enchanted creature.
+requires_groovy_code
+oracle=Enchant creature. When Fatal Attraction enters the battlefield, it deals 2 damage to enchanted creature. At the beginning of your upkeep, Fatal Attraction deals 4 damage to enchanted creature.
