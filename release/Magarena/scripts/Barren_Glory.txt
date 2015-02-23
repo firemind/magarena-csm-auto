@@ -1,6 +1,6 @@
 name=Barren Glory
-image=http://magiccards.info/scans/en/fut/3.jpg
-value=3.522
+image=http://mtgimage.com/card/barren%20glory.jpg
+value=2.500
 rarity=R
 type=Enchantment
 cost={4}{W}{W}
