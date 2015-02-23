@@ -1,9 +1,9 @@
 name=Steel Sabotage
-image=http://magiccards.info/scans/en/mbs/33.jpg
-value=4.241
+image=http://mtgimage.com/card/steel%20sabotage.jpg
+value=2.500
 rarity=C
 type=Instant
 cost={U}
-effect=Choose one — (1) Counter target artifact spell. (2) Return target artifact to its owner's hand.
 timing=counter
-oracle=Choose one —\n• Counter target artifact spell.\n• Return target artifact to its owner's hand.
+requires_groovy_code
+oracle=Choose one — • Counter target artifact spell. • Return target artifact to its owner's hand.
