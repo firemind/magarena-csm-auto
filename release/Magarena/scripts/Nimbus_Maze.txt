@@ -1,10 +1,9 @@
 name=Nimbus Maze
-image=http://magiccards.info/scans/en/fut/178.jpg
-value=4.216
+image=http://mtgimage.com/card/nimbus%20maze.jpg
+value=2.500
 rarity=R
 type=Land
-ability={T}: Add {C} to your mana pool.;\
-        {T}: Add {W} to your mana pool. Activate this ability only if you control an Island.;\
-        {T}: Add {U} to your mana pool. Activate this ability only if you control a Plains.
+ability={T}: Add {1} to your mana pool.
 timing=land
-oracle={T}: Add {C} to your mana pool.\n{T}: Add {W} to your mana pool. Activate this ability only if you control an Island.\n{T}: Add {U} to your mana pool. Activate this ability only if you control a Plains.
+requires_groovy_code
+oracle={T}: Add {1} to your mana pool. {T}: Add {W} to your mana pool. Activate this ability only if you control an Island. {T}: Add {U} to your mana pool. Activate this ability only if you control a Plains.
