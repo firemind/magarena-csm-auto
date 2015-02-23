@@ -1,9 +1,9 @@
 name=Valorous Stance
-image=http://magiccards.info/scans/en/frf/28.jpg
-value=5.000
+image=http://mtgimage.com/card/valorous%20stance.jpg
+value=2.500
 rarity=U
 type=Instant
 cost={1}{W}
-effect=Choose one — (1) Target creature gains indestructible until end of turn. (2) Destroy target creature with toughness 4 or greater.
 timing=removal
-oracle=Choose one —\n• Target creature gains indestructible until end of turn.\n• Destroy target creature with toughness 4 or greater.
+requires_groovy_code
+oracle=Choose one — • Target creature gains indestructible until end of turn. • Destroy target creature with toughness 4 or greater.
