@@ -1,10 +1,9 @@
 name=Golgari Charm
-image=http://magiccards.info/scans/en/c15/221.jpg
-image_updated=2016-02-29
-value=3.657
+image=http://mtgimage.com/card/golgari%20charm.jpg
+value=2.500
 rarity=U
 type=Instant
 cost={B}{G}
-effect=Choose one — (1) All creatures get -1/-1 until end of turn. (2) Destroy target enchantment. (3) Regenerate each creature you control.
 timing=removal
-oracle=Choose one —\n• All creatures get -1/-1 until end of turn.\n• Destroy target enchantment.\n• Regenerate each creature you control.
+requires_groovy_code
+oracle=Choose one — • All creatures get -1/-1 until end of turn. • Destroy target enchantment. • Regenerate each creature you control.
