@@ -1,12 +1,12 @@
 name=Living Tsunami
-image=http://magiccards.info/scans/en/zen/52.jpg
-value=3.742
+image=http://mtgimage.com/card/living%20tsunami.jpg
+value=2.500
 rarity=U
 type=Creature
 subtype=Elemental
 cost={2}{U}{U}
 pt=4/4
-ability=Flying;\
-        At the beginning of your upkeep, you may return a land you control to its owner's hand. If you don't, sacrifice SN.
+ability=Flying
 timing=main
-oracle=Flying\nAt the beginning of your upkeep, sacrifice Living Tsunami unless you return a land you control to its owner's hand.
+requires_groovy_code
+oracle=Flying. At the beginning of your upkeep, sacrifice Living Tsunami unless you return a land you control to its owner's hand.
