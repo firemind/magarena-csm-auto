@@ -1,7 +1,6 @@
 def choice = new MagicTargetChoice(
-    new MagicCMCCardFilter(CREATURE_CARD_FROM_LIBRARY,Operator.EQUAL,4),
-    "a creature card with converted mana cost 4 from your library"
-);
+             new MagicCMCCardFilter(MagicTargetFilterFactory.CREATURE_CARD_FROM_LIBRARY,Operator.EQUAL,4),
+             "a creature card with converted mana cost 4 from your library");
 
 [
     new MagicPermanentActivation(
@@ -12,8 +11,7 @@ def choice = new MagicTargetChoice(
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
-                new MagicPayManaCostEvent(source, "{1}{B}{B}"),
-                new MagicSacrificeEvent(source),
+                new MagicPayManaCostSacrificeEvent(source, "{1}{B}{B}")
             ];
         }
         @Override
@@ -21,8 +19,8 @@ def choice = new MagicTargetChoice(
             return new MagicEvent(
                 source,
                 this,
-                "PN searches his or her library for a creature with the same converted mana cost as this creature " +
-                "and puts that card onto the battlefield. Then shuffles his or her library."
+                "Search PN's library for a creature with the same converted mana cost as this creature " +
+                "and put that card onto the battlefield. Then shuffle your library."
             );
         }
         @Override
