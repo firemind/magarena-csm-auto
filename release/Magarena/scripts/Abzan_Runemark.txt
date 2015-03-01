@@ -1,13 +1,11 @@
 name=Abzan Runemark
-image=http://magiccards.info/scans/en/frf/3.jpg
+image=http://mtgimage.com/card/abzan%20runemark.jpg
 value=2.500
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{W}
-ability=Enchant creature;\
-        Enchanted creature gets +2/+2.;\
-        Enchanted creature has vigilance as long as you control a black or green permanent.
 timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature\nEnchanted creature gets +2/+2.\nEnchanted creature has vigilance as long as you control a black or green permanent.
+requires_groovy_code
+oracle=Enchant creature. Enchanted creature gets +2/+2. Enchanted creature has vigilance as long as you control a black or green permanent.
