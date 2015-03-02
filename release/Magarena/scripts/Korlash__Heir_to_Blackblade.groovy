@@ -1,19 +1,19 @@
 def CARD_NAMED_KORLASH = new MagicCardFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
         return target.getName().equals("Korlash, Heir to Blackblade");
     }
     public boolean acceptType(final MagicTargetType targetType) {
         return targetType == MagicTargetType.Hand;
     }
-};
+}; 
 def A_CARD_NAMED_KORLASH = new MagicTargetChoice(
-    CARD_NAMED_KORLASH,
+    CARD_NAMED_KORLASH,  
     MagicTargetHint.None,
     "a card named Korlash, Heir to Blackblade from your hand"
 );
 
 def SWAMP_CARD_FROM_LIBRARY = new MagicCardFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
         return target.hasSubType(MagicSubType.Swamp);
     }
     public boolean acceptType(final MagicTargetType targetType) {
@@ -41,12 +41,12 @@ def SWAMP_CARD_FROM_LIBRARY = new MagicCardFilterImpl() {
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.addEvent(new MagicSearchOntoBattlefieldEvent(
+     game.addEvent(new MagicSearchOntoBattlefieldEvent(
                 event,
                 new MagicFromCardFilterChoice(
                     SWAMP_CARD_FROM_LIBRARY,
-                    2,
-                    true,
+                    2, 
+                    true, 
                     "to put onto the battlefield tapped"
                 ),
                 MagicPlayMod.TAPPED
