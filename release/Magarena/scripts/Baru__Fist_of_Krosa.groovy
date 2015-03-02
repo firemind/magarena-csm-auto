@@ -1,20 +1,20 @@
 def CARD_NAMED_BARU = new MagicCardFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
         return target.getName().equals("Baru, Fist of Krosa");
     }
     public boolean acceptType(final MagicTargetType targetType) {
         return targetType == MagicTargetType.Hand;
     }
-};
+}; 
 def A_CARD_NAMED_BARU = new MagicTargetChoice(
-    CARD_NAMED_BARU,
+    CARD_NAMED_BARU,  
     MagicTargetHint.None,
     "a card named Baru, Fist of Krosa from your hand"
 );
 
 [
     new MagicPermanentActivation(
-        new MagicActivationHints(MagicTiming.Token),
+        new MagicActivationHints(MagicTiming.Pump),
         "Grandeur"
     ) {
         @Override
@@ -26,22 +26,22 @@ def A_CARD_NAMED_BARU = new MagicTargetChoice(
             return new MagicEvent(
                 source,
                 this,
-                "PN puts an X/X green Wurm creature token onto the battlefield, where X is the number of lands he or she controls."
+                "Put an X/X green Wurm creature token onto the battlefield, where X is the number of lands you control."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int x = event.getPlayer().getNrOfPermanents(MagicType.Land);
-            game.doAction(new PlayTokenAction(
-                event.getPlayer(),
-                MagicCardDefinition.create(
-                    CardDefinitions.getToken("green Wurm creature token"),
-                    {
-                        it.setPowerToughness(x, x);
-                        it.setValue(x);
-                    }
-                )
-            ));
+            game.doAction(new MagicPlayTokenAction(event.getPlayer(), MagicCardDefinition.create({
+                it.setName("Wurm");
+                it.setFullName("green Wurm creature token");
+                it.setPowerToughness(x, x);
+                it.setColors("g");
+                it.addSubType(MagicSubType.Wurm);
+                it.addType(MagicType.Creature);
+                it.setToken();
+                it.setValue(x);
+            })));
         }
     }
 ]
