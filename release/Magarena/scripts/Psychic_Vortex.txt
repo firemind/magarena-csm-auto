@@ -1,10 +1,9 @@
 name=Psychic Vortex
-image=http://magiccards.info/scans/en/wl/50.jpg
-value=3.767
+image=http://mtgimage.com/card/psychic%20vortex.jpg
+value=2.500
 rarity=R
 type=Enchantment
 cost={2}{U}{U}
-ability=At the beginning of your end step, sacrifice a land.~Discard your hand.
 timing=enchantment
 requires_groovy_code
-oracle=Cumulative upkeep—Draw a card.\nAt the beginning of your end step, sacrifice a land and discard your hand.
+oracle=Cumulative upkeep—Draw a card. At the beginning of your end step, sacrifice a land and discard your hand.
