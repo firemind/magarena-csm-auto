@@ -1,10 +1,9 @@
 name=Inner Sanctum
-image=http://magiccards.info/scans/en/wl/134.jpg
-value=2.983
+image=http://mtgimage.com/card/inner%20sanctum.jpg
+value=2.500
 rarity=R
 type=Enchantment
 cost={1}{W}{W}
-ability=Prevent all damage that would be dealt to creatures you control.
 timing=enchantment
-requires_groovy_code=Glacial Chasm
-oracle=Cumulative upkeep—Pay 2 life.\nPrevent all damage that would be dealt to creatures you control.
+requires_groovy_code
+oracle=Cumulative upkeep—Pay 2 life. Prevent all damage that would be dealt to creatures you control.
