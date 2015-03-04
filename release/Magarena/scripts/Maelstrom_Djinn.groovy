@@ -1,5 +1,7 @@
+def Vanishing = MagicAbility.getAbilityList("Vanishing 1");
+
 [
-    new ThisTurnedFaceUpTrigger() {
+    new MagicWhenTurnedFaceUpTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return new MagicEvent(
@@ -11,8 +13,8 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.Time,2));
-            game.doAction(new AddTriggerAction(event.getPermanent(), FadeVanishCounterTrigger.Time));
+            game.doAction(new MagicChangeCountersAction(event.getPermanent(),MagicCounterType.Time,2));
+            game.doAction(new MagicGainAbilityAction(event.getPermanent(),Vanishing,MagicStatic.Forever))
         }
     }
 ]
