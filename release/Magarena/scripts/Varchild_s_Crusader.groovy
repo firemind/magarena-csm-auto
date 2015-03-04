@@ -8,8 +8,7 @@ def Unblockable = MagicAbility.getAbilityList("SN can't be blocked except by Wal
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
-                new MagicPayManaCostEvent(source,"{0}"),
-                new MagicPlayAbilityEvent(source)
+                new MagicPayManaCostEvent(source,"{0}")
             ];
         }
         @Override
@@ -22,9 +21,8 @@ def Unblockable = MagicAbility.getAbilityList("SN can't be blocked except by Wal
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new PlayAbilityAction(event.getPermanent()));
-            game.doAction(new GainAbilityAction(event.getPermanent(),Unblockable));
-            game.doAction(new AddTriggerAction(event.getPermanent(), AtEndOfTurnTrigger.Sacrifice));
+            game.doAction(new MagicGainAbilityAction(event.getPermanent(),Unblockable));
+            game.doAction(new MagicAddTriggerAction(event.getPermanent(), MagicAtEndOfTurnTrigger.Sacrifice));
         }
     }
 ]
