@@ -1,8 +1,8 @@
 [
-    new AtYourUpkeepTrigger() {
+    new MagicAtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
-            game.doAction(new ChangeCountersAction(
+            game.doAction(new MagicChangeCountersAction(
                 permanent,
                 MagicCounterType.Age,
                 1
@@ -12,7 +12,7 @@
                 new MagicMayChoice("Pay cumulative upkeep?"),
                 this,
                 "PN may\$ sacrifice a creature for each Age counter on SN. " +
-                "If he or she doesn't, sacrifice SN."
+                " If he or she doesn't, sacrifice SN."
             );
         }
         @Override
@@ -20,12 +20,12 @@
             if (event.isYes()) {
                 game.addEvent(new MagicRepeatedPermanentsEvent(
                     event.getSource(),
-                    SACRIFICE_CREATURE,
+                    MagicTargetChoice.SACRIFICE_CREATURE,
                     event.getPermanent().getCounters(MagicCounterType.Age),
                     MagicChainEventFactory.Sac
                 ));
             } else {
-                game.doAction(new SacrificeAction(event.getPermanent()));
+                game.doAction(new MagicSacrificeAction(event.getPermanent()));
             }
         }
     }
