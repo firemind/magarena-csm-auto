@@ -1,7 +1,7 @@
 def NON_DEMON_PERMANENT_YOU_CONTROL = new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicPermanent target) {
         return target.isController(player) && !target.hasSubType(MagicSubType.Demon)
-    }
+    } 
 };
 
 def A_NON_DEMON_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
@@ -10,7 +10,7 @@ def A_NON_DEMON_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
 );
 
 [
-    new ThisAttacksTrigger() {
+    new MagicWhenSelfAttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPermanent creature) {
             return new MagicEvent(
@@ -30,7 +30,7 @@ def A_NON_DEMON_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
             ));
         }
     },
-    new ThisCombatDamagePlayerTrigger() {
+   new MagicWhenSelfCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -49,7 +49,7 @@ def A_NON_DEMON_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
                     event.getPlayer(),
                     A_NON_DEMON_PERMANENT_YOU_CONTROL
                 ));
-            }
+            }      
         }
     }
 ]
