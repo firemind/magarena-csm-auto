@@ -1,6 +1,6 @@
 name=Rakdos the Defiler
-image=http://magiccards.info/scans/en/di/129.jpg
-value=3.799
+image=http://mtgimage.com/card/rakdos%20the%20defiler.jpg
+value=2.500
 rarity=R
 type=Legendary,Creature
 subtype=Demon
@@ -9,4 +9,4 @@ pt=7/6
 ability=Flying; trample
 timing=main
 requires_groovy_code
-oracle=Flying, trample\nWhenever Rakdos the Defiler attacks, sacrifice half the non-Demon permanents you control, rounded up.\nWhenever Rakdos deals combat damage to a player, that player sacrifices half the non-Demon permanents he or she controls, rounded up.
+oracle=Flying, trample. Whenever Rakdos the Defiler attacks, sacrifice half the non-Demon permanents you control, rounded up. Whenever Rakdos deals combat damage to a player, that player sacrifices half the non-Demon permanents he or she controls, rounded up.
