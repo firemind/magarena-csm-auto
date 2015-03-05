@@ -1,33 +1,5 @@
 [
-    new OtherSpellIsCastTrigger() {
-        @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
-            return permanent.isFriend(cardOnStack) &&
-                   cardOnStack.hasType(MagicType.Creature) &&
-                   cardOnStack.hasColor(MagicColor.Blue) ?
-                new MagicEvent(
-                    permanent,
-                    this,
-                    "PN reveals the top card of his or her library. "+
-                    "If it's a creature card, PN puts that card into his or her hand."
-                ):
-                MagicEvent.NONE;
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
-                game.doAction(new RevealAction(card));
-                if (card.hasType(MagicType.Creature)) {
-                    game.doAction(new ShiftCardAction(
-                        card,
-                        MagicLocationType.OwnersLibrary,
-                        MagicLocationType.OwnersHand
-                    ));
-                }
-            }
-        }
-    },
-    new OtherSpellIsCastTrigger() {
+    new MagicWhenOtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
             return permanent.isFriend(cardOnStack) &&
@@ -37,8 +9,8 @@
                     permanent,
                     new MagicMayChoice(),
                     this,
-                    "PN may\$ search his or her library for a creature card and reveal it. "+
-                    "If PN does, he or she shuffles his or her library and puts that card on top of it."
+                    "PN may\$ search your library for a creature card and reveal it. "+
+                    "If you do, shuffle your library and put that card on top of it."
                 ):
                 MagicEvent.NONE;
         }
@@ -50,6 +22,38 @@
                 "Search your library for a creature card, reveal it, then shuffle your library and put that card on top of it.").getEvent(event.getSource()
                 ));
             }
+        }
+    },
+    new MagicWhenOtherSpellIsCastTrigger() {
+        @Override
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
+            return permanent.isFriend(cardOnStack) &&
+                   cardOnStack.hasType(MagicType.Creature) &&
+                   cardOnStack.hasColor(MagicColor.Blue) ?
+                new MagicEvent(
+                    permanent,
+                    this,
+                    "Reveal the top card of PN's library. If it's a creature card, put that card into PN's hand."
+                ):
+                MagicEvent.NONE;
+        }
+        @Override
+        public void executeEvent(final MagicGame game, final MagicEvent event) {
+            for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
+                game.doAction(new MagicRevealAction(card));
+       
+                game.doAction(new MagicRemoveCardAction(
+                    card,
+                    MagicLocationType.OwnersLibrary
+                ));
+                game.doAction(new MagicMoveCardAction(
+                    card,
+                    MagicLocationType.OwnersLibrary,
+                    card.hasType(MagicType.Creature) ?
+                      MagicLocationType.OwnersHand :
+                      MagicLocationType.OwnersLibrary
+                ));       
+            }      
         }
     }
 ]
