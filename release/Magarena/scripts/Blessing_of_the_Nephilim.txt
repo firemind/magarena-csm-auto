@@ -1,6 +1,6 @@
 name=Blessing of the Nephilim
-image=http://magiccards.info/scans/en/di/4.jpg
-value=3.307
+image=http://mtgimage.com/card/blessing%20of%20the%20nephilim.jpg
+value=2.500
 rarity=U
 type=Enchantment
 subtype=Aura
@@ -8,4 +8,4 @@ cost={W}
 timing=aura
 enchant=pump,pos creature
 requires_groovy_code
-oracle=Enchant creature\nEnchanted creature gets +1/+1 for each of its colors.
+oracle=Enchant creature. Enchanted creature gets +1/+1 for each of its colors.
