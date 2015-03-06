@@ -1,5 +1,5 @@
 [
-    new EntersBattlefieldTrigger() {
+    new MagicWhenComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -14,13 +14,20 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.getRefInt() == 1) {
-                game.doAction(new DestroyAction(
-                    CREATURE.except(event.getPermanent()).filter(event)
-                ));
+            final MagicTargetFilter<MagicPermanent> targetFilterkicked =
+                new MagicOtherPermanentTargetFilter(
+                MagicTargetFilterFactory.CREATURE,event.getPermanent());
+            final Collection<MagicPermanent> targetskicked=
+                game.filterPermanents(targetFilterkicked);
+                    game.doAction(new MagicDestroyAction(targetskicked));
+         
             } else {
-                game.doAction(new DestroyAction(
-                    CREATURE_YOU_CONTROL.except(event.getPermanent()).filter(event)
-                ));
+            final MagicTargetFilter<MagicPermanent> targetFilternotkicked =
+                new MagicOtherPermanentTargetFilter(
+                MagicTargetFilterFactory.CREATURE_YOU_CONTROL,event.getPermanent());
+            final Collection<MagicPermanent> targetsnotkicked=
+                game.filterPermanents(event.getPlayer(),targetFilternotkicked);
+                    game.doAction(new MagicDestroyAction(targetsnotkicked));
             }
         }
     }
