@@ -2,6 +2,7 @@ package magic.ai;
 
 public enum MagicAIImpl {
     MMAB("minimax", new MMAB(false)),
+    MMABCLONE("minimax", new MMAB(false)),
     MMABC("minimax (cheat)", new MMAB(true)),
     MCTS("monte carlo tree search", new MCTSAI(false)),
     MCTSC("monte carlo tree search (cheat)", new MCTSAI(true)),
