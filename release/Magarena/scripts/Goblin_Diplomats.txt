@@ -1,11 +1,11 @@
 name=Goblin Diplomats
-image=http://magiccards.info/scans/en/m14/141.jpg
-value=3.636
+image=http://mtgimage.com/card/goblin%20diplomats.jpg
+value=2.500
 rarity=R
 type=Creature
 subtype=Goblin
 cost={1}{R}
 pt=2/1
-ability={T}: Each creature attacks this turn if able.
 timing=main
+requires_groovy_code
 oracle={T}: Each creature attacks this turn if able.
