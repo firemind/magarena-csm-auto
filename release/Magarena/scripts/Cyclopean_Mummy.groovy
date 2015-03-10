@@ -1,5 +1,5 @@
 [
-    new ThisDiesTrigger() {
+    new MagicWhenDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
@@ -9,13 +9,14 @@
             );
         }
 
-        @Override
+       @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new ShiftCardAction(
-                event.getPermanent().getCard(),
-                MagicLocationType.Graveyard,
-                MagicLocationType.Exile
-            ));
+            final MagicCard card = event.getPermanent().getCard();
+ 
+            if (card.isInGraveyard()) {
+                game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
+                game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
+            }    
         }
     }
 ]
