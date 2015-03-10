@@ -1,12 +1,12 @@
 name=Dross Golem
-image=http://magiccards.info/scans/en/ds/119.jpg
-value=3.774
+image=http://mtgimage.com/card/dross%20golem.jpg
+value=2.500
 rarity=C
 type=Artifact,Creature
 subtype=Golem
 cost={5}
 pt=3/2
-ability=Affinity for Swamps;\
-        Fear
+ability=Fear
 timing=main
-oracle=Affinity for Swamps\nFear
+requires_groovy_code
+oracle=Affinity for Swamps. Fear
