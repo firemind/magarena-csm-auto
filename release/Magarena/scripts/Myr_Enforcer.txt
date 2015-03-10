@@ -1,11 +1,11 @@
 name=Myr Enforcer
-image=http://magiccards.info/scans/en/mm2/224.jpg
-value=4.080
+image=http://mtgimage.com/card/myr%20enforcer.jpg
+value=2.500
 rarity=C
 type=Artifact,Creature
 subtype=Myr
 cost={7}
 pt=4/4
-ability=Affinity for artifacts
 timing=main
+requires_groovy_code
 oracle=Affinity for artifacts
