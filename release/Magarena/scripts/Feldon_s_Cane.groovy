@@ -16,7 +16,7 @@
             return new MagicEvent(
                 source,
                 this,
-                "PN shuffles his or her graveyard into his or her library."
+                "Shuffle your graveyard into your library."
             );
         }
 
@@ -24,7 +24,17 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();
             final MagicCardList graveyard = new MagicCardList(player.getGraveyard());
-            game.doAction(new ShuffleCardsIntoLibraryAction(graveyard, MagicLocationType.Graveyard))
+            for (final MagicCard card : graveyard) {
+                game.doAction(new MagicRemoveCardAction(
+                    card,
+                    MagicLocationType.Graveyard
+                ));
+                game.doAction(new MagicMoveCardAction(
+                    card,
+                    MagicLocationType.Graveyard,
+                    MagicLocationType.OwnersLibrary
+                ));
+            }
         }
     }
 ]
