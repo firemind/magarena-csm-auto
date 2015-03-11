@@ -1,10 +1,10 @@
 name=Assert Authority
-image=http://magiccards.info/scans/en/mi/30.jpg
-value=3.797
+image=http://mtgimage.com/card/assert%20authority.jpg
+value=2.500
 rarity=U
 type=Instant
 cost={5}{U}{U}
-ability=Affinity for artifacts
-effect=Counter target spell. If that spell is countered this way, exile it instead of putting it into its owner's graveyard.
+effect=Affinity for artifacts
 timing=counter
-oracle=Affinity for artifacts\nCounter target spell. If that spell is countered this way, exile it instead of putting it into its owner's graveyard.
+requires_groovy_code
+oracle=Affinity for artifacts. Counter target spell. If that spell is countered this way, exile it instead of putting it into its owner's graveyard.
