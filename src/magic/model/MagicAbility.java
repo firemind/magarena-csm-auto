@@ -211,9 +211,10 @@ public enum MagicAbility {
             ));
         }
     },
-    AttacksAnyEffect("Whenever a creature attacks, " + ARG.EFFECT, 10) {
+    AttacksAnyEffect("When(ever)? (a|an) " + ARG.WORDRUN + " attacks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicWhenAttacksTrigger.create(
+                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
@@ -1207,6 +1208,12 @@ public enum MagicAbility {
             final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
             card.add(new MagicMegamorphActivation(matchedCostEvents));
             card.add(MagicMorphCastActivation.Megamorph);
+        }
+    },
+    Affinity("affinity for " + ARG.WORDRUN + "(\\.)?", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicCardActivation.affinity(cardDef, MagicTargetFilterFactory.multiple(ARG.wordrun(arg))));
         }
     },
     ;

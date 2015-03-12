@@ -15,6 +15,7 @@ import magic.model.MagicPermanent;
 import magic.model.MagicPermanentState;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
+import magic.model.MagicCopyable;
 import magic.model.ARG;
 import magic.model.choice.MagicChoice;
 import magic.model.choice.MagicFromCardFilterChoice;
@@ -139,7 +140,24 @@ public enum MagicRuleEventAction {
             };
         }
     },
-    Counter(
+    CounterSpellToExile(
+        "counter (?<choice>[^\\.]*)\\. if that spell is countered this way, exile it instead of putting it into its owner's graveyard.", 
+        MagicTargetHint.Negative, 
+        MagicDefaultTargetPicker.create(), 
+        MagicTiming.Counter,
+        "Counter",
+        new MagicEventAction() {
+            @Override
+            public void executeEvent(final MagicGame game, final MagicEvent event) {
+                event.processTargetItemOnStack(game,new MagicItemOnStackAction() {
+                    public void doAction(final MagicItemOnStack item) {
+                        game.doAction(new MagicCounterItemOnStackAction(item, MagicLocationType.Exile));
+                    }
+                });
+            }
+        }
+    ),
+    CounterSpell(
         "counter (?<choice>[^\\.]*)\\.", 
         MagicTargetHint.Negative, 
         MagicDefaultTargetPicker.create(), 
@@ -453,7 +471,7 @@ public enum MagicRuleEventAction {
         }
     },
     DamageChosen(
-        "sn deal(s)? (?<amount>[0-9]+) damage to (?<choice>[^\\.]*)(\\.)?",
+        ARG.IT + " deal(s)? (?<amount>[0-9]+) damage to (?<choice>[^\\.]*)(\\.)?",
         MagicTargetHint.Negative, 
         MagicTiming.Removal,
         "Damage"
@@ -466,7 +484,7 @@ public enum MagicRuleEventAction {
                 public void executeEvent(final MagicGame game, final MagicEvent event) {
                     event.processTarget(game,new MagicTargetAction() {
                         public void doAction(final MagicTarget target) {
-                            final MagicDamage damage=new MagicDamage(event.getSource(),target,amount);
+                            final MagicDamage damage=new MagicDamage(event.getSource(matcher),target,amount);
                             game.doAction(new MagicDealDamageAction(damage));
                         }
                     });
@@ -942,7 +960,7 @@ public enum MagicRuleEventAction {
         }
     },
     PumpSelf(
-        "sn get(s)? (?<pt>[+-][0-9]+/[+-][0-9]+) until end of turn\\.", 
+        ARG.IT + " get(s)? (?<pt>[+-][0-9]+/[+-][0-9]+) until end of turn\\.", 
         MagicTiming.Pump, 
         "Pump"
     ) {
@@ -954,7 +972,7 @@ public enum MagicRuleEventAction {
             return new MagicEventAction() {
                 @Override
                 public void executeEvent(final MagicGame game, final MagicEvent event) {
-                    game.doAction(new MagicChangeTurnPTAction(event.getPermanent(),power,toughness));
+                    game.doAction(new MagicChangeTurnPTAction(event.getPermanent(matcher),power,toughness));
                 }
             };
         }
@@ -1009,7 +1027,7 @@ public enum MagicRuleEventAction {
         }
     },
     PumpGainSelf(
-        "sn get(s)? (?<pt>[+-][0-9]+/[+-][0-9]+) and gain(s)? (?<ability>.+) until end of turn(\\.)?", 
+        ARG.IT + " get(s)? (?<pt>[+-][0-9]+/[+-][0-9]+) and gain(s)? (?<ability>.+) until end of turn(\\.)?", 
         MagicTiming.Pump
     ) {
         @Override
@@ -1021,8 +1039,8 @@ public enum MagicRuleEventAction {
             return new MagicEventAction() {
                 @Override
                 public void executeEvent(final MagicGame game, final MagicEvent event) {
-                    game.doAction(new MagicChangeTurnPTAction(event.getPermanent(),power,toughness));
-                    game.doAction(new MagicGainAbilityAction(event.getPermanent(),abilityList));
+                    game.doAction(new MagicChangeTurnPTAction(event.getPermanent(matcher),power,toughness));
+                    game.doAction(new MagicGainAbilityAction(event.getPermanent(matcher),abilityList));
                 }
             };
         }
@@ -1275,7 +1293,7 @@ public enum MagicRuleEventAction {
         }
     },
     GainSelf(
-        "sn gain(s)? (?<ability>.+) until end of turn\\."
+        ARG.IT + " gain(s)? (?<ability>.+) until end of turn\\."
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
@@ -1283,7 +1301,7 @@ public enum MagicRuleEventAction {
             return new MagicEventAction() {
                 @Override
                 public void executeEvent(final MagicGame game, final MagicEvent event) {
-                    game.doAction(new MagicGainAbilityAction(event.getPermanent(),abilityList));
+                    game.doAction(new MagicGainAbilityAction(event.getPermanent(matcher),abilityList));
                 }
             };
         }
@@ -1597,7 +1615,7 @@ public enum MagicRuleEventAction {
         }
     },
     CounterOnSelf(
-        "put (?<amount>[a-z]+) (?<type>[^ ]+) counter(s)? on sn\\.",
+        "put (?<amount>[a-z]+) (?<type>[^ ]+) counter(s)? on " + ARG.IT + "\\.",
         MagicTiming.Pump
     ) {
         @Override
@@ -1608,7 +1626,7 @@ public enum MagicRuleEventAction {
                 @Override
                 public void executeEvent(final MagicGame game, final MagicEvent event) {
                     game.doAction(new MagicChangeCountersAction(
-                        event.getPermanent(),
+                        event.getPermanent(matcher),
                         counterType,
                         amount
                     ));
@@ -2429,16 +2447,16 @@ public enum MagicRuleEventAction {
         }
     ),
     SacrificeSelfEndCombat(
-            "sacrifice sn at end of combat\\.",
-            MagicTiming.Removal,
-            "Sacrifice",
-            new MagicEventAction() {
-                @Override
-                public void executeEvent(final MagicGame game, final MagicEvent event) {
-                    game.doAction(new MagicAddTriggerAction(event.getPermanent(), MagicAtEndOfCombatTrigger.Sacrifice));
-                }
+        "sacrifice sn at end of combat\\.",
+        MagicTiming.Removal,
+        "Sacrifice",
+        new MagicEventAction() {
+            @Override
+            public void executeEvent(final MagicGame game, final MagicEvent event) {
+                game.doAction(new MagicAddTriggerAction(event.getPermanent(), MagicAtEndOfCombatTrigger.Sacrifice));
             }
-        ),
+        }
+    ),
     SacrificeChosen(
         "sacrifice (?<permanent>[^\\.]*)\\.",
         MagicTiming.Removal,
@@ -2647,8 +2665,8 @@ public enum MagicRuleEventAction {
             @Override
             public void executeEvent(final MagicGame game, final MagicEvent event) {
                 event.processTargetPermanent(game,new MagicPermanentAction() {
-                public void doAction(final MagicPermanent creature) {
-                    game.doAction(new MagicAttachAction(event.getPermanent(),creature));
+                    public void doAction(final MagicPermanent creature) {
+                        game.doAction(new MagicAttachAction(event.getPermanent(),creature));
                     }
                 });
             }
@@ -3107,7 +3125,7 @@ public enum MagicRuleEventAction {
         if (mayCost != MagicManaCost.ZERO) {
             return new MagicSourceEvent(ruleAction, matcher) {
                 @Override
-                public MagicEvent getEvent(final MagicSource source) {
+                public MagicEvent getEvent(final MagicSource source, final MagicCopyable ref) {
                     return ifCond.accept(source) ? new MagicEvent(
                         source,
                         new MagicMayChoice(
@@ -3115,6 +3133,7 @@ public enum MagicRuleEventAction {
                             choice
                         ),
                         picker,
+                        ref,
                         new MagicEventAction() {
                             @Override
                             public void executeEvent(final MagicGame game, final MagicEvent event) {
@@ -3135,7 +3154,7 @@ public enum MagicRuleEventAction {
         } else if (optional) {
             return new MagicSourceEvent(ruleAction, matcher) {
                 @Override
-                public MagicEvent getEvent(final MagicSource source) {
+                public MagicEvent getEvent(final MagicSource source, final MagicCopyable ref) {
                     return ifCond.accept(source) ? new MagicEvent(
                         source,
                         new MagicMayChoice(
@@ -3143,6 +3162,7 @@ public enum MagicRuleEventAction {
                             choice
                         ),
                         picker,
+                        ref,
                         new MagicEventAction() {
                             @Override
                             public void executeEvent(final MagicGame game, final MagicEvent event) {
@@ -3163,11 +3183,12 @@ public enum MagicRuleEventAction {
         } else {
             return new MagicSourceEvent(ruleAction, matcher) {
                 @Override
-                public MagicEvent getEvent(final MagicSource source) {
+                public MagicEvent getEvent(final MagicSource source, final MagicCopyable ref) {
                     return ifCond.accept(source) ? new MagicEvent(
                         source,
                         choice,
                         picker,
+                        ref,
                         new MagicEventAction() {
                             @Override
                             public void executeEvent(final MagicGame game, final MagicEvent event) {
