@@ -1,5 +1,5 @@
 [
-    new OtherEntersBattlefieldTrigger() {
+    new MagicWhenOtherComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return otherPermanent.isController(permanent.getController().getOpponent()) &&
@@ -20,7 +20,7 @@
             game.addEvent(new MagicSacrificePermanentEvent(
                 event.getSource(),
                 event.getPlayer(),
-                SACRIFICE_LAND
+                MagicTargetChoice.SACRIFICE_LAND
             ));
         }
     }
