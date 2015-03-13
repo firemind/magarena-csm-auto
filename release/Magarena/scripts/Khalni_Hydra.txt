@@ -1,6 +1,6 @@
 name=Khalni Hydra
-image=http://magiccards.info/scans/en/roe/192.jpg
-value=4.252
+image=http://mtgimage.com/card/khalni%20hydra.jpg
+value=2.500
 rarity=M
 type=Creature
 subtype=Hydra
@@ -9,4 +9,4 @@ pt=8/8
 ability=Trample
 timing=main
 requires_groovy_code
-oracle=Khalni Hydra costs {G} less to cast for each green creature you control.\nTrample
+oracle=Khalni Hydra costs {G} less to cast for each green creature you control. Trample
