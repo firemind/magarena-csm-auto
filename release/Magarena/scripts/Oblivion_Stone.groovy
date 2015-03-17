@@ -1,7 +1,7 @@
 def NONLAND_PERMANENT_WITHOUT_FATE_COUNTER = new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicPermanent target) {
         return !target.isLand() && target.getCounters(MagicCounterType.Fade) == 0;
-    }
+    } 
 };
 
 [
@@ -30,14 +30,17 @@ def NONLAND_PERMANENT_WITHOUT_FATE_COUNTER = new MagicPermanentFilterImpl() {
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new DestroyAction(NONLAND_PERMANENT_WITHOUT_FATE_COUNTER.filter(event)));
-            PERMANENT.filter(event) each {
-                game.doAction(new ChangeCountersAction(
-                    it,
-                    MagicCounterType.Fate,
-                    -it.getCounters(MagicCounterType.Fate)
-                ));
-            }
+            final Collection<MagicPermanent> targets = 
+            game.filterPermanents(NONLAND_PERMANENT_WITHOUT_FATE_COUNTER);
+                game.doAction(new MagicDestroyAction(targets));
+                final List<MagicPermanent> permanents = game.filterPermanents(MagicTargetFilterFactory.PERMANENT);
+                for (final MagicPermanent permanent : permanents) {   
+                    game.doAction(new MagicChangeCountersAction(
+                        permanent,
+                        MagicCounterType.Fate,
+                        -permanent.getCounters(MagicCounterType.Fate)
+                    )); 
+            }   
         }
     }
 ]
