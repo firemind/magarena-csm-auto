@@ -22,7 +22,7 @@ def TEXT2 = "Until end of turn, lands you control become 2/2 creatures that are 
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                payedCost.isKicked() ?
+                payedCost.isKicked() ? 
                     MagicChoice.NONE :
                     new MagicOrChoice(
                         MagicChoice.NONE,
@@ -30,21 +30,29 @@ def TEXT2 = "Until end of turn, lands you control become 2/2 creatures that are 
                     ),
                 this,
                 payedCost.isKicked() ?
-                    TEXT1 + " " + TEXT2 :
-                    "Choose one\$ — (1) " + TEXT1 + " (2) " + TEXT2
+                    "Untap all lands you control. "+
+                    "Until end of turn, lands you control become 2/2 creatures that are still lands." :
+                    "Choose one\$ — • " + TEXT1 + " • " + TEXT2 + "\$"
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            if (event.isKicked() || event.isMode(1)) {
-                LAND_YOU_CONTROL.filter(event.getPlayer()) each {
-                    game.doAction(new UntapAction(it));
-                }
-            }
-            if (event.isKicked() || event.isMode(2)) {
-                LAND_YOU_CONTROL.filter(event.getPlayer()) each {
-                    game.doAction(new BecomesCreatureAction(it,PT,ST));
-                }
+            if (event.isKicked()) {
+                final Collection<MagicPermanent> targets = event.getPlayer().filterPermanents(MagicTargetFilterFactory.LAND_YOU_CONTROL); 
+                for (final MagicPermanent target : targets) {
+                    game.doAction(new MagicUntapAction(target));
+                    game.doAction(new MagicBecomesCreatureAction(target,PT,ST));
+                }         
+            } else if (event.isMode(1)) {
+                final Collection<MagicPermanent> targets = event.getPlayer().filterPermanents(MagicTargetFilterFactory.LAND_YOU_CONTROL); 
+                for (final MagicPermanent target : targets) {
+                    game.doAction(new MagicUntapAction(target));
+                }         
+            } else if (event.isMode(2)) {
+                final Collection<MagicPermanent> targets = event.getPlayer().filterPermanents(MagicTargetFilterFactory.LAND_YOU_CONTROL); 
+                for (final MagicPermanent target : targets) {
+                    game.doAction(new MagicBecomesCreatureAction(target,PT,ST));
+                }         
             }
         }
     }
