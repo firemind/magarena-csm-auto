@@ -1,28 +1,28 @@
 [
-    new EntersBattlefieldTrigger() {
+    new MagicWhenComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 permanent,
                 this,
-                "PN exiles all cards from his or her hand."
+                "Exile all cards from your hand."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicCardList hand = new MagicCardList(event.getPlayer().getHand());
             for (final MagicCard card : hand) {
-                game.doAction(new ExileLinkAction(
+                game.doAction(new MagicExileLinkAction(
                     event.getPermanent(),
                     card,
                     MagicLocationType.OwnersHand
                 ));
-            }
         }
-    },
-    new ThisLeavesBattlefieldTrigger() {
+    }
+},
+    new MagicWhenLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
             return new MagicEvent(
                 permanent,
                 this,
@@ -31,9 +31,10 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new ReturnLinkedExileAction(
+            game.doAction(new MagicReturnLinkedExileAction(
                 event.getPermanent(),
-                MagicLocationType.OwnersHand
+                MagicLocationType.OwnersHand,
+                event.getPlayer()
             ));
         }
     }
