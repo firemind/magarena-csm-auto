@@ -1,5 +1,5 @@
 name=Promise of Power
-image=http://magiccards.info/scans/en/c14/157.jpg
+image=http://mtgimage.com/card/promise%20of%20power.jpg
 value=2.500
 rarity=R
 type=Sorcery
@@ -7,4 +7,4 @@ cost={2}{B}{B}{B}
 ability=Entwine {4}
 timing=main
 requires_groovy_code
-oracle=Choose one — \n• You draw five cards and you lose 5 life.\n• Put an X/X black Demon creature token with flying onto the battlefield, where X is the number of cards in your hand.\nEntwine {4}
+oracle=Choose one — • You draw five cards and you lose 5 life. • Put an X/X black Demon creature token with flying onto the battlefield, where X is the number of cards in your hand as the token enters the battlefield. Entwine {4}

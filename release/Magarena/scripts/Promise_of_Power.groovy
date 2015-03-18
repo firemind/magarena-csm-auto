@@ -1,7 +1,7 @@
-def TEXT1 = "PN draws five cards and loses 5 life."
+def TEXT1 = "You draw five cards and you lose 5 life."
 
-def TEXT2 = "PN puts an X/X black Demon creature token with flying onto the battlefield, "+
-            "where X is the number of cards in his or her hand as the token enters the battlefield."
+def TEXT2 = "Put an X/X black Demon creature token with flying onto the battlefield, "+ 
+            "where X is the number of cards in your hand as the token enters the battlefield."
 
 [
     new MagicSpellCardEvent() {
@@ -9,7 +9,7 @@ def TEXT2 = "PN puts an X/X black Demon creature token with flying onto the batt
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                payedCost.isKicked() ?
+                payedCost.isKicked() ? 
                     MagicChoice.NONE :
                     new MagicOrChoice(
                         MagicChoice.NONE,
@@ -18,26 +18,27 @@ def TEXT2 = "PN puts an X/X black Demon creature token with flying onto the batt
                 this,
                 payedCost.isKicked() ?
                     TEXT1 + " " + TEXT2 :
-                    "Choose one\$ — (1) " + TEXT1 + " (2) " + TEXT2
+                    "Choose one\$ — • " + TEXT1 + " • " + TEXT2
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            if (event.isKicked() || event.isMode(1)) {
-                game.doAction(new DrawAction(event.getPlayer(),5));
-                game.doAction(new ChangeLifeAction(event.getPlayer(),-5));
+            if (event.isMode(1) || event.isKicked()) {
+                game.doAction(new MagicDrawAction(event.getPlayer(),5));
+                game.doAction(new MagicChangeLifeAction(event.getPlayer(),-5));
             }
-            if (event.isKicked() || event.isMode(2)) {
-                final MagicPlayer player = event.getPlayer();
-                final int amount = player.getHandSize();
-                game.logAppendValue(player,amount);
-                game.doAction(new PlayTokenAction(player, MagicCardDefinition.create(
-                    CardDefinitions.getToken("black Demon creature token with flying"),
-                    {
-                        it.setPowerToughness(amount, amount);
-                        it.setValue(amount);
-                    }
-                )));
+            if (event.isMode(2) || event.isKicked()) {
+            final int x = event.getPlayer().getHandSize();
+                game.doAction(new MagicPlayTokenAction(event.getPlayer(), MagicCardDefinition.create({
+                    it.setName("Demon");
+                    it.setFullName("black Demon creature token with flying");
+                    it.setPowerToughness(x, x);
+                    it.setColors("b");
+                    it.addSubType(MagicSubType.Demon);
+                    it.addType(MagicType.Creature);
+                    it.setToken();
+                    it.setValue(x);
+                })));
             }
         }
     }
