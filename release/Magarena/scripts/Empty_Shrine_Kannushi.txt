@@ -1,6 +1,6 @@
 name=Empty-Shrine Kannushi
 image=http://magiccards.info/scans/en/bok/2.jpg
-value=3.660
+value=2.500
 rarity=U
 type=Creature
 subtype=Human,Cleric
