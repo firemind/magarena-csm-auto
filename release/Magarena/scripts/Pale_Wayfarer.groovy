@@ -1,6 +1,6 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
-    game.doAction(new GainAbilityAction(
+    game.doAction(new MagicGainAbilityAction(
         event.getRefPermanent(),
         event.getChosenColor().getProtectionAbility()
     ));
@@ -22,7 +22,7 @@ def action = {
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                POS_TARGET_CREATURE,
+                MagicTargetChoice.POS_TARGET_CREATURE,
                 this,
                 "Target creature\$ gains protection from the color of its controller's choice until end of turn."
             );
