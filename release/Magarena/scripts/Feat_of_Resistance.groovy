@@ -1,7 +1,7 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
-    game.doAction(new ChangeCountersAction(event.getRefPermanent(),MagicCounterType.PlusOne,1));
-    game.doAction(new GainAbilityAction(
+    game.doAction(new MagicChangeCountersAction(event.getRefPermanent(),MagicCounterType.PlusOne,1));
+    game.doAction(new MagicGainAbilityAction(
         event.getRefPermanent(),
         event.getChosenColor().getProtectionAbility()
     ));
@@ -13,10 +13,10 @@ def action = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                TARGET_CREATURE_YOU_CONTROL,
+                MagicTargetChoice.TARGET_CREATURE_YOU_CONTROL,
                 this,
-                "PN puts a +1/+1 counter on target creature he or she controls.\$ "+
-                "It gains protection from the color of PN's choice until end of turn."
+                "Put a +1/+1 counter on target creature\$ you control. "+
+                "It gains protection from the color of your choice until end of turn."
             );
         }
         @Override
