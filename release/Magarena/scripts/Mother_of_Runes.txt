@@ -6,6 +6,6 @@ type=Creature
 subtype=Human,Cleric
 cost={W}
 pt=1/1
-ability={T}: Target creature you control gains protection from the color of your choice until end of turn.
 timing=main
+requires_groovy_code
 oracle={T}: Target creature you control gains protection from the color of your choice until end of turn.
