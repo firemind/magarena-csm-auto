@@ -1,9 +1,9 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     if (event.isYes()) {
-        game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),5));
+        game.doAction(new MagicDealDamageAction(event.getSource(),event.getPlayer(),5));
     } else {
-        game.doAction(new DrawAction(event.getRefPlayer(),3));
+        game.doAction(new MagicDrawAction(event.getRefPlayer(),3));
     }
 }
 
@@ -13,10 +13,9 @@ def action = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                POS_TARGET_PLAYER,
+                MagicTargetChoice.POS_TARGET_PLAYER,
                 this,
-                "PN's opponent may have SN deal 5 damage to him or her. " +
-                "If he or she doesn't, target player\$ draws three cards."
+                "Your opponent may have SN deal 5 damage to him or her. If he or she doesn't, target player\$ draws three cards."
             );
         }
         @Override
@@ -25,10 +24,10 @@ def action = {
                 game.addEvent(new MagicEvent(
                     event.getSource(),
                     event.getPlayer().getOpponent(),
-                    new MagicMayChoice("Have SN deal 5 damage to you?"),
+                    new MagicMayChoice("have SN deal 5 damage to you?"),
                     it,
                     action,
-                    "PN may\$ have SN deal 5 damage to him or her. If he or she doesn't, RN draws 3 cards."
+                    "PN may\$ have SN deal 5 damage to you. If you don't, your opponent draws 3 cards."
                 ));
             });
         }
