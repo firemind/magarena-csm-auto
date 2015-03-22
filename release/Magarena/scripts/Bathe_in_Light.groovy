@@ -1,8 +1,48 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
-    CREATURE.filter(event) each {
-        if (it.getColorFlags() & event.getRefPermanent().getColorFlags()) {
-            game.doAction(new GainAbilityAction(it, event.getChosenColor().getProtectionAbility()));
+    if (event.getRefPermanent().hasColor(MagicColor.Black)) {
+        final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.BLACK_CREATURE);
+        for (final MagicPermanent creature : creatures) {
+            game.doAction(new MagicGainAbilityAction(
+                creature,
+                event.getChosenColor().getProtectionAbility()
+            ));
+        }
+    }
+    if (event.getRefPermanent().hasColor(MagicColor.Blue)) {
+        final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.BLUE_CREATURE);
+        for (final MagicPermanent creature : creatures) {
+            game.doAction(new MagicGainAbilityAction(
+                creature,
+                event.getChosenColor().getProtectionAbility()
+            ));
+        }
+    }
+    if (event.getRefPermanent().hasColor(MagicColor.Green)) {
+        final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.GREEN_CREATURE);
+        for (final MagicPermanent creature : creatures) {
+            game.doAction(new MagicGainAbilityAction(
+                creature,
+                event.getChosenColor().getProtectionAbility()
+            ));
+        }
+    }
+    if (event.getRefPermanent().hasColor(MagicColor.Red)) {
+        final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.RED_CREATURE);
+        for (final MagicPermanent creature : creatures) {
+            game.doAction(new MagicGainAbilityAction(
+                creature,
+                event.getChosenColor().getProtectionAbility()
+            ));
+        }
+    }
+    if (event.getRefPermanent().hasColor(MagicColor.White)) {
+        final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.WHITE_CREATURE);
+        for (final MagicPermanent creature : creatures) {
+            game.doAction(new MagicGainAbilityAction(
+                creature,
+                event.getChosenColor().getProtectionAbility()
+            ));
         }
     }
 }
@@ -13,10 +53,10 @@ def action = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                POS_TARGET_CREATURE,
+                MagicTargetChoice.POS_TARGET_CREATURE,
                 this,
                 "Target creature\$ and each other creature that shares a color with it " +
-                "gain protection from the color of PN's choice until end of turn."
+                "gain protection from the color of your choice until end of turn."
             );
         }
         @Override
