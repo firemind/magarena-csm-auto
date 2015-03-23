@@ -1,5 +1,5 @@
 name=Lord Magnus
-image=http://mtgimage.com/card/lord%20magnus.jpg
+image=http://magiccards.info/scans/en/lg/283.jpg
 value=2.500
 rarity=U
 type=Legendary,Creature

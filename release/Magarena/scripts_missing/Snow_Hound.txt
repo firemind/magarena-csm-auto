@@ -1,5 +1,5 @@
 name=Snow Hound
-image=http://mtgimage.com/card/snow%20hound.jpg
+image=http://magiccards.info/scans/en/ia/277.jpg
 value=2.500
 rarity=U
 type=Creature

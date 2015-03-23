@@ -1,5 +1,5 @@
 name=Mirri's Guile
-image=http://mtgimage.com/card/mirri%27s%20guile.jpg
+image=http://magiccards.info/scans/en/tp/130.jpg
 value=2.500
 rarity=R
 type=Enchantment

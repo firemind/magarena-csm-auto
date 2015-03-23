@@ -1,5 +1,5 @@
 name=Cobblebrute
-image=http://mtgimage.com/card/cobblebrute.jpg
+image=http://magiccards.info/scans/en/rtr/91.jpg
 value=2.125
 rarity=C
 type=Creature
@@ -7,3 +7,4 @@ subtype=Elemental
 cost={3}{R}
 pt=5/2
 timing=main
+oracle=NONE

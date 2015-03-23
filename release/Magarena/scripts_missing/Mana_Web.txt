@@ -1,5 +1,5 @@
 name=Mana Web
-image=http://mtgimage.com/card/mana%20web.jpg
+image=http://magiccards.info/scans/en/wl/152.jpg
 value=2.500
 rarity=R
 type=Artifact

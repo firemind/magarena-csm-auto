@@ -1,5 +1,5 @@
 name=Lurker
-image=http://mtgimage.com/card/lurker.jpg
+image=http://magiccards.info/scans/en/dk/43.jpg
 value=2.500
 rarity=R
 type=Creature

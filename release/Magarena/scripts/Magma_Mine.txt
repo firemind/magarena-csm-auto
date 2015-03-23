@@ -1,5 +1,5 @@
 name=Magma Mine
-image=http://mtgimage.com/card/magma%20mine.jpg
+image=http://magiccards.info/scans/en/vi/149.jpg
 value=3.058
 rarity=U
 type=Artifact

@@ -1,5 +1,5 @@
 name=Mind Harness
-image=http://mtgimage.com/card/mind%20harness.jpg
+image=http://magiccards.info/scans/en/mr/78.jpg
 value=3.096
 rarity=U
 type=Enchantment

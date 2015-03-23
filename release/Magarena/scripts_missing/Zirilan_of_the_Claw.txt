@@ -1,5 +1,5 @@
 name=Zirilan of the Claw
-image=http://mtgimage.com/card/zirilan%20of%20the%20claw.jpg
+image=http://magiccards.info/scans/en/mr/204.jpg
 value=2.500
 rarity=R
 type=Legendary,Creature

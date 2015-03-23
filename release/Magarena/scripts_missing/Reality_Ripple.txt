@@ -1,5 +1,5 @@
 name=Reality Ripple
-image=http://mtgimage.com/card/reality%20ripple.jpg
+image=http://magiccards.info/scans/en/mr/87.jpg
 value=2.500
 rarity=C
 type=Instant

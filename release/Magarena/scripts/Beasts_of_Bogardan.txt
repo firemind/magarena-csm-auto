@@ -1,5 +1,5 @@
 name=Beasts of Bogardan
-image=http://mtgimage.com/card/beasts%20of%20bogardan.jpg
+image=http://magiccards.info/scans/en/ch/45.jpg
 value=2.440
 rarity=U
 type=Creature

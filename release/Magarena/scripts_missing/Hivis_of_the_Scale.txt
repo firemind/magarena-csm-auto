@@ -1,5 +1,5 @@
 name=Hivis of the Scale
-image=http://mtgimage.com/card/hivis%20of%20the%20scale.jpg
+image=http://magiccards.info/scans/en/mr/182.jpg
 value=2.500
 rarity=R
 type=Legendary,Creature

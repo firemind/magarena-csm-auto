@@ -1,5 +1,5 @@
 name=Jungle Patrol
-image=http://mtgimage.com/card/jungle%20patrol.jpg
+image=http://magiccards.info/scans/en/mr/121.jpg
 value=2.500
 rarity=R
 type=Creature

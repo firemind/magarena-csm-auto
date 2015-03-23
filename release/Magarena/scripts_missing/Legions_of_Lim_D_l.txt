@@ -1,5 +1,5 @@
 name=Legions of Lim-Dûl
-image=http://mtgimage.com/card/legions%20of%20lim-dul.jpg
+image=http://magiccards.info/scans/en/cstd/29.jpg
 value=2.500
 rarity=C
 type=Creature

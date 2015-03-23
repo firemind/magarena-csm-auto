@@ -1,5 +1,5 @@
 name=Phyrexian Dreadnought
-image=http://mtgimage.com/card/phyrexian%20dreadnought.jpg
+image=http://magiccards.info/scans/en/mr/280.jpg
 value=2.500
 rarity=R
 type=Artifact,Creature

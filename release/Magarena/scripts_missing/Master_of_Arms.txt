@@ -1,5 +1,5 @@
 name=Master of Arms
-image=http://mtgimage.com/card/master%20of%20arms.jpg
+image=http://magiccards.info/scans/en/wl/136.jpg
 value=2.500
 rarity=U
 type=Creature

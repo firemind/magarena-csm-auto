@@ -1,5 +1,5 @@
 name=Tidal Control
-image=http://mtgimage.com/card/tidal%20control.jpg
+image=http://magiccards.info/scans/en/ai/59.jpg
 value=2.500
 rarity=R
 type=Enchantment

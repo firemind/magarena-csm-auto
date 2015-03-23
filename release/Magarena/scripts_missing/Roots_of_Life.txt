@@ -1,5 +1,5 @@
 name=Roots of Life
-image=http://mtgimage.com/card/roots%20of%20life.jpg
+image=http://magiccards.info/scans/en/mr/135.jpg
 value=2.500
 rarity=U
 type=Enchantment

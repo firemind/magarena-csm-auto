@@ -1,5 +1,5 @@
 name=Avizoa
-image=http://mtgimage.com/card/avizoa.jpg
+image=http://magiccards.info/scans/en/wl/35.jpg
 value=2.500
 rarity=R
 type=Creature

@@ -1,5 +1,5 @@
 name=Uktabi Faerie
-image=http://mtgimage.com/card/uktabi%20faerie.jpg
+image=http://magiccards.info/scans/en/mr/145.jpg
 value=2.439
 rarity=C
 type=Creature

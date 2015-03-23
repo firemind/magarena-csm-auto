@@ -1,5 +1,5 @@
 name=Mountain Stronghold
-image=http://mtgimage.com/card/mountain%20stronghold.jpg
+image=http://magiccards.info/scans/en/lg/249.jpg
 value=2.500
 rarity=U
 type=Land

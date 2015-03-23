@@ -1,5 +1,5 @@
 name=Lim-Dûl's Hex
-image=http://mtgimage.com/card/lim-dul%27s%20hex.jpg
+image=http://magiccards.info/scans/en/ia/34.jpg
 value=2.500
 rarity=U
 type=Enchantment

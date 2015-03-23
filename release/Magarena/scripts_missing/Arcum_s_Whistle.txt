@@ -1,5 +1,5 @@
 name=Arcum's Whistle
-image=http://mtgimage.com/card/arcum%27s%20whistle.jpg
+image=http://magiccards.info/scans/en/ia/286.jpg
 value=2.500
 rarity=U
 type=Artifact

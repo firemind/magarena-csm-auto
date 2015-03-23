@@ -1,5 +1,5 @@
 name=Teferi's Imp
-image=http://mtgimage.com/card/teferi%27s%20imp.jpg
+image=http://magiccards.info/scans/en/mr/98.jpg
 value=2.500
 rarity=R
 type=Creature

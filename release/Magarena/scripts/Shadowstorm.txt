@@ -1,5 +1,5 @@
 name=Shadowstorm
-image=http://mtgimage.com/card/shadowstorm.jpg
+image=http://magiccards.info/scans/en/tp/202.jpg
 value=2.065
 removal=1
 rarity=U

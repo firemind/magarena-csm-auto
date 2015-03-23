@@ -1,5 +1,5 @@
 name=Teferi's Veil
-image=http://mtgimage.com/card/teferi%27s%20veil.jpg
+image=http://magiccards.info/scans/en/wl/53.jpg
 value=2.500
 rarity=U
 type=Enchantment

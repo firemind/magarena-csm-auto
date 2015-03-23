@@ -1,9 +1,10 @@
 name=Loamdragger Giant
-image=http://mtgimage.com/card/loamdragger%20giant.jpg
-value=2.370
+image=http://magiccards.info/scans/en/shm/210.jpg
+value=2.500
 rarity=C
 type=Creature
 subtype=Giant,Warrior
 cost={4}{R/G}{R/G}{R/G}
 pt=7/6
 timing=main
+oracle=NONE

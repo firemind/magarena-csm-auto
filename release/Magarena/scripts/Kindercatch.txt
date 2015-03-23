@@ -1,9 +1,10 @@
 name=Kindercatch
-image=http://mtgimage.com/card/kindercatch.jpg
-value=2.674
+image=http://magiccards.info/scans/en/isd/190.jpg
+value=2.500
 rarity=C
 type=Creature
 subtype=Spirit
 cost={3}{G}{G}{G}
 pt=6/6
 timing=main
+oracle=NONE

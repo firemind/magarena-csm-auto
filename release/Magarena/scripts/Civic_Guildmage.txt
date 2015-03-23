@@ -1,5 +1,5 @@
 name=Civic Guildmage
-image=http://mtgimage.com/card/civic%20guildmage.jpg
+image=http://magiccards.info/scans/en/mr/211.jpg
 value=2.438
 rarity=C
 type=Creature

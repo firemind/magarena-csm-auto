@@ -1,5 +1,5 @@
 name=Sorcerous Sight
-image=http://mtgimage.com/card/sorcerous%20sight.jpg
+image=http://magiccards.info/scans/en/po/69.jpg
 value=2.500
 rarity=C
 type=Sorcery

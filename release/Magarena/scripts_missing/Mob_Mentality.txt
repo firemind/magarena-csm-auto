@@ -1,5 +1,5 @@
 name=Mob Mentality
-image=http://mtgimage.com/card/mob%20mentality.jpg
+image=http://magiccards.info/scans/en/vi/88.jpg
 value=2.500
 rarity=U
 type=Enchantment

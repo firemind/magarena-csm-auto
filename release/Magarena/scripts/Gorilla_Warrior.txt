@@ -1,9 +1,10 @@
 name=Gorilla Warrior
-image=http://mtgimage.com/card/gorilla%20warrior.jpg
-value=2.700
+image=http://magiccards.info/scans/en/br/30.jpg
+value=2.500
 rarity=C
 type=Creature
 subtype=Ape,Warrior
 cost={2}{G}
 pt=3/2
 timing=main
+oracle=NONE

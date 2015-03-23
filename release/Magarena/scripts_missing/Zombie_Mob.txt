@@ -1,5 +1,5 @@
 name=Zombie Mob
-image=http://mtgimage.com/card/zombie%20mob.jpg
+image=http://magiccards.info/scans/en/mr/51.jpg
 value=2.500
 rarity=U
 type=Creature

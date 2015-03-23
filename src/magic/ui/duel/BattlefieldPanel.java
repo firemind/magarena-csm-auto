@@ -1,9 +1,9 @@
 package magic.ui.duel;
 
-import magic.ui.duel.animation.PlayCardAnimation;
 import javax.swing.JPanel;
 import magic.model.MagicCardList;
 import magic.model.event.MagicEvent;
+import magic.ui.duel.animation.PlayCardAnimation;
 import magic.ui.duel.resolution.ResolutionProfileResult;
 import magic.ui.duel.viewer.StackViewer;
 

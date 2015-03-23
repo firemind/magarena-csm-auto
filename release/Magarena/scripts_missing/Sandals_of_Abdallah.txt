@@ -1,5 +1,5 @@
 name=Sandals of Abdallah
-image=http://mtgimage.com/card/sandals%20of%20abdallah.jpg
+image=http://magiccards.info/scans/en/an/83.jpg
 value=2.500
 rarity=U
 type=Artifact

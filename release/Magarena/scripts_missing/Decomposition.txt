@@ -1,5 +1,5 @@
 name=Decomposition
-image=http://mtgimage.com/card/decomposition.jpg
+image=http://magiccards.info/scans/en/mr/110.jpg
 value=2.500
 rarity=U
 type=Enchantment

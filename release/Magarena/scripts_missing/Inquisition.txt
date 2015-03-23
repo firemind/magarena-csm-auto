@@ -1,5 +1,5 @@
 name=Inquisition
-image=http://mtgimage.com/card/inquisition.jpg
+image=http://magiccards.info/scans/en/dk/9.jpg
 value=2.500
 rarity=C
 type=Sorcery

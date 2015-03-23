@@ -1,5 +1,5 @@
 name=Invoke Prejudice
-image=http://mtgimage.com/card/invoke%20prejudice.jpg
+image=http://magiccards.info/scans/en/lg/62.jpg
 value=2.500
 rarity=R
 type=Enchantment

@@ -1,5 +1,5 @@
 name=Corrosion
-image=http://mtgimage.com/card/corrosion.jpg
+image=http://magiccards.info/scans/en/vi/128.jpg
 value=2.500
 rarity=R
 type=Enchantment

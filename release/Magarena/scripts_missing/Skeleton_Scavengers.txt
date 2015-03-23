@@ -1,5 +1,5 @@
 name=Skeleton Scavengers
-image=http://mtgimage.com/card/skeleton%20scavengers.jpg
+image=http://magiccards.info/scans/en/sh/20.jpg
 value=2.500
 rarity=R
 type=Creature

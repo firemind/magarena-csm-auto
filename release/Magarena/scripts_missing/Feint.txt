@@ -1,5 +1,5 @@
 name=Feint
-image=http://mtgimage.com/card/feint.jpg
+image=http://magiccards.info/scans/en/lg/144.jpg
 value=2.500
 rarity=C
 type=Instant

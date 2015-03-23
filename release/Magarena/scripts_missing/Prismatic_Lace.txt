@@ -1,5 +1,5 @@
 name=Prismatic Lace
-image=http://mtgimage.com/card/prismatic%20lace.jpg
+image=http://magiccards.info/scans/en/mr/84.jpg
 value=2.500
 rarity=R
 type=Instant

@@ -420,7 +420,7 @@ public class MagicEvent implements MagicCopyable {
     }
 
     public MagicTargetChoice getTargetChoice() {
-        return choice.getTargetChoice();
+        return chosen != null ? choice.getTargetChoice(chosen) : choice.getTargetChoice();
     }
 
     public void clearTargetChoice(Object[] choiceResults) {
@@ -662,6 +662,12 @@ public class MagicEvent implements MagicCopyable {
         chosen = choiceResults;
         action.executeEvent(game,this);
         chosen = null;
+    }
+    
+    public final void executeAllEvents(final MagicGame game, final MagicSourceEvent... sourceEvents) {
+        for (int i = 0; i < sourceEvents.length; i++) {
+            sourceEvents[i].getEvent(getSource()).executeEvent(game, getChosen());
+        }
     }
 
     public final void executeModalEvent(final MagicGame game, final MagicSourceEvent... sourceEvents) {

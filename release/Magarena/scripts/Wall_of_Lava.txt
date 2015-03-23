@@ -1,5 +1,5 @@
 name=Wall of Lava
-image=http://mtgimage.com/card/wall%20of%20lava.jpg
+image=http://magiccards.info/scans/en/ia/223.jpg
 value=3.171
 rarity=U
 type=Creature

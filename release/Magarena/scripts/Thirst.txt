@@ -1,5 +1,5 @@
 name=Thirst
-image=http://mtgimage.com/card/thirst.jpg
+image=http://magiccards.info/scans/en/mr/99.jpg
 value=3.045
 rarity=C
 type=Enchantment

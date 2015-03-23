@@ -1,5 +1,5 @@
 name=Deep Wood
-image=http://mtgimage.com/card/deep%20wood.jpg
+image=http://magiccards.info/scans/en/po2/66.jpg
 value=2.500
 rarity=U
 type=Instant

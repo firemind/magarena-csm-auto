@@ -1,5 +1,5 @@
 name=Cold Storage
-image=http://mtgimage.com/card/cold%20storage.jpg
+image=http://magiccards.info/scans/en/tp/270.jpg
 value=2.500
 rarity=R
 type=Artifact

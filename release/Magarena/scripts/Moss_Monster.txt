@@ -1,9 +1,10 @@
 name=Moss Monster
-image=http://mtgimage.com/card/moss%20monster.jpg
-value=1.870
+image=http://magiccards.info/scans/en/8e/267.jpg
+value=2.500
 rarity=C
 type=Creature
 subtype=Elemental
 cost={3}{G}{G}
 pt=3/6
 timing=main
+oracle=NONE

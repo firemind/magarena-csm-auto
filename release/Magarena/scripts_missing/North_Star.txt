@@ -1,5 +1,5 @@
 name=North Star
-image=http://mtgimage.com/card/north%20star.jpg
+image=http://magiccards.info/scans/en/lg/233.jpg
 value=2.500
 rarity=R
 type=Artifact

@@ -1,5 +1,5 @@
 name=Sylvan Hierophant
-image=http://mtgimage.com/card/sylvan%20hierophant.jpg
+image=http://magiccards.info/scans/en/wl/83.jpg
 value=2.500
 rarity=U
 type=Creature

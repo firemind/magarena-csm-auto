@@ -1,5 +1,5 @@
 name=Touch of Darkness
-image=http://mtgimage.com/card/touch%20of%20darkness.jpg
+image=http://magiccards.info/scans/en/lg/36.jpg
 value=2.500
 rarity=U
 type=Instant

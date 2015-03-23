@@ -1,5 +1,5 @@
 name=Surge of Strength
-image=http://mtgimage.com/card/surge%20of%20strength.jpg
+image=http://magiccards.info/scans/en/ai/197.jpg
 value=3.329
 rarity=U
 type=Instant

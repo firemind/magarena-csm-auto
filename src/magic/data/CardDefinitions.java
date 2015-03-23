@@ -12,6 +12,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,10 +137,12 @@ public class CardDefinitions {
     //link to groovy script that returns array of MagicChangeCardDefinition objects
     static void addCardSpecificGroovyCode(final MagicCardDefinition cardDefinition, final String cardName) {
         try {
+            final File groovyFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".groovy");
+            if (groovyFile.isFile() == false) {
+                throw new RuntimeException("groovy file not found: " + groovyFile);
+            }
             @SuppressWarnings("unchecked")
-            final List<MagicChangeCardDefinition> defs = (List<MagicChangeCardDefinition>)shell.evaluate(
-                new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".groovy")
-            );
+            final List<MagicChangeCardDefinition> defs = (List<MagicChangeCardDefinition>)shell.evaluate(groovyFile);
             for (MagicChangeCardDefinition ccd : defs) {
                 ccd.change(cardDefinition);
             }
@@ -170,9 +173,11 @@ public class CardDefinitions {
     }
     
     public static void loadCardDefinition(final String cardName) {
-         loadCardDefinition(
-            new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt")
-         );
+         final File cardFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt");
+         if (cardFile.isFile() == false) {
+             throw new RuntimeException("card script file not found: " + cardFile);
+         }
+         loadCardDefinition(cardFile);
     }
 
     /**
@@ -381,9 +386,11 @@ public class CardDefinitions {
     }
 
     public static boolean isMissingImages() {
+        final Date lastDownloaderRunDate = GeneralConfig.getInstance().getImageDownloaderRunDate();
         for (final MagicCardDefinition card : getAllPlayableCardDefs()) {
             if (card.getImageURL() != null) {
-                if (!MagicFileSystem.getCardImageFile(card).exists()) {
+                if (!MagicFileSystem.getCardImageFile(card).exists() || 
+                        card.isImageUpdatedAfter(lastDownloaderRunDate)) {
                     return true;
                 }
             }

@@ -1,5 +1,5 @@
 name=Elixir of Vitality
-image=http://mtgimage.com/card/elixir%20of%20vitality.jpg
+image=http://magiccards.info/scans/en/mr/265.jpg
 value=1.581
 rarity=U
 type=Artifact

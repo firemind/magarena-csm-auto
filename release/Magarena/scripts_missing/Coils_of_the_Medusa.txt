@@ -1,5 +1,5 @@
 name=Coils of the Medusa
-image=http://mtgimage.com/card/coils%20of%20the%20medusa.jpg
+image=http://magiccards.info/scans/en/wl/7.jpg
 value=2.500
 rarity=C
 type=Enchantment

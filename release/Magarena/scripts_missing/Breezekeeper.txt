@@ -1,5 +1,5 @@
 name=Breezekeeper
-image=http://mtgimage.com/card/breezekeeper.jpg
+image=http://magiccards.info/scans/en/vi/27.jpg
 value=2.500
 rarity=C
 type=Creature

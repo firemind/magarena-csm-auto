@@ -1,5 +1,5 @@
 name=Mogg Squad
-image=http://mtgimage.com/card/mogg%20squad.jpg
+image=http://magiccards.info/scans/en/tp/192.jpg
 value=1.223
 rarity=U
 type=Creature

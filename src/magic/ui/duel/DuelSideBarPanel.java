@@ -1,41 +1,52 @@
 package magic.ui.duel;
 
-import magic.ui.duel.viewer.PlayerViewer;
 import javax.swing.JPanel;
 import magic.data.GeneralConfig;
+import magic.model.MagicPlayerZone;
+import magic.ui.IPlayerZoneListener;
 import magic.ui.SwingGameController;
+import magic.ui.duel.player.GamePlayerPanel;
+import magic.ui.duel.player.PlayerZoneButtonsPanel;
 import magic.ui.duel.resolution.DefaultResolutionProfile;
-import magic.ui.duel.resolution.ResolutionProfileResult;
-import magic.ui.duel.resolution.ResolutionProfileType;
 import magic.ui.duel.viewer.GameStatusPanel;
 import magic.ui.duel.viewer.LogBookViewer;
 import magic.ui.duel.viewer.LogStackViewer;
+import magic.ui.duel.viewer.PlayerViewerInfo;
 import magic.ui.duel.viewer.StackViewer;
 import magic.ui.widget.FontsAndBorders;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-public class DuelSideBarPanel extends JPanel {
+public class DuelSideBarPanel extends JPanel implements IPlayerZoneListener {
 
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
 
-    private final PlayerViewer opponentViewer;
-    private final PlayerViewer playerViewer;
+    private final GamePlayerPanel opponentViewer;
+    private final GamePlayerPanel playerViewer;
     private final LogStackViewer logStackViewer;
     private final LogBookViewer logBookViewer;
     private final GameStatusPanel gameStatusPanel;
+    private final SwingGameController controller;
 
     DuelSideBarPanel(final SwingGameController controller, final StackViewer imageStackViewer) {
-        setOpaque(false);
-        //
-        opponentViewer = new PlayerViewer(controller, true);
-        playerViewer = new PlayerViewer(controller, false);
+        this.controller = controller;
+
+        PlayerZoneButtonsPanel.clearButtonGroup();
+        opponentViewer = new GamePlayerPanel(controller, controller.getViewerInfo().getPlayerInfo(true));
+        playerViewer = new GamePlayerPanel(controller, controller.getViewerInfo().getPlayerInfo(false));
+
         logBookViewer = new LogBookViewer(controller.getGame().getLogBook());
         logBookViewer.setVisible(!CONFIG.isLogViewerDisabled());
+
         logStackViewer = new LogStackViewer(logBookViewer, imageStackViewer);
         logStackViewer.setBackground(FontsAndBorders.TRANSLUCENT_WHITE_STRONG);
+
         gameStatusPanel= new GameStatusPanel(controller);
         gameStatusPanel.setBackground(FontsAndBorders.TRANSLUCENT_WHITE_STRONG);
+
+        controller.addPlayerZoneListener(this);
+
+        setOpaque(false);
     }
 
     GameStatusPanel getGameStatusPanel() {
@@ -64,21 +75,18 @@ public class DuelSideBarPanel extends JPanel {
     }
 
     void doUpdate() {
-        opponentViewer.update();
-        playerViewer.update();
+        opponentViewer.updateDisplay(controller.getViewerInfo().getPlayerInfo(true));
+        playerViewer.updateDisplay(controller.getViewerInfo().getPlayerInfo(false));
         gameStatusPanel.update();
     }
 
-    void resizeComponents(final ResolutionProfileResult result) {
-        opponentViewer.setSmall(result.getFlag(ResolutionProfileType.GamePlayerViewerSmall));
-        playerViewer.setBounds(result.getBoundary(ResolutionProfileType.GamePlayerViewer));
-        playerViewer.setSmall(result.getFlag(ResolutionProfileType.GamePlayerViewerSmall));
-        gameStatusPanel.setBounds(result.getBoundary(ResolutionProfileType.GameStatusPanel));
-    }
-
-    void setStartEndTurnState() {
-        opponentViewer.getAvatarPanel().setSelected(false);
-        playerViewer.getAvatarPanel().setSelected(false);
+    @Override
+    public void setActivePlayerZone(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
+        if (playerInfo == controller.getViewerInfo().getPlayerInfo(true)) {
+            opponentViewer.setActiveZone(zone);
+        } else {
+            playerViewer.setActiveZone(zone);
+        }
     }
 
 }

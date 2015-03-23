@@ -1,5 +1,5 @@
 name=Tourach's Chant
-image=http://mtgimage.com/card/tourach%27s%20chant.jpg
+image=http://magiccards.info/scans/en/fe/32.jpg
 value=2.500
 rarity=U
 type=Enchantment

@@ -1,5 +1,5 @@
 name=Magnetic Web
-image=http://mtgimage.com/card/magnetic%20web.jpg
+image=http://magiccards.info/scans/en/tp/285.jpg
 value=2.500
 rarity=R
 type=Artifact

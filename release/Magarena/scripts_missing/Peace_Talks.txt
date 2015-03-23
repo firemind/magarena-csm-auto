@@ -1,5 +1,5 @@
 name=Peace Talks
-image=http://mtgimage.com/card/peace%20talks.jpg
+image=http://magiccards.info/scans/en/vi/115.jpg
 value=2.500
 rarity=U
 type=Sorcery

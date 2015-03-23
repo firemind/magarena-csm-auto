@@ -1,5 +1,5 @@
 name=Sand Silos
-image=http://mtgimage.com/card/sand%20silos.jpg
+image=http://magiccards.info/scans/en/5e/439.jpg
 value=2.500
 rarity=R
 type=Land

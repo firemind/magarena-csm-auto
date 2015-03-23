@@ -1,5 +1,5 @@
 name=Gallowbraid
-image=http://mtgimage.com/card/gallowbraid.jpg
+image=http://magiccards.info/scans/en/wl/12.jpg
 value=2.500
 rarity=R
 type=Legendary,Creature

@@ -1,5 +1,5 @@
 name=Teferi's Isle
-image=http://mtgimage.com/card/teferi%27s%20isle.jpg
+image=http://magiccards.info/scans/en/mr/315.jpg
 value=2.500
 rarity=R
 type=Legendary,Land

@@ -1,5 +1,5 @@
 name=Martyrdom
-image=http://mtgimage.com/card/martyrdom.jpg
+image=http://magiccards.info/scans/en/ai/139.jpg
 value=2.500
 rarity=C
 type=Instant

@@ -1,5 +1,5 @@
 name=Flooded Woodlands
-image=http://mtgimage.com/card/flooded%20woodlands.jpg
+image=http://magiccards.info/scans/en/ia/368.jpg
 value=2.500
 rarity=R
 type=Enchantment

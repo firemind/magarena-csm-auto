@@ -1,0 +1,9 @@
+name=Hydroblast
+image=http://magiccards.info/scans/en/med/37.jpg
+value=2.500
+rarity=C
+type=Instant
+cost={U}
+effect=Choose one — • Counter target red spell. • Destroy target red permanent.
+timing=removal
+oracle=Choose one — • Counter target spell if it's red. • Destroy target permanent if it's red.

@@ -1,5 +1,5 @@
 name=Season of the Witch
-image=http://mtgimage.com/card/season%20of%20the%20witch.jpg
+image=http://magiccards.info/scans/en/dk/14.jpg
 value=2.500
 rarity=R
 type=Enchantment

@@ -1,5 +1,5 @@
 name=Lichenthrope
-image=http://mtgimage.com/card/lichenthrope.jpg
+image=http://magiccards.info/scans/en/vi/62.jpg
 value=2.500
 rarity=R
 type=Creature

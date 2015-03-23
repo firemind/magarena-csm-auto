@@ -1,5 +1,5 @@
 name=Lure of Prey
-image=http://mtgimage.com/card/lure%20of%20prey.jpg
+image=http://magiccards.info/scans/en/mr/125.jpg
 value=2.500
 rarity=R
 type=Instant

@@ -1,5 +1,5 @@
 name=Kaervek's Hex
-image=http://mtgimage.com/card/kaervek%27s%20hex.jpg
+image=http://magiccards.info/scans/en/mr/28.jpg
 value=2.500
 rarity=U
 type=Sorcery

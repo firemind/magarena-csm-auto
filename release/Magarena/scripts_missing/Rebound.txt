@@ -1,5 +1,5 @@
 name=Rebound
-image=http://mtgimage.com/card/rebound.jpg
+image=http://magiccards.info/scans/en/sh/40.jpg
 value=2.500
 rarity=U
 type=Instant

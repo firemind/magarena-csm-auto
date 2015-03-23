@@ -12,6 +12,7 @@ import magic.model.condition.MagicConditionFactory;
 import magic.model.condition.MagicConditionParser;
 import magic.model.trigger.MagicThiefTrigger.Player;
 import magic.model.trigger.MagicThiefTrigger.Type;
+import magic.exception.ScriptParseException;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -222,6 +223,14 @@ public enum MagicAbility {
     BlocksEffect("When(ever)? SN blocks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicWhenSelfBlocksTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    BlocksCreatureEffect("When(ever)? SN blocks (a|an) " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicWhenSelfBlocksTrigger.create(
+                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
@@ -534,6 +543,11 @@ public enum MagicAbility {
     Buyback("buyback " + ARG.COST, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicKickerCost.Buyback(new MagicRegularCostEvent(ARG.cost(arg))));
+        }
+    },
+    Entwine("entwine " + ARG.COST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicKickerCost.Entwine(new MagicRegularCostEvent(ARG.cost(arg))));
         }
     },
     Multikicker("multikicker " + ARG.MANACOST, 0) {
@@ -1286,7 +1300,7 @@ public enum MagicAbility {
                 return ability;
             }
         }
-        throw new RuntimeException("unknown ability \"" + name + "\"");
+        throw new ScriptParseException("unknown ability \"" + name + "\"");
     }
     
     public static MagicAbilityList getAbilityList(final String[] names) {

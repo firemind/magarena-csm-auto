@@ -1,5 +1,5 @@
 name=Orgg
-image=http://mtgimage.com/card/orgg.jpg
+image=http://magiccards.info/scans/en/tsts/67.jpg
 value=2.500
 rarity=R
 type=Creature
