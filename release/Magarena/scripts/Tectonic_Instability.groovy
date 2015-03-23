@@ -1,5 +1,5 @@
 [
-    new OtherEntersBattlefieldTrigger() {
+    new MagicWhenOtherComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return otherPermanent.hasType(MagicType.Land) ?
@@ -14,8 +14,10 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            LAND_YOU_CONTROL.filter(event.getRefPermanent()) each {
-                game.doAction(new TapAction(it))
+            final MagicPlayer player = event.getRefPermanent().getController()
+            final Collection<MagicPermanent> lands = player.filterPermanents(MagicTargetFilterFactory.LAND);
+                for (final MagicPermanent land : lands) {
+                    game.doAction(new MagicTapAction(land))
             }
         }
     }
