@@ -1,14 +1,14 @@
 [
-    new OtherDiesTrigger() {
+    new MagicWhenOtherDiesTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent died) {
-            return (died.isOwner(permanent.getController()) &&
-                    died.hasType(MagicType.Creature) &&
-                    died.getToughness() >= 4) ?
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
+            return (otherPermanent.isFriend(permanent) &&
+                    otherPermanent.isCreature() && 
+                    otherPermanent.getToughness() >= 4) ?
                 new MagicEvent(
                     permanent,
                     new MagicMayChoice(),
-                    died.getCard(),
+                    otherPermanent,
                     this,
                     "PN may\$ exile RN with SN."
                 ) :
@@ -17,22 +17,21 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                game.doAction(new ExileLinkAction(
+                game.doAction(new MagicExileLinkAction(
                     event.getPermanent(),
-                    event.getRefCard(),
-                    MagicLocationType.Graveyard
+                    event.getRefPermanent()
                 ));
             }
         }
     },
-    new AtEndOfTurnTrigger() {
+    new MagicAtEndOfTurnTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer endOfTurnPlayer) {
             return permanent.getExiledCards().size() >= 3 ?
                 new MagicEvent(
                     permanent,
                     this,
-                    "Sacrifice SN. If PN does, return the cards exiled with it to the battlefield under their owner's control."
+                    "Sacrifice SN. If you do, return the cards exiled with it to the battlefield under their owner's control."
                 ):
                 MagicEvent.NONE;
         }
@@ -41,7 +40,7 @@
             final MagicEvent sac = new MagicSacrificeEvent(event.getPermanent());
             if (sac.isSatisfied()) {
                 game.addEvent(sac);
-                game.doAction(new ReturnLinkedExileAction(event.getPermanent(),MagicLocationType.Battlefield));
+                game.doAction(new MagicReturnLinkedExileAction(event.getPermanent(),MagicLocationType.Play));
             }
         }
     }
