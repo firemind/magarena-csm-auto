@@ -1,9 +1,9 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     if (event.isYes()) {
-        game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),2));
+        game.doAction(new MagicDealDamageAction(event.getSource(),event.getPlayer(),2));
     } else {
-        game.doAction(new DealDamageAction(event.getSource(),event.getRefPermanent(),1));
+        game.doAction(new MagicDealDamageAction(event.getSource(),event.getRefPermanent(),1));
     }
 }
 
@@ -23,7 +23,7 @@ def action = {
         public MagicEvent getPermanentEvent(final MagicPermanent source, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                NEG_TARGET_CREATURE,
+                MagicTargetChoice.NEG_TARGET_CREATURE,
                 this,
                 "SN deals 1 damage to target creature\$ unless that creature's controller has SN deal 2 damage to him or her."
             );
@@ -37,7 +37,7 @@ def action = {
                     new MagicMayChoice("have SN deal 2 damage to you?"),
                     it,
                     action,
-                    "PN may\$ have SN deal 2 damage to him or her. If PN doesn't, SN deals 1 damage to RN."
+                    "PN may\$ have SN deal 2 damage to you. If you don't, SN deals 1 damage to RN."
                 ));
             });
         }
