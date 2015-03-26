@@ -1,5 +1,5 @@
 [
-    new AtUpkeepTrigger() {
+    new MagicAtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return permanent.isController(upkeepPlayer) == false ?
@@ -18,7 +18,7 @@
         @Override
         public void executeEvent(final MagicGame game,final MagicEvent event) {
             if (event.isYes()) {
-                game.doAction(new GainControlAction(event.getPlayer(),event.getPermanent()));
+                game.doAction(new MagicGainControlAction(event.getPlayer(),event.getPermanent()));
             }
         }
     }
