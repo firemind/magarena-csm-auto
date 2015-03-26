@@ -1,6 +1,6 @@
 name=Chain Lightning
 image=http://magiccards.info/scans/en/vma/153.jpg
-value=4.000
+value=2.500
 rarity=C
 type=Sorcery
 cost={R}
