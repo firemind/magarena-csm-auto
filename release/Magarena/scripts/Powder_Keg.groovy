@@ -1,12 +1,3 @@
-def makeFilter = {
-    final int fuse ->
-    return new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
-            return target.getConvertedCost() == fuse && (target.isArtifact() || target.isCreature())
-        }
-    };
-}
-
 [
     new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Removal),
@@ -31,8 +22,18 @@ def makeFilter = {
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final int fuse = event.getPermanent().getCounters(MagicCounterType.Fuse);
-            game.doAction(new DestroyAction(makeFilter(fuse).filter(event)));
+            final List<MagicPermanent> artifacts = game.filterPermanents(MagicTargetFilterFactory.ARTIFACT);
+            for (final MagicPermanent artifact : artifacts) {
+                if (artifact.getConvertedCost() == event.getPermanent().getCounters(MagicCounterType.Fuse)) {   
+                    game.doAction(new MagicDestroyAction(artifact)); 
+                }
+            }
+            final List<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.CREATURE);
+            for (final MagicPermanent creature : creatures) {
+                if (creature.getConvertedCost() == event.getPermanent().getCounters(MagicCounterType.Fuse)) {   
+                    game.doAction(new MagicDestroyAction(creature)); 
+                }
+            }
         }
     }
 ]
