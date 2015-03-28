@@ -1,12 +1,12 @@
 [
-    new MagicHandCastActivation(
+     new MagicCardActivation(
         [MagicCondition.CARD_CONDITION],
         new MagicActivationHints(MagicTiming.Main, true),
         "Cast"
     ) {
         @Override
         public void change(final MagicCardDefinition cdef) {
-            cdef.setHandAct(this);
+            cdef.setCardAct(this);
         }
 
         @Override
@@ -15,12 +15,12 @@
             return [
                 new MagicPayManaCostEvent(
                     source,
-                    source.getGameCost().reduce(n)
+                    source.getCost().reduce(MagicCostManaType.Colorless, n)
                 )
             ];
         }
     },
-    new AtYourUpkeepTrigger() {
+    new MagicAtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             final int n = 2 * permanent.getController().getDomain();
@@ -28,7 +28,7 @@
                 permanent,
                 new MagicMayChoice(
                     "Pay SN's upkeep cost?",
-                    new MagicPayManaCostChoice(MagicManaCost.create("{10}").reduce(n))
+                    new MagicPayManaCostChoice(MagicManaCost.create("{10}").reduce(MagicCostManaType.Colorless, n))
                 ),
                 this,
                 "PN may\$ pay SN's upkeep cost. If PN doesn't, sacrifice SN."
@@ -38,7 +38,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isNo()) {
-                game.doAction(new SacrificeAction(event.getPermanent()));
+                game.doAction(new MagicSacrificeAction(event.getPermanent()));
             }
         }
     }
