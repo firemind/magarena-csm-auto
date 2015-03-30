@@ -1,6 +1,6 @@
 name=Jolrael, Empress of Beasts
-image=http://mtgimage.com/card/jolrael%2C%20empress%20of%20beasts.jpg
-value=2.500
+image=http://magiccards.info/scans/en/tsts/81.jpg
+value=4.022
 rarity=R
 type=Legendary,Creature
 subtype=Human,Spellshaper

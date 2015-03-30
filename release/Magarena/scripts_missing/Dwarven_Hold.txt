@@ -1,5 +1,5 @@
 name=Dwarven Hold
-image=http://mtgimage.com/card/dwarven%20hold.jpg
+image=http://magiccards.info/scans/en/5e/414.jpg
 value=2.500
 rarity=R
 type=Land

@@ -8,7 +8,6 @@ import javax.swing.SwingWorker;
 import magic.data.GeneralConfig;
 import magic.model.MagicDuel;
 import magic.model.MagicGame;
-import magic.model.MagicGameLog;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.ui.ScreenOptionsOverlay;
@@ -17,8 +16,7 @@ import magic.ui.duel.DuelPanel;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.widget.MenuPanel;
 import magic.ui.widget.ZoneBackgroundLabel;
-
-
+import magic.utility.MagicSystem;
 
 @SuppressWarnings("serial")
 public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
@@ -29,11 +27,10 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
     private DuelLayeredPane gamePane;
 
     public DuelGameScreen(final MagicDuel duel) {
-
+        
         final SwingWorker<MagicGame, Void> worker = new SwingWorker<MagicGame, Void> () {
             @Override
             protected MagicGame doInBackground() throws Exception {
-                MagicGameLog.initialize();
                 config.setTextView(false);
                 duel.updateDifficulty();
                 return duel.nextGame();
@@ -42,7 +39,7 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
             protected void done() {
                 try {
                     setContent(getScreenContent(get()));
-                    if (!config.showMulliganScreen() || Boolean.getBoolean("selfMode")) {
+                    if (!config.showMulliganScreen() || MagicSystem.isAiVersusAi()) {
                         gamePane.setVisible(true);
                         quickFixSpaceKeyShortcut();
                     }
@@ -160,6 +157,13 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     ScreenController.showGameLogScreen();
+                }
+            });
+            menu.addMenuItem("Sidebar Layout", new AbstractAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    hideOverlay();
+                    ScreenController.showDuelSidebarDialog(gamePanel.getController());
                 }
             });
             menu.addBlankItem();

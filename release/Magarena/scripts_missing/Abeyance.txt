@@ -1,5 +1,5 @@
 name=Abeyance
-image=http://mtgimage.com/card/abeyance.jpg
+image=http://magiccards.info/scans/en/wl/117.jpg
 value=2.500
 rarity=R
 type=Instant

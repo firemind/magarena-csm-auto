@@ -1,5 +1,5 @@
 name=Mammoth Harness
-image=http://mtgimage.com/card/mammoth%20harness.jpg
+image=http://magiccards.info/scans/en/hl/64.jpg
 value=2.500
 rarity=R
 type=Enchantment

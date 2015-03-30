@@ -1,5 +1,5 @@
 name=Infernal Denizen
-image=http://mtgimage.com/card/infernal%20denizen.jpg
+image=http://magiccards.info/scans/en/ia/24.jpg
 value=2.500
 rarity=R
 type=Creature

@@ -1,5 +1,5 @@
 name=Chimeric Sphere
-image=http://mtgimage.com/card/chimeric%20sphere.jpg
+image=http://magiccards.info/scans/en/wl/148.jpg
 value=3.207
 rarity=U
 type=Artifact

@@ -1,5 +1,5 @@
 name=Rainbow Efreet
-image=http://mtgimage.com/card/rainbow%20efreet.jpg
+image=http://magiccards.info/scans/en/vi/41.jpg
 value=2.500
 rarity=R
 type=Creature

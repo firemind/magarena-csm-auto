@@ -1,5 +1,6 @@
 package magic.ui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -60,21 +61,21 @@ import magic.ui.duel.choice.ModeChoicePanel;
 import magic.ui.duel.choice.MulliganChoicePanel;
 import magic.ui.duel.choice.MultiKickerChoicePanel;
 import magic.ui.duel.choice.PlayChoicePanel;
-import magic.ui.duel.player.IZoneButtonListener;
 import magic.ui.duel.viewer.ChoiceViewer;
 import magic.ui.duel.viewer.PlayerViewerInfo;
+import magic.ui.duel.viewer.PlayerZoneViewer;
 import magic.ui.duel.viewer.UserActionPanel;
 import magic.ui.duel.viewer.ViewerInfo;
 import magic.ui.screen.MulliganScreen;
 import magic.utility.MagicSystem;
 
-public class SwingGameController implements IUIGameController, ILogBookListener, IZoneButtonListener {
+public class SwingGameController implements IUIGameController, ILogBookListener {
 
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
 
     private final DuelPanel gamePanel;
     private final MagicGame game;
-    private final boolean selfMode = Boolean.getBoolean("selfMode");
+    private final boolean selfMode = MagicSystem.isAiVersusAi();
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final AtomicBoolean isPaused =  new AtomicBoolean(false);
     private final AtomicBoolean gameConceded = new AtomicBoolean(false);
@@ -90,6 +91,8 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
     private final BlockingQueue<Boolean> input = new SynchronousQueue<>();
     private int gameTurn = 0;
     private final ViewerInfo viewerInfo;
+    private PlayerZoneViewer playerZoneViewer;
+    private final List<IPlayerZoneListener> playerZoneListeners = new ArrayList<>();
     
     private static boolean isControlKeyDown = false;
     private static final KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
@@ -183,13 +186,9 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
 
     @Override
     public void waitForInput() throws UndoClickedException {
-        try {
-            final boolean undoClicked = input.take();
-            if (undoClicked) {
-                throw new UndoClickedException();
-            }
-        } catch (final InterruptedException ex) {
-            throw new RuntimeException(ex);
+        final boolean undoClicked = waitForInputOrUndo();
+        if (undoClicked) {
+            throw new UndoClickedException();
         }
     }
 
@@ -198,10 +197,7 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
     }
     
     public void switchKeyPressed() {
-        game.setVisiblePlayer(game.getVisiblePlayer().getOpponent());
-        gamePanel.switchPlayers();
-        getViewerInfo().update(game);
-        gamePanel.updateView();
+        playerZoneViewer.switchPlayerZone();
     }
 
     public void passKeyPressed() {
@@ -465,6 +461,7 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
         validChoices=Collections.emptySet();
         combatChoice=false;
         showValidChoices();
+        showMessage(MagicEvent.NO_SOURCE, "");
     }
 
     @Override
@@ -525,11 +522,11 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
     }
 
     @Override
-    public void showMessage(final MagicSource source,final String message) {
+    public void showMessage(final MagicSource source, final String message) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                userActionPanel.showMessage(getMessageWithSource(source,message));
+                userActionPanel.showMessage(getMessageWithSource(source, message));
             }
         });
     }
@@ -559,7 +556,11 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
 
     private Object[] getArtificialNextEventChoiceResults(final MagicEvent event) {
         disableActionButton(true);
-        showMessage(event.getSource(),event.getChoiceDescription());
+        if (CONFIG.getHideAiActionPrompt()) {
+            showMessage(MagicEvent.NO_SOURCE, "");
+        } else {
+            showMessage(event.getSource(),event.getChoiceDescription());
+        }
         SwingGameController.invokeAndWait(new Runnable() {
             @Override
             public void run() {
@@ -935,17 +936,39 @@ public class SwingGameController implements IUIGameController, ILogBookListener,
         return choicePanel.getResult();
     }
 
-    @Override
-    public void playerZoneSelected(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-        gamePanel.setActivePlayerZone(playerInfo, zone);
+    public PlayerZoneViewer getPlayerZoneViewer() {
+        if (playerZoneViewer == null) {
+            playerZoneViewer = new PlayerZoneViewer(this);
+        }
+        return playerZoneViewer;
+    }
+
+    public void addPlayerZoneListener(final IPlayerZoneListener listener) {
+        playerZoneListeners.add(listener);
+    }
+
+    public void notifyPlayerZoneChanged(final PlayerViewerInfo playerInfo, final MagicPlayerZone zone) {
+        for (IPlayerZoneListener listener : playerZoneListeners) {
+            listener.setActivePlayerZone(playerInfo, zone);
+        }
     }
 
     @Override
-    public void playerZoneSelectedClicked(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-        gamePanel.setFullScreenActivePlayerZone(playerInfo, zone);
+    public void refreshSidebarLayout() {
+        gamePanel.refreshSidebarLayout();
     }
 
-    public void setPlayerZone(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-//        System.err.printf("TODO SwingGameController.setPlayerZone : %s, %s\n", playerInfo.name, zone);
+    @Override
+    public Rectangle getPlayerZoneButtonRectangle(MagicPlayer player, MagicPlayerZone zone, Component canvas) {
+        return gamePanel.getPlayerZoneButtonRectangle(player, zone, canvas);
+    }
+
+    @Override
+    public Rectangle getStackViewerRectangle(Component canvas) {
+        return gamePanel.getStackViewerRectangle(canvas);
+    }
+
+    public void doFlashPlayerHandZoneButton() {
+        gamePanel.doFlashPlayerHandZoneButton();
     }
 }

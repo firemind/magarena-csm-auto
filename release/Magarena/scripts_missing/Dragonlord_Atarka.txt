@@ -1,5 +1,5 @@
 name=Dragonlord Atarka
-image=http://mtgimage.com/card/dragonlord%20atarka.jpg
+image=http://magiccards.info/scans/en/dtk/216.jpg
 value=2.500
 rarity=M
 type=Legendary,Creature

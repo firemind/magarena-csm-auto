@@ -10,20 +10,20 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicTargetFilter<MagicPermanent> permanents =
-                new MagicOtherPermanentTargetFilter(
-                MagicTargetFilterFactory.PERMANENT_YOU_CONTROL,event.getPermanent());
-            final Collection<MagicPermanent> targets=
-                game.filterPermanents(permanents);
+            final MagicTargetFilter<MagicPermanent> filter = new MagicOtherPermanentTargetFilter(
+                MagicTargetFilterFactory.PERMANENT_YOU_CONTROL,
+                event.getPermanent()
+            );
+            final Collection<MagicPermanent> targets = event.getPlayer().filterPermanents(filter);
             for (final MagicPermanent target : targets) {
                 game.doAction(new MagicExileLinkAction(
                     event.getPermanent(),
                     target
                 ));
+            }
         }
-    }
-},
-    new MagicWhenLeavesPlayTrigger() {
+    },
+    new MagicWhenSelfLeavesPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
             return new MagicEvent(
@@ -36,8 +36,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.doAction(new MagicReturnLinkedExileAction(
                 event.getPermanent(),
-                MagicLocationType.Play,
-                event.getPlayer()
+                MagicLocationType.Play
             ));
         }
     }

@@ -1,5 +1,5 @@
 name=Deadfall
-image=http://mtgimage.com/card/deadfall.jpg
+image=http://magiccards.info/scans/en/lg/95.jpg
 value=2.500
 rarity=U
 type=Enchantment

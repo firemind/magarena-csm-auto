@@ -1,5 +1,5 @@
 name=Mist Dragon
-image=http://mtgimage.com/card/mist%20dragon.jpg
+image=http://magiccards.info/scans/en/mr/79.jpg
 value=2.500
 rarity=R
 type=Creature

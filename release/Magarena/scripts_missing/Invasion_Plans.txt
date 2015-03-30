@@ -1,5 +1,5 @@
 name=Invasion Plans
-image=http://mtgimage.com/card/invasion%20plans.jpg
+image=http://magiccards.info/scans/en/sh/89.jpg
 value=2.500
 rarity=R
 type=Enchantment

@@ -1,5 +1,5 @@
 name=Pyramids
-image=http://mtgimage.com/card/pyramids.jpg
+image=http://magiccards.info/scans/en/an/81.jpg
 value=2.500
 rarity=R
 type=Artifact

@@ -89,7 +89,7 @@ public class MagicGame {
     private boolean fastBlocker;
     private boolean immediate;
     private boolean disableLog;
-    private MagicPlayer visiblePlayer;
+    private final MagicPlayer visiblePlayer;
     private MagicPlayer turnPlayer;
     private MagicPlayer losingPlayer = MagicPlayer.NONE;
     private MagicPhase phase;
@@ -814,10 +814,9 @@ public class MagicGame {
         return players[1-player.getIndex()];
     }
 
-    public void setVisiblePlayer(final MagicPlayer aVisiblePlayer) {
-        visiblePlayer = aVisiblePlayer;
-    }
-
+    /**
+     * Player whose hand is shown by default at the start of a game.
+     */
     public MagicPlayer getVisiblePlayer() {
         return visiblePlayer;
     }

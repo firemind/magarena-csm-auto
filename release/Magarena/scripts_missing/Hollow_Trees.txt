@@ -1,5 +1,5 @@
 name=Hollow Trees
-image=http://mtgimage.com/card/hollow%20trees.jpg
+image=http://magiccards.info/scans/en/5e/422.jpg
 value=2.500
 rarity=R
 type=Land

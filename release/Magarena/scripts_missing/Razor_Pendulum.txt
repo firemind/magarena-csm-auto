@@ -1,5 +1,5 @@
 name=Razor Pendulum
-image=http://mtgimage.com/card/razor%20pendulum.jpg
+image=http://magiccards.info/scans/en/mr/282.jpg
 value=2.500
 rarity=R
 type=Artifact

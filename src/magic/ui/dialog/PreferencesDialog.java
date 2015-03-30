@@ -97,6 +97,7 @@ public class PreferencesDialog
     private SliderPanel popupScaleSlider;
     private JCheckBox uiSoundCheckBox;
     private JCheckBox pauseGamePopupCheckBox;
+    private JCheckBox hideAIPromptCheckBox;
 
     private final JLabel hintLabel = new JLabel();
     private boolean isProxyUpdated = false;
@@ -209,6 +210,11 @@ public class PreferencesDialog
 
     private JPanel getGameplaySettingsPanel1() {
 
+        hideAIPromptCheckBox = new JCheckBox("[Experimental] Suppress AI action prompts", config.getHideAiActionPrompt());
+        hideAIPromptCheckBox.setToolTipText("If enabled, hides AI prompts in the user action panel. Only prompts that require you to make a decision will be shown.");
+        hideAIPromptCheckBox.setFocusable(false);
+        hideAIPromptCheckBox.addMouseListener(this);
+
         mulliganScreenCheckbox = new JCheckBox("Use Mulligan screen", config.getMulliganScreenActive());
         mulliganScreenCheckbox.setFocusable(false);
         mulliganScreenCheckbox.addMouseListener(this);
@@ -247,6 +253,7 @@ public class PreferencesDialog
 
         // layout components
         final JPanel mainPanel = new JPanel(new MigLayout("flowy, insets 16, gapy 10"));
+        mainPanel.add(hideAIPromptCheckBox);
         mainPanel.add(mulliganScreenCheckbox);
         mainPanel.add(gameLogCheckBox);
         mainPanel.add(soundCheckBox);
@@ -330,6 +337,7 @@ public class PreferencesDialog
                 config.setCardPopupScale(popupScaleSlider.getValue() / 100d);
                 config.setIsUiSound(uiSoundCheckBox.isSelected());
                 config.setIsGamePausedOnPopup(pauseGamePopupCheckBox.isSelected());
+                config.setHideAiActionPrompt(hideAIPromptCheckBox.isSelected());
                 config.save();
                 CachedImagesProvider.getInstance().clearCache();
                 frame.refreshUI();
@@ -562,8 +570,8 @@ public class PreferencesDialog
 
     private JPanel getVisualCueSettings() {
 
-        animateGameplayCheckBox = new JCheckBox("Play card animation from AI hand", config.getAnimateGameplay());
-        animateGameplayCheckBox.setToolTipText("When a card is played by the AI from its hand it zooms out to the center of the screen where it is displayed for a short time before zooming in to the stack or battlefield. Left-click, Spacebar or Enter cancels preview.");
+        animateGameplayCheckBox = new JCheckBox("Play animations", config.getAnimateGameplay());
+        animateGameplayCheckBox.setToolTipText("Turn off animations to speed up gameplay but it will make it harder to follow the action. Left-click, Spacebar or Enter cancels the card preview animation.");
         animateGameplayCheckBox.setFocusable(false);
         animateGameplayCheckBox.addMouseListener(this);
         animateGameplayCheckBox.addChangeListener(new ChangeListener() {
@@ -608,7 +616,7 @@ public class PreferencesDialog
         ((NumberFormatter)txt1.getFormatter()).setAllowsInvalid(false);
         //
         final JPanel panel = new JPanel(new MigLayout("insets 0"));
-        panel.add(new JLabel("Display land card for"));
+        panel.add(new JLabel("Preview land card for"));
         panel.add(landAnimationSpinner, "w 70!");
         panel.add(new JLabel("msecs"));
         panel.setToolTipText("When the AI plays a land card, this setting determines how long it should be displayed at full size (1000 millisecs = 1 second).");
@@ -624,7 +632,7 @@ public class PreferencesDialog
         ((NumberFormatter)txt1.getFormatter()).setAllowsInvalid(false);
         //
         final JPanel panel = new JPanel(new MigLayout("insets 0"));
-        panel.add(new JLabel("Display non-land card for"));
+        panel.add(new JLabel("Preview non-land card for"));
         panel.add(nonLandAnimationSpinner, "w 70!");
         panel.add(new JLabel("msecs"));
         panel.setToolTipText("When the AI plays a non-land card, this setting determines how long it should be displayed at full size (1000 millisecs = 1 second).");

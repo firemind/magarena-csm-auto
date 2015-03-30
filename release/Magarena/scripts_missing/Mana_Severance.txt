@@ -1,5 +1,5 @@
 name=Mana Severance
-image=http://mtgimage.com/card/mana%20severance.jpg
+image=http://magiccards.info/scans/en/tp/73.jpg
 value=2.500
 rarity=R
 type=Sorcery

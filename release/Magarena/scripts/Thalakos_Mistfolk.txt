@@ -1,5 +1,5 @@
 name=Thalakos Mistfolk
-image=http://mtgimage.com/card/thalakos%20mistfolk.jpg
+image=http://magiccards.info/scans/en/tp/93.jpg
 value=3.103
 rarity=C
 type=Creature

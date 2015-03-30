@@ -1,5 +1,5 @@
 name=Eye of Singularity
-image=http://mtgimage.com/card/eye%20of%20singularity.jpg
+image=http://magiccards.info/scans/en/vi/104.jpg
 value=2.500
 rarity=R
 type=World,Enchantment

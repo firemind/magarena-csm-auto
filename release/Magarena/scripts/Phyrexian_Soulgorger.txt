@@ -1,6 +1,6 @@
 name=Phyrexian Soulgorger
-image=http://mtgimage.com/card/phyrexian%20soulgorger.jpg
-value=2.500
+image=http://magiccards.info/scans/en/cs/141.jpg
+value=4.030
 rarity=R
 type=Snow,Artifact,Creature
 subtype=Construct

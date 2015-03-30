@@ -1,5 +1,5 @@
 name=Balm of Restoration
-image=http://mtgimage.com/card/balm%20of%20restoration.jpg
+image=http://magiccards.info/scans/en/fe/167.jpg
 value=1.455
 rarity=R
 type=Artifact

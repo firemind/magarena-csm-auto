@@ -10,6 +10,8 @@ import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.ui.GraphicsUtilities;
 import magic.ui.ScreenController;
+import magic.utility.MagicSystem;
+
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -27,6 +29,9 @@ public class DeckEditorPanel extends JPanel {
     private final DeckEditorTabbedPanel tabbedPanel; // RHS
 
     public DeckEditorPanel(final MagicDeck deck) {
+        
+        MagicSystem.waitForAllCards();
+
         // lhs
         sideBarPanel = new DeckEditorSideBarPanel();
         // rhs

@@ -1,5 +1,5 @@
 name=Brand of Ill Omen
-image=http://mtgimage.com/card/brand%20of%20ill%20omen.jpg
+image=http://magiccards.info/scans/en/ia/177.jpg
 value=2.500
 rarity=R
 type=Enchantment

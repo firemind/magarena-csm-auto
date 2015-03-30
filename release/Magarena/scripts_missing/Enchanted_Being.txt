@@ -1,5 +1,5 @@
 name=Enchanted Being
-image=http://mtgimage.com/card/enchanted%20being.jpg
+image=http://magiccards.info/scans/en/lg/181.jpg
 value=2.500
 rarity=C
 type=Creature

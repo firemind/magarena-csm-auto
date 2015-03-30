@@ -1,5 +1,5 @@
 name=Gaea's Liege
-image=http://mtgimage.com/card/gaea%27s%20liege.jpg
+image=http://magiccards.info/scans/en/tsts/78.jpg
 value=2.500
 rarity=R
 type=Creature

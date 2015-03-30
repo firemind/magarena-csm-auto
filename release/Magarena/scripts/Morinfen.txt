@@ -1,6 +1,6 @@
 name=Morinfen
-image=http://mtgimage.com/card/morinfen.jpg
-value=2.500
+image=http://magiccards.info/scans/en/wl/17.jpg
+value=2.571
 rarity=R
 type=Legendary,Creature
 subtype=Horror

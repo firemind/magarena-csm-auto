@@ -1,5 +1,5 @@
 name=Afiya Grove
-image=http://mtgimage.com/card/afiya%20grove.jpg
+image=http://magiccards.info/scans/en/mr/103.jpg
 value=2.500
 rarity=R
 type=Enchantment

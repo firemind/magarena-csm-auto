@@ -1,6 +1,6 @@
 name=Vexing Sphinx
-image=http://mtgimage.com/card/vexing%20sphinx.jpg
-value=2.500
+image=http://magiccards.info/scans/en/cs/50.jpg
+value=4.336
 rarity=R
 type=Creature
 subtype=Sphinx

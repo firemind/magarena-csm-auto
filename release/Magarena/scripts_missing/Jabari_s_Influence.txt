@@ -1,5 +1,5 @@
 name=Jabari's Influence
-image=http://mtgimage.com/card/jabari%27s%20influence.jpg
+image=http://magiccards.info/scans/en/mr/228.jpg
 value=2.500
 rarity=R
 type=Instant

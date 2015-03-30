@@ -1,5 +1,5 @@
 name=Natural Balance
-image=http://mtgimage.com/card/natural%20balance.jpg
+image=http://magiccards.info/scans/en/mr/129.jpg
 value=2.500
 rarity=R
 type=Sorcery

@@ -1,5 +1,5 @@
 name=Chaotic Goo
-image=http://mtgimage.com/card/chaotic%20goo.jpg
+image=http://magiccards.info/scans/en/tp/168.jpg
 value=2.500
 rarity=R
 type=Creature

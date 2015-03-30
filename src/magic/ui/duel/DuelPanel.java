@@ -1,5 +1,6 @@
 package magic.ui.duel;
 
+import java.awt.Component;
 import magic.ui.duel.dialog.DuelDialogPanel;
 import magic.ui.duel.animation.PlayCardAnimation;
 import java.awt.Dimension;
@@ -17,6 +18,7 @@ import magic.data.GeneralConfig;
 import magic.exception.InvalidDeckException;
 import magic.model.MagicCardList;
 import magic.model.MagicGame;
+import magic.model.MagicPlayer;
 import magic.model.MagicPlayerZone;
 import magic.model.event.MagicEvent;
 import magic.ui.SwingGameController;
@@ -29,7 +31,6 @@ import magic.ui.duel.resolution.DefaultResolutionProfile;
 import magic.ui.duel.resolution.ResolutionProfileResult;
 import magic.ui.duel.resolution.ResolutionProfiles;
 import magic.ui.duel.viewer.LogBookViewer;
-import magic.ui.duel.viewer.PlayerViewerInfo;
 import magic.ui.widget.ZoneBackgroundLabel;
 import net.miginfocom.swing.MigLayout;
 
@@ -84,6 +85,9 @@ public final class DuelPanel extends JPanel {
         battlefieldPanel = isTextView() ? textView : imageView;
 
         sidebarPanel = new DuelSideBarPanel(controller, battlefieldPanel.getStackViewer());
+
+        // TODO: should not have to run this, but required while sidebarPanel is created after battlefieldPanel.
+        controller.notifyPlayerZoneChanged(controller.getViewerInfo().getPlayerInfo(false), MagicPlayerZone.HAND);
 
         controller.setUserActionPanel(sidebarPanel.getGameStatusPanel().getUserActionPanel());
 
@@ -262,6 +266,9 @@ public final class DuelPanel extends JPanel {
         assert !SwingUtilities.isEventDispatchThread();
         final PlayCardAnimation animationEvent = battlefieldPanel.getPlayCardFromHandAnimation();
         if (animationEvent != null && CONFIG.isAnimateGameplay()) {
+            if (animationEvent.getPlayer() != controller.getGame().getVisiblePlayer()) {
+                controller.doFlashPlayerHandZoneButton();
+            }
             animator.runAnimation(animationEvent);
         }
         battlefieldPanel.setPlayCardFromHandAnimation(null);
@@ -318,15 +325,20 @@ public final class DuelPanel extends JPanel {
         return dialogPanel;
     }
 
-    public void setActivePlayerZone(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-        battlefieldPanel.setActivePlayerZone(playerInfo, zone);
+    public void refreshSidebarLayout() {
+        sidebarPanel.refreshLayout();
     }
 
-    public void setFullScreenActivePlayerZone(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-        battlefieldPanel.setFullScreenActivePlayerZone(playerInfo, zone);
+    public Rectangle getPlayerZoneButtonRectangle(MagicPlayer player, MagicPlayerZone zone, Component canvas) {
+        return sidebarPanel.getPlayerZoneButtonRectangle(player, zone, canvas);
     }
 
-    public void switchPlayers() {
-        sidebarPanel.switchPlayers();
+    public Rectangle getStackViewerRectangle(Component canvas) {
+        return sidebarPanel.getStackViewerRectangle(canvas);
     }
+
+    public void doFlashPlayerHandZoneButton() {
+        sidebarPanel.doFlashPlayerHandZoneButton();
+    }
+
 }

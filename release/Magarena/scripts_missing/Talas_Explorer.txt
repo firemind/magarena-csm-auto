@@ -1,5 +1,5 @@
 name=Talas Explorer
-image=http://mtgimage.com/card/talas%20explorer.jpg
+image=http://magiccards.info/scans/en/po2/49.jpg
 value=2.500
 rarity=C
 type=Creature

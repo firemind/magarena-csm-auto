@@ -1,6 +1,6 @@
 name=Shipwreck Singer
-image=http://mtgimage.com/card/shipwreck%20singer.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ths/203.jpg
+value=3.516
 rarity=U
 type=Creature
 subtype=Siren

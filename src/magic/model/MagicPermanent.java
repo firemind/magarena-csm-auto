@@ -87,14 +87,21 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
         firstController = aController;
 
         counters = new EnumMap<MagicCounterType, Integer>(MagicCounterType.class);
-        equipmentPermanents=new MagicPermanentSet();
-        auraPermanents=new MagicPermanentSet();
-        blockingCreatures=new MagicPermanentList();
+        equipmentPermanents = new MagicPermanentSet();
+        auraPermanents = new MagicPermanentSet();
+        blockingCreatures = new MagicPermanentList();
         exiledCards = new MagicCardList();
+        
+        cachedController = firstController;
+        cachedTypeFlags = getCardDefinition().getTypeFlags();
+        cachedSubTypeFlags = getCardDefinition().genSubTypeFlags();
+        cachedColorFlags = getCardDefinition().getColorFlags();
+        cachedAbilityFlags = getCardDefinition().genAbilityFlags();
+        cachedPowerToughness = getCardDefinition().genPowerToughness();
         cachedActivations = new LinkedList<MagicActivation<MagicPermanent>>();
         cachedManaActivations = new LinkedList<MagicManaActivation>();
-        cachedTriggers    = new LinkedList<MagicTrigger<?>>();
-        etbTriggers       = new LinkedList<MagicWhenComesIntoPlayTrigger>();
+        cachedTriggers = new LinkedList<MagicTrigger<?>>();
+        etbTriggers = new LinkedList<MagicWhenComesIntoPlayTrigger>();
     }
 
     private MagicPermanent(final MagicCopyMap copyMap, final MagicPermanent sourcePermanent) {
@@ -871,7 +878,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
             hasAbility(MagicAbility.CannotAttackOrBlock) ||
             hasState(MagicPermanentState.ExcludeFromCombat) ||
             hasState(MagicPermanentState.CannotAttack) ||
-            (hasAbility(MagicAbility.Defender) && !hasState(MagicPermanentState.CanAttackWithDefender))) {
+            (hasAbility(MagicAbility.Defender) && !hasAbility(MagicAbility.CanAttackWithDefender))) {
             return false;
         }
         return isCreature() && canTap();
@@ -949,12 +956,24 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
             !hasAbility(MagicAbility.Horsemanship)) {
             return false;
         }
-        
+       
+        //cannot be blocked by ...
         for (MagicTrigger<?> trigger: attacker.getTriggers()) {
             if (trigger.getType() == MagicTriggerType.CannotBeBlocked) {
                 @SuppressWarnings("unchecked")
                 final MagicTrigger<MagicPermanent> cannotBeBlocked = (MagicTrigger<MagicPermanent>)trigger;
                 if (cannotBeBlocked.accept(attacker, this)) {
+                    return false;
+                }
+            }
+        }
+        
+        //can't block ...
+        for (MagicTrigger<?> trigger: getTriggers()) {
+            if (trigger.getType() == MagicTriggerType.CantBlock) {
+                @SuppressWarnings("unchecked")
+                final MagicTrigger<MagicPermanent> cantBlock = (MagicTrigger<MagicPermanent>)trigger;
+                if (cantBlock.accept(this, attacker)) {
                     return false;
                 }
             }

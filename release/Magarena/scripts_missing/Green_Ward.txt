@@ -1,5 +1,5 @@
 name=Green Ward
-image=http://mtgimage.com/card/green%20ward.jpg
+image=http://magiccards.info/scans/en/4e/277.jpg
 value=2.500
 rarity=U
 type=Enchantment

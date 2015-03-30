@@ -1,5 +1,5 @@
 name=Dauthi Mindripper
-image=http://mtgimage.com/card/dauthi%20mindripper.jpg
+image=http://magiccards.info/scans/en/tp/19.jpg
 value=3.756
 rarity=U
 type=Creature

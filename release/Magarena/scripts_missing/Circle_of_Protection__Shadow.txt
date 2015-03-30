@@ -1,5 +1,5 @@
 name=Circle of Protection: Shadow
-image=http://mtgimage.com/card/circle%20of%20protection%20shadow.jpg
+image=http://magiccards.info/scans/en/tp/224.jpg
 value=2.500
 rarity=C
 type=Enchantment

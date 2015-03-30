@@ -1,5 +1,5 @@
 name=Pygmy Hippo
-image=http://mtgimage.com/card/pygmy%20hippo.jpg
+image=http://magiccards.info/scans/en/vi/133.jpg
 value=2.500
 rarity=R
 type=Creature

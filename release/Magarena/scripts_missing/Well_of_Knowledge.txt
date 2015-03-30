@@ -1,5 +1,5 @@
 name=Well of Knowledge
-image=http://mtgimage.com/card/well%20of%20knowledge.jpg
+image=http://magiccards.info/scans/en/wl/162.jpg
 value=2.500
 rarity=R
 type=Artifact

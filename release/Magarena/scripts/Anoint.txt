@@ -1,5 +1,5 @@
 name=Anoint
-image=http://mtgimage.com/card/anoint.jpg
+image=http://magiccards.info/scans/en/tp/215.jpg
 value=1.955
 rarity=C
 type=Instant

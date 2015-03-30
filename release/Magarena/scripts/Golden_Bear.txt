@@ -1,6 +1,6 @@
 name=Golden Bear
-image=http://mtgimage.com/card/golden%20bear.jpg
-value=2.500
+image=http://magiccards.info/scans/en/po2/67.jpg
+value=3.333
 rarity=C
 type=Creature
 subtype=Bear

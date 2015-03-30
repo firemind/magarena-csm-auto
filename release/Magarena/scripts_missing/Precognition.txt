@@ -1,5 +1,5 @@
 name=Precognition
-image=http://mtgimage.com/card/precognition.jpg
+image=http://magiccards.info/scans/en/tp/79.jpg
 value=2.500
 rarity=R
 type=Enchantment

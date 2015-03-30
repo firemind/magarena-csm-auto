@@ -1,5 +1,5 @@
 name=Spirit en-Kor
-image=http://mtgimage.com/card/spirit%20en-kor.jpg
+image=http://magiccards.info/scans/en/sh/119.jpg
 value=2.500
 rarity=C
 type=Creature

@@ -1,5 +1,5 @@
 name=Desert Nomads
-image=http://mtgimage.com/card/desert%20nomads.jpg
+image=http://magiccards.info/scans/en/an/47.jpg
 value=2.500
 rarity=C
 type=Creature

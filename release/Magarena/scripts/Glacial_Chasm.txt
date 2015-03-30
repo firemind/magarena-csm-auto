@@ -1,6 +1,6 @@
 name=Glacial Chasm
-image=http://mtgimage.com/card/glacial%20chasm.jpg
-value=2.500
+image=http://magiccards.info/scans/en/me2/229.jpg
+value=4.000
 rarity=U
 type=Land
 ability=When SN enters the battlefield, sacrifice a land.;\

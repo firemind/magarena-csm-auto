@@ -1,5 +1,5 @@
 name=Shattered Crypt
-image=http://mtgimage.com/card/shattered%20crypt.jpg
+image=http://magiccards.info/scans/en/wl/22.jpg
 value=2.500
 rarity=C
 type=Sorcery

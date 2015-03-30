@@ -1,5 +1,6 @@
 package magic.ui.duel;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import magic.ui.duel.animation.PlayCardAnimation;
@@ -11,7 +12,6 @@ import javax.swing.SwingUtilities;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCardList;
 import magic.model.MagicPlayer;
-import magic.model.MagicPlayerZone;
 import magic.model.event.MagicEvent;
 import magic.ui.SwingGameController;
 import magic.ui.duel.resolution.ResolutionProfileResult;
@@ -19,8 +19,7 @@ import magic.ui.duel.resolution.ResolutionProfileType;
 import magic.ui.duel.viewer.ImageBattlefieldViewer;
 import magic.ui.duel.viewer.ImageCardListViewer;
 import magic.ui.duel.viewer.ImageCombatViewer;
-import magic.ui.duel.viewer.ImageHandGraveyardExileViewer;
-import magic.ui.duel.viewer.PlayerViewerInfo;
+import magic.ui.duel.viewer.PlayerZoneViewer;
 import magic.ui.duel.viewer.StackViewer;
 
 @SuppressWarnings("serial")
@@ -30,23 +29,23 @@ public class ImageModeBattlefieldPanel extends BattlefieldPanel {
 
     private final BattlefieldTextOverlay textOverlay = new BattlefieldTextOverlay();
 
-    private final ImageHandGraveyardExileViewer imageHandGraveyardViewer;
+    private final PlayerZoneViewer playerZoneViewer;
     private final ImageBattlefieldViewer imagePlayerPermanentViewer;
     private final ImageBattlefieldViewer imageOpponentPermanentViewer;
     private final ImageCombatViewer imageCombatViewer;
     private final StackViewer imageStackViewer;
+    private final SwingGameController controller;
 
     public ImageModeBattlefieldPanel(final SwingGameController controller) {
-        setOpaque(false);
+        this.controller = controller;
         //
-        imageHandGraveyardViewer = new ImageHandGraveyardExileViewer(controller);
+        playerZoneViewer = controller.getPlayerZoneViewer();
         imagePlayerPermanentViewer = new ImageBattlefieldViewer(controller, false);
         imageOpponentPermanentViewer = new ImageBattlefieldViewer(controller, true);
         imageCombatViewer = new ImageCombatViewer(controller);
         imageStackViewer = new StackViewer(controller, true);
         //
-        imageHandGraveyardViewer.addPropertyChangeListener(
-                ImageHandGraveyardExileViewer.CP_PLAYER_ZONE,
+        playerZoneViewer.addPropertyChangeListener(PlayerZoneViewer.CP_PLAYER_ZONE,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -57,15 +56,17 @@ public class ImageModeBattlefieldPanel extends BattlefieldPanel {
         //
         setLayout(null);
         add(imageStackViewer);
-        add(imageHandGraveyardViewer);
+        add(playerZoneViewer);
         add(imagePlayerPermanentViewer);
         add(imageOpponentPermanentViewer);
         add(imageCombatViewer);
+
+        setOpaque(false);
     }
 
     @Override
     public void doUpdate() {
-        imageHandGraveyardViewer.update();
+        playerZoneViewer.update();
         imagePlayerPermanentViewer.update();
         imageOpponentPermanentViewer.update();
         imageCombatViewer.update();
@@ -74,18 +75,18 @@ public class ImageModeBattlefieldPanel extends BattlefieldPanel {
 
     @Override
     public void showCards(final MagicCardList cards) {
-        imageHandGraveyardViewer.showCards(cards);
-        imageHandGraveyardViewer.setSelectedTab(5);
+        playerZoneViewer.showCards(cards);
+        playerZoneViewer.setSelectedTab(5);
     }
 
     @Override
     public void focusViewers(int handGraveyard) {
-        imageHandGraveyardViewer.setSelectedTab(handGraveyard);
+        playerZoneViewer.setSelectedTab(handGraveyard);
     }
 
     @Override
     public void resizeComponents(ResolutionProfileResult result) {
-        imageHandGraveyardViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageHandGraveyardViewer));
+        playerZoneViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageHandGraveyardViewer));
         imagePlayerPermanentViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImagePlayerPermanentViewer));
         imageOpponentPermanentViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageOpponentPermanentViewer));
         imageCombatViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageCombatViewer));
@@ -97,7 +98,7 @@ public class ImageModeBattlefieldPanel extends BattlefieldPanel {
      */
     private void setAnimationStartPoint(final MagicPlayer player, final MagicCardDefinition card) {
         if (isPlayerHandVisible(player)) {
-            final ImageCardListViewer handViewer = imageHandGraveyardViewer.getCardListViewer();
+            final ImageCardListViewer handViewer = controller.getPlayerZoneViewer().getImageCardsListViewer();
             final Point startPoint = handViewer.getCardPosition(card);
             animationEvent.setStartSize(handViewer.getCardSize());
             animationEvent.setStartPoint(startPoint);
@@ -125,7 +126,8 @@ public class ImageModeBattlefieldPanel extends BattlefieldPanel {
         animationEvent = new PlayCardAnimation(player, card, gamePanel);
         setAnimationStartPoint(player, card);
         if (card.usesStack()) {
-            animationEvent.setEndPoint(new Point(150, imageStackViewer.getLocation().y));
+            final Dimension stackViewerSize = controller.getStackViewerRectangle(gamePanel).getSize();
+            animationEvent.setEndSize(new Dimension(stackViewerSize.height*2, stackViewerSize.height));
         } else {
             if (player.getIndex() == 0) {
                 animationEvent.setEndPoint(getLocationOnDuelPanel(imagePlayerPermanentViewer));
@@ -163,14 +165,5 @@ public class ImageModeBattlefieldPanel extends BattlefieldPanel {
         g.drawImage(overlayImage, 0, 0, this);
     }
 
-    @Override
-    public void setActivePlayerZone(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-        imageHandGraveyardViewer.setActivePlayerZone(playerInfo, zone);
-    }
-
-    @Override
-    public void setFullScreenActivePlayerZone(PlayerViewerInfo playerInfo, MagicPlayerZone zone) {
-        imageHandGraveyardViewer.setFullScreenActivePlayerZone(playerInfo, zone);
-    }
 }
 

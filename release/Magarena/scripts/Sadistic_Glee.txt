@@ -1,5 +1,5 @@
 name=Sadistic Glee
-image=http://mtgimage.com/card/sadistic%20glee.jpg
+image=http://magiccards.info/scans/en/br/61.jpg
 value=4.041
 rarity=C
 type=Enchantment

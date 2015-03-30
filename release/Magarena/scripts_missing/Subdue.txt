@@ -1,5 +1,5 @@
 name=Subdue
-image=http://mtgimage.com/card/subdue.jpg
+image=http://magiccards.info/scans/en/lg/120.jpg
 value=2.500
 rarity=C
 type=Instant

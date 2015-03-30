@@ -1,5 +1,5 @@
 name=Sentinel
-image=http://mtgimage.com/card/sentinel.jpg
+image=http://magiccards.info/scans/en/ch/87.jpg
 value=2.500
 rarity=R
 type=Artifact,Creature

@@ -1,5 +1,5 @@
 name=Merseine
-image=http://mtgimage.com/card/merseine.jpg
+image=http://magiccards.info/scans/en/fe/49.jpg
 value=2.500
 rarity=C
 type=Enchantment

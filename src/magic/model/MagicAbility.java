@@ -12,6 +12,7 @@ import magic.model.condition.MagicConditionFactory;
 import magic.model.condition.MagicConditionParser;
 import magic.model.trigger.MagicThiefTrigger.Player;
 import magic.model.trigger.MagicThiefTrigger.Type;
+import magic.exception.ScriptParseException;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -26,13 +27,14 @@ public enum MagicAbility {
     CannotAttack("(SN )?can't attack(\\.)?",-50),
     CannotAttackOrBlock("(SN )?can't attack or block(\\.)?",-200),
     CannotBlockWithoutFlying("(SN )?can block only creatures with flying\\.",-40),
-    CanBlockShadow("(SN )?can block creatures with shadow as though (they didn't have shadow|SN had shadow)\\.",10),
     CannotBeCountered("(SN )?can't be countered( by spells or abilities)?\\.",0),
-    Hexproof("hexproof(\\.)?",80),
     CannotBeTheTarget0("can't be the target of spells or abilities your opponents control",80),
     CannotBeTheTarget1("can't be the target of spells or abilities your opponents control",80),
     CannotBeTheTargetOfNonGreen("(SN )?can't be the target of nongreen spells or abilities from nongreen sources\\.",10),
     CannotBeTheTargetOfBlackOrRedOpponentSpell("(SN )?can't be the target of black or red spells your opponents control\\.",10),
+    CanBlockShadow("(SN )?can block creatures with shadow as though (they didn't have shadow|SN had shadow)\\.",10),
+    CanAttackWithDefender("can attack as though (it|they) didn't have defender", 10),
+    Hexproof("hexproof(\\.)?",80),
     Deathtouch("deathtouch(\\.)?",60),
     Defender("defender(\\.)?",-100),
     DoesNotUntap("(SN )?(doesn't|don't) untap during (your|its controller's|their controllers') untap step(s)?(\\.)?",-30),
@@ -1040,6 +1042,13 @@ public enum MagicAbility {
             ));
         }
     },
+    CantBlockPermanent("(SN )?can't block " + ARG.WORDRUN + "(\\.)?", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicCantBlockTrigger.create(
+                MagicTargetFilterFactory.multiple(ARG.wordrun(arg))
+            ));
+        }
+    },
     LordPumpGain("(?<other>other )?" + ARG.WORDRUN + " get(s)? " + ARG.PT + " and (have|has) " + ARG.ANY + "(\\.)?", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final String[] pt = ARG.pt(arg).replace("+","").split("/");
@@ -1080,11 +1089,11 @@ public enum MagicAbility {
             }
         }
     },
-    LordGainCant("(?<other>other )?" + ARG.WORDRUN + " can't " + ARG.ANY + "(\\.)?", 0) {
+    LordGainCan("(?<other>other )?" + ARG.WORDRUN + " (?<any>can('t)? .+)(\\.)?", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final boolean other = arg.group("other") != null;
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun(arg));
-            final MagicAbilityList abilityList = MagicAbility.getAbilityList("can't " + ARG.any(arg));
+            final MagicAbilityList abilityList = MagicAbility.getAbilityList(ARG.any(arg));
             if (other) {
                 card.add(MagicStatic.genABGameStaticOther(
                     filter,
@@ -1229,6 +1238,12 @@ public enum MagicAbility {
             card.add(MagicCardActivation.affinity(cardDef, MagicTargetFilterFactory.multiple(ARG.wordrun(arg))));
         }
     },
+    Kinship("kinship " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final String effect = ARG.effect(arg);
+            card.add(MagicAtYourUpkeepTrigger.kinship(effect, MagicRuleEventAction.create(effect).getAction()));
+        }
+    },
     ;
 
     public static final Set<MagicAbility> PROTECTION_FLAGS = EnumSet.range(ProtectionFromBlack, ProtectionFromEverything);
@@ -1299,7 +1314,7 @@ public enum MagicAbility {
                 return ability;
             }
         }
-        throw new RuntimeException("unknown ability \"" + name + "\"");
+        throw new ScriptParseException("unknown ability \"" + name + "\"");
     }
     
     public static MagicAbilityList getAbilityList(final String[] names) {

@@ -1,6 +1,6 @@
 name=Butcher of the Horde
-image=http://mtgimage.com/card/butcher%20of%20the%20horde.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ktk/168.jpg
+value=4.300
 rarity=R
 type=Creature
 subtype=Demon

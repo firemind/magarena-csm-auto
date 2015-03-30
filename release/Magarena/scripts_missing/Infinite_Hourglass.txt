@@ -1,5 +1,5 @@
 name=Infinite Hourglass
-image=http://mtgimage.com/card/infinite%20hourglass.jpg
+image=http://magiccards.info/scans/en/5e/378.jpg
 value=2.500
 rarity=R
 type=Artifact

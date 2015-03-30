@@ -1,5 +1,5 @@
 name=Reality Anchor
-image=http://mtgimage.com/card/reality%20anchor.jpg
+image=http://magiccards.info/scans/en/tp/140.jpg
 value=1.737
 rarity=C
 type=Instant

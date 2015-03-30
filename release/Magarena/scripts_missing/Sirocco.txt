@@ -1,5 +1,5 @@
 name=Sirocco
-image=http://mtgimage.com/card/sirocco.jpg
+image=http://magiccards.info/scans/en/mr/192.jpg
 value=2.500
 rarity=U
 type=Instant

@@ -17,12 +17,15 @@ import javax.swing.Scrollable;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import javax.swing.SwingUtilities;
 
 public class StackViewer extends JPanel implements ChoiceViewer {
 
@@ -80,11 +83,13 @@ public class StackViewer extends JPanel implements ChoiceViewer {
         buttons.clear();
 
         // Display stack items
-        for (final StackViewerInfo stackInfo : controller.getViewerInfo().getStack()) {
+        final List<StackViewerInfo> stack = controller.getViewerInfo().getStack();
+        for (final StackViewerInfo stackInfo : stack) {
             StackButton btn = new StackButton(stackInfo, maxWidth);
             buttons.add(btn);
             stackScrollablePanel.add(btn, "w 100%");
         }
+        stackTitleBar.setText(TITLE_CAPTION + (stack.size() > 0 ? ": " + stack.size() : ""));
 
         // set preferred size for layout manager.
         int preferredHeight =
@@ -112,6 +117,11 @@ public class StackViewer extends JPanel implements ChoiceViewer {
 
             button.showValidChoices(validChoices);
         }
+    }
+
+    Rectangle getStackViewerRectangle(Component canvas) {
+        final Point pointOnCanvas = SwingUtilities.convertPoint(this, stackTitleBar.getLocation(), canvas);
+        return new Rectangle(pointOnCanvas.x, pointOnCanvas.y, stackTitleBar.getWidth(), stackTitleBar.getHeight());
     }
 
     private final class StackButton extends PanelButton implements ChoiceViewer {

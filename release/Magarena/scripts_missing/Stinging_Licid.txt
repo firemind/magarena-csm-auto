@@ -1,5 +1,5 @@
 name=Stinging Licid
-image=http://mtgimage.com/card/stinging%20licid.jpg
+image=http://magiccards.info/scans/en/tp/91.jpg
 value=2.500
 rarity=U
 type=Creature

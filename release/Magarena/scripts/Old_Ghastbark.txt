@@ -1,6 +1,6 @@
 name=Old Ghastbark
-image=http://mtgimage.com/card/old%20ghastbark.jpg
-value=2.500
+image=http://magiccards.info/scans/en/shm/232.jpg
+value=2.048
 rarity=C
 type=Creature
 subtype=Treefolk,Warrior

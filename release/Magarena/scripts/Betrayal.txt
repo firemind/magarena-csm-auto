@@ -1,5 +1,5 @@
 name=Betrayal
-image=http://mtgimage.com/card/betrayal.jpg
+image=http://magiccards.info/scans/en/vi/26.jpg
 value=3.861
 rarity=C
 type=Enchantment

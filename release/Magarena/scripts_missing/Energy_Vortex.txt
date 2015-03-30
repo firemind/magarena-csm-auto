@@ -1,5 +1,5 @@
 name=Energy Vortex
-image=http://mtgimage.com/card/energy%20vortex.jpg
+image=http://magiccards.info/scans/en/mr/64.jpg
 value=2.500
 rarity=R
 type=Enchantment

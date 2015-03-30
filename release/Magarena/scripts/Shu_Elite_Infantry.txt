@@ -1,6 +1,6 @@
 name=Shu Elite Infantry
-image=http://mtgimage.com/card/shu%20elite%20infantry.jpg
-value=2.500
+image=http://magiccards.info/scans/en/p3k/22.jpg
+value=2.136
 rarity=C
 type=Creature
 subtype=Human,Soldier

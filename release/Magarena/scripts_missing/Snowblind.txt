@@ -1,5 +1,5 @@
 name=Snowblind
-image=http://mtgimage.com/card/snowblind.jpg
+image=http://magiccards.info/scans/en/ia/152.jpg
 value=2.500
 rarity=R
 type=Enchantment

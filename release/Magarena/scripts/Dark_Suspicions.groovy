@@ -16,6 +16,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int amount = event.getRefPlayer().getHandSize() - event.getPlayer().getHandSize();
             if (amount > 0) {
+                game.logAppendMessage(event.getPlayer(),"("+amount+")");
                 game.doAction(new MagicChangeLifeAction(event.getRefPlayer(),-amount));
             }
         }

@@ -1,5 +1,5 @@
 name=Ancestral Knowledge
-image=http://mtgimage.com/card/ancestral%20knowledge.jpg
+image=http://magiccards.info/scans/en/wl/32.jpg
 value=2.500
 rarity=R
 type=Enchantment

@@ -1,5 +1,5 @@
 name=Superior Numbers
-image=http://mtgimage.com/card/superior%20numbers.jpg
+image=http://magiccards.info/scans/en/mr/142.jpg
 value=2.500
 rarity=U
 type=Sorcery

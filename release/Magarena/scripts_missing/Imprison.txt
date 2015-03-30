@@ -1,5 +1,5 @@
 name=Imprison
-image=http://mtgimage.com/card/imprison.jpg
+image=http://magiccards.info/scans/en/lg/21.jpg
 value=2.500
 rarity=R
 type=Enchantment

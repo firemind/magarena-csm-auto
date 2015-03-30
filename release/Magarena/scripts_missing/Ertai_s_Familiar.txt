@@ -1,5 +1,5 @@
 name=Ertai's Familiar
-image=http://mtgimage.com/card/ertai%27s%20familiar.jpg
+image=http://magiccards.info/scans/en/wl/38.jpg
 value=2.500
 rarity=R
 type=Creature

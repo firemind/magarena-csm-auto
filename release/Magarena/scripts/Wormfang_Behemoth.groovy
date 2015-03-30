@@ -17,10 +17,10 @@
                     card,
                     MagicLocationType.OwnersHand
                 ));
+            }
         }
-    }
-},
-    new MagicWhenLeavesPlayTrigger() {
+    },
+    new MagicWhenSelfLeavesPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
             return new MagicEvent(
@@ -33,8 +33,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.doAction(new MagicReturnLinkedExileAction(
                 event.getPermanent(),
-                MagicLocationType.OwnersHand,
-                event.getPlayer()
+                MagicLocationType.OwnersHand
             ));
         }
     }

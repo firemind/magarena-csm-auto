@@ -1,5 +1,5 @@
 name=Bösium Strip
-image=http://mtgimage.com/card/bosium%20strip.jpg
+image=http://magiccards.info/scans/en/wl/146.jpg
 value=2.500
 rarity=R
 type=Artifact

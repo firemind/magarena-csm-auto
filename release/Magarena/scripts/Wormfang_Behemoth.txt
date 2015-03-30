@@ -1,6 +1,6 @@
 name=Wormfang Behemoth
-image=http://mtgimage.com/card/wormfang%20behemoth.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ju/55.jpg
+value=1.663
 rarity=R
 type=Creature
 subtype=Nightmare,Fish,Beast

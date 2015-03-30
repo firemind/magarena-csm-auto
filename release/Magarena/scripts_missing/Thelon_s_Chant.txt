@@ -1,5 +1,5 @@
 name=Thelon's Chant
-image=http://mtgimage.com/card/thelon%27s%20chant.jpg
+image=http://magiccards.info/scans/en/fe/94.jpg
 value=2.500
 rarity=U
 type=Enchantment

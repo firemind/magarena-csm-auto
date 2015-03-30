@@ -1,5 +1,5 @@
 name=Spike Weaver
-image=http://mtgimage.com/card/spike%20weaver.jpg
+image=http://magiccards.info/scans/en/br/79.jpg
 value=4.298
 rarity=R
 type=Creature

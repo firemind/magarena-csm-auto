@@ -1,5 +1,5 @@
 name=Avalanche
-image=http://mtgimage.com/card/avalanche.jpg
+image=http://magiccards.info/scans/en/ia/171.jpg
 value=2.500
 rarity=U
 type=Sorcery

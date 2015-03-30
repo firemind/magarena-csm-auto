@@ -1,5 +1,5 @@
 name=Maddening Imp
-image=http://mtgimage.com/card/maddening%20imp.jpg
+image=http://magiccards.info/scans/en/tp/37.jpg
 value=2.500
 rarity=R
 type=Creature

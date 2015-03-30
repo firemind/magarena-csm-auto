@@ -1,5 +1,5 @@
 name=Virtue's Ruin
-image=http://mtgimage.com/card/virtue's%20ruin.jpg
+image=http://magiccards.info/scans/en/po/39.jpg
 value=4.202
 rarity=U
 type=Sorcery

@@ -1,5 +1,5 @@
 name=Crazed Armodon
-image=http://mtgimage.com/card/crazed%20armodon.jpg
+image=http://magiccards.info/scans/en/tp/114.jpg
 value=2.500
 rarity=R
 type=Creature

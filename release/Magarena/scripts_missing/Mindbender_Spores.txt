@@ -1,5 +1,5 @@
 name=Mindbender Spores
-image=http://mtgimage.com/card/mindbender%20spores.jpg
+image=http://magiccards.info/scans/en/mr/127.jpg
 value=2.500
 rarity=R
 type=Creature

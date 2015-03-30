@@ -1,11 +1,13 @@
 package magic.ui.duel.player;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.util.Set;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import magic.model.MagicPlayerZone;
 import magic.model.player.AiPlayer;
 import magic.ui.SwingGameController;
 import magic.ui.duel.viewer.ChoiceViewer;
@@ -27,16 +29,11 @@ public class GamePlayerPanel extends TexturedPanel implements ChoiceViewer {
 
         this.playerInfo = playerInfo;
 
-        setOpaque(true);
-        setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
-
+        setOpaque(false);
         setPreferredSize(new Dimension(0, 80));
         setMinimumSize(getPreferredSize());
 
-        zoneButtonsPanel = new PlayerZoneButtonsPanel(playerInfo);
-
-        assert controller instanceof IZoneButtonListener;
-        zoneButtonsPanel.addZoneButtonListener(controller);
+        zoneButtonsPanel = new PlayerZoneButtonsPanel(playerInfo, controller);
 
         avatarPanel = new PlayerImagePanel(playerInfo, controller.getGame());
 
@@ -83,6 +80,22 @@ public class GamePlayerPanel extends TexturedPanel implements ChoiceViewer {
         this.playerInfo = playerInfo;
         avatarPanel.updateDisplay(playerInfo);
         zoneButtonsPanel.updateDisplay(playerInfo);
+    }
+
+    public void setActiveZone(MagicPlayerZone zone) {
+        zoneButtonsPanel.setActiveZone(zone);
+    }
+
+    public PlayerViewerInfo getPlayerInfo() {
+        return playerInfo;
+    }
+
+    public Rectangle getZoneButtonRectangle(MagicPlayerZone zone, Component canvas) {
+        return zoneButtonsPanel.getZoneButtonRectangle(zone, canvas);
+    }
+
+    public void doFlashPlayerHandZoneButton() {
+        zoneButtonsPanel.doFlashPlayerHandZoneButton();
     }
 
 }

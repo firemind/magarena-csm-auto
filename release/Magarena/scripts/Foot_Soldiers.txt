@@ -1,6 +1,6 @@
 name=Foot Soldiers
-image=http://mtgimage.com/card/foot%20soldiers.jpg
-value=2.500
+image=http://magiccards.info/scans/en/9e/14.jpg
+value=1.345
 rarity=C
 type=Creature
 subtype=Human,Soldier

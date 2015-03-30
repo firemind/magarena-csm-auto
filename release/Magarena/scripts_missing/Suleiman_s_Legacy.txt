@@ -1,5 +1,5 @@
 name=Suleiman's Legacy
-image=http://mtgimage.com/card/suleiman%27s%20legacy.jpg
+image=http://magiccards.info/scans/en/vi/138.jpg
 value=2.500
 rarity=R
 type=Enchantment

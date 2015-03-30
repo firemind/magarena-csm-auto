@@ -1,5 +1,5 @@
 name=Dragonlord Silumgar
-image=http://mtgimage.com/card/dragonlord%20silumgar.jpg
+image=http://magiccards.info/scans/en/dtk/220.jpg
 value=2.500
 rarity=M
 type=Legendary,Creature

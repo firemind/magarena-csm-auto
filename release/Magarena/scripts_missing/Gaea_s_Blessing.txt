@@ -1,5 +1,5 @@
 name=Gaea's Blessing
-image=http://mtgimage.com/card/gaea%27s%20blessing.jpg
+image=http://magiccards.info/scans/en/tsts/77.jpg
 value=2.500
 rarity=U
 type=Sorcery

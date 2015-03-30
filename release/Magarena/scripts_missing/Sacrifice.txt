@@ -1,5 +1,5 @@
 name=Sacrifice
-image=http://mtgimage.com/card/sacrifice.jpg
+image=http://magiccards.info/scans/en/rv/34.jpg
 value=2.500
 rarity=U
 type=Instant

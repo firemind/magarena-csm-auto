@@ -1,5 +1,5 @@
 name=Phyrexian Splicer
-image=http://mtgimage.com/card/phyrexian%20splicer.jpg
+image=http://magiccards.info/scans/en/tp/293.jpg
 value=2.500
 rarity=U
 type=Artifact

@@ -1,6 +1,6 @@
 name=Minotaur Warrior
-image=http://mtgimage.com/card/minotaur%20warrior.jpg
-value=2.500
+image=http://magiccards.info/scans/en/po/145.jpg
+value=2.474
 rarity=C
 type=Creature
 subtype=Minotaur,Warrior

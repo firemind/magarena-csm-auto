@@ -1,5 +1,5 @@
 name=Frog Tongue
-image=http://mtgimage.com/card/frog%20tongue.jpg
+image=http://magiccards.info/scans/en/tp/122.jpg
 value=3.738
 rarity=C
 type=Enchantment

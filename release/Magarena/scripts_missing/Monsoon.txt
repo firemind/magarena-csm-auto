@@ -1,5 +1,5 @@
 name=Monsoon
-image=http://mtgimage.com/card/monsoon.jpg
+image=http://magiccards.info/scans/en/ia/376.jpg
 value=2.500
 rarity=R
 type=Enchantment

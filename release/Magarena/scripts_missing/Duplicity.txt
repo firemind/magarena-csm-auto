@@ -1,5 +1,5 @@
 name=Duplicity
-image=http://mtgimage.com/card/duplicity.jpg
+image=http://magiccards.info/scans/en/tp/60.jpg
 value=2.500
 rarity=R
 type=Enchantment

@@ -1,5 +1,5 @@
 name=Knight of Dawn
-image=http://mtgimage.com/card/knight%20of%20dawn.jpg
+image=http://magiccards.info/scans/en/tp/238.jpg
 value=3.745
 rarity=U
 type=Creature

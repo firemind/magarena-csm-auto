@@ -1,5 +1,5 @@
 name=Coffin Queen
-image=http://mtgimage.com/card/coffin%20queen.jpg
+image=http://magiccards.info/scans/en/tp/8.jpg
 value=2.500
 rarity=R
 type=Creature

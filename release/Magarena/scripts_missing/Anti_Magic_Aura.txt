@@ -1,7 +1,7 @@
 name=Anti-Magic Aura
-image=http://mtgimage.com/card/anti-magic%20aura.jpg
+image=http://magiccards.info/scans/en/5e/72.jpg
 value=2.500
-rarity=C
+rarity=U
 type=Enchantment
 subtype=Aura
 cost={2}{U}

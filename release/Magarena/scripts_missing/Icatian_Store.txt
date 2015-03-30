@@ -1,5 +1,5 @@
 name=Icatian Store
-image=http://mtgimage.com/card/icatian%20store.jpg
+image=http://magiccards.info/scans/en/5e/423.jpg
 value=2.500
 rarity=R
 type=Land

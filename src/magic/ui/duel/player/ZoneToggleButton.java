@@ -1,6 +1,7 @@
 package magic.ui.duel.player;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -12,17 +13,17 @@ import java.awt.Transparency;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import javax.swing.JToggleButton;
+import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.model.MagicPlayerZone;
 import magic.ui.GraphicsUtilities;
 import magic.ui.IconImages;
 import magic.ui.MagicStyle;
 import org.pushingpixels.trident.Timeline;
-import org.pushingpixels.trident.callback.TimelineCallback;
 
 
 @SuppressWarnings("serial")
-public class ZoneToggleButton extends JToggleButton implements TimelineCallback {
+public class ZoneToggleButton extends JToggleButton {
 
     enum ValueStyle {
         NORMAL,
@@ -39,6 +40,7 @@ public class ZoneToggleButton extends JToggleButton implements TimelineCallback 
     private Timeline timeline1;
     private int imageOffset = 0;
     private boolean animateOnChange = false;
+    private boolean isActive = false;
 
     public int getImageOffset() {
         return imageOffset;
@@ -51,31 +53,32 @@ public class ZoneToggleButton extends JToggleButton implements TimelineCallback 
     
     // CTR
     private ZoneToggleButton(
-            final MagicPlayerZone playerZone,
-            final MagicIcon icon,
+            final MagicPlayerZone zone,
             final int cardCount,
             final ValueStyle valueStyle,
-            final boolean isActive,
-            final boolean isAnimated) {
+            final boolean isActive) {
 
-        this.playerZone = playerZone;
-        this.magicIcon = icon;
+        this.playerZone = zone;
+        this.magicIcon = zone.getIcon();
         this.valueStyle = valueStyle;
-        this.animateOnChange = false;
-        setEnabled(isActive);
+        this.animateOnChange = true;
+        this.isActive = isActive;
+        setToolTipText(zone.getName());
+        setEnabled(false);
+        setFocusable(false);
+        setRolloverEnabled(false);
+        setContentAreaFilled(false);
         setNumberOfCardsInZone(cardCount);
-        setMinimumSize(new Dimension(40, 60));        
+        setMinimumSize(new Dimension(40, 60));
     }
+    
     // CTR
     ZoneToggleButton(
             final MagicPlayerZone playerZone,
-            final MagicIcon icon,
             final int cardCount,
-            final boolean isActive,
-            final boolean isAnimated) {
+            final boolean isActive) {
         
-        this(playerZone, icon, cardCount, ValueStyle.NORMAL, isActive, isAnimated);
-
+        this(playerZone, cardCount, ValueStyle.NORMAL, isActive);
     }
 
     public MagicPlayerZone getPlayerZone() {
@@ -98,8 +101,15 @@ public class ZoneToggleButton extends JToggleButton implements TimelineCallback 
         drawZoneValueOverlay((Graphics2D)g, cardCountString, x, getHeight(), image);
 
         if (isSelected()) {
-            drawSelectedBorder(g);
+            drawSelectedRoundBorder(g);
         }
+    }
+
+    private void drawSelectedFill(Graphics g) {
+        final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(MagicStyle.getTranslucentColor(MagicStyle.HIGHLIGHT_COLOR, 110));
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight()-1, 18, 18);
     }
 
     private void drawSelectedBorder(Graphics g) {
@@ -107,13 +117,21 @@ public class ZoneToggleButton extends JToggleButton implements TimelineCallback 
         g2d.setStroke(new BasicStroke(4.0f));
         g2d.setColor(MagicStyle.HIGHLIGHT_COLOR);
         g2d.drawRect(0, 0, getWidth(), getHeight());
+    }
 
+    private void drawSelectedRoundBorder(Graphics g) {
+        final Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setStroke(new BasicStroke(3.0f));
+        g2d.setColor(new Color(0, 0, 0, 100));
+        g2d.drawRoundRect(1, 1, getWidth()-3, getHeight()-3, 16, 16);
     }
 
     private BufferedImage getZoneIconAsImage() {
         if (zoneIconImage == null) {
             zoneIconImage = GraphicsUtilities.getCompatibleBufferedImage(32, 32, Transparency.TRANSLUCENT);
             Graphics2D g2d = (Graphics2D) zoneIconImage.getGraphics();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             final Image iconImage = GraphicsUtilities.getConvertedIcon(IconImages.getIcon(magicIcon));
             g2d.drawImage(iconImage, 0, 0, this);
             g2d.dispose();
@@ -123,6 +141,7 @@ public class ZoneToggleButton extends JToggleButton implements TimelineCallback 
 
     private void drawZoneValueOverlay(Graphics2D g2d, String text, int x, int y, final Image iconImage) {
         g2d.setFont(ZONE_FONT);
+        g2d.setColor(Color.BLACK);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         FontRenderContext frc = g2d.getFontRenderContext();
         final int textHeight = Math.round(ZONE_FONT.getLineMetrics(text, frc).getHeight());
@@ -141,34 +160,22 @@ public class ZoneToggleButton extends JToggleButton implements TimelineCallback 
         final boolean isModified = !Integer.toString(cardCount).equals(cardCountString);
         cardCountString = Integer.toString(cardCount);
         if (isModified) {
-            if (animateOnChange) {
-                doAlertAnimation();
-            } else {
-                repaint();
-            }
+            repaint();
         }
     }
 
     public void doAlertAnimation() {
-        timeline1 = new Timeline();
-        timeline1.addCallback(this);
-        timeline1.setDuration(200);
-//        timeline1.setEase(new Spline(0.8f));
-        timeline1.addPropertyToInterpolate(
-                Timeline.property("imageOffset").on(this).from(0).to(4));
-        timeline1.playLoop(2, Timeline.RepeatBehavior.REVERSE);
+        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+            timeline1 = new Timeline();
+            timeline1.setDuration(200);
+            timeline1.addPropertyToInterpolate(
+                    Timeline.property("imageOffset").on(this).from(0).to(4));
+            timeline1.playLoop(4, Timeline.RepeatBehavior.REVERSE);
+        }
     }
 
-    @Override
-    public void onTimelineStateChanged(Timeline.TimelineState oldState, Timeline.TimelineState newState, float durationFraction, float timelinePosition) {
-        // do nothing.
+    public boolean isActive() {
+        return isActive;
     }
-
-    @Override
-    public void onTimelinePulse(float durationFraction, float timelinePosition) {
-        // do nothing.
-    }
-
-
 
 }

@@ -1,5 +1,5 @@
 name=Avenging Angel
-image=http://mtgimage.com/card/avenging%20angel.jpg
+image=http://magiccards.info/scans/en/tp/219.jpg
 value=3.317
 rarity=R
 type=Creature

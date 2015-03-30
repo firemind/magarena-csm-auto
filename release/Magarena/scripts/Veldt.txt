@@ -1,5 +1,5 @@
 name=Veldt
-image=http://mtgimage.com/card/veldt.jpg
+image=http://magiccards.info/scans/en/ia/358.jpg
 value=2.400
 rarity=R
 type=Land

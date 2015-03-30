@@ -21,6 +21,9 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import magic.utility.ProgressReporter;
 import magic.utility.MagicSystem;
 import magic.model.MagicCardDefinition;
@@ -48,7 +51,7 @@ public class CardDefinitions {
     // of that card that can be played.
 
     // Contains reference to all playable MagicCardDefinitions indexed by card name.
-    private static final Map<String, MagicCardDefinition> allPlayableCardDefs = new HashMap<>();
+    private static final ConcurrentMap<String, MagicCardDefinition> allPlayableCardDefs = new ConcurrentHashMap<>();
 
     // Only contains reference to the main MagicCardDefinition aspect of a card. This is
     // required for functions like the Deck Editor where you should not be able to select
@@ -59,6 +62,7 @@ public class CardDefinitions {
     private static final List<MagicCardDefinition> landCards = new ArrayList<>();
     private static final List<MagicCardDefinition> spellCards = new ArrayList<>();
 
+    private static final AtomicInteger cdefIndex = new AtomicInteger(1);
 
     // groovy shell for evaluating groovy card scripts with autmatic imports
     private static final GroovyShell shell = new GroovyShell(
@@ -92,25 +96,23 @@ public class CardDefinitions {
     private static void addDefinition(final MagicCardDefinition cardDefinition) {
         assert cardDefinition != null : "CardDefinitions.addDefinition passed null";
         assert cardDefinition.getIndex() == -1 : "cardDefinition has been assigned index";
-            
+
         final String key = getASCII(cardDefinition.getFullName());
-        allPlayableCardDefs.put(key, cardDefinition);
-        
-        cardDefinition.setIndex(allPlayableCardDefs.size());
+
+        final MagicCardDefinition prev = allPlayableCardDefs.putIfAbsent(key, cardDefinition);
+        if (prev != null) {
+            // card definition already added, early exit
+            return;
+        }
+
+        cardDefinition.setIndex(cdefIndex.getAndIncrement());
         
         if (cardDefinition.isToken()) {
             TokenCardDefinitions.add(cardDefinition);
-        } else if (cardDefinition.isHidden() == false) {
+        }
+        
+        if (cardDefinition.isToken() == false && cardDefinition.isHidden() == false) {
             cardDefinition.add(new MagicCardActivation(cardDefinition));
-            
-            defaultPlayableCardDefs.add(cardDefinition);
-            CubeDefinitions.getCubeDefinition("all").add(cardDefinition.getName());
-
-            if (cardDefinition.isLand() == false) {
-                spellCards.add(cardDefinition);
-            } else if (cardDefinition.isBasic() == false) {
-                landCards.add(cardDefinition);
-            }
         }
     }
 
@@ -137,10 +139,12 @@ public class CardDefinitions {
     //link to groovy script that returns array of MagicChangeCardDefinition objects
     static void addCardSpecificGroovyCode(final MagicCardDefinition cardDefinition, final String cardName) {
         try {
+            final File groovyFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".groovy");
+            if (groovyFile.isFile() == false) {
+                throw new RuntimeException("groovy file not found: " + groovyFile);
+            }
             @SuppressWarnings("unchecked")
-            final List<MagicChangeCardDefinition> defs = (List<MagicChangeCardDefinition>)shell.evaluate(
-                new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".groovy")
-            );
+            final List<MagicChangeCardDefinition> defs = (List<MagicChangeCardDefinition>)shell.evaluate(groovyFile);
             for (MagicChangeCardDefinition ccd : defs) {
                 ccd.change(cardDefinition);
             }
@@ -171,9 +175,11 @@ public class CardDefinitions {
     }
     
     public static void loadCardDefinition(final String cardName) {
-         loadCardDefinition(
-            new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt")
-         );
+         final File cardFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt");
+         if (cardFile.isFile() == false) {
+             throw new RuntimeException("card script file not found: " + cardFile);
+         }
+         loadCardDefinition(cardFile);
     }
 
     /**
@@ -200,8 +206,25 @@ public class CardDefinitions {
             }
         }
         reporter.setMessage("Loading cards...100%");
+        
+        // update card lists
+        for (final MagicCardDefinition cardDefinition : allPlayableCardDefs.values()) {
+            if (cardDefinition.isToken() == false && cardDefinition.isHidden() == false) {
+                defaultPlayableCardDefs.add(cardDefinition);
+                CubeDefinitions.getCubeDefinition("all").add(cardDefinition.getName());
+
+                if (cardDefinition.isLand() == false) {
+                    spellCards.add(cardDefinition);
+                } else if (cardDefinition.isBasic() == false) {
+                    landCards.add(cardDefinition);
+                }
+            }
+        }
+    }
+
+    public static void postCardDefinitions() {
         printStatistics();
-        updateNewCardsLog(loadCardsSnapshotFile());
+        updateNewCardsLog(CardDefinitions.loadCardsSnapshotFile());
     }
     
     private static boolean isZero(double value, double delta){
@@ -263,6 +286,7 @@ public class CardDefinitions {
      * Returns a list of all playable MagicCardDefinitions EXCEPT those classed as hidden.
      */
     public static List<MagicCardDefinition> getDefaultPlayableCardDefs() {
+        MagicSystem.waitForAllCards();
         return defaultPlayableCardDefs;
     }
 
@@ -270,6 +294,7 @@ public class CardDefinitions {
      * Returns a list all playable MagicCardDefinitions INCLUDING those classed as hidden.
      */
     public static Collection<MagicCardDefinition> getAllPlayableCardDefs() {
+        MagicSystem.waitForAllCards();
         return allPlayableCardDefs.values();
     }
 
@@ -281,10 +306,12 @@ public class CardDefinitions {
     }
 
     public static List<MagicCardDefinition> getLandCards() {
+        MagicSystem.waitForAllCards();
         return landCards;
     }
 
     public static List<MagicCardDefinition> getSpellCards() {
+        MagicSystem.waitForAllCards();
         return spellCards;
     }
 

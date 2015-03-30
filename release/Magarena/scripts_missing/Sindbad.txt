@@ -1,5 +1,5 @@
 name=Sindbad
-image=http://mtgimage.com/card/sindbad.jpg
+image=http://magiccards.info/scans/en/tsts/31.jpg
 value=2.500
 rarity=U
 type=Creature

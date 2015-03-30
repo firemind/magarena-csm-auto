@@ -1,5 +1,5 @@
 name=The Rack
-image=http://mtgimage.com/card/the%20rack.jpg
+image=http://magiccards.info/scans/en/4e/370.jpg
 value=4.368
 rarity=U
 type=Artifact

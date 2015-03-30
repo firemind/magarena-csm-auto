@@ -1,5 +1,5 @@
 name=Desperate Gambit
-image=http://mtgimage.com/card/desperate%20gambit.jpg
+image=http://magiccards.info/scans/en/wl/96.jpg
 value=2.500
 rarity=U
 type=Instant

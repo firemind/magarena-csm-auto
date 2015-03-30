@@ -1,5 +1,5 @@
 name=Spike Colony
-image=http://mtgimage.com/card/spike%20colony.jpg
+image=http://magiccards.info/scans/en/br/77.jpg
 value=2.984
 rarity=C
 type=Creature

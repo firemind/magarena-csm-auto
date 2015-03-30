@@ -1,5 +1,5 @@
 name=Stormwing Dragon
-image=http://mtgimage.com/card/stormwing%20dragon.jpg
+image=http://magiccards.info/scans/en/dtk/159.jpg
 value=2.500
 rarity=U
 type=Creature

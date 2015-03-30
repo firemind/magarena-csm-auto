@@ -1,6 +1,6 @@
 name=Lagac Lizard
-image=http://mtgimage.com/card/lagac%20lizard.jpg
-value=2.500
+image=http://magiccards.info/scans/en/roe/154.jpg
+value=1.556
 rarity=C
 type=Creature
 subtype=Lizard

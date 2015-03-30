@@ -1,5 +1,5 @@
 name=Omen
-image=http://mtgimage.com/card/omen.jpg
+image=http://magiccards.info/scans/en/po/63.jpg
 value=2.500
 rarity=C
 type=Sorcery

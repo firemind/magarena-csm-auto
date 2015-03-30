@@ -10,6 +10,10 @@ import magic.data.GeneralConfig;
 import magic.model.MagicGameLog;
 import magic.utility.MagicFileSystem.DataPath;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ExecutionException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
@@ -19,6 +23,12 @@ final public class MagicSystem {
     private MagicSystem() {}
 
     public static final boolean IS_WINDOWS_OS = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    private static final ProgressReporter reporter = new ProgressReporter();
+    private static final FutureTask<Void> loadCards = new FutureTask<>(new Runnable() {
+        public void run() {
+            initializeEngine(reporter);
+        }
+    }, null);
 
     public static boolean isTestGame() {
         return (System.getProperty("testGame") != null);
@@ -75,30 +85,34 @@ final public class MagicSystem {
         return params;
     }
 
-    public static void initializeEngine(final ProgressReporter reporter) {
-        // setup the game log
-        reporter.setMessage("Initializing log...");
-        MagicGameLog.initialize();
+    public static String getLoadingProgress() {
+        return reporter.getMessage();
+    }
 
-        if (Boolean.getBoolean("parseMissing")) {
+    public static void waitForAllCards() {
+        if (loadCards.isDone()) {
+            return;
+        } else {
+            try {
+                loadCards.get();
+            } catch (final InterruptedException|ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+    
+    private static void initializeEngine(final ProgressReporter reporter) {
+        if (isParseMissing()) {
             UnimplementedParser.parseScriptsMissing(reporter);
             reporter.setMessage("Parsing card abilities...");
             UnimplementedParser.parseCardAbilities();
+
         }
         CardDefinitions.loadCardDefinitions(reporter);
-        if (Boolean.getBoolean("debug")) {
-            reporter.setMessage("Loading card abilities...");
-            CardDefinitions.loadCardAbilities();
-        }
-        reporter.setMessage("Loading cube definitions...");
-        CubeDefinitions.loadCubeDefinitions();
-        reporter.setMessage("Loading keyword definitions...");
-        KeywordDefinitions.getInstance().loadKeywordDefinitions();
-        reporter.setMessage("Loading deck generators...");
-        DeckGenerators.getInstance().loadDeckGenerators();
     }
 
     public static void initialize(final ProgressReporter reporter) {
+
         // must load config here otherwise annotated card image theme-specifc
         // icons are not loaded before the AbilityIcon class is initialized
         // and you end up with the default icons instead.
@@ -115,6 +129,36 @@ final public class MagicSystem {
         }
 
         DeckUtils.createDeckFolder();
-        initializeEngine(reporter);
+
+        // setup the game log
+        reporter.setMessage("Initializing log...");
+        MagicGameLog.initialize();
+       
+        // start a separate thread to load cards
+        final ExecutorService background = Executors.newSingleThreadExecutor();
+        background.execute(loadCards);
+        background.execute(new Runnable() {
+            public void run() {
+                CardDefinitions.postCardDefinitions();
+            }
+        });
+        background.shutdown();
+
+        // if parse scripts missing or pre-load abilities then load cards synchronously
+        if (isParseMissing() || isDebugMode()) {
+            waitForAllCards();
+        }
+        
+        if (isDebugMode()) {
+            reporter.setMessage("Loading card abilities...");
+            CardDefinitions.loadCardAbilities();
+        }
+
+        reporter.setMessage("Loading cube definitions...");
+        CubeDefinitions.loadCubeDefinitions();
+        reporter.setMessage("Loading deck generators...");
+        DeckGenerators.getInstance().loadDeckGenerators();
+        reporter.setMessage("Loading keyword definitions...");
+        KeywordDefinitions.getInstance().loadKeywordDefinitions();
     }
 }
