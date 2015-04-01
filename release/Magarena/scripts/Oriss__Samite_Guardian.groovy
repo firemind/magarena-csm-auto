@@ -1,5 +1,5 @@
 def CARD_NAMED_ORISS = new MagicCardFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
         return target.getName().equals("Oriss, Samite Guardian");
     }
     public boolean acceptType(final MagicTargetType targetType) {
@@ -8,14 +8,14 @@ def CARD_NAMED_ORISS = new MagicCardFilterImpl() {
 };
 
 def A_CARD_NAMED_ORISS = new MagicTargetChoice(
-    CARD_NAMED_ORISS,
+    CARD_NAMED_ORISS,  
     MagicTargetHint.None,
     "a card named Oriss, Samite Guardian from your hand"
 );
 
 [
     new MagicPermanentActivation(
-        new MagicActivationHints(MagicTiming.FirstMain),
+        new MagicActivationHints(MagicTiming.Tapping),
         "Grandeur"
     ) {
         @Override
@@ -26,7 +26,7 @@ def A_CARD_NAMED_ORISS = new MagicTargetChoice(
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                NEG_TARGET_PLAYER,
+                MagicTargetChoice.NEG_TARGET_PLAYER,
                 this,
                 "Target player\$ can't cast spells this turn, and creatures that player controls can't attack this turn."
             );
@@ -34,10 +34,13 @@ def A_CARD_NAMED_ORISS = new MagicTargetChoice(
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
-                game.doAction(new ChangePlayerStateAction(it, MagicPlayerState.CantCastSpells));
-                CREATURE_YOU_CONTROL.filter(it) each {
-                    final MagicPermanent creature ->
-                    game.doAction(new GainAbilityAction(creature, MagicAbility.CannotAttack));
+                game.doAction(new MagicChangePlayerStateAction(
+                    it,
+                    MagicPlayerState.CantCastSpells
+                ));
+            final Collection<MagicPermanent> creatures = it.filterPermanents(MagicTargetFilterFactory.CREATURE_YOU_CONTROL);
+            for (final MagicPermanent creature : creatures) {
+                game.doAction(new MagicGainAbilityAction(creature, MagicAbility.CannotAttack));
                 }
             });
         }
