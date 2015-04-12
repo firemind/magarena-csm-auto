@@ -1,13 +1,13 @@
 name=Sulfur Elemental
 image=http://magiccards.info/scans/en/pc/108.jpg
-value=4.060
+value=2.500
 rarity=U
 type=Creature
 subtype=Elemental
 cost={2}{R}
 pt=3/2
 ability=Flash;\
-        Split second;\
-        White creatures get +1/-1.
+Split second.;\
+White creatures get +1/-1.
 timing=flash
-oracle=Flash\nSplit second\nWhite creatures get +1/-1.
+oracle=Flash. Split second. White creatures get +1/-1.
