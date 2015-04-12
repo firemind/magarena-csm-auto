@@ -1,7 +1,7 @@
 def RED_INSTANT_OR_SORCERY = new MagicStackFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicItemOnStack target) {
+    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicItemOnStack target) {
         return target.hasColor(MagicColor.Red) && target.isInstantOrSorcerySpell();
-    }
+    } 
 };
 
 def TARGET_RED_INSTANT_OR_SORCERY = new MagicTargetChoice(
@@ -31,8 +31,8 @@ def TARGET_RED_INSTANT_OR_SORCERY = new MagicTargetChoice(
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.processTargetCardOnStack(game, {
-                game.doAction(new CounterItemOnStackAction(it));
+             event.processTargetCardOnStack(game, {
+                 game.doAction(new MagicCounterItemOnStackAction(it));
             });
         }
     }
