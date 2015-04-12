@@ -1,13 +1,12 @@
 name=Take Possession
 image=http://magiccards.info/scans/en/mma/66.jpg
-value=3.947
+value=2.500
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={5}{U}{U}
-ability=Split second;\
-        Enchant permanent;\
-        You control enchanted permanent.
+ability=Split second.;\
+You control enchanted permanent.
 timing=aura
 enchant=gain control,neg permanent
-oracle=Split second\nEnchant permanent\nYou control enchanted permanent.
+oracle=Split second. Enchant permanent. You control enchanted permanent.
