@@ -1,8 +1,8 @@
 [
-    new EntersBattlefieldTrigger() {
+    new MagicWhenComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
-            return permanent.hasState(MagicPermanentState.CastFromHand) ?
+            return permanent.hasState(MagicPermanentState.CastFromHand) ? 
                 new MagicEvent(
                     permanent,
                     this,
@@ -12,9 +12,9 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new PlayTokenAction(
+            game.doAction(new MagicPlayTokenAction(
                 event.getPlayer(),
-                CardDefinitions.getToken("1/1 white and blue Bird creature token with flying")
+                TokenCardDefinitions.get("1/1 white and blue Bird creature token with flying")
             ));
             game.addEvent(new MagicPopulateEvent(event.getSource()));
         }
