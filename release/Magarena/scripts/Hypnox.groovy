@@ -1,8 +1,8 @@
 [
-    new EntersBattlefieldTrigger() {
+    new MagicWhenComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
-            return permanent.hasState(MagicPermanentState.CastFromHand) ?
+            return permanent.hasState(MagicPermanentState.CastFromHand) ? 
                 new MagicEvent(
                     permanent,
                     MagicTargetChoice.TARGET_OPPONENT,
@@ -16,7 +16,7 @@
             event.processTargetPlayer(game, {
                 final MagicCardList hand = new MagicCardList(it.getHand());
                 for (final MagicCard card : hand) {
-                    game.doAction(new ExileLinkAction(
+                    game.doAction(new MagicExileLinkAction(
                         event.getPermanent(),
                         card,
                         MagicLocationType.OwnersHand
@@ -25,9 +25,9 @@
             });
         }
     },
-    new ThisLeavesBattlefieldTrigger() {
+    new MagicWhenSelfLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
             return new MagicEvent(
                 permanent,
                 this,
@@ -36,7 +36,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new ReturnLinkedExileAction(
+            game.doAction(new MagicReturnLinkedExileAction(
                 event.getPermanent(),
                 MagicLocationType.OwnersHand
             ));
