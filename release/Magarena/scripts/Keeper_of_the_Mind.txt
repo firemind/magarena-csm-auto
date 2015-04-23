@@ -1,6 +1,6 @@
 name=Keeper of the Mind
 image=http://magiccards.info/scans/en/ex/36.jpg
-value=3.886
+value=2.500
 rarity=U
 type=Creature
 subtype=Human,Wizard
