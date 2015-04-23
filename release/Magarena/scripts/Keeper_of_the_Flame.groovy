@@ -1,7 +1,7 @@
 def OPPONENT_WHO_HAS_MORE_LIFE = new MagicPlayerFilterImpl() {
     public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPlayer target) {
         return target.isEnemy(player) && target.getLife() > player.getLife();
-    }
+    } 
 };
 
 def TARGET_OPPONENT_WHO_HAS_MORE_LIFE = new MagicTargetChoice(
@@ -28,7 +28,7 @@ def TARGET_OPPONENT_WHO_HAS_MORE_LIFE = new MagicTargetChoice(
                 source,
                 TARGET_OPPONENT_WHO_HAS_MORE_LIFE,
                 this,
-                "SN deals 2 damage to target opponent\$ who has more life than PN."
+                "SN deals 2 damage to RN."
             );
         }
 
