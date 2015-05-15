@@ -1,16 +1,15 @@
 def CREATURE_OR_PLANESWALKER = new MagicPermanentFilterImpl() {
     public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
         return target.isCreature() || target.isPlaneswalker();
-    }
+    } 
 };
 
 def TARGET_CREATURE_OR_PLANESWALKER = new MagicTargetChoice(
     CREATURE_OR_PLANESWALKER,
-    MagicTargetHint.Negative,
     "target creature or planeswalker"
 );
 [
-    new EntersBattlefieldTrigger() {
+    new MagicWhenComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -26,7 +25,7 @@ def TARGET_CREATURE_OR_PLANESWALKER = new MagicTargetChoice(
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
                 game.doAction(new AddStaticAction(
-                    event.getPermanent(),
+                    event.getPermanent(), 
                     MagicStatic.ControlAsLongAsYouControlSource(
                         event.getPlayer(),
                         it
