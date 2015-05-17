@@ -5,7 +5,7 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "PN wins the game if he or she controls a land of each basic land type and a creature of each color."
+                "You win the game if you control a land of each basic land type and a creature of each color."
             );
         }
         @Override
@@ -21,8 +21,7 @@
                 player.controlsPermanent(GREEN_CREATURE) &&
                 player.controlsPermanent(RED_CREATURE) &&
                 player.controlsPermanent(WHITE_CREATURE)) {
-
-                game.doAction(new LoseGameAction(player.getOpponent()));
+                    game.doAction(new LoseGameAction(player.getOpponent()));
             }
         }
     }
