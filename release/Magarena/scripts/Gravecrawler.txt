@@ -1,6 +1,6 @@
 name=Gravecrawler
 image=http://magiccards.info/scans/en/dka/64.jpg
-value=4.318
+value=2.500
 rarity=R
 type=Creature
 subtype=Zombie
