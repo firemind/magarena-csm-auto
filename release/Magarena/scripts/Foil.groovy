@@ -1,5 +1,5 @@
 def ISLAND_CARD_FROM_HAND = new MagicCardFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
         return target.hasSubType(MagicSubType.Island);
     }
     public boolean acceptType(final MagicTargetType targetType) {
@@ -13,7 +13,7 @@ def AN_ISLAND_CARD_FROM_HAND = new MagicTargetChoice(
 );
 
 [
-    new MagicCardActivation(
+    new MagicHandCastActivation(
         [
             MagicConditionFactory.HandAtLeast(3),
             MagicCondition.CARD_CONDITION,
@@ -24,10 +24,7 @@ def AN_ISLAND_CARD_FROM_HAND = new MagicTargetChoice(
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             final MagicTargetChoice ANOTHER_CARD_FROM_HAND = new MagicTargetChoice(
-                new MagicOtherCardTargetFilter(
-                    MagicTargetFilterFactory.CARD_FROM_HAND, 
-                    source
-                ),
+                CARD_FROM_HAND.except(source), 
                 MagicTargetHint.None,
                 "another card from your hand"
             );

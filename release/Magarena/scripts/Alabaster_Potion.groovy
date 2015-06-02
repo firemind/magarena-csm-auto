@@ -2,16 +2,17 @@
     new MagicSpellCardEvent() {
         @Override
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
+            final int amount = payedCost.getX();
             return new MagicEvent(
                 cardOnStack,
                 new MagicOrChoice(
-                    MagicTargetChoice.POS_TARGET_PLAYER,
-                    MagicTargetChoice.POS_TARGET_CREATURE_OR_PLAYER
+                    POS_TARGET_PLAYER,
+                    POS_TARGET_CREATURE_OR_PLAYER
                 ),
-                payedCost.getX(),
+                amount,
                 this,
-                "Choose one\$ - target player gains X life; " +
-                "or prevent the next X damage that would be dealt to target creature or player this turn.\$" 
+                "Choose one\$ — (1) target player gains X life; " +
+                "or (2) prevent the next X damage that would be dealt to target creature or player this turn.\$ (X=${amount})" 
             );
         }
         @Override
@@ -19,11 +20,11 @@
             final int X = event.getRefInt();
             if (event.isMode(1)) {
                 event.processTargetPlayer(game, {
-                    game.doAction(new MagicChangeLifeAction(it,X));
+                    game.doAction(new ChangeLifeAction(it,X));
                 });
             } else if (event.isMode(2)) {
                 event.processTarget(game, {
-                game.doAction(new MagicPreventDamageAction(it,X));
+                game.doAction(new PreventDamageAction(it,X));
                 });
             }
         }

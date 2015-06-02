@@ -1,8 +1,7 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     if (event.isYes()) {
-        event.payManaCost(game);
-        game.doAction(new MagicCopyCardOnStackAction(event.getPlayer(),event.getRefCardOnStack()));
+        game.doAction(new CopyCardOnStackAction(event.getPlayer(),event.getCardOnStack()));
     }
 }
 
@@ -12,7 +11,7 @@ def action = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_CREATURE_OR_PLAYER,
+                NEG_TARGET_CREATURE_OR_PLAYER,
                 this,
                 "SN deals 3 damage to target creature or player\$."
             );
@@ -20,7 +19,7 @@ def action = {
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTarget(game, {
-                game.doAction(new MagicDealDamageAction(event.getSource(),it,3));
+                game.doAction(new DealDamageAction(event.getSource(),it,3));
                 game.addEvent(new MagicEvent(
                     event.getSource(),
                     it.getController(),
@@ -28,7 +27,6 @@ def action = {
                         "Pay {R}{R}?",
                         new MagicPayManaCostChoice(MagicManaCost.create("{R}{R}"))
                     ),
-                    event.getCardOnStack(),
                     action,
                     "PN may\$ pay {R}{R}\$. If that player does, he or she may copy this spell and may choose a new target for that copy."
                 ));

@@ -17,7 +17,7 @@ def TEXT2 = "Each player draws seven cards."
                 this,
                 payedCost.isKicked() ?
                     TEXT1 + " " + TEXT2 :
-                    "Choose one\$ — • " + TEXT1 + " • " + TEXT2
+                    "Choose one\$ — (1) " + TEXT1 + " (2) " + TEXT2
             );
         }
         @Override
@@ -26,19 +26,19 @@ def TEXT2 = "Each player draws seven cards."
                 for (final MagicPlayer player : game.getAPNAP()) {
                     final MagicCardList graveyard = new MagicCardList(player.getGraveyard());
                     for (final MagicCard card : graveyard) {
-                        game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                        game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
+                        game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                        game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
                     }
                     final MagicCardList hand = new MagicCardList(player.getHand());
                     for (final MagicCard card : hand) {
-                        game.doAction(new MagicRemoveCardAction(card,MagicLocationType.OwnersHand));
-                        game.doAction(new MagicMoveCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
+                        game.doAction(new RemoveCardAction(card,MagicLocationType.OwnersHand));
+                        game.doAction(new MoveCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
                     }
                 }
             }
             if (event.isKicked() || event.isMode(2)) {
                 for (final MagicPlayer player : game.getAPNAP()) { 
-                    game.doAction(new MagicDrawAction(player,7));
+                    game.doAction(new DrawAction(player,7));
                 } 
             }
         }

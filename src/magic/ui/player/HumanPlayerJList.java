@@ -1,8 +1,8 @@
 package magic.ui.player;
 
-import magic.model.player.HumanPlayer;
+import magic.model.player.HumanProfile;
 import magic.ui.widget.FontsAndBorders;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
@@ -19,17 +19,17 @@ import magic.ui.IconImages;
 
 @SuppressWarnings("serial")
 public class HumanPlayerJList
-    extends JList<HumanPlayer> {
+    extends JList<HumanProfile> {
 
     public HumanPlayerJList() {
         setOpaque(false);
         setCellRenderer(new HumanPlayerListRenderer());
     }
 
-    private class HumanPlayerListRenderer extends JPanel implements ListCellRenderer<HumanPlayer> {
+    private class HumanPlayerListRenderer extends JPanel implements ListCellRenderer<HumanProfile> {
 
         private Color foreColor;
-        private HumanPlayer profile;
+        private HumanProfile profile;
 
         public HumanPlayerListRenderer() {
             setOpaque(false);
@@ -37,20 +37,21 @@ public class HumanPlayerJList
 
         @Override
         public Component getListCellRendererComponent(
-                JList<? extends HumanPlayer> list,
-                HumanPlayer profile,
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus) {
+            JList<? extends HumanProfile> list,
+            HumanProfile profile,
+            int index,
+            boolean isSelected,
+            boolean cellHasFocus
+        ) {
 
             this.profile = profile;
-            foreColor = isSelected ? MagicStyle.HIGHLIGHT_COLOR: Color.WHITE;
+            foreColor = isSelected ? MagicStyle.getRolloverColor(): Color.WHITE;
 
             final JPanel panel = new JPanel(new MigLayout("insets 0 0 0 6, gap 0"));
             panel.setPreferredSize(new Dimension(0, 70));
             panel.setOpaque(false);
             panel.setForeground(foreColor);
-            panel.setBorder(isSelected ? BorderFactory.createLineBorder(MagicStyle.HIGHLIGHT_COLOR, 1) : null);
+            panel.setBorder(isSelected ? BorderFactory.createLineBorder(MagicStyle.getRolloverColor(), 1) : null);
 
             panel.add(getAvatarPortrait(), "w 70!, h 70!");
             panel.add(getNamePanel(), "w 100%");

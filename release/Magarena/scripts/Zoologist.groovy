@@ -1,5 +1,5 @@
 [
-      new MagicPermanentActivation(
+    new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Draw),
         "Reveal"
     ) {
@@ -23,18 +23,18 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
-                game.doAction(new MagicRevealAction(card));
-                game.doAction(new MagicRemoveCardAction(
+                game.doAction(new RevealAction(card));
+                game.doAction(new RemoveCardAction(
                     card,
                     MagicLocationType.OwnersLibrary
                 ));
                 if (card.hasType(MagicType.Creature)) {
-                    game.doAction(new MagicPlayCardAction(
+                    game.doAction(new PlayCardAction(
                         card,
                         event.getPlayer()
                     ));
                 } else {
-                    game.doAction(new MagicMoveCardAction(
+                    game.doAction(new MoveCardAction(
                         card,
                         MagicLocationType.OwnersLibrary,
                         MagicLocationType.Graveyard

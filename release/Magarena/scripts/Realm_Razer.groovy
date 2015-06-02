@@ -1,7 +1,7 @@
 [
     new MagicWhenSelfLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return new MagicEvent(
                 permanent,
                 this,
@@ -10,7 +10,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game,final MagicEvent event) {
-            game.doAction(new MagicReturnLinkedExileAction(
+            game.doAction(new ReturnLinkedExileAction(
                 event.getPermanent(),
                 MagicLocationType.Play,
                 MagicPlayMod.TAPPED

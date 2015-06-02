@@ -1,12 +1,12 @@
 [
-     new MagicCardActivation(
+    new MagicHandCastActivation(
         [MagicCondition.CARD_CONDITION],
         new MagicActivationHints(MagicTiming.Main, true),
         "Cast"
     ) {
         @Override
         public void change(final MagicCardDefinition cdef) {
-            cdef.setCardAct(this);
+            cdef.setHandAct(this);
         }
 
         @Override
@@ -38,7 +38,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isNo()) {
-                game.doAction(new MagicSacrificeAction(event.getPermanent()));
+                game.doAction(new SacrificeAction(event.getPermanent()));
             }
         }
     }

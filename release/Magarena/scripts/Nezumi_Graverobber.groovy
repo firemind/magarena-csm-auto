@@ -13,7 +13,7 @@
         public MagicEvent getPermanentEvent(final MagicPermanent source, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                MagicTargetChoice.TARGET_CARD_FROM_OPPONENTS_GRAVEYARD,
+                TARGET_CARD_FROM_OPPONENTS_GRAVEYARD,
                 MagicGraveyardTargetPicker.ExileOpp,
                 this,
                 "Exile target card\$ from an opponent's graveyard. " +
@@ -23,17 +23,17 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetCard(game, {
-                game.doAction(new MagicRemoveCardAction(
+                game.doAction(new RemoveCardAction(
                     it,
                     MagicLocationType.Graveyard
                 ));
-                game.doAction(new MagicMoveCardAction(
+                game.doAction(new MoveCardAction(
                     it,
                     MagicLocationType.Graveyard,
                     MagicLocationType.Exile
                 ));
                 if (it.getOwner().getGraveyard().isEmpty()) {
-                    game.doAction(new MagicFlipAction(event.getPermanent()));
+                    game.doAction(new FlipAction(event.getPermanent()));
                 }
             });
         }

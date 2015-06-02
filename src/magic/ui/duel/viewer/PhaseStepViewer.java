@@ -6,13 +6,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import magic.model.phase.MagicPhaseType;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class PhaseStepViewer extends JPanel {
 
-    private static final Color COLOR_ON = MagicStyle.HIGHLIGHT_COLOR;
+    private static final Color COLOR_ON = MagicStyle.getRolloverColor();
     private static final Color COLOR_OFF = Color.LIGHT_GRAY;
     private static final Font FONT_ON = new Font("dialog", Font.BOLD, 12);
     private static final Font FONT_OFF = new Font("dialog", Font.PLAIN, 12);

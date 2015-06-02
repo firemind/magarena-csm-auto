@@ -2,6 +2,11 @@ package magic.data;
 
 public enum MagicIcon {
 
+    ILLEGAL_ICON("card_illegal.png"),
+    LEGAL_ICON("card_legal.png"),
+    BANNED_ICON("card_banned.png"),
+    RESTRICTED_ICON("card_restricted.png"),
+
     HEADER_ICON("headerIcon.png"),
     OPTIONS_ICON("w_book.png"),
     OPTIONBAR_ICON("w_book24.png"),
@@ -31,7 +36,7 @@ public enum MagicIcon {
     ARROWUP_ICON("w_arrowup.png"),
     PLUS_ICON("w_plus28.png"),
     MINUS_ICON("w_minus28.png"),
-    
+
     MISSING_ICON("missing2.png"),
     ARENA("arena.png"),
     ANY("any.png"),
@@ -96,7 +101,7 @@ public enum MagicIcon {
     STRENGTH("strength.png"),
     DELAY("delay.png"),
     PICTURE("picture.png"),
-    
+
     // ability icons
     FLYING("flying.png"),
     TRAMPLE("trample.png"),
@@ -124,6 +129,17 @@ public enum MagicIcon {
     // counters
     PLUS("plus.png"),
     MINUS("minus.png"),
+    PLUSTWO("plusTwo.png"),
+    MINUSTWO("minusTwo.png"),
+    PLUSZEROPLUSONE("plusZeroPlusOne.png"),
+    MINUSZEROMINUSONE("minusZeroMinusOne.png"),
+    PLUSZEROPLUSTWO("plusZeroPlusTwo.png"),
+    MINUSZEROMINUSTWO("minusZeroMinusTwo.png"),
+    PLUSONEPLUSZERO("plusOnePlusZero.png"),
+    MINUSONEMINUSZERO("minusOneMinusZero.png"),
+    PLUSONEPLUSTWO("plusOnePlusTwo.png"),
+    PLUSTWOPLUSZERO("plusTwoPlusZero.png"),
+    MINUSTWOMINUSONE("minusTwoMinusOne.png"),
     CHARGE("charge.png"),
     FEATHER("feather.gif"),
     GOLDCOUNTER("goldcounter.png"),
@@ -155,7 +171,12 @@ public enum MagicIcon {
     PRESSURECOUNTER("pressure-counter.png"),
     VERSECOUNTER("verse-counter.png"),
     MUSICCOUNTER("verse-counter.png"),
-    
+    RUSTCOUNTER("rust-counter.png"),
+    BLOODCOUNTER("blood-counter.png"),
+    GROWTHCOUNTER("spore-counter.png"),
+    PLAGUECOUNTER("spore-counter.png"),
+    PINCOUNTER("pin-counter.png"),
+
     MANA_ANY("anymana.gif"),
 
     // mana icons are stored in a sprite/icon sheet.

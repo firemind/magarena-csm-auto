@@ -27,14 +27,14 @@
             game.addEvent(new MagicSearchOntoBattlefieldEvent(
                 event,
                 new MagicFromCardFilterChoice(
-                    MagicTargetFilterFactory.BASIC_LAND_CARD_FROM_LIBRARY,
+                    BASIC_LAND_CARD_FROM_LIBRARY,
                     1, 
                     true, 
                     "to put onto the battlefield tapped"
                 ),
                 MagicPlayMod.TAPPED
             ));
-            game.doAction(new MagicAddTriggerAction(event.getPermanent(),MagicAtEndOfTurnTrigger.Return))
+            game.doAction(new AddTriggerAction(event.getPermanent(),MagicAtEndOfTurnTrigger.Return))
         }
     }
 ]

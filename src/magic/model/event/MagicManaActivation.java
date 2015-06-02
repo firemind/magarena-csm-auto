@@ -58,10 +58,8 @@ public abstract class MagicManaActivation implements MagicChangeCardDefinition {
 
         // Check able to pay costs
         for (final MagicEvent event : getCostEvent(source)) {
-            for (final MagicCondition condition : event.getConditions()) {
-                if (!condition.accept(source)) {
-                    return false;
-                }
+            if (event.isSatisfied() == false) {
+                return false;
             }
         }
 
@@ -82,7 +80,7 @@ public abstract class MagicManaActivation implements MagicChangeCardDefinition {
         assert matchedCostEvents.size() > 0;
         
         if (part.length > 1) {
-            matchedCostEvents.addAll(MagicConditionCostEvent.build(part[1]));
+            matchedCostEvents.addAll(MagicCondition.build(part[1]));
         }
 
         // Mana activation cost events do not have choices.

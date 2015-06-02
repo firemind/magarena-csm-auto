@@ -16,9 +16,9 @@ import javax.swing.JToggleButton;
 import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.model.MagicPlayerZone;
-import magic.ui.GraphicsUtilities;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.IconImages;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import org.pushingpixels.trident.Timeline;
 
 
@@ -52,11 +52,7 @@ public class ZoneToggleButton extends JToggleButton {
     }
     
     // CTR
-    private ZoneToggleButton(
-            final MagicPlayerZone zone,
-            final int cardCount,
-            final ValueStyle valueStyle,
-            final boolean isActive) {
+    private ZoneToggleButton(final MagicPlayerZone zone, final int cardCount, final ValueStyle valueStyle, final boolean isActive) {
 
         this.playerZone = zone;
         this.magicIcon = zone.getIcon();
@@ -73,11 +69,7 @@ public class ZoneToggleButton extends JToggleButton {
     }
     
     // CTR
-    ZoneToggleButton(
-            final MagicPlayerZone playerZone,
-            final int cardCount,
-            final boolean isActive) {
-        
+    ZoneToggleButton(final MagicPlayerZone playerZone, final int cardCount, final boolean isActive) {
         this(playerZone, cardCount, ValueStyle.NORMAL, isActive);
     }
 
@@ -108,14 +100,14 @@ public class ZoneToggleButton extends JToggleButton {
     private void drawSelectedFill(Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(MagicStyle.getTranslucentColor(MagicStyle.HIGHLIGHT_COLOR, 110));
+        g2d.setColor(MagicStyle.getTranslucentColor(MagicStyle.getRolloverColor(), 110));
         g2d.fillRoundRect(0, 0, getWidth(), getHeight()-1, 18, 18);
     }
 
     private void drawSelectedBorder(Graphics g) {
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(4.0f));
-        g2d.setColor(MagicStyle.HIGHLIGHT_COLOR);
+        g2d.setColor(MagicStyle.getRolloverColor());
         g2d.drawRect(0, 0, getWidth(), getHeight());
     }
 
@@ -129,10 +121,10 @@ public class ZoneToggleButton extends JToggleButton {
 
     private BufferedImage getZoneIconAsImage() {
         if (zoneIconImage == null) {
-            zoneIconImage = GraphicsUtilities.getCompatibleBufferedImage(32, 32, Transparency.TRANSLUCENT);
+            zoneIconImage = GraphicsUtils.getCompatibleBufferedImage(32, 32, Transparency.TRANSLUCENT);
             Graphics2D g2d = (Graphics2D) zoneIconImage.getGraphics();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            final Image iconImage = GraphicsUtilities.getConvertedIcon(IconImages.getIcon(magicIcon));
+            final Image iconImage = GraphicsUtils.getConvertedIcon(IconImages.getIcon(magicIcon));
             g2d.drawImage(iconImage, 0, 0, this);
             g2d.dispose();
         }
@@ -150,7 +142,7 @@ public class ZoneToggleButton extends JToggleButton {
         int textX = x + ((iconImage.getWidth(null) / 2) - (textWidth / 2));
         int textY = y - 6;
         if (valueStyle == ValueStyle.OUTLINE) {
-            GraphicsUtilities.drawStringWithOutline(g2d, text, textX, textY);
+            GraphicsUtils.drawStringWithOutline(g2d, text, textX, textY);
         } else {
             g2d.drawString(text, textX, textY);
         }

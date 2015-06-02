@@ -12,11 +12,9 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicPlayer player = event.getPlayer();
-            final MagicCardList cards = new MagicCardList(game.filterCards(player,MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD));
-            for (final MagicCard card : cards.getRandomCards(1)) {
-                game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+            new MagicCardList(CREATURE_CARD_FROM_GRAVEYARD.filter(event)).getRandomCards(1) each {
+                game.doAction(new RemoveCardAction(it, MagicLocationType.Graveyard));
+                game.doAction(new MoveCardAction(it, MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
             }
         }
     }

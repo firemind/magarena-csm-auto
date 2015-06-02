@@ -6,7 +6,8 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
-                new MagicPayManaCostSacrificeEvent(source, "{W}")
+                new MagicPayManaCostEvent(source, "{W}"),
+                new MagicSacrificeEvent(source)
             ];
         }
         @Override
@@ -19,10 +20,8 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets=
-                game.filterPermanents(event.getPlayer(),MagicTargetFilterFactory.CREATURE_YOU_CONTROL);
-            for (final MagicPermanent creature : targets) {
-                game.doAction(new MagicPreventDamageAction(creature,1));
+            CREATURE_YOU_CONTROL.filter(event) each {
+                game.doAction(new PreventDamageAction(it,1));
             }
         }
     }

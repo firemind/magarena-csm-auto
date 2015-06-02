@@ -3,7 +3,7 @@ def action = {
     if (event.isYes()) {
         game.addEvent(new MagicDiscardEvent(event.getSource(),event.getPlayer(),event.getPlayer().getHandSize()));
     } else {
-        game.doAction(new MagicCounterItemOnStackAction(
+        game.doAction(new CounterItemOnStackAction(
             event.getRefItemOnStack(),
             MagicLocationType.Graveyard
         ));
@@ -28,7 +28,7 @@ def perplexChoice = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_SPELL,
+                NEG_TARGET_SPELL,
                 this,
                 "Counter target spell\$ unless its controller discards his or her hand."
             );

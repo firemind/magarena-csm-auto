@@ -1,6 +1,6 @@
 def KEEPER_OF_KOOKUS = new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicPermanent target) {
-        return target.isCreature() && target.getName().equals("Keeper of Kookus");
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
+        return target.isCreature() && target.isName("Keeper of Kookus");
     } 
 };
 
@@ -19,8 +19,8 @@ def KEEPER_OF_KOOKUS = new MagicPermanentFilterImpl() {
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDealDamageAction(event.getPermanent(),event.getPlayer(),3));
-            game.doAction(new MagicGainAbilityAction(event.getPermanent(),MagicAbility.AttacksEachTurnIfAble));
+            game.doAction(new DealDamageAction(event.getPermanent(),event.getPlayer(),3));
+            game.doAction(new GainAbilityAction(event.getPermanent(),MagicAbility.AttacksEachTurnIfAble));
         }
     }
 ]

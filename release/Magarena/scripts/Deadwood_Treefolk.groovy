@@ -1,18 +1,15 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     event.processTargetCard(game, {
-        game.doAction(new MagicRemoveCardAction(it,MagicLocationType.Graveyard));
-        game.doAction(new MagicMoveCardAction(it,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+        game.doAction(new RemoveCardAction(it,MagicLocationType.Graveyard));
+        game.doAction(new MoveCardAction(it,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
     });
 }
 
 def event = {
     final MagicPermanent permanent ->
     final MagicTargetChoice choice = new MagicTargetChoice(
-        new MagicOtherCardTargetFilter(
-            MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD,
-            permanent.getCard()
-        ),
+        CREATURE_CARD_FROM_GRAVEYARD.except(permanent.getCard()),
         MagicTargetHint.None,
         "another target creature card from your graveyard"
     );
@@ -34,7 +31,7 @@ def event = {
     },
     new MagicWhenSelfLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return event(permanent);
         }
     }

@@ -12,13 +12,13 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import magic.data.DuelConfig;
 import magic.data.GeneralConfig;
-import magic.exception.InvalidDeckException;
 import magic.test.TestGameBuilder;
 import magic.ui.ScreenController;
 import magic.ui.UiExceptionHandler;
 import magic.utility.MagicSystem;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
+import magic.model.player.PlayerProfiles;
 
 public class MagicMain {
 
@@ -111,11 +111,12 @@ public class MagicMain {
         if (MagicSystem.isAiVersusAi()) {
             final DuelConfig config = DuelConfig.getInstance();
             config.load();
-            try {
-                ScreenController.getMainFrame().newDuel(config);
-            } catch (InvalidDeckException ex) {
-                ScreenController.showWarningMessage(ex.getMessage());
-            }
+            
+            // set both player profile to AI for AI vs AI mode
+            config.setPlayerProfile(0, PlayerProfiles.getDefaultAiPlayer());
+            config.setPlayerProfile(1, PlayerProfiles.getDefaultAiPlayer());
+
+            ScreenController.getMainFrame().newDuel(config);
         }
     }
 

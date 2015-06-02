@@ -1,5 +1,6 @@
 package magic.data;
 
+import magic.utility.FileIO;
 import groovy.lang.GroovyShell;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +30,8 @@ import magic.utility.MagicSystem;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicChangeCardDefinition;
 import magic.model.MagicColor;
-import magic.model.event.MagicCardActivation;
+import magic.model.MagicCubeDefinition;
+import magic.model.event.MagicHandCastActivation;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
 import magic.utility.MagicResources;
@@ -67,7 +69,8 @@ public class CardDefinitions {
     // groovy shell for evaluating groovy card scripts with autmatic imports
     private static final GroovyShell shell = new GroovyShell(
         new CompilerConfiguration().addCompilationCustomizers(
-            new ImportCustomizer().addStarImports(
+            new ImportCustomizer()
+            .addStarImports(
                 "java.util",
                 "magic.data",
                 "magic.model",
@@ -80,6 +83,9 @@ public class CardDefinitions {
                 "magic.model.target",
                 "magic.model.trigger",
                 "magic.card"
+            ).addStaticStars(
+                "magic.model.target.MagicTargetFilterFactory",
+                "magic.model.choice.MagicTargetChoice"
             ),
             new ASTTransformationCustomizer(groovy.transform.CompileStatic.class)
         )
@@ -93,43 +99,46 @@ public class CardDefinitions {
         }
     }
 
-    private static void addDefinition(final MagicCardDefinition cardDefinition) {
-        assert cardDefinition != null : "CardDefinitions.addDefinition passed null";
-        assert cardDefinition.getIndex() == -1 : "cardDefinition has been assigned index";
+    private static void addDefinition(final MagicCardDefinition cardDef) {
+        assert cardDef != null : "CardDefinitions.addDefinition passed null";
+        assert cardDef.getIndex() == -1 : "cardDefinition has been assigned index";
 
-        final String key = getASCII(cardDefinition.getFullName());
-
-        final MagicCardDefinition prev = allPlayableCardDefs.putIfAbsent(key, cardDefinition);
-        if (prev != null) {
-            // card definition already added, early exit
-            return;
-        }
-
-        cardDefinition.setIndex(cdefIndex.getAndIncrement());
+        cardDef.setIndex(cdefIndex.getAndIncrement());
         
-        if (cardDefinition.isToken()) {
-            TokenCardDefinitions.add(cardDefinition);
+        if (cardDef.isToken() == false && cardDef.isHidden() == false) {
+            cardDef.add(new MagicHandCastActivation(cardDef));
         }
         
-        if (cardDefinition.isToken() == false && cardDefinition.isHidden() == false) {
-            cardDefinition.add(new MagicCardActivation(cardDefinition));
-        }
+        allPlayableCardDefs.put(cardDef.getAsciiName(), cardDef);
     }
 
     private static MagicCardDefinition prop2carddef(final File scriptFile, final boolean isMissing) {
         final Properties content = FileIO.toProp(scriptFile);
         final MagicCardDefinition cardDefinition = new MagicCardDefinition();
-        cardDefinition.setIsMissing(isMissing);
+
+        if (isMissing) {
+            cardDefinition.setInvalid();
+        }
 
         for (final String key : content.stringPropertyNames()) {
             try {
                 setProperty(cardDefinition, key, content.getProperty(key));
             } catch (Exception e) {
                 if (isMissing) {
-                    cardDefinition.setIsValid(false);
+                    cardDefinition.setInvalid();
                 } else {
-                    throw new RuntimeException(e);
+                    throw e;
                 }
+            }
+        }
+            
+        try {
+            cardDefinition.validate();
+        } catch (Exception e) {
+            if (isMissing) {
+                cardDefinition.setInvalid();
+            } else {
+                throw e;
             }
         }
 
@@ -166,7 +175,6 @@ public class CardDefinitions {
     private static void loadCardDefinition(final File file) {
         try {
             final MagicCardDefinition cdef = prop2carddef(file, false);
-            cdef.validate();
             addDefinition(cdef);
         } catch (final Throwable cause) {
             //System.out.println("ERROR file: " + file + " cause: " + cause.getMessage());
@@ -208,10 +216,11 @@ public class CardDefinitions {
         reporter.setMessage("Loading cards...100%");
         
         // update card lists
+        final MagicCubeDefinition cube = CubeDefinitions.DEFAULT_CUBE;
         for (final MagicCardDefinition cardDefinition : allPlayableCardDefs.values()) {
             if (cardDefinition.isToken() == false && cardDefinition.isHidden() == false) {
                 defaultPlayableCardDefs.add(cardDefinition);
-                CubeDefinitions.getCubeDefinition("all").add(cardDefinition.getName());
+                cube.add(cardDefinition.getName());
 
                 if (cardDefinition.isLand() == false) {
                     spellCards.add(cardDefinition);
@@ -251,6 +260,15 @@ public class CardDefinitions {
             executor.awaitTermination(100, TimeUnit.SECONDS);
         } catch (final InterruptedException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+    
+    public static MagicCardDefinition getToken(final String original) {
+        final MagicCardDefinition token = getCard(original);
+        if (token.isToken()) {
+            return token;
+        } else {
+            throw new RuntimeException("unknown token: \"" + original + "\"");
         }
     }
 
@@ -352,7 +370,7 @@ public class CardDefinitions {
             if (scriptFiles != null) {
                 for (final File file : scriptFiles) {
                     MagicCardDefinition cdef = prop2carddef(file, true);
-                    missingScripts.put(getASCII(cdef.getFullName()), cdef);
+                    missingScripts.put(cdef.getAsciiName(), cdef);
                 }
             }
         }
@@ -365,10 +383,8 @@ public class CardDefinitions {
             } else {
                 final MagicCardDefinition card = new MagicCardDefinition();
                 card.setName(cardName);
-                card.setFullName(cardName);
-                card.setIsMissing(true);
-                card.setIsValid(false);
-                card.setIsScriptFileMissing(true);
+                card.setDistinctName(cardName);
+                card.setInvalid();
                 missingCards.put(cardKey, card);
             }
         }
@@ -422,21 +438,19 @@ public class CardDefinitions {
     }
 
     public static String getScriptFilename(final MagicCardDefinition card) {
-        return getCanonicalName(card.getName()) + ".txt";
+        return card.getFilename() + ".txt";
     }
 
     public static String getGroovyFilename(final MagicCardDefinition card) {
-        return getCanonicalName(card.getName()) + ".groovy";
+        return card.getFilename() + ".groovy";
     }
 
     public static boolean isCardPlayable(MagicCardDefinition card) {
-        final String key = getASCII(card.getFullName());
-        return allPlayableCardDefs.containsKey(key);
+        return allPlayableCardDefs.containsKey(card.getAsciiName());
     }
 
     public static boolean isCardMissing(MagicCardDefinition card) {
-        final String key = getASCII(card.getFullName());
-        return (missingCards == null ? false : missingCards.containsKey(key));
+        return missingCards == null ? false : missingCards.containsKey(card.getAsciiName());
     }
 
     public static synchronized Collection<MagicCardDefinition> getMissingCards() {
@@ -466,7 +480,7 @@ public class CardDefinitions {
     private static List<String> getPlayableNonTokenCardNames() {
         final ArrayList<String> cardNames = new ArrayList<>();
         for (MagicCardDefinition card : getAllPlayableCardDefs()) {
-            if (!card.isToken()) {
+            if (card.isToken() == false) {
                 cardNames.add(card.getName());
             }
         }

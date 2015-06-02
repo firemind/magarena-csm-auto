@@ -22,6 +22,8 @@ public enum MagicPermanentState {
     Transformed("transformed",""),
     DealtFirstStrike("dealt first strike",""),
     Exploit("exploit", ""),
+    WasDealtDamage("",""),
+    CastFromHand("",""),
     ;
 
     // states that persist after cleanup

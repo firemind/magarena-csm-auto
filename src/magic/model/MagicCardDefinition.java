@@ -5,7 +5,7 @@ import magic.data.CardDefinitions;
 import magic.data.CardProperty;
 import magic.model.event.MagicActivation;
 import magic.model.event.MagicActivationHints;
-import magic.model.event.MagicCardActivation;
+import magic.model.event.MagicHandCastActivation;
 import magic.model.event.MagicCardEvent;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicEventSource;
@@ -39,7 +39,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
         @Override
         protected void initialize() {
             setName("Unknown");
-            setFullName("Unknown");
+            setDistinctName("Unknown");
             setToken();
             setValue(1);
             addType(MagicType.Creature);
@@ -58,7 +58,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
         @Override
         protected void initialize() {
             setName("");
-            setFullName("2/2 face-down creature");
+            setDistinctName("2/2 face-down creature");
             setValue(1);
             addType(MagicType.Creature);
             setCost(MagicManaCost.create("{0}"));
@@ -72,12 +72,11 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private String name;
 
     // name used for mapping and persistence, must be unique
-    private String fullName;
+    private String distinctName;
+    
     private boolean isValid = true;
-    private boolean isScriptFileMissing = false;
 
     private String imageURL;
-    private String cardInfoUrl = "";
     private int imageCount = 1;
     private Date imageUpdated;
     private int index=-1;
@@ -88,7 +87,9 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private MagicRarity rarity;
     private boolean token = false;
     private boolean hidden = false;
+    private boolean excludeManaOrCombat = false;
     private int typeFlags;
+    private EnumSet<MagicType> cardType = EnumSet.noneOf(MagicType.class);
     private EnumSet<MagicSubType> subTypeFlags = EnumSet.noneOf(MagicSubType.class);
     private EnumSet<MagicAbility> abilityFlags = EnumSet.noneOf(MagicAbility.class);
     private int colorFlags = -1;
@@ -103,7 +104,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private MagicCardEvent cardEvent=MagicPlayCardEvent.create();
     private final Collection<MagicActivation<MagicPermanent>> permActivations=new ArrayList<MagicActivation<MagicPermanent>>();
     private final Collection<MagicActivation<MagicPermanent>> morphActivations=new ArrayList<MagicActivation<MagicPermanent>>();
-    private final LinkedList<MagicActivation<MagicCard>> cardActivations = new LinkedList<MagicActivation<MagicCard>>();
+    private final LinkedList<MagicActivation<MagicCard>> handActivations = new LinkedList<MagicActivation<MagicCard>>();
     private final LinkedList<MagicActivation<MagicCard>> graveyardActivations = new LinkedList<MagicActivation<MagicCard>>();
     private final Collection<MagicCDA> CDAs = new ArrayList<MagicCDA>();
     private final Collection<MagicTrigger<?>> triggers = new ArrayList<MagicTrigger<?>>();
@@ -115,7 +116,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private final Collection<MagicWhenPutIntoGraveyardTrigger> putIntoGraveyardTriggers = new ArrayList<MagicWhenPutIntoGraveyardTrigger>();
     private final Collection<MagicManaActivation> manaActivations=new ArrayList<MagicManaActivation>();
     private final Collection<MagicEventSource> costEventSources=new ArrayList<MagicEventSource>();
-    private boolean excludeManaOrCombat;
+    
     private MagicCardDefinition flipCardDefinition;
     private MagicCardDefinition transformCardDefinition;
 
@@ -125,10 +126,6 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private String flipCardName;
     private String transformCardName;
 
-    private boolean isMissing = false;
-
-    private Set<MagicType> cardType = EnumSet.noneOf(MagicType.class);
-
     public MagicCardDefinition() {
         initialize();
     }
@@ -136,6 +133,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public static MagicCardDefinition create(final MagicCardDefinitionInit init) {
         final MagicCardDefinition cdef = new MagicCardDefinition();
         init.initialize(cdef);
+        cdef.validate();
         return cdef;
     }
 
@@ -193,8 +191,13 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public boolean isValid() {
         return isValid;
     }
-    public void setIsValid(boolean b) {
-        this.isValid = b;
+    
+    public boolean isInvalid() {
+        return isValid == false;
+    }
+    
+    public void setInvalid() {
+        isValid = false;
     }
 
     public void setImageUpdated(final Date d) {
@@ -205,6 +208,14 @@ public class MagicCardDefinition implements MagicAbilityStore {
         return imageUpdated != null && imageUpdated.after(d);
     }
 
+    /**
+     * Returns the name of the card exactly as it appears on the printed card.
+     * <p>
+     * Note that in the case of token cards this means it may return the
+     * same name (eg. five different Wurm tokens would all return "Wurm").
+     *
+     * @see getDistinctName()
+     */
     public String getName() {
         return name;
     }
@@ -213,12 +224,35 @@ public class MagicCardDefinition implements MagicAbilityStore {
         this.name = name;
     }
 
-    public String getFullName() {
-        return fullName;
+    /**
+     * Returns a guaranteed distinct card name.
+     * <p>
+     * In most cases this will be the same as {@link getName()} but for tokens
+     * of the same type (eg. Wurm) this will return a name that clearly identifies
+     * the card (eg. 5/5 green Wurm creature token with trample).
+     *
+     */
+    public String getDistinctName() {
+        return distinctName;
     }
 
-    public void setFullName(final String name) {
-        fullName = name;
+    public void setDistinctName(String aName) {
+        assert (this.name.equals(aName) ? this.name == aName : true) : "Same name but using two separate strings. Should reference same string for efficiency.";
+        distinctName = aName;
+    }
+
+    /**
+     * Returns the name of the card containing only ASCII characters.
+     */
+    public String getAsciiName() {
+        return CardDefinitions.getASCII(distinctName);
+    }
+    
+    /**
+     * Returns the name of the script/groovy file without extension
+     */
+    public String getFilename() {
+        return CardDefinitions.getCanonicalName(distinctName);
     }
 
     public void setIndex(final int index) {
@@ -231,8 +265,8 @@ public class MagicCardDefinition implements MagicAbilityStore {
 
     public String getImageName() {
         return token ?
-            CardDefinitions.getCanonicalName(fullName):
-            fullName.replaceAll("[<>:\"/\\\\|?*\\x00-\\x1F]", "_");                
+            CardDefinitions.getCanonicalName(distinctName):
+            distinctName.replaceAll("[<>:\"/\\\\|?*\\x00-\\x1F]", "_");
     }
 
     public void setImageCount(final int count) {
@@ -249,14 +283,6 @@ public class MagicCardDefinition implements MagicAbilityStore {
     
     public String getImageURL() {
         return imageURL;
-    }
-
-    public void setCardInfoURL(final String url) {
-        this.cardInfoUrl = url;
-    }
-
-    public String getCardInfoURL() {
-        return this.cardInfoUrl;
     }
 
     public String getCardTextName() {
@@ -317,7 +343,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     }
 
     public String getRarityString() {
-        return (isMissing || rarity == null ? "" : rarity.getName());
+        return (rarity == null ? "" : rarity.getName());
     }
 
     public void setToken() {
@@ -538,7 +564,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     }
 
     public boolean hasColor(final MagicColor color) {
-        return (colorFlags&color.getMask())!=0 && !isMissing;
+        return (colorFlags&color.getMask())!=0;
     }
 
     public boolean isColorless() {
@@ -660,11 +686,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
         return new MagicPowerToughness(power, toughness);
     }
 
-    public void applyCDAPowerToughness(
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicPermanent perm,
-            final MagicPowerToughness pt) {
+    public void applyCDAPowerToughness(final MagicGame game, final MagicPlayer player, final MagicPermanent perm, final MagicPowerToughness pt) {
         for (final MagicCDA lv : CDAs) {
             lv.modPowerToughness(game, player, perm, pt);
         }
@@ -688,6 +710,10 @@ public class MagicCardDefinition implements MagicAbilityStore {
 
     public String getText() {
         return this.text;
+    }
+    
+    public String getFlattenedText() {
+        return this.text.replace("\n", " ");
     }
 
     public void setStaticType(final MagicStaticType staticType) {
@@ -723,14 +749,14 @@ public class MagicCardDefinition implements MagicAbilityStore {
         return new MagicActivationHints(timing,true);
     }
 
-    // cast card activation is the first element of cardActivations
+    // cast card activation is the first element of handActivations
     public MagicActivation<MagicCard> getCastActivation() {
-        assert cardActivations.size() >= 1 : this + " has no card activations";
-        return cardActivations.getFirst();
+        assert handActivations.size() >= 1 : this + " has no card activations";
+        return handActivations.getFirst();
     }
 
-    public Collection<MagicActivation<MagicCard>> getCardActivations() {
-        return cardActivations;
+    public Collection<MagicActivation<MagicCard>> getHandActivations() {
+        return handActivations;
     }
 
     public Collection<MagicActivation<MagicCard>> getGraveyardActivations() {
@@ -813,18 +839,18 @@ public class MagicCardDefinition implements MagicAbilityStore {
         morphActivations.add(activation);
     }
 
-    public void addCardAct(final MagicCardActivation activation) {
-        cardActivations.add(activation);
+    public void addHandAct(final MagicHandCastActivation activation) {
+        handActivations.add(activation);
     }
 
-    public void addGraveyardAct(final MagicCardActivation activation) {
+    public void addGraveyardAct(final MagicHandCastActivation activation) {
         graveyardActivations.add(activation);
     }
 
-    public void setCardAct(final MagicCardActivation activation) {
-        assert cardActivations.size() == 1 : "removing multiple (" + cardActivations.size() + ") card activations";
-        cardActivations.clear();
-        cardActivations.add(activation);
+    public void setHandAct(final MagicHandCastActivation activation) {
+        assert handActivations.size() == 1 : "removing multiple (" + handActivations.size() + ") card activations";
+        handActivations.clear();
+        handActivations.add(activation);
     }
 
     public Collection<MagicActivation<MagicPermanent>> getActivations() {
@@ -873,7 +899,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public boolean hasText(String s) {
         s = s.toLowerCase();
         return (
-            CardDefinitions.getASCII(fullName).toLowerCase().contains(s) ||
+            CardDefinitions.getASCII(distinctName).toLowerCase().contains(s) ||
             CardDefinitions.getASCII(name).toLowerCase().contains(s) ||
             subTypeHasText(s) ||
             abilityHasText(s) ||
@@ -991,19 +1017,4 @@ public class MagicCardDefinition implements MagicAbilityStore {
             return TOUGHNESS_COMPARATOR_DESC.compare(cardDefinition2, cardDefinition1);
         }
     };
-
-    public void setIsMissing(boolean b) {
-        this.isMissing = b;
-    }
-    public boolean isMissing() {
-        return isMissing;
-    }
-
-    public void setIsScriptFileMissing(boolean b) {
-        isScriptFileMissing = b;
-    }
-    public boolean IsScriptFileMissing() {
-        return isScriptFileMissing;
-    }
-
 }

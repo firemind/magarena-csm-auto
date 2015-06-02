@@ -1,7 +1,7 @@
 [
     new MagicWhenSelfLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicRemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final RemoveFromPlayAction act) {
             final MagicPermanent enchantedPermanent = permanent.getEnchantedPermanent();
             return enchantedPermanent.isValid() ?
                 new MagicEvent(
@@ -14,7 +14,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicSacrificeAction(event.getRefPermanent()));
+            game.doAction(new SacrificeAction(event.getRefPermanent()));
         }
     }
 ]

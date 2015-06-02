@@ -13,7 +13,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import magic.model.MagicPlayerZone;
 import magic.ui.ScreenController;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class PlayerZoneViewer extends JPanel implements ChangeListener {
@@ -68,11 +68,7 @@ public class PlayerZoneViewer extends JPanel implements ChangeListener {
         update(false);
     }
 
-    private void showCards(
-            final MagicCardList cards,
-            final boolean showFullScreen,
-            String cardZoneTitle,
-            final boolean showCardIcons) {
+    private void showCards(final MagicCardList cards, final boolean showFullScreen, final String cardZoneTitle, final boolean showCardIcons) {
         if (showFullScreen) {
             showFullScreenZone(cards, cardZoneTitle);
         } else {

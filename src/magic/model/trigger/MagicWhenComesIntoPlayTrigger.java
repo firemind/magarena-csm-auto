@@ -5,8 +5,8 @@ import magic.model.MagicGame;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPermanent;
 import magic.model.MagicPermanentState;
-import magic.model.action.MagicSacrificeAction;
-import magic.model.action.MagicChangeStateAction;
+import magic.model.action.SacrificeAction;
+import magic.model.action.ChangeStateAction;
 import magic.model.action.MagicPermanentAction;
 import magic.model.event.MagicEventAction;
 import magic.model.event.MagicEvent;
@@ -76,7 +76,7 @@ public abstract class MagicWhenComesIntoPlayTrigger extends MagicTrigger<MagicPa
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicSacrificeAction(event.getPermanent()));
+            game.doAction(new SacrificeAction(event.getPermanent()));
         }
     };
     
@@ -86,8 +86,8 @@ public abstract class MagicWhenComesIntoPlayTrigger extends MagicTrigger<MagicPa
             public void executeEvent(final MagicGame game, final MagicEvent event) {
                 event.processTargetPermanent(game,new MagicPermanentAction() {
                     public void doAction(final MagicPermanent permanent) {
-                        game.doAction(new MagicSacrificeAction(permanent));
-                        game.doAction(MagicChangeStateAction.Set(event.getPermanent(), MagicPermanentState.Exploit));
+                        game.doAction(ChangeStateAction.Set(event.getPermanent(), MagicPermanentState.Exploit));
+                        game.doAction(new SacrificeAction(permanent));
                     }
                 });
             }
@@ -108,7 +108,7 @@ public abstract class MagicWhenComesIntoPlayTrigger extends MagicTrigger<MagicPa
             final MagicEvent sac = new MagicSacrificePermanentEvent(
                 event.getSource(),
                 event.getPlayer(),
-                MagicTargetChoice.CREATURE_YOU_CONTROL,
+                MagicTargetChoice.A_CREATURE_YOU_CONTROL,
                 EVENT_ACTION
             );
             if (event.isYes() && sac.isSatisfied()) {

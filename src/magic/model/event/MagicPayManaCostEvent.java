@@ -9,7 +9,7 @@ import magic.model.condition.MagicCondition;
 
 public class MagicPayManaCostEvent extends MagicEvent {
 
-    private final MagicCondition[] conds;
+    private final MagicCondition cond;
 
     public MagicPayManaCostEvent(final MagicSource source, final MagicManaCost cost) {
         this(source, source.getController(), cost);
@@ -24,21 +24,14 @@ public class MagicPayManaCostEvent extends MagicEvent {
             source,
             player,
             new MagicPayManaCostChoice(cost),
-            EVENT_ACTION,
+            MagicEventAction.NONE,
             "Pay "+cost.getText()+"$."
         );
-        conds = new MagicCondition[]{cost.getCondition()};
+        cond = cost.getCondition();
     }
 
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.payManaCost(game);
-        }
-    };
-
     @Override
-    public MagicCondition[] getConditions() {
-        return conds;
+    public boolean isSatisfied() {
+        return cond.accept(getSource()) && super.isSatisfied();
     }
 }

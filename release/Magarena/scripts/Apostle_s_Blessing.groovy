@@ -1,5 +1,5 @@
 def ARTIFACT_OR_CREATURE_YOU_CONTROL = new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicPermanent target) {
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
         return target.isController(player) && (target.isCreature() || target.isArtifact());
     } 
 };
@@ -14,7 +14,7 @@ def ProtectionFromArtifacts = MagicAbility.getAbilityList("protection from artif
 
 def action = {
     final MagicGame game, final MagicEvent event ->
-    game.doAction(new MagicGainAbilityAction(
+    game.doAction(new GainAbilityAction(
         event.getRefPermanent(),
         event.getChosenColor().getProtectionAbility()
     ));
@@ -31,15 +31,15 @@ def action = {
                     TARGET_ARTIFACT_OR_CREATURE_YOU_CONTROL
                 ),
                 this,
-                "Choose one\$ - target artifact or creature you control gains protection from artifacts until end of turn; " +
-                "or target artifact or creature you control gains protection from the color of your choice until end of turn.\$" 
+                "Choose one\$ — (1) target artifact or creature you control gains protection from artifacts until end of turn; " +
+                "or (2) target artifact or creature you control gains protection from the color of your choice until end of turn.\$" 
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isMode(1)) {
                 event.processTargetPermanent(game, {
-                    game.doAction(new MagicGainAbilityAction(it,ProtectionFromArtifacts))
+                    game.doAction(new GainAbilityAction(it,ProtectionFromArtifacts))
                 });
             }
             if (event.isMode(2)) {

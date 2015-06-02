@@ -16,12 +16,12 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
-                game.doAction(new MagicUntapAction(it));
-                game.doAction(new MagicAddTurnTriggerAction(
+                game.doAction(new UntapAction(it));
+                game.doAction(new AddTurnTriggerAction(
                     it,
-                    MagicIfDamageWouldBeDealtTrigger.PreventCombatDamageDealtToDealtBy
+                    MagicPreventDamageTrigger.PreventCombatDamageDealtToDealtBy
                 ));
-                game.doAction(new MagicAddTriggerAction(
+                game.doAction(new AddTriggerAction(
                     MagicAtUpkeepTrigger.YouDraw(
                         event.getSource(), 
                         event.getPlayer()

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import magic.model.action.MagicLoseGameAction;
+import magic.model.action.LoseGameAction;
 import magic.model.choice.MagicBuilderManaCost;
 import magic.model.event.MagicActivationPriority;
 import magic.model.event.MagicSourceActivation;
@@ -13,14 +13,14 @@ import magic.model.event.MagicSourceManaActivation;
 import magic.model.mstatic.MagicLayer;
 import magic.model.mstatic.MagicPermanentStatic;
 import magic.model.mstatic.MagicStatic;
-import magic.model.player.AiPlayer;
+import magic.model.player.AiProfile;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetType;
 
-public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMappable<MagicPlayer> {
+public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTarget, MagicMappable<MagicPlayer> {
 
-    public static final MagicPlayer NONE = new MagicPlayer(-1, new MagicPlayerDefinition(), -1) {
+    public static final MagicPlayer NONE = new MagicPlayer(-1, null, -1) {
         @Override
         public String toString() {
             return "";
@@ -50,7 +50,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     private static final int LOSING_POISON=10;
     private static final long ID_FACTOR=31;
 
-    private final MagicPlayerDefinition playerDefinition;
+    private final DuelPlayerConfig playerDefinition;
     private final int index;
 
     private int life;
@@ -77,7 +77,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
     private long[] keys;
 
-    MagicPlayer(final int aLife,final MagicPlayerDefinition aPlayerDefinition,final int aIndex) {
+    MagicPlayer(final int aLife,final DuelPlayerConfig aPlayerDefinition,final int aIndex) {
         playerDefinition = aPlayerDefinition;
         index = aIndex;
         life = aLife;
@@ -204,7 +204,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         return set;
     }
 
-    public MagicPlayerDefinition getPlayerDefinition() {
+    public DuelPlayerConfig getPlayerDefinition() {
         return playerDefinition;
     }
 
@@ -304,7 +304,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         creaturesAttackedThisTurn=count; 
     }
     
-    public void incCreatuesAttacked() {
+    public void incCreaturesAttacked() {
         creaturesAttackedThisTurn++;
     }
     
@@ -435,7 +435,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
             
     private void addCards(final List<MagicCard> targets, final MagicCardList list, final MagicTargetFilter<MagicCard> filter) {
         for (final MagicCard card : list) {
-            if (filter.accept(currGame, this, card)) {
+            if (filter.accept(MagicSource.NONE, this, card)) {
                 targets.add(card);
             }
         }
@@ -560,7 +560,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     public int getNrOfPermanents(final MagicTargetFilter<MagicPermanent> filter) {
         int count = 0;
         for (final MagicPermanent permanent : permanents) {
-            if (filter.accept(currGame, this, permanent)) {
+            if (filter.accept(MagicSource.NONE, this, permanent)) {
                 count++;
             }
         }
@@ -569,7 +569,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
     public boolean controlsPermanent(final MagicTargetFilter<MagicPermanent> filter) {
         for (final MagicPermanent permanent : permanents) {
-            if (filter.accept(currGame, this, permanent)) {
+            if (filter.accept(MagicSource.NONE, this, permanent)) {
                 return true;
             }
         }
@@ -626,10 +626,6 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         return domain;
     }
     
-    public List<MagicPermanent> filterPermanents(final MagicTargetFilter<MagicPermanent> targetFilter) {
-        return currGame.filterPermanents(this, targetFilter);
-    }
-
     public int getDevotion(final MagicColor... colors) {
         int devotion = 0;
         for (final MagicPermanent permanent : permanents) {
@@ -749,10 +745,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
     public void generateStateBasedActions() {
         if (getLife() <= 0) {
-            currGame.addDelayedAction(new MagicLoseGameAction(this,MagicLoseGameAction.LIFE_REASON));
+            currGame.addDelayedAction(new LoseGameAction(this,LoseGameAction.LIFE_REASON));
         }
         if (getPoison() >= LOSING_POISON) {
-            currGame.addDelayedAction(new MagicLoseGameAction(this,MagicLoseGameAction.POISON_REASON));
+            currGame.addDelayedAction(new LoseGameAction(this,LoseGameAction.POISON_REASON));
         }
     }
 
@@ -800,10 +796,14 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     }
 
     public boolean isHuman() {
-        return !getPlayerDefinition().isArtificial();
+        return playerDefinition.getProfile().isHuman();
+    }
+    
+    public boolean isArtificial() {
+        return playerDefinition.getProfile().isArtificial();
     }
 
-    public boolean isAiPlayerProfile() {
-        return getPlayerDefinition().getPlayerProfile() instanceof AiPlayer;
+    public AiProfile getAiProfile() {
+        return (AiProfile)playerDefinition.getProfile();
     }
 }

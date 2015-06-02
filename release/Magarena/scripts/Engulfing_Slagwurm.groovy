@@ -12,8 +12,8 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPermanent target = event.getRefPermanent();
-            game.doAction(new MagicDestroyAction(target));
-            game.doAction(new MagicChangeLifeAction(
+            game.doAction(new DestroyAction(target));
+            game.doAction(new ChangeLifeAction(
                 event.getPlayer(),
                 target.getToughness()
             ));

@@ -18,6 +18,7 @@ import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
 import java.awt.event.ActionEvent;
+import magic.model.MagicCubeDefinition;
 
 @SuppressWarnings("serial")
 public class DuelPropertiesDialog extends JDialog {
@@ -25,16 +26,17 @@ public class DuelPropertiesDialog extends JDialog {
     private final SliderPanel handSizeSliderPanel;
     private final SliderPanel lifeSliderPanel;
     private final SliderPanel winsSliderPanel;
-    private final JComboBox<String> cubeComboBox;
+    private final JComboBox<MagicCubeDefinition> cubeComboBox;
     private boolean isCancelled = false;
 
     // CTR : edit an existing profile.
     public DuelPropertiesDialog(
-            final MagicFrame frame,
-            final int handSize,
-            final int initialLife,
-            final int maxGames,
-            final String cube) {
+        final MagicFrame frame,
+        final int handSize,
+        final int initialLife,
+        final int maxGames,
+        final MagicCubeDefinition cube
+    ) {
 
         super(frame, true);
         this.setTitle("Duel Properties");
@@ -47,7 +49,7 @@ public class DuelPropertiesDialog extends JDialog {
         handSizeSliderPanel = new SliderPanel("Hand size:", null, 6, 8, 1, handSize);
         winsSliderPanel = new SliderPanel("Max. games:", null, 1, 11, 2, maxGames);
 
-        cubeComboBox = new JComboBox<String>(CubeDefinitions.getCubeNames());
+        cubeComboBox = new JComboBox<>(CubeDefinitions.getCubesArray());
         cubeComboBox.setLightWeightPopupEnabled(false);
         cubeComboBox.setFocusable(false);
         cubeComboBox.setSelectedItem(cube);
@@ -128,7 +130,7 @@ public class DuelPropertiesDialog extends JDialog {
         return winsSliderPanel.getValue();
     }
 
-    public String getCube() {
+    public MagicCubeDefinition getCube() {
         return cubeComboBox.getItemAt(cubeComboBox.getSelectedIndex());
     }
 

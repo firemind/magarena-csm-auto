@@ -16,13 +16,13 @@
             final MagicPlayer player = event.getPlayer();
             for (final MagicCard card : player.getGraveyard().getRandomCards(1)) {
                 if (card.hasType(MagicType.Creature)) {
-                    game.doAction(new MagicReanimateAction(
+                    game.doAction(new ReanimateAction(
                         card,
                         player
                     ));
                 } else {
-                    game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                    game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+                    game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                    game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
                     game.logAppendMessage(player, "${player.getName()} returns (${card.getName()}) to his or her hand.");
                 }
             }

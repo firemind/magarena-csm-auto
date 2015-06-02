@@ -15,11 +15,12 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import magic.data.DeckGenerator;
+import magic.model.MagicDeck;
 import magic.ui.MagicFrame;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.SliderPanel;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -49,7 +50,7 @@ public class RandomDeckGeneratorDialog extends JDialog implements ChangeListener
 
         this.cardPoolSize = cardPoolSize;
 
-        deckSizeSlider = new SliderPanel("", null, 40, 100, 10, 60, false);
+        deckSizeSlider = new SliderPanel("", null, 40, 100, 10, MagicDeck.DEFAULT_SIZE, false);
         deckSizeSlider.setPaintTicks(false);
         deckSizeSlider.addChangeListener(this);
 

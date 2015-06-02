@@ -1,5 +1,5 @@
 def CARD_NAMED_BARU = new MagicCardFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
         return target.getName().equals("Baru, Fist of Krosa");
     }
     public boolean acceptType(final MagicTargetType targetType) {
@@ -32,9 +32,9 @@ def A_CARD_NAMED_BARU = new MagicTargetChoice(
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int x = event.getPlayer().getNrOfPermanents(MagicType.Land);
-            game.doAction(new MagicPlayTokenAction(event.getPlayer(), MagicCardDefinition.create({
+            game.doAction(new PlayTokenAction(event.getPlayer(), MagicCardDefinition.create({
                 it.setName("Wurm");
-                it.setFullName("green Wurm creature token");
+                it.setDistinctName("green Wurm creature token");
                 it.setPowerToughness(x, x);
                 it.setColors("g");
                 it.addSubType(MagicSubType.Wurm);

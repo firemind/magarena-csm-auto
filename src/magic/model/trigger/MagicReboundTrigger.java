@@ -9,9 +9,9 @@ import magic.model.MagicPayedCost;
 import magic.model.stack.MagicCardOnStack;
 import magic.model.choice.MagicMayChoice;
 import magic.model.event.MagicEvent;
-import magic.model.action.MagicRemoveCardAction;
-import magic.model.action.MagicRemoveTriggerAction;
-import magic.model.action.MagicPutItemOnStackAction;
+import magic.model.action.RemoveCardAction;
+import magic.model.action.RemoveTriggerAction;
+import magic.model.action.PutItemOnStackAction;
 
 public class MagicReboundTrigger extends MagicAtUpkeepTrigger {
 
@@ -28,7 +28,7 @@ public class MagicReboundTrigger extends MagicAtUpkeepTrigger {
 
     @Override
     public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent none,final MagicPlayer upkeepPlayer) {
-        game.addDelayedAction(new MagicRemoveTriggerAction(this));
+        game.addDelayedAction(new RemoveTriggerAction(this));
         final MagicCard mappedCard = upkeepPlayer.getExile().getCard(staleCard.getId());
         return mappedCard.isInExile() ?
             new MagicEvent(
@@ -44,10 +44,10 @@ public class MagicReboundTrigger extends MagicAtUpkeepTrigger {
     public void executeEvent(final MagicGame game, final MagicEvent event) {
         if (event.isYes() && event.getCard().isInExile()) {
             final MagicCard card = event.getCard();
-            game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Exile));
+            game.doAction(new RemoveCardAction(card,MagicLocationType.Exile));
             final MagicCardOnStack cardOnStack=new MagicCardOnStack(card, event.getPlayer(), MagicPayedCost.NO_COST);
             cardOnStack.setFromLocation(MagicLocationType.Exile);
-            game.doAction(new MagicPutItemOnStackAction(cardOnStack));
+            game.doAction(new PutItemOnStackAction(cardOnStack));
         }
     }
 }

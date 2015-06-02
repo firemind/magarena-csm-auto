@@ -1,7 +1,7 @@
 def makeFilter = {
     final int fuse ->
     return new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicGame game,final MagicPlayer player,final MagicPermanent target) {
+        public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
             return target.getConvertedCost() == fuse && (target.isArtifact() || target.isCreature())
         }
     };
@@ -32,7 +32,7 @@ def makeFilter = {
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int fuse = event.getPermanent().getCounters(MagicCounterType.Fuse);
-            game.doAction(new MagicDestroyAction(game.filterPermanents(makeFilter(fuse))));
+            game.doAction(new DestroyAction(makeFilter(fuse).filter(event)));
         }
     }
 ]

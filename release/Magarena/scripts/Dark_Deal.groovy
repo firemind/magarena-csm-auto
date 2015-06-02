@@ -14,9 +14,9 @@
             for (final MagicPlayer player : game.getAPNAP()) {
                 final MagicCardList hand = new MagicCardList(player.getHand());
                 for (final MagicCard card : hand) {
-                    game.doAction(new MagicDiscardCardAction(player,card));
+                    game.doAction(new DiscardCardAction(player,card));
                 }
-                game.doAction(new MagicDrawAction(player, hand.size() - 1));
+                game.doAction(new DrawAction(player, hand.size() - 1));
             }
         }
     }

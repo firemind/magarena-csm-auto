@@ -23,10 +23,10 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();
-            final MagicCardList cards = new MagicCardList(game.filterCards(player,MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD));
+            final MagicCardList cards = new MagicCardList(CREATURE_CARD_FROM_GRAVEYARD.filter(event));
             for (final MagicCard card : cards.getRandomCards(1)) {
-                game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+                game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
                 game.logAppendMessage(player, "${player.getName()} returns (${card.getName()}) to his or her hand.");
             }
         }

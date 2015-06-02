@@ -5,6 +5,7 @@ import magic.model.MagicManaCost;
 import magic.model.MagicPermanent;
 import magic.model.MagicCard;
 import magic.model.MagicSource;
+import magic.model.MagicLocationType;
 import magic.model.ARG;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.target.MagicOtherPermanentTargetFilter;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 
 public enum MagicCostEvent {
             
-    SacrificeSelf("Sacrifice (SN|this permanent)") {
+    SacrificeSelf("Sacrifice (SN|this permanent|this land)") {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             return new MagicSacrificeEvent((MagicPermanent)source);
         }
@@ -30,7 +31,7 @@ public enum MagicCostEvent {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             final int amt = ARG.amount(arg);
             final String chosen = MagicTargetFilterFactory.toSingular(ARG.any(arg)) + " to sacrifice";
-            final MagicTargetFilter<MagicPermanent> regular = MagicTargetFilterFactory.singlePermanent(chosen);
+            final MagicTargetFilter<MagicPermanent> regular = MagicTargetFilterFactory.Permanent(chosen);
             final MagicTargetFilter<MagicPermanent> filter = arg.group("another") != null ? 
                 new MagicOtherPermanentTargetFilter(regular, (MagicPermanent)source) :
                 regular;
@@ -54,7 +55,7 @@ public enum MagicCostEvent {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             final int amt = ARG.amount(arg);
             final String chosen = MagicTargetFilterFactory.toSingular(ARG.any(arg));
-            final MagicTargetFilter<MagicPermanent> regular = MagicTargetFilterFactory.singlePermanent(chosen);
+            final MagicTargetFilter<MagicPermanent> regular = MagicTargetFilterFactory.Permanent(chosen);
             final MagicTargetFilter<MagicPermanent> filter = arg.group("another") != null ? 
                 new MagicOtherPermanentTargetFilter(regular, (MagicPermanent)source) :
                 regular;
@@ -102,6 +103,11 @@ public enum MagicCostEvent {
             return false;
         }
     },
+    ExileCardSelf("Exile SN from your graveyard") {
+        public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
+            return new MagicExileSelfEvent((MagicCard)source, MagicLocationType.Graveyard);
+        }
+    },
     ExileTopNCardsLibrary("Exile the top( " + ARG.AMOUNT + ")? card(s)? of your library") {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             return new MagicExileTopLibraryEvent(source, ARG.amount(arg));
@@ -111,7 +117,7 @@ public enum MagicCostEvent {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             final int amt = ARG.amount(arg);
             final String chosen = MagicTargetFilterFactory.toSingular(ARG.any(arg));
-            final MagicTargetFilter<MagicCard> regular = MagicTargetFilterFactory.singleCard(chosen);
+            final MagicTargetFilter<MagicCard> regular = MagicTargetFilterFactory.Card(chosen);
             final MagicTargetFilter<MagicCard> filter = (source instanceof MagicCard) ? new MagicOtherCardTargetFilter(regular, (MagicCard)source) : regular;
             final MagicTargetChoice choice = new MagicTargetChoice(
                 filter, 
@@ -147,7 +153,7 @@ public enum MagicCostEvent {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             final int amt = ARG.amount(arg);
             final String chosen = MagicTargetFilterFactory.toSingular(ARG.any(arg));
-            final MagicTargetFilter<MagicPermanent> untapped = MagicTargetFilterFactory.untapped(MagicTargetFilterFactory.singlePermanent(chosen));
+            final MagicTargetFilter<MagicPermanent> untapped = MagicTargetFilterFactory.untapped(MagicTargetFilterFactory.Permanent(chosen));
             final MagicTargetFilter<MagicPermanent> filter = arg.group("another") != null ? 
                 new MagicOtherPermanentTargetFilter(untapped, (MagicPermanent)source) :
                 untapped;
@@ -159,7 +165,7 @@ public enum MagicCostEvent {
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             final int amt = ARG.amount(arg);
             final String chosen = MagicTargetFilterFactory.toSingular(ARG.any(arg));
-            final MagicTargetFilter<MagicPermanent> tapped = MagicTargetFilterFactory.tapped(MagicTargetFilterFactory.singlePermanent(chosen));
+            final MagicTargetFilter<MagicPermanent> tapped = MagicTargetFilterFactory.tapped(MagicTargetFilterFactory.Permanent(chosen));
             final MagicTargetFilter<MagicPermanent> filter = arg.group("another") != null ? 
                 new MagicOtherPermanentTargetFilter(tapped, (MagicPermanent)source) :
                 tapped;

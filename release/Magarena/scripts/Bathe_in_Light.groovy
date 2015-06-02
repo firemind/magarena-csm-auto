@@ -1,12 +1,8 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
-    final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.CREATURE);
-    for (final MagicPermanent creature : creatures) {
-        if (creature.getColorFlags() & event.getRefPermanent().getColorFlags()) {
-            game.doAction(new MagicGainAbilityAction(
-                creature,
-                event.getChosenColor().getProtectionAbility()
-            ));
+    CREATURE.filter(event) each {
+        if (it.getColorFlags() & event.getRefPermanent().getColorFlags()) {
+            game.doAction(new GainAbilityAction(it, event.getChosenColor().getProtectionAbility()));
         }
     }
 }
@@ -17,7 +13,7 @@ def action = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.POS_TARGET_CREATURE,
+                POS_TARGET_CREATURE,
                 this,
                 "Target creature\$ and each other creature that shares a color with it " +
                 "gain protection from the color of your choice until end of turn."

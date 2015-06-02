@@ -1,5 +1,7 @@
 package magic.ui;
 
+import magic.ui.utility.DesktopUtils;
+import magic.ui.utility.GraphicsUtils;
 import magic.utility.MagicSystem;
 
 import java.awt.Dimension;
@@ -26,7 +28,6 @@ import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.data.OSXAdapter;
 import magic.exception.DesktopNotSupportedException;
-import magic.exception.InvalidDeckException;
 import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.model.MagicDuel;
@@ -88,16 +89,21 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
                 onClose();
             }
             @Override
-            public void windowDeactivated(final WindowEvent e) {
-                if (isFullScreen() && e.getOppositeWindow() == null && !ignoreWindowDeactivate) {
-                    setState(Frame.ICONIFIED);
+            public void windowDeactivated(final WindowEvent ev) {
+                if (isFullScreen() && ev.getOppositeWindow() == null && !ignoreWindowDeactivate) {
+                    try {
+                        setState(Frame.ICONIFIED);
+                    } catch (Exception ex) {
+                        // see issue #130: Crashes when there is a change in focus? On Mac.
+                        System.err.println("setState(Frame.ICONIFIED) failed\n" + ex);
+                    }
                 }
                 ignoreWindowDeactivate = false;
             }
         });
     }
 
-    public void showDuel() throws InvalidDeckException {
+    public void showDuel() {
         if (duel!=null) {
             ScreenController.showDuelDecksScreen(duel);
             if (MagicSystem.isAiVersusAi()) {
@@ -110,14 +116,14 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         }
     }
 
-    public void newDuel(final DuelConfig configuration) throws InvalidDeckException {
+    public void newDuel(final DuelConfig configuration) {
         duel = new MagicDuel(configuration);
         duel.initialize();
         showDuel();
     }
 
-    public void loadDuel() throws InvalidDeckException {
-        final File duelFile=MagicDuel.getDuelFile();
+    public void loadDuel() {
+        final File duelFile=MagicDuel.getLatestDuelFile();
         if (duelFile.exists()) {
             duel=new MagicDuel();
             duel.load(duelFile);
@@ -127,7 +133,7 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         }
     }
 
-    public void restartDuel() throws InvalidDeckException {
+    public void restartDuel() {
         if (duel!=null) {
             duel.restart();
             showDuel();
@@ -239,7 +245,7 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     /**
      *
      */
-    public void closeDuelScreen() throws InvalidDeckException {
+    public void closeDuelScreen() {
         ScreenController.closeActiveScreen(false);
         showDuel();
     }
@@ -283,9 +289,9 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         contentPanel.getActionMap().put("Screenshot", new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                GraphicsUtilities.setBusyMouseCursor(true);
+                GraphicsUtils.setBusyMouseCursor(true);
                 doScreenshot();
-                GraphicsUtilities.setBusyMouseCursor(false);
+                GraphicsUtils.setBusyMouseCursor(false);
             }
         });
     }
@@ -317,7 +323,7 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     private void doScreenshot() {
         try {
             final Path filePath = MagicFileSystem.getDataPath(DataPath.LOGS).resolve("screenshot.png");
-            final File imageFile = GraphicsUtilities.doScreenshotToFile(this.getContentPane(), filePath);
+            final File imageFile = GraphicsUtils.doScreenshotToFile(this.getContentPane(), filePath);
             DesktopUtils.openFileInDefaultOsEditor(imageFile);
         } catch (IOException | DesktopNotSupportedException e) {
             e.printStackTrace();

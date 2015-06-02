@@ -7,14 +7,11 @@ def Spirit = new MagicStatic(MagicLayer.Type) {
 [
     new MagicAtUpkeepTrigger() {
         @Override
-        public MagicEvent executeTrigger(
-                final MagicGame game,
-                final MagicPermanent permanent,
-                final MagicPlayer upkeepPlayer) {
+        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 new MagicMayChoice(
-                    MagicTargetChoice.TARGET_CREATURE_CARD_FROM_GRAVEYARD
+                    TARGET_CREATURE_CARD_FROM_GRAVEYARD
                 ),
                 MagicGraveyardTargetPicker.PutOntoBattlefield,
                 this,
@@ -30,22 +27,22 @@ def Spirit = new MagicStatic(MagicLayer.Type) {
             if (event.isYes()) {
                 event.processTargetCard(game,{
                     final MagicPlayer player=event.getPlayer();
-                    game.doAction(new MagicRemoveCardAction(
+                    game.doAction(new RemoveCardAction(
                         it,
                         MagicLocationType.Graveyard
                     ));
-                    game.doAction(new MagicMoveCardAction(
+                    game.doAction(new MoveCardAction(
                         it,
                         MagicLocationType.Graveyard,
                         MagicLocationType.Exile
                     ));
-                    game.doAction(new MagicPlayTokenAction(
+                    game.doAction(new PlayTokenAction(
                         player,
                         it,
                         {
                             final MagicPermanent perm ->
-                            game.doAction(new MagicAddStaticAction(perm, Spirit));
-                            game.doAction(new MagicAddTriggerAction(perm, MagicAtEndOfTurnTrigger.ExileAtEnd));
+                            game.doAction(new AddStaticAction(perm, Spirit));
+                            game.doAction(new AddTriggerAction(perm, MagicAtEndOfTurnTrigger.ExileAtEnd));
                         }
                     ));
                 });

@@ -1,5 +1,6 @@
 package magic.data;
 
+import magic.utility.FileIO;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -15,52 +16,35 @@ import magic.utility.MagicFileSystem.DataPath;
 
 public class CubeDefinitions {
 
-    private static final String[] INCLUDED_CUBES={"all"};
-    private static final String CUBE_FILE_EXTENSION="_cube.txt";
-
-    static final String DEFAULT_NAME=INCLUDED_CUBES[0];
-
-    private static final FileFilter CUBE_FILE_FILTER=new FileFilter() {
+    private static final String CUBE_FILE_EXTENSION = "_cube.txt";
+    private static final FileFilter CUBE_FILE_FILTER = new FileFilter() {
         @Override
         public boolean accept(final File file) {
-            return file.isFile()&&file.getName().endsWith(CUBE_FILE_EXTENSION);
+            return file.isFile() && file.getName().endsWith(CUBE_FILE_EXTENSION);
         }
     };
 
-    private static final List<MagicCubeDefinition> cubeDefinitions;
+    public static final MagicCubeDefinition DEFAULT_CUBE = new MagicCubeDefinition("all");
 
+    private static final List<MagicCubeDefinition> cubeDefinitions = new ArrayList<>();
+    private static MagicCubeDefinition currentCube;
     static {
-        cubeDefinitions=new ArrayList<>();
-        for (final String cubeName : INCLUDED_CUBES) {
-            cubeDefinitions.add(new MagicCubeDefinition(cubeName));
-        }
+        cubeDefinitions.add(DEFAULT_CUBE);
+        currentCube = DEFAULT_CUBE;
     }
 
-    public static String[] getCubeNames() {
-        final String[] names=new String[cubeDefinitions.size()];
-        for (int index=0;index<names.length;index++) {
-            names[index]=cubeDefinitions.get(index).getName();
-        }
-        return names;
+    public static MagicCubeDefinition[] getCubesArray() {
+        return cubeDefinitions.toArray(new MagicCubeDefinition[cubeDefinitions.size()]);
     }
 
     public static String[] getFilterValues() {
         final List<String> values = new ArrayList<>();
         for (MagicCubeDefinition cube : cubeDefinitions) {
-            if (!cube.toString().equalsIgnoreCase("all")) {
-              values.add(cube.toString());
-          }
-        }
-        return values.toArray(new String[values.size()]);
-    }
-
-    public static MagicCubeDefinition getCubeDefinition(final String name) {
-        for (final MagicCubeDefinition cubeDefinition : cubeDefinitions) {
-            if (cubeDefinition.getName().equals(name)) {
-                return cubeDefinition;
+            if (cube != DEFAULT_CUBE) {
+                values.add(cube.getLabel());
             }
         }
-        return cubeDefinitions.get(0);
+        return values.toArray(new String[values.size()]);
     }
 
     private static void loadCubeDefinition(final String name,final File file) {
@@ -96,7 +80,7 @@ public class CubeDefinitions {
         if (MagicSystem.showStartupStats()) {
             System.err.println(cubeDefinitions.size()+" cube definitions");
             for (final MagicCubeDefinition cubeDefinition : cubeDefinitions) {
-                System.err.println("Cube "+cubeDefinition.getName());
+                System.err.println("Cube " + cubeDefinition);
             }
         }
     }
@@ -106,18 +90,23 @@ public class CubeDefinitions {
         return cube.contains(card.getName());
     }
 
-    //TODO: convert cubeDefinitions to a Map keyed on cubeName then can get rid of this function.
-    private static MagicCubeDefinition currentCube = null;
-    public static MagicCubeDefinition getCube(final String cubeName) {
-        if (currentCube == null || !currentCube.toString().equals(cubeName)) {
+    public static MagicCubeDefinition getCube(final String cubeLabel) {
+
+        // prior to 1.62 the cube label including card count was saved to the duel
+        // config file so for backwards compatibility during import need to check
+        // for and remove card count if it exists to isolate just the cube name.
+        final String cubeName = getCubeNameWithoutSize(cubeLabel);
+        
+        if (!currentCube.getName().equals(cubeName)) {
             for (MagicCubeDefinition cube : cubeDefinitions) {
-                if (cube.toString().equals(cubeName)) {
+                if (cube.getName().equals(cubeName)) {
                     currentCube = cube;
                     break;
                 }
             }
         }
         return currentCube;
+        
     }
 
     public static MagicCubeDefinition createCube(Collection<MagicCardDefinition> cardPool) {
@@ -127,4 +116,14 @@ public class CubeDefinitions {
         }
         return cubeDefinition;
     }
+
+    private static String getCubeNameWithoutSize(final String cube) {
+        final int toIndex = cube.indexOf("(");
+        if (toIndex == -1) {
+            return cube;
+        } else {
+            return cube.substring(0, toIndex).trim();
+        }
+    }
+
 }

@@ -25,11 +25,11 @@
             final MagicEvent bounce = new MagicBounceChosenPermanentEvent(
                 event.getSource(), 
                 event.getPlayer(),
-                MagicTargetChoice.Other("a creature you control", event.getPermanent())
+                Other("a creature you control", event.getPermanent())
             );
             if (event.isYes() && bounce.isSatisfied()) {
                 game.addEvent(bounce);
-                game.doAction(new MagicGainAbilityAction(event.getPermanent(),MagicAbility.Indestructible));
+                game.doAction(new GainAbilityAction(event.getPermanent(),MagicAbility.Indestructible));
             }
         }
     }

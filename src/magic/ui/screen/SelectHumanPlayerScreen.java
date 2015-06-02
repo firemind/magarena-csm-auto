@@ -1,6 +1,6 @@
 package magic.ui.screen;
 
-import magic.model.player.HumanPlayer;
+import magic.model.player.HumanProfile;
 import magic.model.player.IPlayerProfileListener;
 import magic.model.player.PlayerProfile;
 import magic.model.player.PlayerProfiles;
@@ -28,9 +28,9 @@ public class SelectHumanPlayerScreen
         refreshProfilesJList(playerProfile);
     }
 
-    private HumanPlayer[] getPlayerProfilesArray() {
+    private HumanProfile[] getPlayerProfilesArray() {
         final List<PlayerProfile> sortedPlayersList = getSortedPlayersList();
-        return sortedPlayersList.toArray(new HumanPlayer[sortedPlayersList.size()]);
+        return sortedPlayersList.toArray(new HumanProfile[sortedPlayersList.size()]);
     }
 
     /* (non-Javadoc)
@@ -38,9 +38,7 @@ public class SelectHumanPlayerScreen
      */
     @Override
     protected void createDefaultPlayerProfiles() throws IOException {
-        final HumanPlayer profile = new HumanPlayer();
-        profile.setPlayerName(getDefaultPlayerProfileName());
-        profile.save();
+        PlayerProfiles.createDefaultHumanPlayerProfiles();
     }
 
     private String getDefaultPlayerProfileName() {
@@ -95,8 +93,7 @@ public class SelectHumanPlayerScreen
                     JOptionPane.PLAIN_MESSAGE,
                     null, null, null);
             if (newName != null && !newName.trim().isEmpty()) {
-                final PlayerProfile newProfile = new HumanPlayer();
-                newProfile.setPlayerName(newName);
+                final PlayerProfile newProfile = HumanProfile.create(newName);
                 newProfile.save();
                 PlayerProfiles.getPlayerProfiles().put(newProfile.getId(), newProfile);
                 refreshProfilesJList(newProfile);

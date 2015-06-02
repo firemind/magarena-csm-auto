@@ -29,12 +29,12 @@ import magic.data.GeneralConfig;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCardList;
-import magic.ui.GraphicsUtilities;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.SwingGameController;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.FontsAndBorders;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class ImageCardListViewer extends JPanel implements ChoiceViewer {
@@ -45,7 +45,7 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
     private static final int CARD_HEIGHT=140;
     private static final int SPACING=10;
     private static final BasicStroke MOUSE_OVER_STROKE = new BasicStroke(2);
-    private static final Color MOUSE_OVER_COLOR = MagicStyle.HIGHLIGHT_COLOR;
+    private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
     private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 20);
 
     private final SwingGameController controller;
@@ -221,7 +221,7 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         final Stroke defaultStroke = g2d.getStroke();
 
-        final Dimension imageSize = GraphicsUtilities.getMaxCardImageSize();
+        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
         final Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(mousePoint, this);
         Rectangle mouseOverRect = new Rectangle();
@@ -243,7 +243,7 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
             //draw the overlay icons
             if (showInfo) {
                 if (cardDefinition.isLand()) {
-                    ImageDrawingUtils.drawManaInfo(g,this,cardDefinition,x1+1,y2-17);
+                    ImageDrawingUtils.drawManaInfo(g,this,cardDefinition.getManaActivations(),x1+1,y2-17);
                 } else {
                     ImageDrawingUtils.drawCostInfo(g,this,card.getCost(),x1,x2-1,y1+2);
                 }

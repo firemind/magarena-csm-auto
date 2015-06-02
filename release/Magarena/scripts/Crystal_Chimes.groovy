@@ -24,12 +24,10 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final List<MagicCard> targets = game.filterCards(
-                    event.getPlayer(),
-                    MagicTargetFilterFactory.ENCHANTMENT_CARD_FROM_GRAVEYARD);
+            final List<MagicCard> targets = ENCHANTMENT_CARD_FROM_GRAVEYARD.filter(event);
             for (final MagicCard card : targets) {
-                game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+                game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
             }
         }
     }

@@ -8,5 +8,5 @@ cost={B}
 ability=Enchant creature;\
         Enchanted creature gets +1/+1.;\
         Sacrifice SN: Regenerate enchanted creature.
-timing=main
-oracle=Enchant creature. Enchanted creature gets +1/+1. Sacrifice Thrull Retainer: Regenerate enchanted creature.
+timing=aura
+oracle=Enchant creature\nEnchanted creature gets +1/+1.\nSacrifice Thrull Retainer: Regenerate enchanted creature.

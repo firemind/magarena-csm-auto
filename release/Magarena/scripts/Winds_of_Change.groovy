@@ -14,10 +14,10 @@
                 final MagicCardList hand = new MagicCardList(player.getHand());
                 if (hand.size() > 0) {
                     for (final MagicCard card : hand) {
-                        game.doAction(new MagicRemoveCardAction(card,MagicLocationType.OwnersHand));
-                        game.doAction(new MagicMoveCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
+                        game.doAction(new RemoveCardAction(card,MagicLocationType.OwnersHand));
+                        game.doAction(new MoveCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
                     }
-                    game.doAction(new MagicDrawAction(player,hand.size()));
+                    game.doAction(new DrawAction(player,hand.size()));
                 }
             }
         }

@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
-import magic.exception.InvalidDeckException;
 import magic.model.MagicCardList;
 import magic.model.MagicGame;
 import magic.model.MagicPlayer;
@@ -60,10 +59,7 @@ public final class DuelPanel extends JPanel {
     private final AnimationCanvas animationCanvas;
     private final DuelDialogPanel dialogPanel;
 
-    public DuelPanel(
-            final MagicFrame frame,
-            final MagicGame game,
-            final ZoneBackgroundLabel backgroundLabel) {
+    public DuelPanel(final MagicFrame frame, final MagicGame game, final ZoneBackgroundLabel backgroundLabel) {
 
         this.frame = frame;
         this.backgroundLabel = backgroundLabel;
@@ -224,7 +220,7 @@ public final class DuelPanel extends JPanel {
         repaint();
     }
 
-    public void close() throws InvalidDeckException {
+    public void close() {
         frame.closeDuelScreen();
     }
 

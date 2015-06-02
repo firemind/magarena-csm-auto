@@ -23,8 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import magic.model.player.AiPlayer;
-import magic.model.player.HumanPlayer;
 import magic.model.player.IPlayerProfileListener;
 import magic.model.player.PlayerProfile;
 import magic.model.player.PlayerProfiles;
@@ -38,7 +36,7 @@ import magic.ui.screen.widget.MenuButton;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -155,26 +153,15 @@ public abstract class SelectPlayerScreen
 
         private void deleteSelectedPlayer() {
             final PlayerProfile condemnedPlayer = getSelectedPlayer();
-            if (isDeletePlayerValid(condemnedPlayer)) {
+            if (PlayerProfiles.canDeleteProfile(condemnedPlayer)) {
                 if (isDeletePlayerConfirmedByUser(condemnedPlayer)) {
                     PlayerProfiles.deletePlayer(condemnedPlayer);
                     refreshProfilesJList();
                     notifyPlayerDeleted(condemnedPlayer);
                 }
-            }
-        }
-
-        private boolean isDeletePlayerValid(final PlayerProfile playerProfile) {
-            boolean isDeletePlayerValid = true;
-            if (playerProfile instanceof HumanPlayer) {
-                isDeletePlayerValid = (PlayerProfiles.getHumanPlayerProfiles().size() > 1);
-            } else if (playerProfile instanceof AiPlayer) {
-                isDeletePlayerValid = (PlayerProfiles.getAiPlayerProfiles().size() > 1);
-            }
-            if (!isDeletePlayerValid) {
+            } else {
                 ScreenController.showWarningMessage("There must be at least one player defined.");
             }
-            return isDeletePlayerValid;
         }
 
         private boolean isDeletePlayerConfirmedByUser(final PlayerProfile profile) {
@@ -306,15 +293,15 @@ public abstract class SelectPlayerScreen
         final List<MenuButton> buttons = new ArrayList<>();
         buttons.add(
                 new ActionBarButton(
+                        "Settings", "Update player profile settings.",
+                        getEditPlayerAction()));
+        buttons.add(
+                new ActionBarButton(
                         "New", "Create a new player profile.",
                         getNewPlayerAction()));
         buttons.add(
                 new ActionBarButton(
-                        "Edit", "Update selected player's name.",
-                        getEditPlayerAction()));
-        buttons.add(
-                new ActionBarButton(
-                        "Delete", "Delete selected player profile.",
+                        "Delete", "Delete selected player profile (confirmation required).",
                         new DeletePlayerAction()));
         buttons.add(
                 new SelectAvatarActionButton());

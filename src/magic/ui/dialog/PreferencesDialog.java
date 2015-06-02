@@ -48,7 +48,8 @@ import magic.ui.widget.DirectoryChooser;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.LinkLabel;
 import magic.ui.widget.SliderPanel;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
+import magic.ui.widget.ColorButton;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -98,6 +99,7 @@ public class PreferencesDialog
     private JCheckBox uiSoundCheckBox;
     private JCheckBox pauseGamePopupCheckBox;
     private JCheckBox hideAIPromptCheckBox;
+    private ColorButton rollOverColorButton;
 
     private final JLabel hintLabel = new JLabel();
     private boolean isProxyUpdated = false;
@@ -274,7 +276,7 @@ public class PreferencesDialog
         mouseWheelPopupCheckBox.setToolTipText("Manually display the card image popup by moving the mouse wheel forwards. Overrides the Auto-Popup delay.");
         mouseWheelPopupCheckBox.addMouseListener(this);
 
-        popupDelaySlider=new SliderPanel("Popup Delay", null, 0, 500, 50, config.getPopupDelay());
+        popupDelaySlider=new SliderPanel("Popup Delay", null, 0, 2000, 50, config.getPopupDelay());
         popupDelaySlider.setToolTipText("Automatically displays the card popup image after the specified number of milliseconds that the mouse cursor hovers over a card.");
         popupDelaySlider.addMouseListener(this);
 
@@ -338,6 +340,7 @@ public class PreferencesDialog
                 config.setIsUiSound(uiSoundCheckBox.isSelected());
                 config.setIsGamePausedOnPopup(pauseGamePopupCheckBox.isSelected());
                 config.setHideAiActionPrompt(hideAIPromptCheckBox.isSelected());
+                config.setRolloverColor(rollOverColorButton.getColor());
                 config.save();
                 CachedImagesProvider.getInstance().clearCache();
                 frame.refreshUI();
@@ -465,6 +468,9 @@ public class PreferencesDialog
         highQualityCheckBox.setFocusable(false);
         highQualityCheckBox.addMouseListener(this);
 
+        rollOverColorButton = new ColorButton(MagicStyle.getRolloverColor());
+        rollOverColorButton.setFocusable(false);
+
         // Layout UI components.
         final JPanel panel = new JPanel(new MigLayout("flowx, wrap 2, insets 16, gapy 8", "[140!][]"));
         panel.add(getThemeSettingPanel(), "spanx 2, w 100%");
@@ -474,6 +480,8 @@ public class PreferencesDialog
         panel.add(customBackgroundCheckBox);
         panel.add(new JLabel("Large card images"), "alignx right");
         panel.add(highQualityCheckBox);
+        panel.add(new JLabel("Roll-over color"), "alignx right");
+        panel.add(rollOverColorButton);
 
         return panel;
     }

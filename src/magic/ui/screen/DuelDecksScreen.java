@@ -6,7 +6,7 @@ import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.model.MagicDeckProfile;
 import magic.model.MagicDuel;
-import magic.model.MagicPlayerDefinition;
+import magic.model.DuelPlayerConfig;
 import magic.ui.DuelDecksPanel;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenOptionsOverlay;
@@ -87,7 +87,8 @@ public class DuelDecksScreen
             return new MenuButton(getStartDuelCaption(), new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
-                    final MagicPlayerDefinition[] players = screenContent.getDuel().getPlayers();
+                    final DuelPlayerConfig[] players = screenContent.getDuel().getPlayers();
+
                     if (isLegalDeckAndShowErrors(players[0].getDeck(), players[0].getName()) &&
                        isLegalDeckAndShowErrors(players[1].getDeck(), players[1].getName())) {
                         saveDuel(false);
@@ -194,9 +195,9 @@ public class DuelDecksScreen
     /**
      *
      */
-    public void swapDecks() throws InvalidDeckException {
+    public void swapDecks() {
         screenContent.getDuel().restart();
-        final MagicPlayerDefinition[] players = screenContent.getDuel().getPlayers();
+        final DuelPlayerConfig[] players = screenContent.getDuel().getPlayers();
         final MagicDeckProfile deckProfile1 = players[0].getDeckProfile();
         final MagicDeckProfile deckProfile2 = players[1].getDeckProfile();
         final MagicDeck deck1 = new MagicDeck(players[0].getDeck());
@@ -214,7 +215,6 @@ public class DuelDecksScreen
      */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
-        screenContent.haltStrengthViewer();
         return true;
     }
 
@@ -223,7 +223,7 @@ public class DuelDecksScreen
     }
 
     public void saveDuel(final boolean confirmSave) {
-        screenContent.getDuel().save(MagicDuel.getDuelFile());
+        screenContent.getDuel().save(MagicDuel.getLatestDuelFile());
         if (confirmSave) {
             ScreenController.showInfoMessage("<html><b>Duel saved.</b><br><br>Please use Resume Duel option in Main Menu to restore.");
         }

@@ -1,5 +1,6 @@
 package magic.ui;
 
+import magic.ui.utility.MagicStyle;
 import java.util.Stack;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -24,6 +25,7 @@ import magic.ui.screen.CardScriptScreen;
 import magic.ui.screen.CardZoneScreen;
 import magic.ui.screen.DeckEditorSplitScreen;
 import magic.ui.screen.DeckEditorTabbedScreen;
+import magic.ui.screen.DeckTiledCardsScreen;
 import magic.ui.screen.DeckViewScreen;
 import magic.ui.screen.DecksScreen;
 import magic.ui.screen.DuelDecksScreen;
@@ -93,12 +95,21 @@ public final class ScreenController {
             showScreen(new DeckEditorTabbedScreen(deck));
         }
     }
+
     public static void showDeckEditor() {
         if (GeneralConfig.getInstance().isSplitViewDeckEditor()) {
             showScreen(new DeckEditorSplitScreen());
         } else {
             showScreen(new DeckEditorTabbedScreen());
         }
+    }
+
+    public static void showDeckViewScreen(MagicDeck deck, MagicCardDefinition selectedCard) {
+        showScreen(new DeckViewScreen(deck, selectedCard));
+    }
+
+    public static void showDeckViewScreen(MagicDeck deck) {
+        showScreen(new DeckViewScreen(deck));
     }
 
     public static void showSampleHandScreen(final MagicDeck deck) {
@@ -119,7 +130,7 @@ public final class ScreenController {
     }
 
     public static void showDeckView(final MagicDeck deck) {
-        showScreen(new DeckViewScreen(deck));
+        showScreen(new DeckTiledCardsScreen(deck));
     }
 
     public static void showSelectAiProfileScreen(final IPlayerProfileListener listener, final PlayerProfile profile) {
@@ -229,8 +240,7 @@ public final class ScreenController {
     }
 
     public static void showDuelSidebarDialog(final IUIGameController controller) {
-        final DuelSidebarLayoutDialog dialog = new DuelSidebarLayoutDialog(getMainFrame(), controller);
-        dialog.setVisible(true);
+        new DuelSidebarLayoutDialog(getMainFrame(), controller);
     }
 
 }

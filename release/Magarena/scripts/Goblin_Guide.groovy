@@ -1,5 +1,5 @@
 [
-     new MagicWhenSelfAttacksTrigger() {
+    new MagicWhenSelfAttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent attacker) {
             return new MagicEvent(
@@ -12,13 +12,13 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
-                game.doAction(new MagicRevealAction(card));
+                game.doAction(new RevealAction(card));
                 if (card.hasType(MagicType.Land)) {
-                    game.doAction(new MagicRemoveCardAction(
+                    game.doAction(new RemoveCardAction(
                         card,
                         MagicLocationType.OwnersLibrary
                     ));
-                    game.doAction(new MagicMoveCardAction(
+                    game.doAction(new MoveCardAction(
                         card,
                         MagicLocationType.OwnersLibrary,
                         MagicLocationType.OwnersHand

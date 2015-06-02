@@ -10,4 +10,4 @@ ability=Flying;\
         When SN enters the battlefield, untap up to two lands.;\
         Cycling {2}
 timing=main
-oracle=Flying. When Cloud of Faeries enters the battlefield, untap up to two lands. Cycling {2}
+oracle=Flying\nWhen Cloud of Faeries enters the battlefield, untap up to two lands.\nCycling {2}

@@ -1,5 +1,5 @@
 def NONCREATURE_CARD_FROM_HAND = new MagicCardFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
         return !target.hasType(MagicType.Creature);
     }
     public boolean acceptType(final MagicTargetType targetType) {
@@ -30,7 +30,7 @@ def A_NONCREATURE_CARD_FROM_HAND = new MagicTargetChoice(
             if (event.isYes() && discard.isSatisfied()) {
                 game.addEvent(discard);
             } else {
-                game.doAction(new MagicSacrificeAction(event.getPermanent()));
+                game.doAction(new SacrificeAction(event.getPermanent()));
             }
         }
     }

@@ -12,8 +12,8 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicPlayer player : game.getAPNAP()) {
                 for (final MagicCard card : new MagicCardList(player.getGraveyard())) {
-                    game.doAction(new MagicRemoveCardAction(card, MagicLocationType.Graveyard));
-                    game.doAction(new MagicMoveCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
+                    game.doAction(new RemoveCardAction(card, MagicLocationType.Graveyard));
+                    game.doAction(new MoveCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
                 }
             }
         }
@@ -21,7 +21,7 @@
     //handles permanents
     new MagicWhenLeavesPlayTrigger(MagicTrigger.REPLACEMENT) {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final RemoveFromPlayAction act) {
             if (act.getToLocation() == MagicLocationType.Graveyard) {
                 act.setToLocation(MagicLocationType.Exile);
             }
@@ -31,7 +31,7 @@
     //handles cards
     new MagicWouldBeMovedTrigger(MagicTrigger.REPLACEMENT) {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicMoveCardAction act) {
+        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MoveCardAction act) {
             if (act.getToLocation() == MagicLocationType.Graveyard) {
                 act.setToLocation(MagicLocationType.Exile);
             }

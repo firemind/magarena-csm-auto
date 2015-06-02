@@ -2,26 +2,27 @@
     new MagicSpellCardEvent() {
         @Override
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
+            final int amount = payedCost.getX();
             return new MagicEvent(
                 cardOnStack,
                 new MagicOrChoice(
                     MagicChoice.NONE,
-                    MagicTargetChoice.NEG_TARGET_CREATURE_OR_PLAYER
+                    NEG_TARGET_CREATURE_OR_PLAYER
                 ),
-                payedCost.getX(),
+                amount,
                 this,
-                "Choose one\$ - draw X cards; " +
-                "or SN deals X damage to target creature or player.\$" 
+                "Choose one\$ — (1) draw X cards; " +
+                "or (2) SN deals X damage to target creature or player.\$ (X=${amount})" 
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final int X = event.getRefInt();
+            final int amount = event.getRefInt();
             if (event.isMode(1)) {
-                game.doAction(new MagicDrawAction(event.getPlayer(),X));
+                game.doAction(new DrawAction(event.getPlayer(),amount));
             } else if (event.isMode(2)) {
                 event.processTarget(game, {
-                    game.doAction(new MagicDealDamageAction(event.getSource(),it,X));
+                    game.doAction(new DealDamageAction(event.getSource(),it,amount));
                 });
             }
         }

@@ -7,8 +7,8 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.Set;
 import javax.swing.JLabel;
+import magic.data.GeneralConfig;
 import magic.model.MagicPlayerZone;
-import magic.model.player.AiPlayer;
 import magic.ui.SwingGameController;
 import magic.ui.duel.viewer.ChoiceViewer;
 import magic.ui.duel.viewer.PlayerViewerInfo;
@@ -61,19 +61,22 @@ public class GamePlayerPanel extends TexturedPanel implements ChoiceViewer {
     }
 
     private JLabel getPlayerLabel() {
-        final StringBuffer sb = new StringBuffer(playerInfo.name);
-        if (playerInfo.player.isAiPlayerProfile()) {
-            final AiPlayer aiPlayer = (AiPlayer)playerInfo.player.getPlayerDefinition().getPlayerProfile();
-            sb.append(", level ").append(aiPlayer.getAiLevel()).append(" AI (").append(aiPlayer.getAiType().name()).append(")");
-        }
-        final JLabel lbl = new JLabel(sb.toString());
+        final JLabel lbl = new JLabel(playerInfo.playerLabel);
         lbl.setFont(new Font("dialog", Font.PLAIN, 9));
         return lbl;
     }
 
+    private boolean isThisPlayerValidChoice(Set<?> validChoices) {
+        return !validChoices.isEmpty() && validChoices.contains(playerInfo.player);
+    }
+
     @Override
     public void showValidChoices(Set<?> validChoices) {
-        avatarButton.setValid(!validChoices.isEmpty() ? validChoices.contains(playerInfo.player) : false);
+        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+            avatarPanel.doPulsingBorderAnimation(isThisPlayerValidChoice(validChoices));
+        } else {
+            avatarPanel.showValidChoiceIndicator(isThisPlayerValidChoice(validChoices));
+        }
     }
 
     public void updateDisplay(final PlayerViewerInfo playerInfo) {

@@ -1,12 +1,6 @@
 package magic.ui.dialog;
 
-import magic.ai.MagicAIImpl;
-import magic.model.player.AiPlayer;
-import magic.model.player.PlayerProfile;
-import magic.ui.MagicFrame;
-import magic.ui.widget.SliderPanel;
-import net.miginfocom.swing.MigLayout;
-
+import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -19,20 +13,23 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-
-import java.awt.event.ActionEvent;
+import magic.ai.MagicAIImpl;
+import magic.model.player.AiProfile;
+import magic.model.player.PlayerProfile;
+import magic.ui.MagicFrame;
+import magic.ui.widget.SliderPanel;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class AiPropertiesDialog extends JDialog {
 
-    private AiPlayer playerProfile;
+    private AiProfile playerProfile;
     private final JTextField playerNameTextField;
     private final SliderPanel aiLevelSliderPanel;
     private final SliderPanel lifeSliderPanel;
     private final JComboBox<MagicAIImpl> aiComboBox;
 
- // CTR : edit an existing profile.
-    public AiPropertiesDialog(final MagicFrame frame, final AiPlayer profile) {
+    public AiPropertiesDialog(final MagicFrame frame, final AiProfile profile) {
 
         super(frame, true);
         this.setTitle("AI Profile");
@@ -41,20 +38,23 @@ public class AiPropertiesDialog extends JDialog {
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        this.playerProfile = profile == null ? new AiPlayer() : profile;
+        this.playerProfile = profile == null ? new AiProfile() : profile;
         playerNameTextField = new JTextField(playerProfile.getPlayerName());
         lifeSliderPanel = new SliderPanel("Extra Life", null, 0, 10, 1, playerProfile.getExtraLife());
         aiLevelSliderPanel = new SliderPanel("AI Level", null, 1, 8, 1, playerProfile.getAiLevel());
 
-        aiComboBox = new JComboBox<MagicAIImpl>();
-        aiComboBox.setModel(new DefaultComboBoxModel<MagicAIImpl>(MagicAIImpl.SUPPORTED_AIS));
+        aiComboBox = new JComboBox<>();
+        aiComboBox.setModel(new DefaultComboBoxModel<>(MagicAIImpl.SUPPORTED_AIS));
         aiComboBox.setLightWeightPopupEnabled(false);
         aiComboBox.setFocusable(false);
         aiComboBox.setSelectedItem(playerProfile.getAiType());
 
-        getContentPane().setLayout(new MigLayout("insets 0, flowy", "", "[][45!]"));
-        getContentPane().add(getDataPanel(), "w 100%, h 100%");
-        getContentPane().add(getButtonPanel(), "w 100%, h 40!");
+        getContentPane().setLayout(new MigLayout("insets 10, gapy 8, flowy"));
+        getContentPane().add(getPlayerNamePanel(), "w 100%");
+        getContentPane().add(getAiTypePanel(), "w 100%");
+        getContentPane().add(lifeSliderPanel, "w 100%");
+        getContentPane().add(aiLevelSliderPanel, "w 100%");
+        getContentPane().add(getButtonPanel(), "w 100%, h 30!, pushy, aligny bottom");
 
         setEscapeKeyAction();
 
@@ -80,7 +80,7 @@ public class AiPropertiesDialog extends JDialog {
     }
 
     private JPanel getButtonPanel() {
-        final JPanel buttonPanel = new JPanel(new MigLayout("alignx right"));
+        final JPanel buttonPanel = new JPanel(new MigLayout("insets 0, alignx right"));
         buttonPanel.add(getSaveButton(), "w 80!");
         buttonPanel.add(getCancelButton(), "w 80!");
         return buttonPanel;
@@ -137,24 +137,15 @@ public class AiPropertiesDialog extends JDialog {
         return newName;
     }
 
-    private JPanel getDataPanel() {
-        final JPanel panel = new JPanel(new MigLayout("flowy"));
-        panel.add(getPlayerNamePanel(), "w 100%");
-        panel.add(getAiTypePanel(), "w 100%");
-        panel.add(lifeSliderPanel, "w 100%");
-        panel.add(aiLevelSliderPanel, "w 100%");
-        return panel;
-    }
-
     private JPanel getAiTypePanel() {
-        final JPanel panel = new JPanel(new MigLayout());
+        final JPanel panel = new JPanel(new MigLayout("insets 0"));
         panel.add(new JLabel("AI Type:"));
         panel.add(aiComboBox, "w 100%, left");
         return panel;
     }
 
     private JPanel getPlayerNamePanel() {
-        final JPanel panel = new JPanel(new MigLayout());
+        final JPanel panel = new JPanel(new MigLayout("insets 0"));
         panel.add(new JLabel("AI Name:"));
         panel.add(playerNameTextField, "w 100%, left");
         return panel;

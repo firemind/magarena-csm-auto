@@ -1,7 +1,7 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     if (event.isYes()) {
-        game.doAction(new MagicDealDamageAction(event.getSource(),event.getPlayer(),4));
+        game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),4));
     } else {
         game.addEvent(MagicDiscardEvent.Random(event.getSource(), event.getPlayer(), 2));
     }
@@ -13,7 +13,7 @@ def action = {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_PLAYER,
+                NEG_TARGET_PLAYER,
                 this,
                 "Target player\$ discards two cards at random unless that player has SN deal 4 damage to him or her."
             );

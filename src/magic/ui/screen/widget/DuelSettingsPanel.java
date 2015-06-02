@@ -10,7 +10,8 @@ import javax.swing.SwingConstants;
 import magic.data.CubeDefinitions;
 import magic.data.DuelConfig;
 import magic.data.MagicIcon;
-import magic.ui.GraphicsUtilities;
+import magic.model.MagicCubeDefinition;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.IconImages;
 import magic.ui.MagicFrame;
 import magic.ui.dialog.DuelPropertiesDialog;
@@ -18,7 +19,7 @@ import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -29,7 +30,7 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
     private int startLife;
     private int handSize;
     private int maxGames = 7;
-    private String cube = CubeDefinitions.getCubeNames()[0];
+    private MagicCubeDefinition cube = CubeDefinitions.DEFAULT_CUBE;
     private final MouseAdapter mouseAdapter = getMouseAdapter();
 
     public DuelSettingsPanel(final MagicFrame frame, final DuelConfig config) {
@@ -64,7 +65,7 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
             sb.append("Initial Player life: ").append(startLife).append("<br>");
             sb.append("Initial Hand size: ").append(handSize).append("<br>");
             sb.append("Maximum games: ").append(maxGames).append(" (first to ").append(getGamesRequiredToWinDuel()).append(")<br>");
-            sb.append("Cube: ").append(cube).append("</html>");
+            sb.append("Cube: ").append(cube.getLabel()).append("</html>");
             setToolTipText(sb.toString());
         }
     }
@@ -78,7 +79,7 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
         add(getDuelSettingsLabel(IconImages.getIcon(MagicIcon.LIFE_ICON), "" + startLife), "h 100%");
         add(getDuelSettingsLabel(IconImages.getIcon(MagicIcon.HAND_ICON), "" + handSize), "h 100%");
         add(getDuelSettingsLabel(IconImages.getIcon(MagicIcon.TARGET_ICON), "" + maxGames), "h 100%");
-        add(getDuelSettingsLabel(IconImages.getIcon(MagicIcon.CUBE_ICON), " " + getCubeNameWithoutSize()), "h 100%");
+        add(getDuelSettingsLabel(IconImages.getIcon(MagicIcon.CUBE_ICON), " " + cube.getName()), "h 100%");
         revalidate();
         repaint();
     }
@@ -87,9 +88,9 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
         return new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                GraphicsUtilities.setBusyMouseCursor(true);
+                GraphicsUtils.setBusyMouseCursor(true);
                 updateDuelSettings();
-                GraphicsUtilities.setBusyMouseCursor(false);
+                GraphicsUtils.setBusyMouseCursor(false);
             }
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -112,8 +113,13 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
     }
 
     public void updateDuelSettings() {
-        final DuelPropertiesDialog dialog =
-                new DuelPropertiesDialog(frame, handSize, startLife, maxGames, cube);
+        final DuelPropertiesDialog dialog = new DuelPropertiesDialog(
+                frame,
+                handSize,
+                startLife,
+                maxGames,
+                cube
+        );
         if (!dialog.isCancelled()) {
             startLife = dialog.getStartLife();
             handSize = dialog.getHandSize();
@@ -129,10 +135,9 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
         config.setHandSize(handSize);
         config.setNrOfGames(maxGames);
         config.setCube(cube);
-        config.save();
     }
 
-    public String getCube() {
+    public MagicCubeDefinition getCube() {
         return cube;
     }
 
@@ -146,20 +151,6 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
 
     public int getNrOfGames() {
         return maxGames;
-    }
-
-    private String getCubeNameWithoutSize() {
-        String verboseCubeName = toTitleCase(cube);
-        final int toIndex = verboseCubeName.indexOf("(");
-        if (toIndex == -1) {
-            return verboseCubeName;
-        } else {
-            return verboseCubeName.substring(0, toIndex).trim();
-        }
-    }
-
-    private String toTitleCase(final String text) {
-        return text.substring(0, 1).toUpperCase() + text.substring(1);
     }
 
     @Override

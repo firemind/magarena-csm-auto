@@ -1,5 +1,5 @@
 def choice = new MagicTargetChoice(
-    new MagicCMCCardFilter(MagicTargetFilterFactory.CREATURE_CARD_FROM_LIBRARY,Operator.EQUAL,4),
+    new MagicCMCCardFilter(CREATURE_CARD_FROM_LIBRARY,Operator.EQUAL,4),
     "a creature card with converted mana cost 4 from your library"
 );
 
@@ -12,7 +12,8 @@ def choice = new MagicTargetChoice(
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
-                new MagicPayManaCostSacrificeEvent(source, "{1}{B}{B}")
+                new MagicPayManaCostEvent(source, "{1}{B}{B}"),
+                new MagicSacrificeEvent(source),
             ];
         }
         @Override

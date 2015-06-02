@@ -49,13 +49,13 @@ import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.theme.PlayerAvatar;
 import magic.ui.theme.Theme;
-import magic.ui.GraphicsUtilities;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.ImageFileIO;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -108,7 +108,7 @@ public class AvatarImagesScreen
             final String filePath = imagePath.toAbsolutePath().toString();
             try (final InputStream ins = new FileInputStream(new File(filePath))) {
                 final BufferedImage image = ImageFileIO.toImg(ins, IconImages.MISSING);
-                final ImageIcon icon = new ImageIcon(GraphicsUtilities.scale(image, PlayerAvatar.LARGE_SIZE, PlayerAvatar.LARGE_SIZE));
+                final ImageIcon icon = new ImageIcon(GraphicsUtils.scale(image, PlayerAvatar.LARGE_SIZE, PlayerAvatar.LARGE_SIZE));
                 final JLabel iconLabel = new JLabel(icon);
                 imagePathMap.put(iconLabel, imagePath);
                 iconLabel.setBorder(FontsAndBorders.EMPTY_BORDER);
@@ -152,17 +152,17 @@ public class AvatarImagesScreen
         // paint the Icon to the BufferedImage.
         icon.paintIcon(null, g, 0,0);
         g.dispose();
-        rightActionButton =
-                new ActionBarButton(
-                        new ImageIcon(GraphicsUtilities.scale(bi, 46, 46)),
-                        "Select Avatar", "Click to select this avatar image.",
-                        new AbstractAction() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                notifyConsumer(iconLabel);
-                                ScreenController.closeActiveScreen(false);
-                            }
-                        });
+        rightActionButton = new ActionBarButton(
+            new ImageIcon(GraphicsUtils.scale(bi, 46, 46)),
+            "Select Avatar", "Click to select this avatar image.",
+            new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    notifyConsumer(iconLabel);
+                    ScreenController.closeActiveScreen(false);
+                }
+            }
+        );
 
         refreshActionBar();
         this.selectedImageLabel = iconLabel;
@@ -281,10 +281,14 @@ public class AvatarImagesScreen
          */
         @Override
         public Component getListCellRendererComponent(
-                JList<? extends AvatarImageSet> list, AvatarImageSet value, int index,
-                boolean isSelected, boolean cellHasFocus) {
+            JList<? extends AvatarImageSet> list, 
+            AvatarImageSet value, 
+            int index,
+            boolean isSelected, 
+            boolean cellHasFocus
+        ) {
 
-            final Color foreColor = isSelected ? MagicStyle.HIGHLIGHT_COLOR : Color.WHITE;
+            final Color foreColor = isSelected ? MagicStyle.getRolloverColor() : Color.WHITE;
 
             final JLabel setNameLabel = new JLabel(value.getName());
             setNameLabel.setFont(FontsAndBorders.FONT2);
@@ -300,7 +304,7 @@ public class AvatarImagesScreen
             itemPanel.setPreferredSize(new Dimension(0, 70));
             itemPanel.setOpaque(false);
             itemPanel.setForeground(foreColor);
-            itemPanel.setBorder(isSelected ? BorderFactory.createLineBorder(MagicStyle.HIGHLIGHT_COLOR, 1) : null);
+            itemPanel.setBorder(isSelected ? BorderFactory.createLineBorder(MagicStyle.getRolloverColor(), 1) : null);
             itemPanel.add(new JLabel(value.getSampleImage()), "w 70!, h 70!");
             itemPanel.add(infoPanel, "w 100%");
             return itemPanel;

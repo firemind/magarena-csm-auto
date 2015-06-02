@@ -11,7 +11,7 @@ import magic.model.MagicObject;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
-import magic.model.action.MagicMoveCardAction;
+import magic.model.action.MoveCardAction;
 import magic.model.event.MagicCardEvent;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicSourceActivation;
@@ -38,7 +38,8 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         final MagicPlayer controller,
         final MagicCardEvent aCardEvent, 
         final MagicPayedCost aPayedCost,
-        final List<? extends MagicPermanentAction> aModifications) {
+        final List<? extends MagicPermanentAction> aModifications
+    ) {
         super(card, controller);
         payedCost = aPayedCost;
         cardEvent = aCardEvent;
@@ -110,7 +111,7 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         super.resolve(game);
         // Move card to move location that is not play
         if (moveLocation != MagicLocationType.Play) {
-            game.doAction(new MagicMoveCardAction(this));
+            game.doAction(new MoveCardAction(this));
         }
     }
 
@@ -164,6 +165,10 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
     @Override
     public boolean isSpell() {
         return true;
+    }
+
+    public boolean isCast() {
+        return payedCost != MagicPayedCost.NOT_SPELL;
     }
 
     public boolean isRepresentedByACard() {

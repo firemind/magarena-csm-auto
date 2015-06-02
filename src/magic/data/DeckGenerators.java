@@ -1,16 +1,19 @@
 package magic.data;
 
+import magic.utility.DeckUtils;
+import magic.utility.FileIO;
 import magic.generator.RandomDeckGenerator;
 import magic.model.MagicCubeDefinition;
-import magic.model.MagicPlayerDefinition;
 
+import magic.model.DuelPlayerConfig;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
-import magic.exception.InvalidDeckException;
+import magic.model.MagicDeck;
+import magic.model.MagicDeckProfile;
 import magic.utility.MagicSystem;
 
 /**
@@ -111,10 +114,19 @@ public class DeckGenerators {
      * <p>
      * This also includes the various random theme decks (like "Fairy Horde", "Token Madness", etc).
      */
-    private static void setRandomColorDeck(final MagicPlayerDefinition player) {
-        final MagicCubeDefinition cubeDefinition = CubeDefinitions.getCubeDefinition(DuelConfig.getInstance().getCube());
-        final RandomDeckGenerator generator = new RandomDeckGenerator(cubeDefinition);
-        player.generateDeck(generator);
+    private static void setRandomColorDeck(final DuelPlayerConfig player) {
+        final MagicDeckProfile deckProfile = player.getDeckProfile();
+        final MagicDeck deck = player.getDeck();
+        final MagicCubeDefinition cubeDefinition = DuelConfig.getInstance().getCube();
+        final RandomDeckGenerator defaultGenerator = new RandomDeckGenerator(cubeDefinition);
+        final RandomDeckGenerator customGenerator = DeckGenerators.getDeckGenerator(deckProfile);
+        if (customGenerator == null) {
+            defaultGenerator.generateDeck(MagicDeck.DEFAULT_SIZE, deckProfile, deck);
+        } else {
+            customGenerator.setCubeDefinition(cubeDefinition);
+            customGenerator.generateDeck(MagicDeck.DEFAULT_SIZE, deckProfile, deck);
+        }
+        DeckGenerator.addBasicLandsToDeck(deck, deckProfile, MagicDeck.DEFAULT_SIZE);
     }
 
     /**
@@ -122,8 +134,8 @@ public class DeckGenerators {
      * <p>
      * This can be generated from scratch or an existing deck file.
      */
-    public static void setRandomDeck(final MagicPlayerDefinition player) throws InvalidDeckException {
-        final boolean isUnspecifiedGenerator = (player.getDeckGenerator() == null) && (player.getDeckProfile().getNrOfColors() == 0);
+    public static void setRandomDeck(final DuelPlayerConfig player) {
+        final boolean isUnspecifiedGenerator = (getDeckGenerator(player.getDeckProfile()) == null) && (player.getDeckProfile().getNrOfColors() == 0);
         final boolean loadRandomDeckFile = player.getDeckProfile().isPreConstructed() || isUnspecifiedGenerator;
         if (loadRandomDeckFile) {
             DeckUtils.loadRandomDeckFile(player);
@@ -131,4 +143,13 @@ public class DeckGenerators {
             setRandomColorDeck(player);
         }
     }
+
+    public static RandomDeckGenerator getDeckGenerator(final MagicDeckProfile deckProfile) {
+        if (deckProfile.getDeckGeneratorName() != null) {
+            return DeckGenerators.getInstance().getDeckGenerator(deckProfile.getDeckGeneratorName());
+        } else {
+            return null;
+        }
+    }
+
 }

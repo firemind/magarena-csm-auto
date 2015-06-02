@@ -8,19 +8,19 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 import magic.data.GeneralConfig;
 import magic.model.MagicGame;
-import magic.ui.GraphicsUtilities;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.IconImages;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import magic.ui.duel.CounterOverlay;
 import magic.ui.duel.viewer.PlayerViewerInfo;
+import magic.ui.theme.ThemeFactory;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.ease.Spline;
 
 @SuppressWarnings("serial")
-public class PlayerImagePanel extends JPanel {
+public class PlayerImagePanel extends AnimationPanel {
 
     private static final Font HEALTH_FONT = new Font("Dialog", Font.BOLD, 20);
 
@@ -33,19 +33,20 @@ public class PlayerImagePanel extends JPanel {
     private int life = 0;
     private int damageColorOpacity = 0;
     private int healColorOpacity = 0;
+    private boolean isValidChoiceVisible = false;
 
     public PlayerImagePanel(final PlayerViewerInfo player, final MagicGame game) {
         this.playerInfo = player;
         this.game = game;
         activeImage = getPlayerAvatarImage();
-        inactiveImage = GraphicsUtilities.getGreyScaleImage(activeImage);
+        inactiveImage = GraphicsUtils.getGreyScaleImage(activeImage);
         poisonCounter = new CounterOverlay(20, 20, Color.GREEN);
         damageCounter = new CounterOverlay(20, 20, Color.CYAN);
     }
 
     private BufferedImage getPlayerAvatarImage() {
         final ImageIcon icon = IconImages.getIconSize3(this.playerInfo.player.getPlayerDefinition());
-        return GraphicsUtilities.scale(GraphicsUtilities.getConvertedIcon(icon), 74, 74);
+        return GraphicsUtils.scale(GraphicsUtils.getConvertedIcon(icon), 74, 74);
     }
 
     @Override
@@ -67,10 +68,27 @@ public class PlayerImagePanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         drawHealthValueOverlay(g2d, 0, 0, activeImage);
 
+        drawValidChoiceIndicator(g2d);
+
         // Animations
         drawDamageAlert(g2d);
         drawHealAlert(g2d);
 
+    }
+
+    private void drawValidChoiceIndicator(Graphics2D g2d) {
+        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+            drawPulsingBorder(g2d);
+        } else {
+            drawValidChoiceOverlay(g2d);
+        }        
+    }
+
+    private void drawValidChoiceOverlay(Graphics2D g2d) {
+        if (isValidChoiceVisible) {
+            g2d.setColor(ThemeFactory.getInstance().getCurrentTheme().getChoiceColor());
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+        }
     }
 
     private void drawDamageAlert(Graphics2D g2d) {
@@ -92,7 +110,7 @@ public class PlayerImagePanel extends JPanel {
         final String text = Integer.toString(playerInfo.life);
         final int textX = x + 4;
         final int textY = y + image.getHeight(null) - 6;
-        GraphicsUtilities.drawStringWithOutline(g2d, text, textX, textY);
+        GraphicsUtils.drawStringWithOutline(g2d, text, textX, textY);
     }    
 
     public void updateDisplay(final PlayerViewerInfo playerInfo) {
@@ -171,6 +189,11 @@ public class PlayerImagePanel extends JPanel {
                     Timeline.property("healColorOpacity").on(this).from(100).to(0));
             timeline.play();
         }
+    }
+
+    void showValidChoiceIndicator(boolean b) {
+        this.isValidChoiceVisible = b;
+        repaint();
     }
 
 }

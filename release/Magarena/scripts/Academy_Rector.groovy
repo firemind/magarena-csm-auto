@@ -13,13 +13,13 @@ def choice = new MagicTargetChoice("an enchantment card from your library");
             );
         }
 
-       @Override
+        @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()){
                 final MagicCard card = event.getPermanent().getCard();
                 if (card.isInGraveyard()) {
-                    game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                    game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
+                    game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                    game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
                     game.addEvent(new MagicSearchOntoBattlefieldEvent(
                         event.getSource(),
                         event.getPlayer(),

@@ -2,9 +2,9 @@ def ACTION = {
     final MagicGame game, final MagicEvent event ->
     if (event.isYes()) {
         final MagicCard card = event.getRefCard();
-        game.doAction(new MagicRevealAction(card));
+        game.doAction(new RevealAction(card));
         if (card.hasType(MagicType.Instant) || card.hasType(MagicType.Sorcery)) {
-            game.doAction(new MagicTransformAction(event.getPermanent()));
+            game.doAction(new TransformAction(event.getPermanent()));
         }
     }
 }
@@ -22,7 +22,7 @@ def ACTION = {
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
-                game.doAction(new MagicLookAction(card, event.getPlayer(), "top card of your library"));
+                game.doAction(new LookAction(card, event.getPlayer(), "top card of your library"));
                 game.addEvent(new MagicEvent(
                     event.getSource(),
                     new MagicMayChoice("Reveal the top card of your library?"),

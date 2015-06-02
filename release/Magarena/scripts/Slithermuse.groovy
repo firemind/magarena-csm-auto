@@ -1,7 +1,7 @@
 [
     new MagicWhenSelfLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicRemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final RemoveFromPlayAction act) {
             return permanent.getOpponent().getHandSize() >
                    permanent.getController().getHandSize() ?
                 new MagicEvent(
@@ -15,7 +15,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int amount = event.getPlayer().getOpponent().getHandSize() - 
                                event.getPlayer().getHandSize();
-            game.doAction(new MagicDrawAction(event.getPlayer(),amount));
+            game.doAction(new DrawAction(event.getPlayer(),amount));
         }
     }
 ]

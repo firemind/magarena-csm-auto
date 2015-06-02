@@ -9,14 +9,14 @@ def EFFECT3 = MagicRuleEventAction.create("Put two +1/+1 counters on target crea
             return new MagicEvent(
                 cardOnStack,
                 new MagicOrChoice(
-                    MagicTargetChoice.NEG_TARGET_PLAYER,
+                    NEG_TARGET_PLAYER,
                     MagicChoice.NONE,
-                    MagicTargetChoice.POS_TARGET_CREATURE
+                    POS_TARGET_CREATURE
                 ),
                 this,
-                "Choose one\$ - exile all cards from target player's graveyard; " +
-                "or SN deals 2 damage to each creature; " +
-                "or put two +1/+1 counters on target creature.\$" 
+                "Choose one\$ — (1) exile all cards from target player's graveyard; " +
+                "or (2) SN deals 2 damage to each creature; " +
+                "or (3) put two +1/+1 counters on target creature.\$" 
             );
         }
         @Override
@@ -25,8 +25,8 @@ def EFFECT3 = MagicRuleEventAction.create("Put two +1/+1 counters on target crea
                 event.processTargetPlayer(game, {
                     final MagicCardList graveyard = new MagicCardList(it.getGraveyard());
                     for (final MagicCard cardGraveyard : graveyard) {
-                        game.doAction(new MagicRemoveCardAction(cardGraveyard,MagicLocationType.Graveyard));
-                        game.doAction(new MagicMoveCardAction(cardGraveyard,MagicLocationType.Graveyard,MagicLocationType.Exile));
+                        game.doAction(new RemoveCardAction(cardGraveyard,MagicLocationType.Graveyard));
+                        game.doAction(new MoveCardAction(cardGraveyard,MagicLocationType.Graveyard,MagicLocationType.Exile));
                     }
                 });
             } else {

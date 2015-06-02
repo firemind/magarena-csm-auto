@@ -6,8 +6,9 @@ type=Creature
 subtype=Zombie
 cost={3}{B}
 pt=3/2
-ability=infect
+ability=infect;\
+        Other creatures you control with infect get +1/+1
 static=player
 timing=main
 requires_groovy_code
-oracle=Infect. Other creatures you control with infect get +1/+1. Whenever you cast a creature spell with infect, target player gets a poison counter.
+oracle=Infect\nOther creatures you control with infect get +1/+1.\nWhenever you cast a creature spell with infect, target player gets a poison counter.

@@ -4,44 +4,63 @@ import magic.model.ARG;
 import magic.model.MagicCounterType;
 import magic.model.MagicAbility;
 import magic.model.target.MagicTargetFilterFactory;
+import magic.model.event.MagicMatchedCostEvent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
+import java.util.LinkedList;
 
 public enum MagicConditionParser {
-            
+
     YouControl("you control a(n)? " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.YouControl(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg))
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             );
         }
     },
     OpponentControl("an opponent controls a(n)? " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.OpponentControl(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg))
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             );
         }
     },
     DefenderControl("defending player controls a(n)? " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.OpponentControl(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg))
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             );
         }
     },
     YouControlAnother("you control another " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.YouControlAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg))
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             );
         }
     },
     ControlAtLeast("you control " + ARG.AMOUNT + " or more " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.YouControlAtLeast(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg)),
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                ARG.amount(arg)
+            );
+        }
+    },
+    ControlAtMost("you control " + ARG.AMOUNT + " or fewer " + ARG.WORDRUN) {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicConditionFactory.YouControlAtMost(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                ARG.amount(arg)
+            );
+        }
+    },
+    OppControlAtLeast("an opponent controls " + ARG.AMOUNT + " or more " + ARG.WORDRUN) {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicConditionFactory.OppControlAtLeast(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 ARG.amount(arg)
             );
         }
@@ -49,7 +68,7 @@ public enum MagicConditionParser {
     ControlNone("you control no " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.YouControlNone(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg))
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             );
         }
     },
@@ -77,6 +96,13 @@ public enum MagicConditionParser {
     OpponentHellbent("an opponent has no cards in hand") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.OPPONENT_HELLBENT;
+        }
+    },
+    CountersAtMost("(SN|it) has " + ARG.AMOUNT + " or fewer " + ARG.WORD1 + " counters on (it|him)") {
+        public MagicCondition toCondition(final Matcher arg) {
+            final int amount = ARG.amount(arg);
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(arg));
+            return MagicConditionFactory.CounterAtMost(counterType, amount);
         }
     },
     CountersAtLeast("(SN|it) has " + ARG.AMOUNT + " or more " + ARG.WORD1 + " counters on it") {
@@ -112,6 +138,11 @@ public enum MagicConditionParser {
             return MagicConditionFactory.CounterEqual(counterType, 0);
         }
     },
+    HasEquipped("SN is being equipped") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.HAS_EQUIPPED_CREATURE;
+        }
+    },
     IsEquipped("(SN is|it's) equipped") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.IS_EQUIPPED;
@@ -125,6 +156,21 @@ public enum MagicConditionParser {
     IsEnchantment("(SN is|it's) an enchantment") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.IS_ENCHANTMENT;
+        }
+    },
+    IsNotEnchantment("(SN is|it's) not an enchantment") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.IS_NOT_ENCHANTMENT;
+        }
+    },
+    IsSpirit("(SN is|it's) a Spirit") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.IS_SPIRIT;
+        }
+    },
+    IsWarrior("(SN is|it's) a Warrior") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.IS_WARRIOR;
         }
     },
     IsUntapped("(SN is|it's) untapped") {
@@ -147,7 +193,7 @@ public enum MagicConditionParser {
             return MagicCondition.IS_BLOCKED_CONDITION;
         }
     },
-    IsAttacking("it's attacking") {
+    IsAttacking("(SN is|it's) attacking") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.IS_ATTACKING_CONDITION;
         }
@@ -160,6 +206,11 @@ public enum MagicConditionParser {
     HasDefender("it has defender") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.HasAbility(MagicAbility.Defender);
+        }
+    },
+    HasFlying("SN has flying") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicConditionFactory.HasAbility(MagicAbility.Flying);
         }
     },
     NoCardsInGraveyard("there are no cards in your graveyard") {
@@ -274,6 +325,11 @@ public enum MagicConditionParser {
             return MagicCondition.DECLARE_ATTACKERS;
         }
     },
+    DuringEndOfCombat("during the end of combat step") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.END_OF_COMBAT_CONDITION;
+        }
+    },
     YourTurn("during your turn") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.YOUR_TURN_CONDITION;
@@ -302,28 +358,28 @@ public enum MagicConditionParser {
     NoneOnBattlefield("no " + ARG.WORDRUN + " are on the battlefield") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.BattlefieldEqual(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg)), 0
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)), 0
             );
         }
     },
     NoneOnBattlefieldAlt("there are no " + ARG.WORDRUN + " on the battlefield") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.BattlefieldEqual(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg)), 0
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)), 0
             );
         }
     },
     AtLeastOneOnBattlefield("there is (a|an) " + ARG.WORDRUN + " on the battlefield") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.BattlefieldAtLeast(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)), 1
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)), 1
             );
         }
     },
     FiveOrMoreIslands("there are " + ARG.AMOUNT + " or more " + ARG.WORDRUN + " on the battlefield") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.BattlefieldAtLeast(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg)), ARG.amount(arg)
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)), ARG.amount(arg)
             );
         }
     },
@@ -345,6 +401,11 @@ public enum MagicConditionParser {
     MoreLandsThanAttacking("you control more lands than attacking player") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.MORE_LANDS_THAN_ATTACKING;
+        }
+    },
+    OpponentMoreLands("an opponent controls more lands than you") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.OPP_MORE_LANDS;
         }
     },
     Morbid("a creature died this turn") {
@@ -374,6 +435,11 @@ public enum MagicConditionParser {
             return MagicConditionFactory.OpponentLoseLifeOrMore(amount);
         }
     },
+    OpponentWasDealtDamage("an opponent was dealt damage this turn") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.OPPONENT_WAS_DEALT_DAMAGE;
+        }
+    },
     YouAttackedWithCreature("you attacked with a creature this turn") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.YOU_ATTACKED_WITH_CREATURE;
@@ -384,49 +450,68 @@ public enum MagicConditionParser {
             return MagicCondition.CREATURE_IN_A_GRAVEYARD;
         }
     },
+    InstantOrSorceryInGraveyard("there is an instant or sorcery card in a graveyard") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.INSTANT_OR_SORCERY_IN_A_GRAVEYARD;
+        }
+    },
     Formidable("creatures you control have total power 8 or greater") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.FORMIDABLE;
         }
     },
+    CastItFromHand("you cast it from your hand") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.CAST_FROM_HAND;
+        }
+    },
     ;
 
     private final Pattern pattern;
-    
+
     private MagicConditionParser(final String regex) {
         pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
-    
+
     public Matcher matcher(final String rule) {
         return pattern.matcher(rule);
     }
 
     public abstract MagicCondition toCondition(final Matcher arg);
-    
+
     public static final MagicCondition build(final String cost) {
+        final boolean aiOnly = cost.startsWith("with AI ");
+        final String processed = cost
+            .replaceFirst("^with AI ", "")
+            .replaceFirst("^only ", "")
+            .replaceFirst("^if ", "")
+            .replaceFirst("\\.$", "");
         for (final MagicConditionParser rule : values()) {
-            final Matcher matcher = rule.matcher(cost);
+            final Matcher matcher = rule.matcher(processed);
             if (matcher.matches()) {
-                return rule.toCondition(matcher);
+                final MagicCondition cond = rule.toCondition(matcher);
+                return aiOnly ? new MagicArtificialCondition(cond) : cond;
             }
         }
         throw new RuntimeException("unknown condition \"" + cost + "\"");
     }
-    
+
     public static MagicCondition[] buildCast(final String costs) {
         final String[] splitCosts = costs.split(" and ");
         final MagicCondition[] conds = new MagicCondition[splitCosts.length + 1];
         conds[0] = MagicCondition.CARD_CONDITION;
         for (int i = 0; i < splitCosts.length; i++) {
-            final boolean aiOnly = splitCosts[i].startsWith("with AI ");
-            final String processed = splitCosts[i]
-                .replaceFirst("^with AI ", "")
-                .replaceFirst("^only ", "")
-                .replaceFirst("^if ", "")
-                .replaceFirst("\\.$", "");
-            final MagicCondition cond = build(processed);
-            conds[i + 1] = aiOnly ? new MagicArtificialCondition(cond) : cond;
+            conds[i + 1] = build(splitCosts[i]);
         }
         return conds;
+    }
+
+    public static List<MagicMatchedCostEvent> buildCost(final String costs) {
+        final String[] splitCosts = costs.split(" and ");
+        final List<MagicMatchedCostEvent> matched = new LinkedList<MagicMatchedCostEvent>();
+        for (String cost : splitCosts) {
+            matched.add(build(cost));
+        }
+        return matched;
     }
 }

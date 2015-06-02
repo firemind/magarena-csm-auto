@@ -14,16 +14,16 @@
                 final MagicCardList graveyard = new MagicCardList(player.getGraveyard());
                 final MagicCardList hand = new MagicCardList(player.getHand());
                 for (final MagicCard card : graveyard) {
-                    game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                    game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
+                    game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                    game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
                 }
                 for (final MagicCard card : hand) {
-                    game.doAction(new MagicRemoveCardAction(card,MagicLocationType.OwnersHand));
-                    game.doAction(new MagicMoveCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
+                    game.doAction(new RemoveCardAction(card,MagicLocationType.OwnersHand));
+                    game.doAction(new MoveCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
                 }
             }
             for (final MagicPlayer player : game.getAPNAP()) {
-                game.doAction(new MagicDrawAction(player,7));
+                game.doAction(new DrawAction(player,7));
             }
         }
     }

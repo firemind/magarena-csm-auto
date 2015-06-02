@@ -22,7 +22,7 @@ import magic.ui.IconImages;
 import magic.ui.URLUtils;
 import magic.exception.DesktopNotSupportedException;
 import magic.model.MagicCardDefinition;
-import magic.ui.DesktopUtils;
+import magic.ui.utility.DesktopUtils;
 import magic.ui.ScreenController;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IStatusBar;
@@ -32,7 +32,7 @@ import magic.ui.screen.widget.MenuButton;
 import magic.ui.widget.TextFileReaderPanel;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -140,7 +140,7 @@ public class CardScriptScreen
 
         public ScreenContent(final MagicCardDefinition card) {
 
-            final Path scriptsPath = card.isMissing() ?
+            final Path scriptsPath = card.isInvalid() ?
                     MagicFileSystem.getDataPath(DataPath.SCRIPTS_MISSING) :
                     MagicFileSystem.getDataPath(DataPath.SCRIPTS);
 
@@ -242,7 +242,7 @@ public class CardScriptScreen
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     headerLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                    headerLabel.setForeground(MagicStyle.HIGHLIGHT_COLOR);
+                    headerLabel.setForeground(MagicStyle.getRolloverColor());
                 }
                 @Override
                 public void mouseExited(MouseEvent e) {

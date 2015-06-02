@@ -11,12 +11,12 @@ def EFFECT3 = MagicRuleEventAction.create("Tap target creature.");
             return new MagicEvent(
                 cardOnStack,
                 new MagicOrChoice(
-                    MagicTargetChoice.NEG_TARGET_CREATURE,
-                    MagicTargetChoice.POS_TARGET_CREATURE,
-                    MagicTargetChoice.NEG_TARGET_CREATURE
+                    NEG_TARGET_CREATURE,
+                    POS_TARGET_CREATURE,
+                    NEG_TARGET_CREATURE
                 ),
                 this,
-                "Choose one\$ - SN deals 1 damage to target creature and you gain 1 life; " +
+                "Choose one\$ — SN deals 1 damage to target creature and you gain 1 life; " +
                 "or target creature gains first strike until end of turn; " +
                 "or tap target creature.\$" 
             );

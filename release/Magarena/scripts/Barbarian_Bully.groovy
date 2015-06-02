@@ -1,9 +1,9 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     if (event.isYes()) {
-        game.doAction(new MagicDealDamageAction(event.getSource(),event.getPlayer(),4));
+        game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),4));
     } else {
-        game.doAction(new MagicChangeTurnPTAction(event.getPermanent(),2,2));
+        game.doAction(new ChangeTurnPTAction(event.getPermanent(),2,2));
     }
 }
 
@@ -15,7 +15,7 @@ def action = {
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
-                new MagicDiscardEvent(source, 1),
+                MagicDiscardEvent.Random(source),
                 new MagicPlayAbilityEvent(source)
             ];
         }
@@ -33,7 +33,7 @@ def action = {
             game.addEvent(new MagicEvent(
                 event.getSource(),
                 event.getPlayer().getOpponent(),
-                new MagicMayChoice("have SN deal 4 damage to you?"),
+                new MagicMayChoice("Have SN deal 4 damage to you?"),
                 action,
                 "PN may\$ have SN deal 4 damage to you. If you don't, SN gets +2/+2 until end of turn."
             ));

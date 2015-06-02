@@ -11,12 +11,12 @@
                 MagicEvent.NONE;
         }
 
-       @Override
+        @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicCard card = event.getPermanent().getCard();
             if (card.isInGraveyard()) {
-                game.doAction(new MagicReanimateAction(card,event.getPlayer()));
-                game.doAction(new MagicChangeCountersAction(event.getPermanent(),MagicCounterType.Death,1));
+                game.doAction(new ReanimateAction(card,event.getPlayer()));
+                game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.Death,1));
             }    
         }
     },
@@ -32,12 +32,12 @@
                 MagicEvent.NONE;
         }
 
-       @Override
+        @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicCard card = event.getPermanent().getCard();
             if (card.isInGraveyard()) {
-                game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
+                game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
             }    
         }
     }

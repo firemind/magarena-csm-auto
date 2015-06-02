@@ -35,8 +35,8 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 import magic.ui.CardImagesProvider;
 import magic.data.MagicIcon;
-import magic.ui.GraphicsUtilities;
-import magic.ui.MagicStyle;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class ImagePermanentViewer extends JPanel {
@@ -44,7 +44,7 @@ public class ImagePermanentViewer extends JPanel {
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final int LOGICAL_X_MARGIN=50;
     private static final int LOGICAL_Y_MARGIN=70;
-    private static final Color MOUSE_OVER_COLOR = MagicStyle.HIGHLIGHT_COLOR;
+    private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
     private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 30);
 
     private final ImagePermanentsViewer viewer;
@@ -182,7 +182,7 @@ public class ImagePermanentViewer extends JPanel {
         int width=0;
         int height=0;
         int x=-LOGICAL_X_MARGIN;
-        final Dimension imageSize = GraphicsUtilities.getMaxCardImageSize();
+        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
         for (final PermanentViewerInfo linkedInfo : linkedInfos) {
             x+=LOGICAL_X_MARGIN;
             final int y=linkedInfo.lowered?LOGICAL_Y_MARGIN:0;
@@ -243,7 +243,7 @@ public class ImagePermanentViewer extends JPanel {
     @Override
     public void paintComponent(final Graphics g) {
 
-        final Dimension imageSize = GraphicsUtilities.getMaxCardImageSize();
+        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
 
         g.setFont(FontsAndBorders.FONT1);
         final FontMetrics metrics = g.getFontMetrics();
@@ -296,8 +296,8 @@ public class ImagePermanentViewer extends JPanel {
                 }
 
                 // Mana symbols
-                if (linkedInfo.cardDefinition.getManaActivations().size() > 0) {
-                    ax = ImageDrawingUtils.drawManaInfo(g, this, linkedInfo.cardDefinition, ax, ay);
+                if (linkedInfo.permanent.getManaActivations().size() > 0) {
+                    ax = ImageDrawingUtils.drawManaInfo(g, this, linkedInfo.permanent.getManaActivations(), ax, ay);
                 }
 
                 // Power, toughness, damage

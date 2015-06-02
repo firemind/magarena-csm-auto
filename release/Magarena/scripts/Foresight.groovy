@@ -11,13 +11,12 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final List<MagicCard> choiceList = event.getPlayer().filterCards(MagicTargetFilterFactory.CARD_FROM_LIBRARY);
             game.addEvent(new MagicSearchToLocationEvent(
                 event,
-                new MagicFromCardListChoice(choiceList, 3, true),
+                new MagicFromCardFilterChoice(CARD_FROM_LIBRARY, 3, true, "to be exiled"),
                 MagicLocationType.Exile
             ));
-            game.doAction(new MagicAddTriggerAction(
+            game.doAction(new AddTriggerAction(
                 MagicAtUpkeepTrigger.YouDraw(
                     event.getSource(), 
                     event.getPlayer()

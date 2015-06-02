@@ -10,8 +10,7 @@ import magic.model.MagicSource;
 import magic.model.MagicType;
 import magic.model.condition.MagicCondition;
 import magic.model.MagicPayedCost;
-import magic.model.stack.MagicCardOnStack;
-import magic.model.action.MagicPlayCardFromStackAction;
+import magic.model.action.PlayCardAction;
 import magic.model.event.MagicEvent;
 import magic.model.phase.MagicMainPhase;
 import magic.exception.UndoClickedException;
@@ -35,20 +34,14 @@ public class MagicMulliganChoice extends MagicChoice {
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Object[]> getArtificialChoiceResults(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    public List<Object[]> getArtificialChoiceResults(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         int costSum = 0;
         for (final MagicCard card: player.getLibrary()){
@@ -84,8 +77,7 @@ public class MagicMulliganChoice extends MagicChoice {
         for (final MagicCard card : assumedPlayer.getHand()) {
             if (card.hasType(MagicType.Land)) {
                 numLands++;
-                final MagicCardOnStack cardOnStack = new MagicCardOnStack(card, assumedPlayer, MagicPayedCost.NOT_SPELL);
-                assumedGame.doAction(new MagicPlayCardFromStackAction(cardOnStack));
+                assumedGame.doAction(new PlayCardAction(card, assumedPlayer));
             }
         }
 
@@ -110,11 +102,9 @@ public class MagicMulliganChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final IUIGameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         if (player.getHandSize() <= 1) {
             return new Object[]{NO_CHOICE};

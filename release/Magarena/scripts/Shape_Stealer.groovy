@@ -15,12 +15,9 @@
             final MagicPermanent creature = event.getRefPermanent();
             final int power = creature.getPower();
             final int toughness = creature.getToughness();
-            game.doAction(new MagicAddStaticAction(
+            game.doAction(new AddStaticAction(
                 event.getPermanent(), 
-                new MagicStatic(
-                    MagicLayer.SetPT,
-                    MagicStatic.UntilEOT
-                ) {
+                new MagicStatic(MagicLayer.SetPT, MagicStatic.UntilEOT) {
                     @Override
                     public void modPowerToughness(final MagicPermanent source,final MagicPermanent permanent,final MagicPowerToughness pt) {
                         pt.set(power, toughness);

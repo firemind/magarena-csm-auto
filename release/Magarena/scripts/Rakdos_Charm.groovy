@@ -7,14 +7,14 @@ def EFFECT2 = MagicRuleEventAction.create("Destroy target artifact.");
             return new MagicEvent(
                 cardOnStack,
                 new MagicOrChoice(
-                    MagicTargetChoice.NEG_TARGET_PLAYER,
-                    MagicTargetChoice.NEG_TARGET_ARTIFACT,
+                    NEG_TARGET_PLAYER,
+                    NEG_TARGET_ARTIFACT,
                     MagicChoice.NONE
                 ),
                 this,
-                "Choose one\$ - exile all cards from target player's graveyard; " +
-                "or destroy target artifact; " +
-                "or each creature deals 1 damage to its controller.\$" 
+                "Choose one\$ — (1) exile all cards from target player's graveyard; " +
+                "or (2) destroy target artifact; " +
+                "or (3) each creature deals 1 damage to its controller.\$" 
             );
         }
         @Override
@@ -22,14 +22,13 @@ def EFFECT2 = MagicRuleEventAction.create("Destroy target artifact.");
             if (event.isMode(1)) {
                 event.processTargetPlayer(game, {
                     for (final MagicCard card : new MagicCardList(it.getGraveyard())) {
-                        game.doAction(new MagicRemoveCardAction(card, MagicLocationType.Graveyard));
-                        game.doAction(new MagicMoveCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
+                        game.doAction(new RemoveCardAction(card, MagicLocationType.Graveyard));
+                        game.doAction(new MoveCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
                     }
                 });
             } else if (event.isMode(3)) {
-                final Collection<MagicPermanent> creatures = game.filterPermanents(MagicTargetFilterFactory.CREATURE);
-                for (final MagicPermanent creature : creatures) {
-                    game.doAction(new MagicDealDamageAction(creature,creature.getController(),1));
+                CREATURE.filter(event) each {
+                    game.doAction(new DealDamageAction(it,it.getController(),1));
                 }
             } else {
                 event.executeModalEvent(game, EFFECT2, EFFECT2, EFFECT2);

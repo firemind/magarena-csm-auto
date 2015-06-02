@@ -10,20 +10,19 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import magic.ai.MagicAI;
 import magic.ai.MagicAIImpl;
 import magic.data.CardDefinitions;
-import magic.data.DeckUtils;
+import magic.utility.DeckUtils;
 import magic.data.DuelConfig;
 import magic.data.GeneralConfig;
-import magic.exception.InvalidDeckException;
 import magic.headless.HeadlessGameController;
 import magic.model.MagicDeckProfile;
 import magic.model.MagicDuel;
 import magic.model.MagicGame;
 import magic.model.MagicGameLog;
-import magic.model.MagicPlayerDefinition;
+import magic.model.DuelPlayerConfig;
 import magic.model.MagicRandom;
+import magic.model.player.AiProfile;
 
 public class FiremindDuelRunner {
     private static int games;
@@ -89,7 +88,7 @@ public class FiremindDuelRunner {
         System.exit(0);
     }
 
-    private static MagicDuel setupDuel() throws InvalidDeckException {
+    private static MagicDuel setupDuel() {
         // Set the random seed
         if (seed != 0) {
             MagicRandom.setRNGState(seed);
@@ -104,20 +103,19 @@ public class FiremindDuelRunner {
         // Set difficulty.
         final MagicDuel testDuel = new MagicDuel(config);
 
-        //testDuel.initialize();
-        testDuel.setDifficulty(0, str1);
-        testDuel.setDifficulty(1, str2);
         final MagicDeckProfile profile = new MagicDeckProfile("bgruw");
-        final MagicPlayerDefinition player1 = new MagicPlayerDefinition(
-                "Player1", true, profile);
-        final MagicPlayerDefinition player2 = new MagicPlayerDefinition(
-                "Player2", true, profile);
-        testDuel.setPlayers(new MagicPlayerDefinition[] { player1, player2 });
-
-        // Set the AI
-        testDuel.setAIs(new MagicAI[] { ai1.getAI(), ai2.getAI() });
-        testDuel.getPlayer(0).setArtificial(true);
-        testDuel.getPlayer(1).setArtificial(true);
+        
+        final DuelPlayerConfig player1 = new DuelPlayerConfig(
+            AiProfile.create("Player1", ai1, str1), 
+            profile
+        );
+        
+        final DuelPlayerConfig player2 = new DuelPlayerConfig(
+            AiProfile.create("Player2", ai2, str2),
+            profile
+        );
+        
+        testDuel.setPlayers(new DuelPlayerConfig[] { player1, player2 });
 
         // Set the deck.
         if (deck1.length() > 0) {
@@ -156,7 +154,7 @@ public class FiremindDuelRunner {
         }
     }
 
-    private static void runDuel() throws InvalidDeckException {
+    private static void runDuel() {
         int played = 0;
         int wins = 0;
         MagicGameLog.initialize();

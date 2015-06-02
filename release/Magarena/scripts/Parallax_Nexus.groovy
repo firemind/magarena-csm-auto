@@ -1,7 +1,7 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     event.processTargetCard(game, {
-        game.doAction(new MagicExileLinkAction(
+        game.doAction(new ExileLinkAction(
             event.getPermanent(),
             it,
             MagicLocationType.OwnersHand
@@ -29,7 +29,7 @@ def action = {
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                MagicTargetChoice.TARGET_OPPONENT,
+                TARGET_OPPONENT,
                 this,
                 "Target opponent\$ exiles a card from his or her hand."
             );
@@ -41,7 +41,7 @@ def action = {
                 game.addEvent(new MagicEvent(
                     event.getSource(),
                     it,
-                    MagicTargetChoice.A_CARD_FROM_HAND,
+                    A_CARD_FROM_HAND,
                     action,
                     "PN exiles a card from his or her hand."
                 ));
@@ -50,7 +50,7 @@ def action = {
     },
     new MagicWhenSelfLeavesPlayTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return new MagicEvent(
                 permanent,
                 this,
@@ -59,7 +59,7 @@ def action = {
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicReturnLinkedExileAction(event.getPermanent(),MagicLocationType.OwnersHand));
+            game.doAction(new ReturnLinkedExileAction(event.getPermanent(),MagicLocationType.OwnersHand));
         }
     }
 ]

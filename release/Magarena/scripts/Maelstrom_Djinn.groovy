@@ -11,8 +11,8 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeCountersAction(event.getPermanent(),MagicCounterType.Time,2));
-            game.doAction(new MagicAddTriggerAction(event.getPermanent(), MagicFadeVanishCounterTrigger.Time));
+            game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.Time,2));
+            game.doAction(new AddTriggerAction(event.getPermanent(), MagicFadeVanishCounterTrigger.Time));
         }
     }
 ]

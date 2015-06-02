@@ -8,15 +8,15 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import magic.data.DeckType;
-import magic.data.DeckUtils;
+import magic.utility.DeckUtils;
 import magic.data.DuelConfig;
 import magic.exception.InvalidDeckException;
+import magic.model.MagicCubeDefinition;
 import magic.model.MagicDeck;
-import magic.model.player.HumanPlayer;
 import magic.model.player.IPlayerProfileListener;
 import magic.model.player.PlayerProfile;
 import magic.model.player.PlayerProfiles;
-import magic.ui.GraphicsUtilities;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.ui.screen.interfaces.IActionBar;
@@ -26,7 +26,7 @@ import magic.ui.screen.widget.DuelSettingsPanel;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.player.DuelPlayerDeckPanel;
 import magic.ui.player.DuelPlayerPanel;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -57,7 +57,7 @@ public class NewDuelSettingsScreen
      */
     @Override
     public MenuButton getLeftAction() {
-        return MenuButton.getCloseScreenButton("Main Menu");
+        return MenuButton.getCloseScreenButton("Cancel");
     }
 
     /* (non-Javadoc)
@@ -69,7 +69,7 @@ public class NewDuelSettingsScreen
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isEachPlayerDeckValid(true)) {
-                    saveDuelConfig();
+                    updateDuelConfig();
                     ScreenController.closeActiveScreen(false);
                     try {
                         getFrame().newDuel(duelConfig);
@@ -99,7 +99,7 @@ public class NewDuelSettingsScreen
         return isEachDeckValid;
     }
 
-    private void saveDuelConfig() {
+    private void updateDuelConfig() {
         duelConfig.setStartLife(content.getStartLife());
         duelConfig.setHandSize(content.getHandSize());
         duelConfig.setNrOfGames(content.getNrOfGames());
@@ -108,7 +108,6 @@ public class NewDuelSettingsScreen
         duelConfig.setPlayerProfile(1, content.getPlayerProfile(1));
         duelConfig.setPlayerDeckProfile(0, content.getDeckType(0), content.getDeckValue(0));
         duelConfig.setPlayerDeckProfile(1, content.getDeckType(1), content.getDeckValue(1));
-        duelConfig.save();
     }
 
     /* (non-Javadoc)
@@ -125,7 +124,7 @@ public class NewDuelSettingsScreen
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         if (isEachPlayerDeckValid(false)) {
-            saveDuelConfig();
+            updateDuelConfig();
         }
         return true;
     }
@@ -146,8 +145,8 @@ public class NewDuelSettingsScreen
             this.duelSettingsPanel = new DuelSettingsPanel(frame, config);
             this.playerPanels[0] = getNewDuelPlayerPanel(config.getPlayerProfile(0));
             this.playerPanels[1] = getNewDuelPlayerPanel(config.getPlayerProfile(1));
-            this.newPlayerDeckPanels[0] = new DuelPlayerDeckPanel(frame, config.getPlayerDeckProfile(0));
-            this.newPlayerDeckPanels[1] = new DuelPlayerDeckPanel(frame, config.getPlayerDeckProfile(1));
+            this.newPlayerDeckPanels[0] = new DuelPlayerDeckPanel(config.getPlayerDeckProfile(0));
+            this.newPlayerDeckPanels[1] = new DuelPlayerDeckPanel(config.getPlayerDeckProfile(1));
             setLookAndFeel();
             refreshLayout();
         }
@@ -180,10 +179,10 @@ public class NewDuelSettingsScreen
             return new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    GraphicsUtilities.setBusyMouseCursor(true);
+                    GraphicsUtils.setBusyMouseCursor(true);
                     selectNewProfile(panel.getPlayer());
                     mouseExited(e);
-                    GraphicsUtilities.setBusyMouseCursor(false);
+                    GraphicsUtils.setBusyMouseCursor(false);
                 }
                 @Override
                 public void mouseEntered(MouseEvent e) {
@@ -197,14 +196,14 @@ public class NewDuelSettingsScreen
         }
 
         private void selectNewProfile(final PlayerProfile playerProfile) {
-            if (playerProfile instanceof HumanPlayer) {
+            if (playerProfile.isHuman()) {
                 ScreenController.showSelectHumanPlayerScreen(this, playerProfile);
             } else {
                 ScreenController.showSelectAiProfileScreen(this, playerProfile);
             }
         }
 
-        public String getCube() {
+        public MagicCubeDefinition getCube() {
             return duelSettingsPanel.getCube();
         }
 
@@ -232,11 +231,7 @@ public class NewDuelSettingsScreen
         }
 
         private DuelPlayerPanel getDuelPlayerPanel(final PlayerProfile player) {
-            if (player instanceof HumanPlayer) {
-                return playerPanels[0];
-            } else {
-                return playerPanels[1];
-            }
+            return playerPanels[player.isHuman() ? 0 : 1];
         }
 
         /* (non-Javadoc)
@@ -252,7 +247,7 @@ public class NewDuelSettingsScreen
          */
         @Override
         public void PlayerProfileDeleted(PlayerProfile deletedPlayer) {
-            if (deletedPlayer instanceof HumanPlayer) {
+            if (deletedPlayer.isHuman()) {
                 final PlayerProfile playerProfile = PlayerProfiles.getDefaultHumanPlayer();
                 DuelConfig.getInstance().setPlayerProfile(0, playerProfile);
                 getDuelPlayerPanel(playerProfile).setPlayer(playerProfile);
@@ -261,7 +256,6 @@ public class NewDuelSettingsScreen
                 DuelConfig.getInstance().setPlayerProfile(1,  playerProfile);
                 getDuelPlayerPanel(playerProfile).setPlayer(playerProfile);
             }
-            DuelConfig.getInstance().save();
         }
 
         /* (non-Javadoc)
@@ -274,12 +268,7 @@ public class NewDuelSettingsScreen
         }
 
         private void saveSelectedPlayerProfile(final PlayerProfile player) {
-            if (player instanceof HumanPlayer) {
-                DuelConfig.getInstance().setPlayerProfile(0, player);
-            } else {
-                DuelConfig.getInstance().setPlayerProfile(1, player);
-            }
-            DuelConfig.getInstance().save();
+            DuelConfig.getInstance().setPlayerProfile(player.isHuman() ? 0 : 1, player);
         }
 
         private boolean isDeckValid(int i) {

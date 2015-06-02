@@ -2,7 +2,7 @@ def ProtectionFromArtifacts = MagicAbility.getAbilityList("protection from artif
 
 def action = {
     final MagicGame game, final MagicEvent event ->
-    game.doAction(new MagicGainAbilityAction(
+    game.doAction(new GainAbilityAction(
         event.getRefPermanent(),
         event.getChosenColor().getProtectionAbility()
     ));
@@ -15,19 +15,19 @@ def action = {
             return new MagicEvent(
                 cardOnStack,
                 new MagicOrChoice(
-                    MagicTargetChoice.TARGET_PERMANENT_YOU_CONTROL,
-                    MagicTargetChoice.TARGET_PERMANENT_YOU_CONTROL
+                    TARGET_PERMANENT_YOU_CONTROL,
+                    TARGET_PERMANENT_YOU_CONTROL
                 ),
                 this,
-                "Choose one\$ - target permanent you control gains protection from artifacts until end of turn; " +
-                "or target permanent you control gains protection from the color of your choice until end of turn.\$" 
+                "Choose one\$ — (1) target permanent you control gains protection from artifacts until end of turn; " +
+                "or (2) target permanent you control gains protection from the color of your choice until end of turn.\$" 
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isMode(1)) {
                 event.processTargetPermanent(game, {
-                    game.doAction(new MagicGainAbilityAction(it,ProtectionFromArtifacts))
+                    game.doAction(new GainAbilityAction(it,ProtectionFromArtifacts))
                 });
             }
             if (event.isMode(2)) {

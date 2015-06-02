@@ -143,7 +143,7 @@ public class MagicCard
     }
 
     public long getStateId() {
-        return getCardDefinition().getIndex();
+        return getCardDefinition().getIndex() * 10L + (aiKnown ? 1 : 0) + (gameKnown ? 2 : 0) + (token ? 4 : 0);
     }
 
     public int getImageIndex() {
@@ -360,7 +360,7 @@ public class MagicCard
     public Collection<MagicSourceActivation<? extends MagicSource>> getSourceActivations() {
         List<MagicSourceActivation<? extends MagicSource>> sourceActs = new LinkedList<>();
         final Collection<MagicActivation<MagicCard>> activations = isInHand() ? 
-            getCardDefinition().getCardActivations() :
+            getCardDefinition().getHandActivations() :
             getCardDefinition().getGraveyardActivations();
         for (final MagicActivation<MagicCard> act : activations) {
             sourceActs.add(MagicSourceActivation.create(this, act));

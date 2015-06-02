@@ -21,8 +21,8 @@ public class MagicPlayChoice extends MagicChoice {
 
     private static final MagicChoice INSTANCE=new MagicPlayChoice();
 
-    private static final String MESSAGE="Play a card or ability.|Press {f} to pass priority.";
-    private static final String CONTINUE_MESSAGE="Press {f} to pass priority.";
+    private static final String CONTINUE_MESSAGE="Click {f} or Space to pass.";
+    private static final String MESSAGE="Play a card or ability.|" + CONTINUE_MESSAGE + "|[Right click {f} or Shift+Space to|skip till end of turn.]";
 
     private static final Collection<Object> PASS_OPTIONS=Collections.<Object>singleton(MagicPlayChoiceResult.SKIP);
     private static final Object[] PASS_CHOICE_RESULTS= {MagicPlayChoiceResult.SKIP};
@@ -32,11 +32,9 @@ public class MagicPlayChoice extends MagicChoice {
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         // When something is already on top of stack for the player, always pass.
         if (game.getStack().hasItemOnTopOfPlayer(player)) {
@@ -60,11 +58,7 @@ public class MagicPlayChoice extends MagicChoice {
         return options.size() > 1 ? options : PASS_OPTIONS;
     }
 
-    private static void addValidChoices(
-            final MagicGame game,
-            final MagicPlayer player,
-            final boolean isAI,
-            final Collection<Object> validChoices) {
+    private static void addValidChoices(final MagicGame game, final MagicPlayer player, final boolean isAI, final Collection<Object> validChoices) {
         final Set<MagicSourceActivation<? extends MagicSource>> sourceActivations = player.getSourceActivations();
         MagicActivation<? extends MagicSource> skip = null;
         for (final MagicSourceActivation<? extends MagicSource> sourceActivation : sourceActivations) {
@@ -81,11 +75,9 @@ public class MagicPlayChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final IUIGameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
         
         controller.focusViewers(0);
 
@@ -141,10 +133,12 @@ public class MagicPlayChoice extends MagicChoice {
         }
 
         if (game.shouldSkip()) {
-            if (game.getStack().isEmpty()) {
-                return PASS_CHOICE_RESULTS;
+            if (game.getStack().isEmpty() == false) {
+                game.clearSkipTurnTill();
+            } else if (game.isPhase(MagicPhaseType.DeclareAttackers) && player.getOpponent().getNrOfAttackers() > 0) {
+                game.clearSkipTurnTill();
             } else {
-                game.skipTurnTill(MagicPhaseType.Mulligan);
+                return PASS_CHOICE_RESULTS;
             }
         }
 

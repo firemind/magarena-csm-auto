@@ -3,9 +3,9 @@ def action = {
     for (final MagicPlayer player : game.getAPNAP()) {
         final MagicCardList hand = new MagicCardList(player.getHand());
         for (final MagicCard card : hand) {
-            game.doAction(new MagicDiscardCardAction(player,card));
+            game.doAction(new DiscardCardAction(player,card));
         }
-        game.doAction(new MagicDrawAction(player, 4));
+        game.doAction(new DrawAction(player, 4));
     }
 }
                             

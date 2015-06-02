@@ -12,11 +12,11 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicEvent discard = new MagicDiscardChosenEvent(event.getSource(), MagicTargetChoice.CREATURE_CARD_FROM_HAND);
+            final MagicEvent discard = new MagicDiscardChosenEvent(event.getSource(), A_CREATURE_CARD_FROM_HAND);
             if (event.isYes() && discard.isSatisfied()) {
                 game.addEvent(discard);
             } else {
-                game.doAction(new MagicSacrificeAction(event.getPermanent()));
+                game.doAction(new SacrificeAction(event.getPermanent()));
             }
         }
     }
