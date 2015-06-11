@@ -1,9 +1,9 @@
 name=Greater Good
 image=http://magiccards.info/scans/en/9e/245.jpg
-value=4.217
+value=3.878
 rarity=R
 type=Enchantment
 cost={2}{G}{G}
 timing=enchantment
 requires_groovy_code
-oracle=Sacrifice a creature: Draw cards equal to the sacrificed creature's power, then discard three cards.
+oracle={T}, Sacrifice a creature: Bloodshot Cyclops deals damage equal to the sacrificed creature's power to target creature or player.
