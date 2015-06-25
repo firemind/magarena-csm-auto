@@ -1,0 +1,9 @@
+name=High Tide
+image=http://magiccards.info/scans/en/vma/73.jpg
+value=2.500
+rarity=U
+type=Instant
+cost={U}
+effect=Until end of turn, whenever a player taps an Island for mana, that player adds {U} to his or her mana pool.
+timing=removal
+oracle=Until end of turn, whenever a player taps an Island for mana, that player adds {U} to his or her mana pool.
