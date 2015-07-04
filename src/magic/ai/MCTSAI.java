@@ -7,7 +7,6 @@ import magic.model.MagicGameLog;
 import magic.model.MagicPlayer;
 import magic.model.choice.MagicBuilderPayManaCostResult;
 import magic.model.event.MagicEvent;
-import magic.exception.handler.ConsoleExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,7 +135,6 @@ public class MCTSAI implements MagicAI {
         log("MCTS cached=" + root.getNumSim());
         
         sims = 0;
-        final ConsoleExceptionHandler handler = new ConsoleExceptionHandler(); 
         final ExecutorService executor = Executors.newFixedThreadPool(THREADS); 
         final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
 
@@ -147,11 +145,7 @@ public class MCTSAI implements MagicAI {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                try {
-                    TreeUpdate(this, root, aiGame, executor, queue, END_TIME);
-                } catch (final Throwable ex) {
-                    handler.uncaughtException(Thread.currentThread(), ex);
-                }
+                TreeUpdate(this, root, aiGame, executor, queue, END_TIME);
             }
         };
         
@@ -253,7 +247,7 @@ public class MCTSAI implements MagicAI {
 
         // submit random play to executor
         if (running) {
-            executor.submit(genSimulationTask(rootGame, path, queue));
+            executor.execute(genSimulationTask(rootGame, path, queue));
         }
         
         // virtual loss + game theoretic value propagation
@@ -282,7 +276,7 @@ public class MCTSAI implements MagicAI {
        
         // end simulations once root is AI win or time is up
         if (running && root.isAIWin() == false) {
-            executor.submit(updateTask);
+            executor.execute(updateTask);
         } else {
             executor.shutdown();
         }

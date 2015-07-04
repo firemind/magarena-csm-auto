@@ -18,8 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import magic.data.CardDefinitions;
-import magic.data.CubeDefinitions;
 import magic.data.MagicFormat;
+import magic.data.MagicPredefinedFormat;
 import magic.data.MagicSetDefinitions;
 import magic.data.MagicSets;
 import magic.model.MagicCardDefinition;
@@ -49,7 +49,8 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
     public static final String[] FILTER_CHOICES = {"Match any selected", "Match all selected", "Exclude selected"};
     public static final Color TEXT_COLOR = ThemeFactory.getInstance().getCurrentTheme().getTextColor();
     public static final Dimension POPUP_CHECKBOXES_SIZE = new Dimension(200, 150);
-    public static final Dimension BUTTON_HOLDER_PANEL_SIZE = new Dimension(100, 36);
+    public static final Dimension FILTER_BUTTON_PREFERRED_SIZE = new Dimension(90, 36);
+    public static final Dimension FILTER_BUTTON_MINIMUM_SIZE = new Dimension(66, 36);
 
     private final MigLayout layout = new MigLayout();
     private final ICardFilterPanelListener listener;
@@ -129,16 +130,9 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
     private void addDummyFilterButton() {
         final JButton btn = new JButton();
         btn.setVisible(false);
-        btn.setPreferredSize(BUTTON_HOLDER_PANEL_SIZE);
+        btn.setPreferredSize(FILTER_BUTTON_PREFERRED_SIZE);
+        btn.setMinimumSize(FILTER_BUTTON_MINIMUM_SIZE);
         add(btn);
-    }
-
-    private void addFormatsFilter() {
-        formatsPopup = addFilterPopupPanel("Format");
-        formatsCheckBoxes = new JCheckBox[MagicFormat.values().length];
-        formatsFilterChoices = new JRadioButton[FILTER_CHOICES.length];
-        final String[] filterValues = MagicFormat.getFilterValues();
-        populateCheckboxPopup(formatsPopup, filterValues, formatsCheckBoxes, formatsFilterChoices, false);
     }
 
     private void addStatusFilter() {
@@ -167,18 +161,27 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
 
     private void addCubeFilter() {
         cubePopup = addFilterPopupPanel("Cube");
-        final String[] filterValues = CubeDefinitions.getFilterValues();
-        cubeCheckBoxes = new JCheckBox[filterValues.length];
+        cubeCheckBoxes = new JCheckBox[MagicFormat.getCubeFilterFormats().size()];
         cubeFilterChoices = new JRadioButton[FILTER_CHOICES.length];
+        final String[] filterValues = MagicFormat.getCubeFilterLabels();
         populateCheckboxPopup(cubePopup, filterValues, cubeCheckBoxes, cubeFilterChoices, false);
+    }
+
+    private void addFormatsFilter() {
+        formatsPopup = addFilterPopupPanel("Format");
+        formatsCheckBoxes = new JCheckBox[MagicPredefinedFormat.values().size()];
+        formatsFilterChoices = new JRadioButton[FILTER_CHOICES.length];
+        final String[] filterValues = MagicPredefinedFormat.getFilterValues();
+        populateCheckboxPopup(formatsPopup, filterValues, formatsCheckBoxes, formatsFilterChoices, false);
     }
 
     private ButtonControlledPopup addFilterPopupPanel(final String title, final String tooltip) {
         final JButton selectButton = new JButton(title);
         selectButton.setToolTipText(tooltip);
         selectButton.setFont(FontsAndBorders.FONT1);
-        selectButton.setPreferredSize(BUTTON_HOLDER_PANEL_SIZE);
-        add(selectButton, "w " + BUTTON_HOLDER_PANEL_SIZE.width + "!");
+        selectButton.setPreferredSize(FILTER_BUTTON_PREFERRED_SIZE);
+        selectButton.setMinimumSize(FILTER_BUTTON_MINIMUM_SIZE);
+        add(selectButton);
 
         final ButtonControlledPopup pop = new ButtonControlledPopup(selectButton, title, title);
         pop.setLayout(new BoxLayout(pop, BoxLayout.Y_AXIS));
@@ -298,8 +301,8 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
             new CardChecker() {
                 @Override
                 public boolean checkCard(final MagicCardDefinition card, final int i) {
-                    final String cubeName = cubeCheckBoxes[i].getText();
-                    return CubeDefinitions.isCardInCube(card, cubeName);
+                    final MagicFormat fmt = MagicFormat.getCubeFilterFormats().get(i);
+                    return fmt.isCardLegal(card);
                 }
             })) {
             return false;
@@ -310,8 +313,8 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
             new CardChecker() {
                 @Override
                 public boolean checkCard(final MagicCardDefinition card, final int i) {
-                    final MagicFormat magicFormat  = MagicFormat.values()[i];
-                    return magicFormat.isCardLegal(card);
+                    final MagicFormat fmt = MagicPredefinedFormat.values().get(i);
+                    return fmt.isCardLegal(card);
                 }
             })) {
             return false;
@@ -612,7 +615,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
     }
 
     private void addManaCostFilter() {
-        costPopup = addFilterPopupPanel("Mana Cost");
+        costPopup = addFilterPopupPanel("Cost");
         costCheckBoxes = new JCheckBox[COST_VALUES.length];
         costFilterChoices = new JRadioButton[FILTER_CHOICES.length];
         populateCheckboxPopup("flowx, wrap 5, insets 2, gap 8", costPopup, COST_VALUES, costCheckBoxes, costFilterChoices, true);
@@ -638,8 +641,9 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
         resetButton.setFont(new Font("dialog", Font.BOLD, 12));
         resetButton.setForeground(new Color(127, 23 ,23));
         resetButton.addActionListener(this);
-        resetButton.setPreferredSize(BUTTON_HOLDER_PANEL_SIZE);
-        add(resetButton, "w " + BUTTON_HOLDER_PANEL_SIZE.width + "!");
+        resetButton.setPreferredSize(FILTER_BUTTON_PREFERRED_SIZE);
+        resetButton.setMinimumSize(FILTER_BUTTON_MINIMUM_SIZE);
+        add(resetButton);
     }
 
     public int getPlayableCardCount() {

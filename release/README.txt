@@ -60,6 +60,7 @@ Thanks to
   http://mtgjson.com for card script data
   http://mtgimage.com for card images
   http://game-icons.net for UI icons
+  http://soundbible.com for sound effects.
   everyone on the CCGHQ forum, http://slightlymagic.net/forum/
 
 Thank you for your support and have fun!
@@ -67,8 +68,99 @@ Thank you for your support and have fun!
 
 
 
-Release 1.63 (June 28, 2015)
+Release 1.64 (July 31, 2015)
 ============
+    
+Release 1.63 (June 30, 2015)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+    
+- support costs with the snow mana symbol {S}
+
+- layout and style updates to Deck Editor including persistent abbreviated deck view
+
+- add a Legality tab in Deck editor to show deck legality status
+
+- add an Audio tab in Preferences dialog for all audio settings, volume of UI sounds can now be adjusted
+
+- new feedback sounds when adding or removing a card from deck, bong sound for alerts, and clunk sound for invalid action
+    
+- rename preference "Allow only sensible choices" to "Limit options for human player to those available to the AI", 
+  change to off by default
+    
+- improve AI's use of specific cards by adding AI specific casting restrictions
+    
+- fixed the following bugs:
+  * crash when mana cost exceeds {16}
+  * crash when double clicking on card in hand (issue #374)
+  * crash when importing AI player profile due to missing default profile (issue #329)
+  * additional costs not required when casting imprinted spell
+  * "skip till end of turn" not cleared at end of turn (issue #350)
+  * static ability generated from ability property applied at the wrong layer (issue #331)
+  * image count not set to zero after image download completed
+  * wrong image for Snake Basket, Mystic Compass
+  * sorcery speed pump spells timing hint incorrect
+  * AI casting restriction applied to player (issue #341)
+  * Rancor stays attached to Treetop Village even when no longer a creature (issue #50)
+  * Momir Vig's triggers did not synergize (issue #328)
+  * Bogardan Phoenix did not get a death counter when it returns to the battlefield
+  * Orzhov Charm's bounce implementation could cause concurrent modification exception
+  * Scare Tactics' timing hint incorrect
+  * Grim Feast's trigger checks for when a creature an opponent controls dies
+  * Chimeric Mass's ability did not give it the Artifiact card type
+
+- added the following cards:
+Adarkar Windform, Alchor's Tomb, Ana Sanctuary, Apathy,
+Arbiter of Knollridge, Arcane Denial, Ashnod's Cylix, Aura Barbs,
+Aura of Dominion, Banshee, Battle Cry, Bellowing Fiend, Blizzard,
+Bloodbond March, Bloodthirsty Ogre, Boreal Centaur, Boreal Griffin,
+Branded Brawlers, Browse, Call for Blood, Call of the Wild, Calming Verse,
+Cerulean Sphinx, Ceta Sanctuary, Champion's Helm, Chilling Shade,
+Chimeric Coils, Cleansing Beam, Cloak of Confusion, Compulsive Research,
+Cover of Winter, Cromat, Crovax the Cursed, Curse Artifact, Cursed Rack,
+Cyclopean Snare, Dark Maze, Dark Temper, Dega Sanctuary, Diamond Faerie,
+Disorder, Distorting Lens, Dosan the Falling Leaf, Dwarven Armory,
+Early Harvest, Earth Surge, Elephant Resurgence, Enchanted Being,
+Ethereal Haze, Excise, Eye of Singularity, Farrel's Mantle, Feint,
+Filigree Fracture, First Volley, Flint Golem, Forbidden Alchemy,
+Forethought Amulet, Frost Raptor, Fylgja, Gaea's Balance,
+Gangrenous Zombies, Gaseous Form, Gelid Shackles, Ghosts of the Innocent,
+Giant Caterpillar, Glacial Plating, Glimpse the Future, Gnat Miser,
+Goblin Cadets, Goblin Rimerunner, Goblin Sappers, Goblin Ski Patrol,
+Goblin Snowman, Granulate, Gravecrawler, Haunted Angel, Heart of Light,
+Hokori, Dust Drinker, Imperial Mask, Incite Hysteria, Indentured Oaf,
+Insurrection, Invoke Prejudice, Jin-Gitaxias, Core Augur,
+Kitsune Palliator, Knight of Dusk, Knight of Valor, Kry Shield,
+Kyoki, Sanity's Eclipse, Leave No Trace, Lichenthrope, Lifespinner,
+Light of Sanction, Locust Miser, Manacles of Decay, Mana Short,
+Mana Vortex, Mark of Eviction, Martyrs of Korlis, Minamo Scrollkeeper,
+Mind Whip, Miracle Worker, Mistfolk, Monsoon, Mouth of Ronom,
+Mundungu, Murderous Betrayal, Natural Balance, Necra Sanctuary,
+Necropolis, Nivix Cyclops, Noble Purpose, Oath of Lim-Dûl,
+Ohran Yeti, Orb of Dreams, Orcish Captain, Orcish Squatters,
+Orcish Veteran, Pallid Mycoderm, Phantom Wings, Phyrexian Ironfoot,
+Phyrexian Snowcrusher, Phytohydra, Pillar Tombs of Aku, Plague Boiler,
+Pollenbright Wings, Preferred Selection, Primordial Ooze, Rakalite,
+Raka Sanctuary, Rally the Righteous, Razormane Masticore, Relic Bind,
+Rimebound Dead, Rimefeather Owl, Rimescale Dragon, Ring of Immortals,
+Ritual of the Returned, Roar of Reclamation, Rocket Launcher,
+Rohgahh of Kher Keep, Rolling Stones, Rubinia Soulsinger, Savaen Elves,
+Scarab of the Unseen, Scarwood Bandits, Scourge of Fleets,
+Scrying Sheets, Seasinger, Serpent Generator, Sheltered Valley,
+Shifting Sky, Shrieking Specter, Silklash Spider, Skyward Eye Prophets,
+Slate Street Ruffian, Sleeper Agent, Slumbering Tora, Snow Devil,
+Snow Fortress, Soldevi Heretic, Spell Crumple, Spitting Slug, Spore Cloud,
+Starfall, Stasis Cocoon, Steamflogger Boss, Strategic Planning, Subdue,
+Sudden Spoiling, Sultai Soothsayer, Surge of Zeal, Surrakar Spellblade,
+Tainted Æther, That Which Was Taken, Thirst for Knowledge,
+Thought Devourer, Thought Eater, Thought Nibbler, Thundercloud Shaman,
+Tolarian Winds, Tower Geist, Transluminant, Tresserhorn Skyknight,
+Trusted Advisor, Vampire Lacerator, Vedalken Shackles, Volrath the Fallen,
+Voodoo Doll, Warped Devotion, Willow Satyr, Wojek Apothecary,
+Wojek Embermage, Wojek Siren, Wrench Mind, Yukora, the Prisoner
 
 Release 1.62 (May 31, 2015)
 ============
@@ -77,13 +169,13 @@ melvin
 PalladiaMors
 ShawnieBoy
 
-- Display decks containing selected card in Card Explorer, double-click deck name to view list of cards in deck
+- display decks containing selected card in Card Explorer, double-click deck name to view list of cards in deck
 
-- Display tokens in Card Explorer
+- display tokens in Card Explorer
 
-- Highlight icons in action and status bar on mouse over
+- highlight icons in action and status bar on mouse over
 
-- Add reason in log for unattaching aura/equipment
+- add reason in log for unattaching aura/equipment
 
 - added the following to the card script:
   * Allow rider effect to reference target by putting reference word between asterisks

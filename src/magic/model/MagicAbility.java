@@ -65,7 +65,7 @@ public enum MagicAbility {
     Infect("infect(\\.)?",35),
     Horsemanship("horsemanship(\\.)?",60),
     Soulbond("soulbond",30),
-    SplitSecond("split second\\.",10),
+    SplitSecond("split second(\\.)?",10),
     CantActivateAbilities("can't activate abilities(\\.)?|its activated abilities can't be activated(\\.)?",-20),
     ProtectionFromBlack("(protection )?from black(\\.)?",20),
     ProtectionFromBlue("(protection )?from blue(\\.)?",20),
@@ -197,7 +197,7 @@ public enum MagicAbility {
             card.add(new MagicRampageTrigger(n));
         }
     },
-    Champion("champion " + ARG.ANY,-10) {
+    Champion("champion (a |an )?" + ARG.ANY,-10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(new MagicChampionTrigger(ARG.any(arg)));
             card.add(MagicLeavesReturnExileTrigger.create());
@@ -331,12 +331,6 @@ public enum MagicAbility {
             card.add(MagicWhenOtherComesIntoPlayTrigger.Graft);
         }
     },
-    Loyalty("loyalty " + ARG.NUMBER,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.Loyalty,n));
-        }
-    },
     Retrace("retrace",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicCardDefinition cardDef = (MagicCardDefinition)card;
@@ -434,7 +428,7 @@ public enum MagicAbility {
             card.add(MagicMorphCastActivation.Morph);
         }
     },
-    
+
     // abilities that involve SN
     ShockLand("As SN enters the battlefield, you may pay 2 life\\. If you don't, SN enters the battlefield tapped\\.", -10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
@@ -665,7 +659,7 @@ public enum MagicAbility {
             ));
         }
     },
-    
+
     // triggered abilities
     AnyAttacksEffect("When(ever)? " + ARG.WORDRUN + " attacks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
@@ -1073,7 +1067,7 @@ public enum MagicAbility {
         }
     },
 
-/*  
+/*
     EnchantDual("Enchant " + ARG.WORD1 + " or "+ ARG.WORD2, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicPlayAuraEvent.create("default," + ARG.word1(arg) + " or " + ARG.word2(arg)));
@@ -1283,10 +1277,19 @@ public enum MagicAbility {
             card.add(MagicStatic.genABGameStatic(filter, abList));
         }
     },
+    /*
+    Suspend("suspend " + ARG.NUMBER + "( |—)" + ARG.MANACOST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicSuspendActivation(n, manaCost));
+        }
+    },
+    */
     ;
 
     public static final Set<MagicAbility> PROTECTION_FLAGS = EnumSet.range(ProtectionFromBlack, ProtectionFromEverything);
-    
+
     public static final Set<MagicAbility> LANDWALK_FLAGS = EnumSet.range(Plainswalk, NonbasicLandwalk);
 
 
@@ -1311,7 +1314,7 @@ public enum MagicAbility {
         card.addAbility(this);
         addAbilityImpl(card, matched(ability));
     }
-    
+
     public void addAbility(final MagicAbilityStore card) {
         card.addAbility(this);
         addAbilityImpl(card, null);
@@ -1333,11 +1336,11 @@ public enum MagicAbility {
         }
         return score;
     }
-    
+
     public boolean matches(final String rule) {
         return pattern.matcher(rule).matches();
     }
-    
+
     public Matcher matched(final String rule) {
         final Matcher matcher = pattern.matcher(rule);
         final boolean matches = matcher.matches();
@@ -1355,7 +1358,7 @@ public enum MagicAbility {
         }
         throw new ScriptParseException("unknown ability \"" + name + "\"");
     }
-    
+
     public static MagicAbilityList getAbilityList(final String[] names) {
         final MagicAbilityList abilityList = new MagicAbilityList();
         for (final String name : names) {
@@ -1363,7 +1366,7 @@ public enum MagicAbility {
         }
         return abilityList;
     }
-    
+
     public static MagicAbilityList getAbilityList(final Set<MagicAbility> abilities) {
         final MagicAbilityList abilityList = new MagicAbilityList();
         for (final MagicAbility ability : abilities) {
@@ -1373,23 +1376,23 @@ public enum MagicAbility {
     }
 
     private static final Pattern SUB_ABILITY_LIST = Pattern.compile(
-        "(?:has |have )?\"([^\"]+)\"(?:, and | and )?|" + 
-        "(?:has |have )?([A-Za-z][^,]+)(?:, and | and )|" + 
+        "(?:has |have )?\"([^\"]+)\"(?:, and | and )?|" +
+        "(?:has |have )?([A-Za-z][^,]+)(?:, and | and )|" +
         "(?:has |have )?([A-Za-z][^,]+)"
     );
-    
+
     public static MagicAbilityList getAbilityList(final String names) {
         final MagicAbilityList abilityList = new MagicAbilityList();
         final Matcher m = SUB_ABILITY_LIST.matcher(names);
         while (m.find()) {
-            final String name = m.group(1) != null ? m.group(1) : 
+            final String name = m.group(1) != null ? m.group(1) :
                                 m.group(2) != null ? m.group(2) :
                                 m.group(3);
             getAbility(name).addAbility(abilityList, name);
         }
         return abilityList;
     }
-    
+
     public static Set<MagicAbility> of(final MagicAbility first, MagicAbility... rest) {
         return EnumSet.of(first, rest);
     }
@@ -1397,7 +1400,7 @@ public enum MagicAbility {
     public static Set<MagicAbility> noneOf() {
         return EnumSet.noneOf(MagicAbility.class);
     }
-    
+
     public static MagicAbility CannotBeTheTarget(final MagicPlayer player) {
         return player.getIndex() == 0 ?
             CannotBeTheTarget0 :

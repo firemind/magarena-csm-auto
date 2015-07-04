@@ -1,9 +1,12 @@
 package magic.ui;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import magic.ui.utility.MagicStyle;
 import java.util.Stack;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
 import magic.model.IUIGameController;
 import magic.model.MagicCardDefinition;
@@ -16,7 +19,7 @@ import magic.model.player.PlayerProfile;
 import magic.ui.dialog.AboutDialog;
 import magic.ui.dialog.DuelSidebarLayoutDialog;
 import magic.ui.dialog.ImportDialog;
-import magic.ui.dialog.PreferencesDialog;
+import magic.ui.prefs.PreferencesDialog;
 import magic.ui.duel.choice.MulliganChoicePanel;
 import magic.ui.screen.AbstractScreen;
 import magic.ui.screen.AvatarImagesScreen;
@@ -24,7 +27,7 @@ import magic.ui.screen.CardExplorerScreen;
 import magic.ui.screen.CardScriptScreen;
 import magic.ui.screen.CardZoneScreen;
 import magic.ui.screen.DeckEditorSplitScreen;
-import magic.ui.screen.DeckEditorTabbedScreen;
+import magic.ui.screen.DeckEditorScreen;
 import magic.ui.screen.DeckTiledCardsScreen;
 import magic.ui.screen.DeckViewScreen;
 import magic.ui.screen.DecksScreen;
@@ -43,8 +46,15 @@ import magic.ui.screen.SelectHumanPlayerScreen;
 import magic.ui.screen.SettingsMenuScreen;
 import magic.ui.screen.interfaces.IAvatarImageConsumer;
 import magic.ui.screen.interfaces.IDeckConsumer;
+import magic.utility.MagicSystem;
 
 public final class ScreenController {
+
+    // translatable strings.
+    private static final String _S1 = "This will require a restart to take full effect. Restart now?";
+    private static final String _S2 = "Information";
+    private static final String _S3 = "Warning";
+    private static final String _S4 = "Restart Magarena?";
 
     private static MagicFrame mainFrame = null;
     private static final Stack<AbstractScreen> screens = new Stack<>();
@@ -71,7 +81,7 @@ public final class ScreenController {
     public static void showReadMeScreen() {
         showScreen(new ReadmeScreen());
     }
-    
+
     public static void showKeywordsScreen() {
         showScreen(new KeywordsScreen());
     }
@@ -92,7 +102,7 @@ public final class ScreenController {
         if (GeneralConfig.getInstance().isSplitViewDeckEditor()) {
             showScreen(new DeckEditorSplitScreen(deck));
         } else {
-            showScreen(new DeckEditorTabbedScreen(deck));
+            showScreen(new DeckEditorScreen(deck));
         }
     }
 
@@ -100,7 +110,7 @@ public final class ScreenController {
         if (GeneralConfig.getInstance().isSplitViewDeckEditor()) {
             showScreen(new DeckEditorSplitScreen());
         } else {
-            showScreen(new DeckEditorTabbedScreen());
+            showScreen(new DeckEditorScreen());
         }
     }
 
@@ -122,7 +132,7 @@ public final class ScreenController {
 
     public static void showMulliganScreen(final MulliganChoicePanel choicePanel, final MagicCardList hand) {
         if (screens.peek() instanceof MulliganScreen) {
-            final MulliganScreen screen = (MulliganScreen)screens.peek();
+            final MulliganScreen screen = (MulliganScreen) screens.peek();
             screen.dealNewHand(choicePanel, hand);
         } else {
             showScreen(new MulliganScreen(choicePanel, hand));
@@ -164,6 +174,7 @@ public final class ScreenController {
     public static void showDuelGameScreen(final MagicGame game) {
         showScreen(new DuelGameScreen(game));
     }
+
     public static void showDuelGameScreen(final MagicDuel duel) {
         showScreen(new DuelGameScreen(duel));
     }
@@ -177,7 +188,35 @@ public final class ScreenController {
     }
 
     public static void showPreferencesDialog() {
-        new PreferencesDialog(getMainFrame());
+        final PreferencesDialog dialog = new PreferencesDialog(getMainFrame());
+        if (dialog.isRestartRequired()) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (confirmRestart()) {
+                        try {
+                            MagicSystem.restart();
+                        } catch (URISyntaxException | IOException ex) {
+                            System.err.println(ex);
+                        } catch (Exception ex) {
+                            System.err.println(ex);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private static boolean confirmRestart() {
+        if (JOptionPane.showConfirmDialog(
+                mainFrame,
+                UiString.get(_S1),
+                UiString.get(_S4),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            return true;
+        }
+        return false;
     }
 
     private static void closeActiveScreen() {
@@ -201,7 +240,7 @@ public final class ScreenController {
         } else {
             closeActiveScreen();
         }
-    }    
+    }
 
     private static void showScreen(final AbstractScreen screen) {
         setMainFrameScreen(screen);
@@ -228,19 +267,28 @@ public final class ScreenController {
     public static void refreshStyle() {
         for (AbstractScreen screen : screens) {
             MagicStyle.refreshComponentStyle(screen);
-        }        
+        }
     }
 
     public static void showInfoMessage(final String message) {
-        JOptionPane.showMessageDialog(getMainFrame(), message, "Information", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(getMainFrame(), message, UiString.get(_S2), JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void showWarningMessage(final String message) {
-        JOptionPane.showMessageDialog(getMainFrame(), message, "Warning", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(getMainFrame(), message, UiString.get(_S3), JOptionPane.WARNING_MESSAGE);
     }
 
     public static void showDuelSidebarDialog(final IUIGameController controller) {
         new DuelSidebarLayoutDialog(getMainFrame(), controller);
+    }
+
+    public static boolean isDuelActive() {
+        for (AbstractScreen screen : screens) {
+            if (screen instanceof DuelDecksScreen) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -4,6 +4,7 @@ import magic.data.GeneralConfig;
 import magic.model.MagicGame;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
+import magic.model.MagicPermanentState;
 import magic.model.event.MagicActivation;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicSourceActivation;
@@ -95,8 +96,7 @@ public class MagicPlayChoice extends MagicChoice {
              game.isPhase(MagicPhaseType.DeclareBlockers) ||
              game.isPhase(MagicPhaseType.CombatDamage) ||
              game.isPhase(MagicPhaseType.EndOfCombat)) &&
-            player.getNrOfAttackers() == 0 &&
-            player.getOpponent().getNrOfAttackers() == 0 &&
+            game.getNrOfPermanents(MagicPermanentState.Attacking) == 0 &&
             game.getStack().isEmpty()) {
             return PASS_CHOICE_RESULTS;
         }
@@ -104,7 +104,7 @@ public class MagicPlayChoice extends MagicChoice {
         //skip if phase is combat damage, not supposed to be able to do
         //anything but resolve triggers
         if (game.isPhase(MagicPhaseType.CombatDamage)) {
-            if (!game.getStack().isEmpty()) {
+            if (game.getStack().hasItem()) {
                 controller.pause(GeneralConfig.getInstance().getMessageDelay());
             }
             return PASS_CHOICE_RESULTS;
@@ -125,7 +125,7 @@ public class MagicPlayChoice extends MagicChoice {
 
             if (skip) {
                 //pause if there is an item on the stack
-                if (!game.getStack().isEmpty()) {
+                if (game.getStack().hasItem()) {
                     controller.pause(GeneralConfig.getInstance().getMessageDelay());
                 }
                 return PASS_CHOICE_RESULTS;
@@ -135,11 +135,13 @@ public class MagicPlayChoice extends MagicChoice {
         if (game.shouldSkip()) {
             if (game.getStack().isEmpty() == false) {
                 game.clearSkipTurnTill();
-            } else if (game.isPhase(MagicPhaseType.DeclareAttackers) && player.getOpponent().getNrOfAttackers() > 0) {
+            } else if (game.isPhase(MagicPhaseType.DeclareAttackers) && game.getNrOfPermanents(MagicPermanentState.Attacking) > 0) { 
                 game.clearSkipTurnTill();
             } else {
                 return PASS_CHOICE_RESULTS;
             }
+        } else {
+            game.clearSkipTurnTill();
         }
 
         if (validChoices.isEmpty()) {

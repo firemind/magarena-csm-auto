@@ -15,15 +15,14 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicCard card = event.getPermanent().getCard();
             if (card.isInGraveyard()) {
-                game.doAction(new ReanimateAction(card,event.getPlayer()));
-                game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.Death,1));
+                game.doAction(new ReanimateAction(card,event.getPlayer(),[MagicPlayMod.DEATH_COUNTER]));
             }    
         }
     },
     new MagicWhenDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
-            return permanent.getCounters(MagicCounterType.Death) > 0 ?
+            return permanent.hasCounters(MagicCounterType.Death) ?
                 new MagicEvent(
                     permanent,
                     this,

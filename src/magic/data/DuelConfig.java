@@ -6,7 +6,6 @@ import java.util.Properties;
 import magic.model.MagicDeckProfile;
 import magic.model.MagicDuel;
 import magic.model.DuelPlayerConfig;
-import magic.model.MagicCubeDefinition;
 import magic.model.player.PlayerProfile;
 import magic.model.player.PlayerProfiles;
 
@@ -28,7 +27,7 @@ public class DuelConfig {
     private int startLife = 20;
     private int handSize = 7;
     private int games = 7;
-    private MagicCubeDefinition cube = CubeDefinitions.DEFAULT_CUBE;
+    private MagicFormat cube = MagicFormat.ALL;
     private DuelPlayerConfig[] players = new DuelPlayerConfig[MAX_PLAYERS];
 
     // CTR
@@ -69,10 +68,10 @@ public class DuelConfig {
         return games;
     }
 
-    public MagicCubeDefinition getCube() {
+    public MagicFormat getCube() {
         return cube;
     }
-    public void setCube(final MagicCubeDefinition aCube) {
+    public void setCube(final MagicFormat aCube) {
         this.cube = aCube;
     }
 
@@ -95,7 +94,7 @@ public class DuelConfig {
         startLife = Integer.parseInt(properties.getProperty(START_LIFE, Integer.toString(startLife)));
         handSize = Integer.parseInt(properties.getProperty(HAND_SIZE, Integer.toString(handSize)));
         games = Integer.parseInt(properties.getProperty(GAMES, Integer.toString(games)));
-        cube = CubeDefinitions.getCube(properties.getProperty(CUBE, cube.getName()));
+        cube = MagicCustomFormat.get(properties.getProperty(CUBE, cube.getName()));
         loadPlayerConfigs(properties, loadPlayerDecks);
     }
 

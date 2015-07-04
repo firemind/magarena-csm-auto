@@ -17,13 +17,18 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import magic.data.MagicFormat;
+import magic.data.MagicPredefinedFormat;
 import magic.data.MagicIcon;
 import magic.model.MagicDeck;
 import magic.ui.IconImages;
+import magic.ui.UiString;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class FormatsLegalityPanel extends JPanel {
+
+    // translatable strings
+    private static final String _S1 = "Formats";
 
     // fired when selection changes.
     public static final String CP_FORMAT_SELECTED = "FormatSelected";
@@ -46,7 +51,7 @@ public class FormatsLegalityPanel extends JPanel {
         scrollpane.getViewport().setBackground(Color.WHITE);
         scrollpane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.DARK_GRAY));
 
-        titleLabel = new JLabel("Formats");
+        titleLabel = new JLabel(UiString.get(_S1));
         titleLabel.setFont(getFont().deriveFont(Font.BOLD));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.DARK_GRAY));
@@ -95,12 +100,12 @@ public class FormatsLegalityPanel extends JPanel {
 
     private DeckLegalityInfo[] getDeckFormatsLegality(final MagicDeck aDeck) {
         final List<DeckLegalityInfo> lst = new ArrayList<>();
-        for (MagicFormat aFormat : MagicFormat.values()) {
+        for (MagicFormat aFormat : MagicPredefinedFormat.values()) {
             final DeckLegalityInfo deckLegality = new DeckLegalityInfo(aFormat);
             deckLegality.setIsLegal(aFormat.isDeckLegal(aDeck));
             lst.add(deckLegality);
         }
-        return lst.toArray(new DeckLegalityInfo[lst.size()]);
+        return lst.toArray(new DeckLegalityInfo[0]);
     }
 
     private class FormatsListCellRenderer extends DefaultListCellRenderer {

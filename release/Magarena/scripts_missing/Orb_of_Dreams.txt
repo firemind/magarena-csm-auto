@@ -1,9 +1,0 @@
-name=Orb of Dreams
-image=http://magiccards.info/scans/en/bok/156.jpg
-value=2.500
-rarity=R
-type=Artifact
-cost={3}
-ability=Permanents enter the battlefield tapped.
-timing=artifact
-oracle=Permanents enter the battlefield tapped.

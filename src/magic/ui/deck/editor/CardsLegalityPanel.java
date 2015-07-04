@@ -27,11 +27,21 @@ import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
 import magic.ui.IconImages;
+import magic.ui.UiString;
+import magic.ui.StringContext;
 import magic.ui.widget.FontsAndBorders;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class CardsLegalityPanel extends JPanel {
+
+    // translatable strings
+    private static final String _S1 = "Deck";
+    @StringContext(eg="Memnite is illegal in Standard.")
+    private static final String _S2 ="<html>%s <b>%s</b> in %s.</html>";
+    @StringContext(eg="Illegal deck size for Vintage.")
+    private static final String _S3 = "Illegal deck size for %s.";
+    private static final String _S4 = "A minimum of %d cards is required.";
 
     // fired when selection changes.
     public static final String CP_CARD_SELECTED = "cardTableSelection";
@@ -93,7 +103,7 @@ public class CardsLegalityPanel extends JPanel {
         scrollpane.setBorder(FontsAndBorders.NO_BORDER);
         scrollpane.getViewport().setBackground(Color.WHITE);
 
-        titleLabel = new JLabel("Deck");
+        titleLabel = new JLabel(UiString.get(_S1));
         titleLabel.setFont(getFont().deriveFont(Font.BOLD));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.DARK_GRAY));
@@ -216,10 +226,9 @@ public class CardsLegalityPanel extends JPanel {
             final CardLegalityInfo cardLegality = tableModel.getCardLegality(row);
             
             final JLabel lbl = getLegalityIcon(cardLegality);
-            lbl.setToolTipText(
-                    String.format("<html>%s is <b>%s</b> in %s.</html>",
+            lbl.setToolTipText(UiString.get(_S2,
                             cardLegality.getCardName(),
-                            cardLegality.getLegality().name(),
+                            cardLegality.getLegality().getDescription(),
                             cardLegality.getFormat().getName())
             );
 
@@ -251,8 +260,8 @@ public class CardsLegalityPanel extends JPanel {
             final Graphics2D g2d = (Graphics2D)g.create();
             g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g2d.setFont(FontsAndBorders.FONT2);
-            g2d.drawString("Illegal deck size for " + magicFormat.getName() + "." , 20, 60);
-            g2d.drawString("A minimum of " + magicFormat.getMinimumDeckSize() + " cards is required.", 20, 84);
+            g2d.drawString(UiString.get(_S3, magicFormat.getName()), 20, 60);
+            g2d.drawString(UiString.get(_S4, magicFormat.getMinimumDeckSize()), 20, 84);
             g2d.dispose();
         }
     }

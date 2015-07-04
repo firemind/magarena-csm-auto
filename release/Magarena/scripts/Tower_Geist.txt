@@ -1,0 +1,12 @@
+name=Tower Geist
+image=http://magiccards.info/scans/en/dka/53.jpg
+value=3.430
+rarity=U
+type=Creature
+subtype=Spirit
+cost={3}{U}
+pt=2/2
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Flying\nWhen Tower Geist enters the battlefield, look at the top two cards of your library. Put one of them into your hand and the other into your graveyard.

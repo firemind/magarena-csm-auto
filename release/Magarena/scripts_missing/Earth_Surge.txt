@@ -1,9 +1,0 @@
-name=Earth Surge
-image=http://magiccards.info/scans/en/gp/84.jpg
-value=2.500
-rarity=R
-type=Enchantment
-cost={3}{G}
-ability=Each land gets +2/+2 as long as it's a creature.
-timing=enchantment
-oracle=Each land gets +2/+2 as long as it's a creature.

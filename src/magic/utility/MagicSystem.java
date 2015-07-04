@@ -1,22 +1,26 @@
 package magic.utility;
 
-import magic.data.DeckGenerators;
-import magic.data.KeywordDefinitions;
-import magic.data.CubeDefinitions;
-import magic.data.CardDefinitions;
-import magic.data.UnimplementedParser;
-import magic.data.GeneralConfig;
-import magic.model.MagicGameLog;
-import magic.utility.MagicFileSystem.DataPath;
-
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.ExecutionException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.util.List;
-import java.io.File;
+import magic.MagicMain;
+import magic.data.CardDefinitions;
+import magic.data.DeckGenerators;
+import magic.data.GeneralConfig;
+import magic.data.KeywordDefinitions;
+import magic.data.MagicCustomFormat;
+import magic.data.UnimplementedParser;
+import magic.model.MagicGameLog;
+import magic.utility.MagicFileSystem.DataPath;
 
 final public class MagicSystem {
     private MagicSystem() {}
@@ -155,6 +159,7 @@ final public class MagicSystem {
         final ExecutorService background = Executors.newSingleThreadExecutor();
         background.execute(loadCards);
         background.execute(new Runnable() {
+            @Override
             public void run() {
                 CardDefinitions.postCardDefinitions();
             }
@@ -172,10 +177,79 @@ final public class MagicSystem {
         }
 
         reporter.setMessage("Loading cube definitions...");
-        CubeDefinitions.loadCubeDefinitions();
+        MagicCustomFormat.loadCustomFormats();
         reporter.setMessage("Loading deck generators...");
         DeckGenerators.getInstance().loadDeckGenerators();
         reporter.setMessage("Loading keyword definitions...");
         KeywordDefinitions.getInstance().loadKeywordDefinitions();
     }
+
+    public static File getJarFile() throws URISyntaxException {
+        
+        CodeSource codeSource = MagicMain.class.getProtectionDomain().getCodeSource();
+        File jarFile = new File(codeSource.getLocation().toURI());
+
+        if (jarFile.isFile() && jarFile.exists()) {
+            return jarFile;
+        } else if (System.getProperty("jarFile") != null) {
+            jarFile = new File(System.getProperty("jarFile"));
+            return jarFile;
+        }
+
+        return null;
+    }
+
+    /**
+     * Restart the current Java application.
+     * <p>
+     * Should also work when JAR is not available (eg. when running from IDE).
+     */
+    public static void restart() throws URISyntaxException, IOException {
+
+        final List<String> command = new ArrayList<>();
+
+        final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+        command.add(javaBin);
+        
+        // vm arguments
+        final List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+        for (final String arg : vmArguments) {
+            // if it's the agent argument : we ignore it otherwise the
+            // address of the old application and the new one will be in conflict
+            if (!arg.contains("-agentlib")) {
+                command.add(arg);
+            }
+        }
+
+        final File jarFile = getJarFile();
+        if (jarFile != null) {
+            command.add("-jar");
+            command.add(jarFile.getPath());
+        } else {
+             // Sun property pointing to the main class and its arguments.
+             // Might not be defined on non Hotspot VM implementations.
+            command.add("-cp \"");
+            command.add(System.getProperty("java.class.path"));
+            command.add("\" ");
+            command.add(System.getProperty("sun.java.command").split(" ")[0]);
+        }
+
+        // execute the command in a shutdown hook, to be sure that all the
+        // resources have been disposed before restarting the application
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    final ProcessBuilder builder = new ProcessBuilder(command);
+                    builder.start();
+                } catch (final IOException ex) {
+                    System.err.println(ex);
+                }
+            }
+        });
+
+        System.exit(0);
+        
+    }
+
 }

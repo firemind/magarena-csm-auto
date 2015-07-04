@@ -2,8 +2,10 @@ package magic.model.mstatic;
 
 import magic.model.MagicCopyMap;
 import magic.model.MagicCounterType;
+import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicPowerToughness;
+import magic.model.MagicType;
 import magic.model.target.MagicTargetFilterFactory;
 import magic.model.MagicSubType;
 import magic.model.MagicAbility;
@@ -13,8 +15,8 @@ import java.util.Set;
 
 public class MagicPermanentStatic implements Comparable<MagicPermanentStatic> {
     public static final MagicPermanentStatic CountersEffect = new MagicPermanentStatic(
-        0, 
-        MagicPermanent.NONE, 
+        0,
+        MagicPermanent.NONE,
         new MagicStatic(MagicLayer.CountersPT, MagicTargetFilterFactory.CREATURE) {
             @Override
             public void modPowerToughness(final MagicPermanent source, final MagicPermanent permanent, final MagicPowerToughness pt) {
@@ -43,8 +45,8 @@ public class MagicPermanentStatic implements Comparable<MagicPermanentStatic> {
     );
 
     public static final MagicPermanentStatic BasicLandEffect = new MagicPermanentStatic(
-        0, 
-        MagicPermanent.NONE, 
+        0,
+        MagicPermanent.NONE,
         new MagicStatic(MagicLayer.Ability, MagicTargetFilterFactory.LAND) {
             @Override
             public void modAbilityFlags(final MagicPermanent source, final MagicPermanent permanent, final Set<MagicAbility> flags) {

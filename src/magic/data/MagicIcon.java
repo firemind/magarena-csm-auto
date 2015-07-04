@@ -176,6 +176,12 @@ public enum MagicIcon {
     GROWTHCOUNTER("spore-counter.png"),
     PLAGUECOUNTER("spore-counter.png"),
     PINCOUNTER("pin-counter.png"),
+    HEALINGCOUNTER("healing-counter.png"),
+    SCREAMCOUNTER("scream-counter.png"),
+    DEVOTIONCOUNTER("devotion-counter.png"),
+    DIVINITYCOUNTER("divinity-counter.png"),
+    DEATHCOUNTER("death-counter.png"),
+    WINDCOUNTER("wind-counter.png"),
 
     MANA_ANY("anymana.gif"),
 
@@ -186,6 +192,7 @@ public enum MagicIcon {
     MANA_BLACK(26),
     MANA_RED(27),
     MANA_GREEN(28),
+    MANA_SNOW(29),
     MANA_HYBRID_WHITE(40),
     MANA_HYBRID_BLUE(41),
     MANA_HYBRID_BLACK(42),
@@ -223,6 +230,10 @@ public enum MagicIcon {
     MANA_14(14),
     MANA_15(15),
     MANA_16(16),
+    MANA_17(17),
+    MANA_18(18),
+    MANA_19(19),
+    MANA_20(20),
     MANA_X(21);
 
     public static final String MANA_ICON_SHEET = "Mana.png";

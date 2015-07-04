@@ -1,9 +1,0 @@
-name=Noble Purpose
-image=http://magiccards.info/scans/en/8e/31.jpg
-value=2.500
-rarity=R
-type=Enchantment
-cost={3}{W}{W}
-ability=Whenever a creature you control deals combat damage, you gain that much life.
-timing=enchantment
-oracle=Whenever a creature you control deals combat damage, you gain that much life.

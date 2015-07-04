@@ -7,7 +7,10 @@ type=Creature
 subtype=Faerie,Wizard
 cost={3}{U}
 pt=4/4
-ability=flash;flying;champion Faerie
+ability=Flash;\
+        Flying;\
+        Champion a Faerie;\
+        Cast SN with AI only if you control a Faerie
 timing=main
 requires_groovy_code
 oracle=Flash\nFlying\nChampion a Faerie\nWhen a Faerie is championed with Mistbind Clique, tap all lands target player controls.

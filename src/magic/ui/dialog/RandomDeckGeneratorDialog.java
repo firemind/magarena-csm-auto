@@ -15,7 +15,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import magic.data.DeckGenerator;
-import magic.model.MagicDeck;
 import magic.ui.MagicFrame;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
@@ -45,12 +44,13 @@ public class RandomDeckGeneratorDialog extends JDialog implements ChangeListener
     private final SliderPanel maxColorsSlider;
 
     // CTR
-    public RandomDeckGeneratorDialog(final MagicFrame frame, final int cardPoolSize) {
+    public RandomDeckGeneratorDialog(final MagicFrame frame, final int cardPoolSize, final int defaultDeckSize) {
+
         super(frame, true);
 
         this.cardPoolSize = cardPoolSize;
 
-        deckSizeSlider = new SliderPanel("", null, 40, 100, 10, MagicDeck.DEFAULT_SIZE, false);
+        deckSizeSlider = new SliderPanel("", null, 40, 100, 10, defaultDeckSize, false);
         deckSizeSlider.setPaintTicks(false);
         deckSizeSlider.addChangeListener(this);
 

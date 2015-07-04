@@ -182,8 +182,13 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
     }
     
     @Override
-    public boolean hasCounters(MagicCounterType counterType) {
-        return false;
+    public int getCounters(final MagicCounterType counterType) {
+        return 0;
+    }
+
+    @Override
+    public void changeCounters(final MagicCounterType counterType,final int amount) {
+        throw new RuntimeException(counterType + " cannot be modified on item on stack");
     }
 
     @Override

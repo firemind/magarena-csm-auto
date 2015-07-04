@@ -113,7 +113,7 @@ public abstract class MagicStatic extends MagicDummyModifier implements MagicCha
     }
 
     public static MagicStatic genPTStatic(final MagicCondition condition, final int givenPower, final int givenToughness) {
-        return new MagicStatic(MagicLayer.Game) {
+        return new MagicStatic(MagicLayer.ModPT) {
             @Override
             public void modPowerToughness(final MagicPermanent source, final MagicPermanent permanent, final MagicPowerToughness pt) {
                 pt.add(givenPower, givenToughness);
@@ -126,7 +126,7 @@ public abstract class MagicStatic extends MagicDummyModifier implements MagicCha
     }
 
     public static MagicStatic genPTStatic(final MagicCondition condition, final MagicTargetFilter<MagicPermanent> filter, final int givenPower, final int givenToughness) {
-        return new MagicStatic(MagicLayer.Game, filter) {
+        return new MagicStatic(MagicLayer.ModPT, filter) {
             @Override
             public void modPowerToughness(final MagicPermanent source, final MagicPermanent permanent, final MagicPowerToughness pt) {
                 pt.add(givenPower, givenToughness);
@@ -174,7 +174,7 @@ public abstract class MagicStatic extends MagicDummyModifier implements MagicCha
     }
 
     public static MagicStatic genABStatic(final MagicCondition condition, final MagicTargetFilter<MagicPermanent> filter, final MagicAbilityList abilityList) {
-        return new MagicStatic(MagicLayer.Game, filter) {
+        return new MagicStatic(MagicLayer.Ability, filter) {
             @Override
             public void modAbilityFlags(final MagicPermanent source, final MagicPermanent permanent, final Set<MagicAbility> flags) {
                 abilityList.giveAbility(permanent, flags);
@@ -187,7 +187,7 @@ public abstract class MagicStatic extends MagicDummyModifier implements MagicCha
     }
 
     public static MagicStatic genABStatic(final MagicCondition condition, final MagicAbilityList abilityList) {
-        return new MagicStatic(MagicLayer.Game) {
+        return new MagicStatic(MagicLayer.Ability) {
             @Override
             public void modAbilityFlags(final MagicPermanent source, final MagicPermanent permanent, final Set<MagicAbility> flags) {
                 abilityList.giveAbility(permanent, flags);
@@ -226,7 +226,7 @@ public abstract class MagicStatic extends MagicDummyModifier implements MagicCha
     }
 
     public static MagicStatic genABGameStatic(final MagicTargetFilter<MagicPermanent> filter, final MagicAbilityList abilityList) {
-        return new MagicStatic(MagicLayer.Game, filter) {
+        return new MagicStatic(MagicLayer.Ability, filter) {
             @Override
             public void modAbilityFlags(final MagicPermanent source, final MagicPermanent permanent, final Set<MagicAbility> flags) {
                 abilityList.giveAbility(permanent, flags);
@@ -327,6 +327,26 @@ public abstract class MagicStatic extends MagicDummyModifier implements MagicCha
             @Override
             public boolean condition(final MagicGame game, final MagicPermanent source, final MagicPermanent target) {
                 if (you.getIndex() != source.getController().getIndex() || source.isUntapped()) {
+                    //remove this static after the update
+                    game.addDelayedAction(new RemoveStaticAction(source, this));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        };
+    }
+
+    public static MagicStatic ControlAsLongAsSourceIsTapped(final MagicPlayer you, final MagicPermanent target) {
+        final MagicTargetFilter<MagicPermanent> filter = new MagicPermanentTargetFilter(target);
+        return new MagicStatic(MagicLayer.Control,filter) {
+            @Override
+            public MagicPlayer getController(final MagicPermanent source, final MagicPermanent permanent, final MagicPlayer player) {
+                return source.getController();
+            }
+            @Override
+            public boolean condition(final MagicGame game, final MagicPermanent source, final MagicPermanent target) {
+                if (source.isUntapped()) {
                     //remove this static after the update
                     game.addDelayedAction(new RemoveStaticAction(source, this));
                     return false;

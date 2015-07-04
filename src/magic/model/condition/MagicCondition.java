@@ -16,7 +16,9 @@ import magic.model.MagicType;
 import magic.model.phase.MagicPhaseType;
 import magic.model.target.MagicOtherPermanentTargetFilter;
 import magic.model.target.MagicTargetFilterFactory;
+import magic.model.action.PlayAbilityAction;
 import magic.model.event.MagicEvent;
+import magic.model.event.MagicEventAction;
 import magic.model.event.MagicMatchedCostEvent;
 import magic.model.event.MagicPlayAbilityEvent;
 import magic.model.event.MagicConditionEvent;
@@ -25,6 +27,13 @@ import java.util.List;
 import java.util.LinkedList;
 
 public abstract class MagicCondition implements MagicMatchedCostEvent {
+    
+    private static final MagicEventAction PLAY_ABILITY_ACTION = new MagicEventAction() {
+        @Override
+        public void executeEvent(final MagicGame game, final MagicEvent event) {
+            game.doAction(new PlayAbilityAction(event.getPermanent()));
+        }
+    };
 
     public static List<MagicMatchedCostEvent> build(final String costs) {
         final List<MagicMatchedCostEvent> matched = new LinkedList<MagicMatchedCostEvent>();
@@ -39,7 +48,11 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
 
     @Override
     public MagicEvent getEvent(final MagicSource source) {
-        return new MagicConditionEvent(source, this);
+        return new MagicConditionEvent(source, this, getEventAction());
+    }
+    
+    public MagicEventAction getEventAction() {
+        return MagicEventAction.NONE;
     }
 
     @Override
@@ -142,6 +155,13 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
+    public static MagicCondition ANY_UPKEEP_CONDITION = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            final MagicGame game = source.getGame();
+            return game.isPhase(MagicPhaseType.Upkeep);
+        }
+    };
+
     public static MagicCondition OPPONENTS_UPKEEP_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
@@ -237,8 +257,8 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
             return permanent.getAbilityPlayedThisTurn() < 1;
         }
         @Override
-        public MagicEvent getEvent(final MagicSource source) {
-            return new MagicPlayAbilityEvent((MagicPermanent)source, this);
+        public MagicEventAction getEventAction() {
+            return PLAY_ABILITY_ACTION;
         }
         @Override
         public boolean isIndependent() {
@@ -252,8 +272,8 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
             return permanent.getAbilityPlayedThisTurn() < 2;
         }
         @Override
-        public MagicEvent getEvent(final MagicSource source) {
-            return new MagicPlayAbilityEvent((MagicPermanent)source, this);
+        public MagicEventAction getEventAction() {
+            return PLAY_ABILITY_ACTION;
         }
         @Override
         public boolean isIndependent() {
@@ -267,8 +287,8 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
             return permanent.getAbilityPlayedThisTurn() < 3;
         }
         @Override
-        public MagicEvent getEvent(final MagicSource source) {
-            return new MagicPlayAbilityEvent((MagicPermanent)source, this);
+        public MagicEventAction getEventAction() {
+            return PLAY_ABILITY_ACTION;
         }
         @Override
         public boolean isIndependent() {
@@ -746,6 +766,13 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         public boolean accept(final MagicSource source) {
             final MagicPlayer player = source.getController();
             return MagicTargetFilterFactory.CREATURE_CARD_FROM_ALL_GRAVEYARDS.filter(player).size() > 0;
+        }
+    };
+
+    public static MagicCondition HAS_CREATURE_IN_GRAVEYARD = new MagicCondition() {
+        public boolean accept(MagicSource source) {
+            final MagicPlayer player = source.getController();
+            return MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD.filter(player).size() > 0;
         }
     };
 

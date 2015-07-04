@@ -17,13 +17,6 @@ all: tags $(MAG) $(EXE)
 zips:
 	make M`grep Release release/README.txt | head -1 | cut -d' ' -f2`
 
-cubes: \
-	cards/standard_all.txt \
-	cards/modern_all.txt \
-	release/Magarena/mods/legacy_cube.txt \
-	release/Magarena/mods/standard_cube.txt \
-	release/Magarena/mods/modern_cube.txt
-
 cards_diff: $(MAG)
 	for i in `hg stat -q src/magic/card release/Magarena/scripts | cut -d' ' -f2 | sort -t'/' -k4`; do hg diff $$i; done | flip -u - > $@
 
@@ -40,15 +33,6 @@ findbugs_warnings.txt: $(MAG)
 
 build_warnings.txt:
 	make clean all > $@
-
-cards/legacy_banned.txt:
-	curl http://archive.wizards.com/Magic/magazine/article.aspx?x=judge/resources/sfrlegacy | grep nodec | grep -o ">[^<]*</a" | sed 's/>//g;s/<\/a//;' > $@
-
-release/Magarena/mods/legacy_cube.txt: cards/existing_master.txt cards/legacy_banned.txt
-	join -v1 -t"|" <(sort $(word 1,$^)) <(sort $(word 2,$^)) > $@
-
-release/Magarena/mods/%_cube.txt: cards/existing_master.txt cards/%_all.txt
-	join -t"|" <(sort $(word 1,$^)) <(sort $(word 2,$^)) > $@
 
 FILTER_DECKBOX := grep deckbox.org/mtg | grep -o ">[A-Z].*<" | sed 's/^>//;s/<$$//'
 
@@ -132,7 +116,7 @@ cards/unimplementable.tsv.add: cards/candidates_full.txt
 release/Magarena/mods/felt_theme.zip:
 	wget https://github.com/magarena/magarena-themes/releases/download/1.0/felt_theme.zip -O $@
 
-M1.%: clean $(EXE) cubes release/Magarena/mods/felt_theme.zip
+M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 	grep "VERSION.*1.$*" -Ir src/
 	grep "Release.*1.$*" release/README.txt
 	grep 1.$* -Ir Magarena.app/
@@ -144,6 +128,7 @@ M1.%: clean $(EXE) cubes release/Magarena/mods/felt_theme.zip
 	mkdir -p Magarena-1.$*/Magarena/mods
 	cp -r \
 			release/gpl-3.0.html \
+			release/Magarena.jar \
 			release/Magarena.exe \
 			release/Magarena.sh \
 			release/Magarena.command \
@@ -451,6 +436,10 @@ verify_mana_cost_order: cards/mtg_mana_costs cards/mag_mana_costs
 	vim $^
 	hg add $^
 
+update_default_value:
+	grep value=2.500 -r release/Magarena/scripts release/Magarena/scripts_missing -l | parallel -j 30 make {}.update_value
+	git checkout -- `grep "value=$$" -r release/Magarena/scripts release/Magarena/scripts_missing -l`
+
 find_event_data: scripts/check_data.awk
 	for i in `grep "new MagicEvent(" -lr src`; do \
 			grep "new Object\|data\[[0-9\]" $$i > /dev/null && echo $$i; \
@@ -480,7 +469,6 @@ find_android: $(MAG)
 
 # meta check
 checks: \
-	check_aura \
 	check_requires_groovy_code \
 	check_script_name \
 	check_tokens \
@@ -512,12 +500,6 @@ check_meta: cards/scriptable.txt
 # every image is to a jpg file or attachment
 check_image:
 	grep '^image=' -r release/Magarena/scripts | grep -v "jpg$$" | grep -v "png$$" | grep -v attachment.php | ${NO_OUTPUT}
-
-# every aura must have an enchant property
-check_aura:
-	diff \
-	<(grep "subtype.*Aura" -lr release/Magarena/scripts | sort) \
-	<(grep enchant= -lr release/Magarena/scripts | sort)
 
 # every card that requires groovy code has a corresponding groovy script file
 # every groovy script file has a corresponding card script that requires groovy code
