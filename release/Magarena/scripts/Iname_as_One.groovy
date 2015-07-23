@@ -2,7 +2,7 @@ def choice = new MagicTargetChoice("a Spirit permanent card from your library");
 
 def SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicCardFilterImpl() {
     public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
-        return target.hasSubType(MagicSubType.Spirit) && target.getCardDefinition().isPermanent();
+        return target.hasSubType(MagicSubType.Spirit) && target.isPermanent();
     }
     public boolean acceptType(final MagicTargetType targetType) {
         return targetType == MagicTargetType.Graveyard;
@@ -10,22 +10,22 @@ def SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicCardFilterImpl() {
 };
 
 def TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicTargetChoice(
-    SPIRIT_PERMANENT_FROM_GRAVEYARD,
+    SPIRIT_PERMANENT_FROM_GRAVEYARD,  
     MagicTargetHint.None,
-    "target Spirit permanent card from your graveyard"
+    "target spirit permanent card from your graveyard"
 );
 
 [
-    new EntersBattlefieldTrigger() {
+    new MagicWhenComesIntoPlayTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
-            return permanent.hasState(MagicPermanentState.CastFromHand) ?
+            return permanent.hasState(MagicPermanentState.CastFromHand) ? 
                 new MagicEvent(
                     permanent,
-                    new MagicMayChoice(),
+                    new MagicMayChoice("Search library?"),
                     this,
-                    "PN may\$ search his or her library for a Spirit permanent card, " +
-                    "put it onto the battlefield, then shuffle his or her library."
+                    "PN may\$ search your library for a Spirit permanent card, " +
+                    "put it onto the battlefield, then shuffle your library."
                 ):
                 MagicEvent.NONE;
         }
@@ -40,14 +40,14 @@ def TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicTargetChoice(
             }
         }
     },
-    new ThisDiesTrigger() {
+    new MagicWhenDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
                 permanent,
                 new MagicMayChoice(TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD),
                 this,
-                "PN may\$ exile SN. If PN does, return target Spirit permanent card\$ from his or her graveyard to the battlefield."
+                "PN may\$ exile SN. If you do, return target Spirit permanent card\$ from your graveyard to the battlefield."
             );
         }
 
@@ -55,9 +55,10 @@ def TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicTargetChoice(
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()){
                 event.processTargetCard(game, {
-                    final MagicCard card = event.getPermanent().getCard();
+                final MagicCard card = event.getPermanent().getCard();
                     if (card.isInGraveyard()) {
-                        game.doAction(new ShiftCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
+                        game.doAction(new RemoveCardAction(card,MagicLocationType.Graveyard));
+                        game.doAction(new MoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.Exile));
                         game.doAction(new ReanimateAction(
                             it,
                             event.getPlayer()
