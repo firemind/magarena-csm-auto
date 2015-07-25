@@ -63,7 +63,7 @@ def TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicTargetChoice(
                             it,
                             event.getPlayer()
                         ));
-                    }
+            }
                 });
             }
         }
