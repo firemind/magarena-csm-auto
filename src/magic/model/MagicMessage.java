@@ -1,12 +1,13 @@
 package magic.model;
 
-import magic.model.phase.MagicPhaseType;
-import magic.model.event.MagicEvent;
-
 import java.util.Collection;
 import java.util.Iterator;
+import magic.model.phase.MagicPhaseType;
+import magic.model.stack.MagicCardOnStack;
 
 public class MagicMessage {
+
+    public static final char CARD_ID_DELIMITER = '#';
 
     private final MagicPlayer player;
     private final int life;
@@ -63,9 +64,12 @@ public class MagicMessage {
     }
 
     public static String replaceName(final String sourceText,final Object source, final Object player, final Object ref) {
+        final String sn = source instanceof MagicObject
+            ? getCardToken((MagicObject) source)
+            : source.toString();
         return sourceText
             .replaceAll("PN", player.toString())
-            .replaceAll("SN", source.toString())
+            .replaceAll("SN", sn)
             .replaceAll("RN", ref.toString());
     }
 
@@ -77,5 +81,31 @@ public class MagicMessage {
             result = result.replaceFirst("\\$", replacement);
         }
         return result;
+    }
+
+    private static final String CARD_TOKEN = "<%s" + CARD_ID_DELIMITER + "%d>";
+
+    public static String getCardToken(final MagicObject obj) {
+
+        if (obj == null) {
+            return "";
+        }
+
+        if (obj instanceof MagicCard) {
+            final MagicCard card = (MagicCard) obj;
+            return String.format(CARD_TOKEN, card.getName(), card.getId());
+
+        } else if (obj instanceof MagicPermanent) {
+            final MagicPermanent card = (MagicPermanent) obj;
+            return String.format(CARD_TOKEN, card.getName(), card.getCard().getId());
+
+        } else if (obj instanceof MagicCardOnStack) {
+            final MagicCardOnStack card = (MagicCardOnStack) obj;
+            return String.format(CARD_TOKEN, card.getName(), card.getCard().getId());
+
+        } else {
+            System.err.println("MagicSource object not supported : " + obj.getClass());
+            return "???";
+        }
     }
 }
