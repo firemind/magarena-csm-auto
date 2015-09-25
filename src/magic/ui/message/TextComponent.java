@@ -7,15 +7,17 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.JComponent;
+import magic.data.GeneralConfig;
 import magic.model.MagicMessage;
 
-class TextComponent extends TComponent {
+public class TextComponent extends TComponent {
 
-    private final Color choiceColor;
+    public static MessageStyle messageStyle = GeneralConfig.getInstance().getLogMessageStyle();
+
     private final String text;
     private final Font font;
+    private final Color fontColor;
     private final FontMetrics metrics;
-    private final boolean isChoice;
     private final boolean newLine;
     private final String cardInfo;
 
@@ -25,19 +27,51 @@ class TextComponent extends TComponent {
         final Font aFont,
         final boolean isChoice,
         final String aCardInfo,
-        final Color aColor) {
+        final Color choiceColor) {
 
         this.text = text;
-        this.isChoice = isChoice;
-        this.choiceColor = aColor;
         this.cardInfo = aCardInfo;
 
-        final boolean isBoldFont = aCardInfo.isEmpty() == false && isChoice == false && !text.startsWith("#");
-        this.font = isBoldFont ? aFont.deriveFont(Font.BOLD) : aFont;
+        this.fontColor = getTextColor(isChoice, choiceColor);
+        this.font = getTextFont(aFont);
         this.metrics = component.getFontMetrics(this.font);
-
+        
         this.newLine = !(".".equals(text) || ",".equals(text));
 
+    }
+    
+    private Color getTextColor(boolean isChoice, Color choiceColor) {
+        if (isCardId() && isChoice == false) {
+            return Color.DARK_GRAY;
+        }
+        if (isInteractive() && messageStyle != MessageStyle.PLAINBOLDMONO) {
+            return Color.BLUE;
+        }
+        if (text.equals("(") || text.equals(")")) {
+            return messageStyle != MessageStyle.PLAINBOLDMONO
+                ? Color.BLUE
+                : choiceColor;
+        }
+        if (isChoice) {
+            return choiceColor;
+        }
+        return Color.BLACK;
+    }
+
+    private Font getTextFont(final Font aFont) {
+        final boolean isBoldFont =
+            messageStyle != MessageStyle.PLAIN
+            && (isInteractive() || messageStyle == MessageStyle.BOLD)
+            && !isCardId();
+        return messageStyle == MessageStyle.PLAIN
+            ? aFont
+            : isBoldFont
+                ? aFont.deriveFont(Font.BOLD)
+                : aFont;
+    }
+
+    private boolean isCardId() {
+        return text.startsWith("#");
     }
 
     @Override
@@ -52,7 +86,7 @@ class TextComponent extends TComponent {
 
     @Override
     void paint(final JComponent com, final Graphics g, final int x, final int y) {
-        g.setColor(text.startsWith("#") ? Color.DARK_GRAY : isChoice ? choiceColor : Color.BLACK);
+        g.setColor(fontColor);
         g.setFont(font);
         g.drawString(text, lx + x, ly + y + metrics.getAscent());
     }
@@ -67,8 +101,8 @@ class TextComponent extends TComponent {
     }
 
     @Override
-    boolean isInteractive() {
-        return cardInfo.isEmpty() == false;
+    final boolean isInteractive() {
+        return cardInfo.isEmpty() == false && getCardId() > 0;
     }
 
     long getCardId() {

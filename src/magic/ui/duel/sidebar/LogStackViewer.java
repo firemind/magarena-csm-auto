@@ -2,6 +2,7 @@ package magic.ui.duel.sidebar;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -16,24 +17,33 @@ import magic.data.MagicIcon;
 import magic.translate.UiString;
 import magic.ui.IconImages;
 import magic.ui.ScreenController;
+import magic.ui.message.MessageStyle;
 import magic.ui.screen.widget.ActionBarButton;
+import magic.ui.screen.widget.DialButton;
 import magic.ui.widget.ActionButtonTitleBar;
+import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 class LogStackViewer extends TexturedPanel {
 
+    public static final Font MESSAGE_FONT = FontsAndBorders.FONT1.deriveFont(Font.PLAIN);
+    public static final Color CHOICE_COLOR = Color.RED.darker();
+
     // translatable strings
     private static final String _S1 = "View log file";
     private static final String _S2 = "Shows the complete game log that is written to file.";
     private static final String _S4 = "Log";
     private static final String _S5 = "Stack";
+    private static final String _S6 = "Cycle message style";
+    private static final String _S7 = "Click to cycle through various styles for the log/stack messages.";
 
     private final LogViewer logViewer;
     private final StackViewer stackViewer;
     private final ActionButtonTitleBar logTitleBar;
     private final ActionButtonTitleBar stackTitleBar;
+    private MessageStyle messageStyle = GeneralConfig.getInstance().getLogMessageStyle();
 
     LogStackViewer(LogViewer aLogBookViewer, StackViewer aStackViewer) {
         
@@ -77,17 +87,42 @@ class LogStackViewer extends TexturedPanel {
         );
     }
 
+    private JButton getMessageStyleActionButton() {
+        return new DialButton(
+            MessageStyle.values().length,
+            messageStyle.ordinal(),
+            UiString.get(_S6),
+            UiString.get(_S7),
+            new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    messageStyle = messageStyle.getNext();
+                    logViewer.setMessageStyle(messageStyle);
+                    stackViewer.update();
+                }
+            }
+        );
+    }
+
     private List<JButton> getLogActionButtons() {
         final List<JButton> btns = new ArrayList<>();
+        btns.add(getMessageStyleActionButton());
         btns.add(getLogFileActionButton());
         btns.add(getLogViewActionButton(MagicIcon.DOWNARROW_ICON));
+        for (JButton btn : btns) {
+            btn.setFocusable(false);
+        }
         return btns;
     }
 
     private List<JButton> getStackActionButtons() {
         final List<JButton> btns = new ArrayList<>();
+        btns.add(getMessageStyleActionButton());
         btns.add(getLogFileActionButton());
         btns.add(getLogViewActionButton(MagicIcon.UPARROW_ICON));
+        for (JButton btn : btns) {
+            btn.setFocusable(false);
+        }
         return btns;
     }
 

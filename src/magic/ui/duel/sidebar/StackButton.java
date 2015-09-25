@@ -18,8 +18,6 @@ import magic.ui.message.TextLabel;
 @SuppressWarnings("serial")
 class StackButton extends PanelButton implements ChoiceViewer {
 
-    private static final Font MESSAGE_FONT = FontsAndBorders.FONT1.deriveFont(Font.PLAIN);
-
     private final StackViewerInfo stackInfo;
     private final SwingGameController controller;
 
@@ -36,11 +34,27 @@ class StackButton extends PanelButton implements ChoiceViewer {
 
         final JLabel sourceLabel = new JLabel(stackInfo.name);
         sourceLabel.setIcon(stackInfo.icon);
-        sourceLabel.setForeground(ThemeFactory.getInstance().getCurrentTheme().getNameColor());
+        sourceLabel.setFont(sourceLabel.getFont().deriveFont(Font.BOLD | Font.ITALIC));
         panel.add(sourceLabel, BorderLayout.NORTH);
 
-        final TextLabel textLabel = new TextLabel(stackInfo.description, MESSAGE_FONT, maxWidth, false, aController);
+        final TextLabel textLabel = new TextLabel(
+            stackInfo.description,
+            LogStackViewer.MESSAGE_FONT,
+            maxWidth,
+            false,
+            LogStackViewer.CHOICE_COLOR,
+            aController
+        );
         panel.add(textLabel, BorderLayout.CENTER);
+    }
+
+    private void doShowCardImage() {
+        final Rectangle rect = new Rectangle(
+            getParent().getLocationOnScreen().x,
+            getLocationOnScreen().y,
+            getParent().getWidth(),
+            getHeight());
+        controller.viewInfoRight(stackInfo.cardDefinition, 0, rect);
     }
 
     @Override
@@ -50,12 +64,7 @@ class StackButton extends PanelButton implements ChoiceViewer {
 
     @Override
     public void mouseEntered() {
-        final Rectangle rect = new Rectangle(
-                getParent().getLocationOnScreen().x,
-                getLocationOnScreen().y,
-                getParent().getWidth(),
-                getHeight());
-        controller.viewInfoRight(stackInfo.cardDefinition, 0, rect);
+        doShowCardImage();
     }
 
     @Override
