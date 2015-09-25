@@ -1,41 +1,43 @@
 package magic.ui.duel.choice;
 
-import magic.model.MagicSource;
-import magic.ui.GameController;
-import magic.ui.duel.viewer.UserActionPanel;
-import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.TextLabel;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import magic.model.IGameController;
+import magic.model.MagicSource;
+import magic.ui.SwingGameController;
+import magic.translate.UiString;
+import magic.ui.duel.viewer.UserActionPanel;
+import magic.ui.widget.FontsAndBorders;
+import magic.ui.message.TextLabel;
 
+@SuppressWarnings("serial")
 public class ModeChoicePanel extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
+    // translatable strings
+    private static final String _S1 = "Choose the mode.";
 
-    private static final String MESSAGE="Choose the mode.";
+    private static final String MESSAGE = UiString.get(_S1);
     private static final Dimension BUTTON_DIMENSION=new Dimension(70,25);
 
-    private final GameController controller;
+    private final SwingGameController controller;
     private final List<Integer> modes;
     private int result;
 
-    public ModeChoicePanel(final GameController aController, final MagicSource source, final List<Integer> aModes) {
-        controller = aController;
+    public ModeChoicePanel(final IGameController aController, final MagicSource source, final List<Integer> aModes) {
+        controller = (SwingGameController) aController;
         modes = aModes;
 
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        final TextLabel textLabel=new TextLabel(GameController.getMessageWithSource(source,MESSAGE),UserActionPanel.TEXT_WIDTH,true);
+        final TextLabel textLabel=new TextLabel(SwingGameController.getMessageWithSource(source,MESSAGE),UserActionPanel.TEXT_WIDTH,true);
         add(textLabel,BorderLayout.NORTH);
 
         final JPanel buttonPanel=new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));

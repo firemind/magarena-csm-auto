@@ -8,6 +8,7 @@ import magic.model.MagicCopyMap;
 
 import java.util.List;
 import java.util.ArrayList;
+import magic.model.MagicMessage;
 
 public class MagicCardChoiceResult extends ArrayList<MagicCard> implements MagicMappable<MagicCardChoiceResult>, MagicCopyable {
 
@@ -51,7 +52,7 @@ public class MagicCardChoiceResult extends ArrayList<MagicCard> implements Magic
             if (buffer.length()>0) {
                 buffer.append(", ");
             }
-            buffer.append(card.getName());
+            buffer.append(MagicMessage.getCardToken(card));
         }
         return buffer.toString();
     }
@@ -64,6 +65,6 @@ public class MagicCardChoiceResult extends ArrayList<MagicCard> implements Magic
             keys[idx] = card.getStateId();
             idx++;
         }
-        return magic.MurmurHash3.hash(keys);
+        return magic.model.MurmurHash3.hash(keys);
     }
 }

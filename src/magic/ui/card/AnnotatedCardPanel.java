@@ -30,15 +30,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import magic.data.CachedImagesProvider;
+import magic.ui.CachedImagesProvider;
 import magic.data.GeneralConfig;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicObject;
 import magic.model.MagicPermanent;
-import magic.ui.GameController;
+import magic.ui.SwingGameController;
 import magic.ui.theme.AbilityIcon;
-import magic.utility.GraphicsUtilities;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.widget.FontsAndBorders;
+import magic.utility.MagicSystem;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.ease.Spline;
 
@@ -57,7 +59,7 @@ public class AnnotatedCardPanel extends JPanel {
     private MagicObject magicObject = null;
     private Timeline fadeInTimeline;
     private float opacity = 1.0f;
-    private final GameController controller;
+    private final SwingGameController controller;
     private BufferedImage cardImage;
     private String modifiedPT;
     private String basePT;
@@ -72,7 +74,7 @@ public class AnnotatedCardPanel extends JPanel {
     private final Rectangle containerRect;
     private boolean preferredVisibility = false;
     
-    public AnnotatedCardPanel(final Rectangle containerRect, final GameController controller) {
+    public AnnotatedCardPanel(final Rectangle containerRect, final SwingGameController controller) {
 
         this.containerRect = containerRect;
         this.controller = controller;
@@ -123,13 +125,35 @@ public class AnnotatedCardPanel extends JPanel {
         visibilityTimer.restart();
     }
 
-    public void hideDelayed() {
+    /**
+     * Hides the card image panel after {@code delay} milliseconds.
+     * <p>
+     * The hide request is cancelled if a request to show a card image is received
+     * before the delay expires (see {@link hideDelayed()}).
+     *
+     * @param delay the time in milliseconds to wait before hiding the card panel.
+     */
+    private void hideCardPanel(int delay) {
         assert SwingUtilities.isEventDispatchThread();
         preferredVisibility = false;
-        visibilityTimer.setInitialDelay(100);
+        visibilityTimer.setInitialDelay(delay);
         visibilityTimer.restart();
     }
 
+    /**
+     * Requests that the card image panel is hidden after 100 milliseconds.
+     * <p>
+     * This method is primarily used to prevent the popup flickering on and off
+     * as the mouse is moved over cards on the battlefield and in the player zones.
+     */
+    public void hideDelayed() {
+        hideCardPanel(100);
+    }
+
+    public void hideNoDelay() {
+        hideCardPanel(0);
+    }
+    
     private void showPopup() {
         if (isFadeInActive) {
             if (opacity == 0f) {
@@ -184,7 +208,7 @@ public class AnnotatedCardPanel extends JPanel {
 
     private void setPopupImage() {
         // create a blank canvas of the appropriate size.
-        popupImage = GraphicsUtilities.getCompatibleBufferedImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
+        popupImage = GraphicsUtils.getCompatibleBufferedImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
         final Graphics g = popupImage.getGraphics();
         final Graphics2D g2d = (Graphics2D)g;
         // don't overwrite original image with modified PT overlay, use a copy.
@@ -192,12 +216,19 @@ public class AnnotatedCardPanel extends JPanel {
         // draw modified PT on original image so it is scaled properly.
         drawPowerToughnessOverlay(cardCanvas);
         // scale card image if required.
-        final BufferedImage scaledImage = GraphicsUtilities.scale(cardCanvas, imageOnlyPopupSize.width, imageOnlyPopupSize.height);
+        final BufferedImage scaledImage = GraphicsUtils.scale(cardCanvas, imageOnlyPopupSize.width, imageOnlyPopupSize.height);
         //
         // draw card image onto popup canvas, right-aligned.
         g.drawImage(scaledImage, popupSize.width - imageOnlyPopupSize.width, 0, this);
         //
         drawIcons(g2d);
+
+        if (MagicSystem.isDevMode() && magicObject != null && magicObject instanceof MagicPermanent) {
+            final MagicPermanent card = (MagicPermanent) magicObject;
+            g.setFont(FontsAndBorders.FONT1);
+            GraphicsUtils.drawStringWithOutline(g, Long.toString(card.getCard().getId()), 2, 14);
+        }
+        
     }
 
     private BufferedImage getImageCopy(final BufferedImage image) {
@@ -241,12 +272,22 @@ public class AnnotatedCardPanel extends JPanel {
         return CachedImagesProvider.getInstance().getImage(cardDef, 0, true);
     }
     private BufferedImage getCardImage(final MagicObject magicObject) {
-        if (magicObject instanceof MagicCard) {
-            final MagicCard card = (MagicCard)magicObject;
-            return getCardImage(card.getCardDefinition());
+        if (magicObject instanceof MagicPermanent) {
+            final MagicPermanent perm = (MagicPermanent)magicObject;
+            return canRevealTrueFace(perm) ?
+                getCardImage(perm.getRealCardDefinition()) :
+                getCardImage(perm.getCardDefinition()); 
         } else {
             return getCardImage(magicObject.getCardDefinition());
         }
+    }
+    
+    /**
+     * primarily used to determine whether a face-down card will
+     * show its hidden face when displaying mouse-over popup.
+     */
+    private boolean canRevealTrueFace(final MagicPermanent perm) {
+        return perm.getController().isHuman() || MagicSystem.isAiVersusAi();
     }
 
     private String getModifiedPT(final MagicObject magicObject) {
@@ -306,8 +347,9 @@ public class AnnotatedCardPanel extends JPanel {
     @Override
     public void setVisible(final boolean isVisible) {
         super.setVisible(isVisible);
-        if (controller != null) {
-            controller.setGamePaused(isVisible);
+        if (controller != null && CONFIG.isGamePausedOnPopup()) {
+            final boolean aiHasPriority = !controller.getGame().getPriorityPlayer().isHuman();
+            controller.setGamePaused(isVisible && aiHasPriority);
         }
     }
 

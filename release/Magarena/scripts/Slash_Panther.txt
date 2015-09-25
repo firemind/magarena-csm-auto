@@ -1,12 +1,12 @@
 name=Slash Panther
-image=http://mtgimage.com/card/slash%20panther.jpg
+image=http://magiccards.info/scans/en/nph/96.jpg
 value=3.908
 rarity=C
 type=Artifact,Creature
 subtype=Cat
 cost={4}{R/P}
 ability=Haste;\
-        alt cost {4}, Pay 2 life named Pay 2 life 
+        alt cost {4}, Pay 2 life named Pay 2 life
 pt=4/2
 timing=fmain
 oracle=Haste

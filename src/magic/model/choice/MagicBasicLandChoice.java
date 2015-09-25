@@ -7,15 +7,13 @@ import magic.model.MagicSource;
 import magic.model.MagicSubType;
 import magic.model.event.MagicEvent;
 import magic.model.target.MagicTargetFilterFactory;
-import magic.ui.GameController;
-import magic.ui.UndoClickedException;
-import magic.ui.duel.choice.ColorChoicePanel;
+import magic.exception.UndoClickedException;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
+import magic.model.IUIGameController;
 
 /** Contains optimal decision logic for each choice type. */
 public class MagicBasicLandChoice extends MagicChoice {
@@ -25,12 +23,12 @@ public class MagicBasicLandChoice extends MagicChoice {
     private static final int UNSUMMON=2;
 
     private static final List<Object> LAND_OPTIONS=Arrays.<Object>asList(
-            MagicSubType.Plains,
-            MagicSubType.Island,
-            MagicSubType.Swamp,
-            MagicSubType.Forest,
-            MagicSubType.Mountain
-        );
+        MagicSubType.Plains,
+        MagicSubType.Island,
+        MagicSubType.Swamp,
+        MagicSubType.Forest,
+        MagicSubType.Mountain
+    );
 
     public static final MagicBasicLandChoice ALL_INSTANCE=new MagicBasicLandChoice(ALL);
     public static final MagicBasicLandChoice MOST_INSTANCE=new MagicBasicLandChoice(MOST);
@@ -44,7 +42,7 @@ public class MagicBasicLandChoice extends MagicChoice {
     }
 
     private static Collection<Object> getArtificialMostOptions(final MagicGame game,final MagicPlayer player) {
-        final Collection<MagicPermanent> targets=game.filterPermanents(player,MagicTargetFilterFactory.PERMANENT);
+        final Collection<MagicPermanent> targets = MagicTargetFilterFactory.PERMANENT.filter(player);
         final int[] counts=new int[MagicSubType.ALL_BASIC_LANDS.size()];
         for (final MagicPermanent permanent : targets) {
             for (final MagicSubType subType : MagicSubType.ALL_BASIC_LANDS) {
@@ -69,7 +67,7 @@ public class MagicBasicLandChoice extends MagicChoice {
 
     private static Collection<Object> getArtificialUnsummonOptions(final MagicGame game,final MagicPlayer player) {
 
-        final Collection<MagicPermanent> targets=game.filterPermanents(player,MagicTargetFilterFactory.CREATURE);
+        final Collection<MagicPermanent> targets = MagicTargetFilterFactory.CREATURE.filter(player);
         final int[] scores=new int[MagicSubType.ALL_BASIC_LANDS.size()];
         for (final MagicPermanent permanent : targets) {
             int score=permanent.getScore();
@@ -97,11 +95,9 @@ public class MagicBasicLandChoice extends MagicChoice {
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         switch (type) {
             case MOST: return getArtificialMostOptions(game,player);
@@ -111,18 +107,11 @@ public class MagicBasicLandChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final GameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
-
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
         controller.disableActionButton(false);
-        final ColorChoicePanel choicePanel = controller.waitForInput(new Callable<ColorChoicePanel>() {
-            public ColorChoicePanel call() {
-                return new ColorChoicePanel(controller,source);
-            }
-        });
-        return new Object[]{choicePanel.getColor().getLandSubType()};
+        return new Object[]{controller.getLandSubTypeChoice(source)};
     }
+    
 }

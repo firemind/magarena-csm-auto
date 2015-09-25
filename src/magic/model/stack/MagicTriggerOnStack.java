@@ -1,12 +1,9 @@
 package magic.model.stack;
 
-import magic.data.IconImages;
 import magic.model.MagicCard;
 import magic.model.MagicCopyMap;
 import magic.model.MagicPlayer;
 import magic.model.event.MagicEvent;
-
-import javax.swing.ImageIcon;
 
 public class MagicTriggerOnStack extends MagicItemOnStack {
     public MagicTriggerOnStack(final MagicEvent event) {
@@ -34,8 +31,4 @@ public class MagicTriggerOnStack extends MagicItemOnStack {
         return true;
     }
 
-    @Override
-    public ImageIcon getIcon() {
-        return IconImages.TRIGGER;
-    }
 }

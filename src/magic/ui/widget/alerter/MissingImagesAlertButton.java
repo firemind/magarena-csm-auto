@@ -3,14 +3,18 @@ package magic.ui.widget.alerter;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
-import magic.MagicMain;
 import magic.data.CardDefinitions;
 import magic.data.GeneralConfig;
+import magic.ui.ScreenController;
+import magic.translate.UiString;
 import magic.ui.dialog.DownloadImagesDialog;
 
 @SuppressWarnings("serial")
 public class MissingImagesAlertButton extends AlertButton {
-    
+
+    // translatable strings
+    private static final String _S1 =  "Download missing card images";
+
     private static DownloadImagesDialog downloadDialog;
     private static boolean isSoundEffectPlayed = false;
     private static boolean hasChecked = false;
@@ -23,7 +27,7 @@ public class MissingImagesAlertButton extends AlertButton {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 if (downloadDialog == null || !downloadDialog.isDisplayable()) {
-                    downloadDialog = new DownloadImagesDialog(MagicMain.rootFrame);
+                    downloadDialog = new DownloadImagesDialog(ScreenController.getMainFrame());
                 } else {
                     downloadDialog.setVisible(true);
                 }
@@ -52,7 +56,7 @@ public class MissingImagesAlertButton extends AlertButton {
             hasChecked = true;
         }
         if (isMissingImages) {
-            return "Download missing card images";
+            return UiString.get(_S1);
         } else {
             return "";
         }

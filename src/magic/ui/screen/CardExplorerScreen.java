@@ -10,13 +10,15 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
-import magic.MagicUtility;
+import magic.utility.MagicSystem;
 import magic.data.CardDefinitions;
-import magic.data.IconImages;
+import magic.data.MagicIcon;
+import magic.ui.IconImages;
 import magic.data.MagicSetDefinitions;
 import magic.ui.explorer.ExplorerPanel;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenOptionsOverlay;
+import magic.translate.UiString;
 import magic.ui.dialog.DownloadImagesDialog;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IOptionsMenu;
@@ -33,6 +35,12 @@ public class CardExplorerScreen
     extends AbstractScreen
     implements IStatusBar, IActionBar, IOptionsMenu, IWikiPage {
 
+    // translatable strings
+    private static final String _S1 = "Card Explorer";
+    private static final String _S2 = "Close";
+    private static final String _S3 = "View Script";
+    private static final String _S4 = "View the script and groovy files for the selected card.<br>(or double-click row)";
+
     private final ExplorerPanel content;
 
     public CardExplorerScreen() {
@@ -40,62 +48,52 @@ public class CardExplorerScreen
         setContent(content);
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagStatusBar#getScreenCaption()
-     */
     @Override
     public String getScreenCaption() {
-        return "Card Explorer";
+        return UiString.get(_S1);
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getLeftAction()
-     */
     @Override
     public MenuButton getLeftAction() {
-        return MenuButton.getCloseScreenButton("Close");
+        return MenuButton.getCloseScreenButton(UiString.get(_S2));
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getRightAction()
-     */
     @Override
     public MenuButton getRightAction() {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getMiddleActions()
-     */
     @Override
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
         buttons.add(
-                new ActionBarButton(
-                        IconImages.EDIT_ICON,
-                        "View Script", "View the script and groovy files for the selected card (or double-click row).",
-                        new AbstractAction() {
-                            @Override
-                            public void actionPerformed(final ActionEvent e) {
-                                content.showCardScriptScreen();
-                            }
-                        })
+            new ActionBarButton(
+                IconImages.getIcon(MagicIcon.EDIT_ICON),
+                UiString.get(_S3), UiString.get(_S4),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        content.showCardScriptScreen();
+                    }
+                }
+            )
         );
-        if (MagicUtility.isDevMode() || MagicUtility.isDebugMode()) {
+        if (MagicSystem.isDevMode() || MagicSystem.isDebugMode()) {
             buttons.add(
-                    new ActionBarButton(
-                            IconImages.SAVE_ICON,
-                            "Save Missing Cards", "Creates CardsMissingInMagarena.txt which can be used by the Scripts Builder.",
-                            new AbstractAction() {
-                                @Override
-                                public void actionPerformed(final ActionEvent e) {
-                                    try {
-                                        saveMissingCardsList();
-                                    } catch (IOException e1) {
-                                        throw new RuntimeException(e1);
-                                    }
-                                }
-                            })
+                new ActionBarButton(
+                    IconImages.getIcon(MagicIcon.SAVE_ICON),
+                    "Save Missing Cards [DevMode Only]", "Creates CardsMissingInMagarena.txt which can be used by the Scripts Builder.",
+                    new AbstractAction() {
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
+                            try {
+                                saveMissingCardsList();
+                            } catch (IOException e1) {
+                                throw new RuntimeException(e1);
+                            }
+                        }
+                    }
+                )
             );
         }
         return buttons;
@@ -113,9 +111,6 @@ public class CardExplorerScreen
         Desktop.getDesktop().open(MagicFileSystem.getDataPath(DataPath.LOGS).toFile());
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.MagScreen#canScreenClose()
-     */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         MagicSetDefinitions.clearLoadedSets();
@@ -123,9 +118,6 @@ public class CardExplorerScreen
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagScreenOptionsMenu#showOptionsMenuOverlay()
-     */
     @Override
     public void showOptionsMenuOverlay() {
         new ScreenOptions(getFrame());
@@ -142,19 +134,18 @@ public class CardExplorerScreen
             super(frame);
         }
 
-        /* (non-Javadoc)
-         * @see magic.ui.ScreenOptionsOverlay#getScreenMenu()
-         */
         @Override
         protected MenuPanel getScreenMenu() {
             return null;
         }
 
+        @Override
+        protected boolean showPreferencesOption() {
+            return false;
+        }
+
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.screen.interfaces.IStatusBar#getStatusPanel()
-     */
     @Override
     public JPanel getStatusPanel() {
         return null;

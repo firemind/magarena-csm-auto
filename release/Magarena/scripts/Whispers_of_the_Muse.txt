@@ -1,5 +1,5 @@
 name=Whispers of the Muse
-image=http://mtgimage.com/card/whispers%20of%20the%20muse.jpg
+image=http://magiccards.info/scans/en/tsts/35.jpg
 value=3.486
 rarity=U
 type=Instant
@@ -7,4 +7,4 @@ cost={U}
 ability=buyback {5}
 effect=Draw a card.
 timing=draw
-oracle=Buyback {5}. Draw a card.
+oracle=Buyback {5}\nDraw a card.

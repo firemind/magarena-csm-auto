@@ -8,23 +8,24 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Set;
 
-import magic.data.IconImages;
+import magic.ui.IconImages;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
-import magic.ui.GameController;
+import magic.ui.SwingGameController;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.CostPanel;
 import magic.ui.widget.PanelButton;
+import magic.ui.utility.MagicStyle;
 
 public class CardButton extends PanelButton implements ChoiceViewer {
     private static final long serialVersionUID = 1L;
 
-    private final GameController controller;
+    private final SwingGameController controller;
     private final MagicCard card;
     private final boolean showCost;
     private final JLabel nameLabel;
 
-    public CardButton(final GameController controller, final MagicCard card, final int lineHeight, final boolean showCost) {
+    public CardButton(final SwingGameController controller, final MagicCard card, final int lineHeight, final boolean showCost) {
         super();
         this.controller = controller;
         this.card       = card;
@@ -46,7 +47,7 @@ public class CardButton extends PanelButton implements ChoiceViewer {
         }
 
         nameLabel = new JLabel(cardDefinition.getName());
-        nameLabel.setForeground(cardDefinition.getRarityColor());
+        nameLabel.setForeground(MagicStyle.getRarityColor(cardDefinition));
 
         final JLabel typeLabel = new JLabel(IconImages.getIcon(cardDefinition));
         typeLabel.setPreferredSize(new Dimension(24,0));

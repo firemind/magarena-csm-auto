@@ -1,6 +1,6 @@
 package magic.ui.avatar;
 
-import magic.data.IconImages;
+import magic.ui.IconImages;
 import magic.ui.theme.PlayerAvatar;
 
 import javax.swing.ImageIcon;
@@ -16,13 +16,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import magic.data.MagicIcon;
+import magic.ui.ImageFileIO;
 
 public class AvatarImageSet {
 
     private final static String IMAGES_FILTER = "*.{png,jpg}";
 
     private final Path path;
-    private ImageIcon sampleImage = IconImages.MISSING_ICON;
+    private ImageIcon sampleImage = IconImages.getIcon(MagicIcon.MISSING_ICON);
 
     public AvatarImageSet(final Path path) {
         this.path = path;
@@ -44,8 +46,8 @@ public class AvatarImageSet {
             if (itr.hasNext()) {
                 final String filePath = itr.next().toAbsolutePath().toString();
                 final InputStream ins = new FileInputStream(new File(filePath));
-                final BufferedImage image = magic.data.FileIO.toImg(ins, IconImages.MISSING);
-                this.sampleImage = new ImageIcon(magic.utility.GraphicsUtilities.scale(image, PlayerAvatar.MEDIUM_SIZE, PlayerAvatar.MEDIUM_SIZE));
+                final BufferedImage image = ImageFileIO.toImg(ins, IconImages.MISSING);
+                this.sampleImage = new ImageIcon(magic.ui.utility.GraphicsUtils.scale(image, PlayerAvatar.MEDIUM_SIZE, PlayerAvatar.MEDIUM_SIZE));
             }
         } catch (IOException e) {
             e.printStackTrace();

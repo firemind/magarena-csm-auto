@@ -5,28 +5,22 @@ import magic.model.MagicGame;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
-import magic.ui.GameController;
-import magic.ui.UndoClickedException;
-import magic.ui.duel.choice.MayChoicePanel;
-
+import magic.exception.UndoClickedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
+import magic.model.IUIGameController;
 
 public class MagicScryChoice extends MagicMayChoice {
     public MagicScryChoice() {
-        super("Move this card from the top of your library to the bottom?");
+        super("Move this card from the top of the library to the bottom?");
     }
     
     @Override
-    public List<Object[]> getArtificialChoiceResults(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
-        
+    public List<Object[]> getArtificialChoiceResults(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
         if (player.getLibrary().isEmpty()) {
-            final List<Object[]> choiceResultsList=new ArrayList<Object[]>();
+            final List<Object[]> choiceResultsList=new ArrayList<>();
             choiceResultsList.add(new Object[]{NO_CHOICE});
             return choiceResultsList;
         } else {
@@ -35,11 +29,9 @@ public class MagicScryChoice extends MagicMayChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final GameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
         
         final Object[] choiceResults=new Object[1];
         choiceResults[0]=NO_CHOICE;
@@ -53,17 +45,12 @@ public class MagicScryChoice extends MagicMayChoice {
         controller.showCards(cards);
 
         controller.disableActionButton(false);
-        final MayChoicePanel choicePanel = controller.waitForInput(new Callable<MayChoicePanel>() {
-            public MayChoicePanel call() {
-                return new MayChoicePanel(controller,source,getDescription());
-            }
-        });
-            
-        controller.clearCards();
 
-        if (choicePanel.isYesClicked()) {
+        if (controller.getMayChoice(source, getDescription())) {
             choiceResults[0]=YES_CHOICE;
         }
+        
+        controller.clearCards();
 
         return choiceResults;
     }

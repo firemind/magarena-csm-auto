@@ -3,9 +3,6 @@ package magic.data;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicColor;
 import magic.model.MagicRarity;
-
-import javax.swing.ImageIcon;
-
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,36 +11,54 @@ import java.util.List;
 
 public class CardStatistics {
 
-    private static final List<String> MANA_CURVE_TEXT = Collections.unmodifiableList(Arrays.asList(
-        "X","0","1","2","3","4","5","6","7","8","9+"));
-    public static final List<ImageIcon> MANA_CURVE_ICONS = Collections.unmodifiableList(Arrays.asList(
-        IconImages.COST_X,
-        IconImages.COST_ZERO,
-        IconImages.COST_ONE,
-        IconImages.COST_TWO,
-        IconImages.COST_THREE,
-        IconImages.COST_FOUR,
-        IconImages.COST_FIVE,
-        IconImages.COST_SIX,
-        IconImages.COST_SEVEN,
-        IconImages.COST_EIGHT,
-        IconImages.COST_NINE
-    ));
-    public static final int MANA_CURVE_SIZE=MANA_CURVE_TEXT.size();
+    private static final List<String> MANA_CURVE_TEXT = Collections.unmodifiableList(
+        Arrays.asList(
+            "X", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9+"
+        )
+    );
 
-    public static final List<String> TYPE_NAMES = Collections.unmodifiableList(Arrays.asList(
-        "Land","Spell","Creature","Equipment","Aura","Enchantment","Artifact"));
-    public static final List<ImageIcon> TYPE_ICONS = Collections.unmodifiableList(Arrays.asList(
-        IconImages.LAND,
-        IconImages.SPELL,
-        IconImages.CREATURE,
-        IconImages.EQUIPMENT,
-        IconImages.AURA,
-        IconImages.ENCHANTMENT,
-        IconImages.ARTIFACT
-    ));
-    public static final int NR_OF_TYPES=TYPE_NAMES.size();
+    public static final List<MagicIcon> MANA_CURVE_ICONS = Collections.unmodifiableList(
+        Arrays.asList(
+            MagicIcon.MANA_X,
+            MagicIcon.MANA_0,
+            MagicIcon.MANA_1,
+            MagicIcon.MANA_2,
+            MagicIcon.MANA_3,
+            MagicIcon.MANA_4,
+            MagicIcon.MANA_5,
+            MagicIcon.MANA_6,
+            MagicIcon.MANA_7,
+            MagicIcon.MANA_8,
+            MagicIcon.MANA_9
+        )
+    );
+    public static final int MANA_CURVE_SIZE = MANA_CURVE_TEXT.size();
 
+    public static final List<String> TYPE_NAMES = Collections.unmodifiableList(
+        Arrays.asList(
+            "Land",
+            "Spell",
+            "Creature",
+            "Equipment",
+            "Aura",
+            "Enchantment",
+            "Artifact"
+        )
+    );
+    public static final int NR_OF_TYPES = TYPE_NAMES.size();
+
+    public static final List<MagicIcon> TYPE_ICONS = Collections.unmodifiableList(
+        Arrays.asList(
+            MagicIcon.LAND,
+            MagicIcon.SPELL,
+            MagicIcon.CREATURE,
+            MagicIcon.EQUIPMENT,
+            MagicIcon.AURA,
+            MagicIcon.ENCHANTMENT,
+            MagicIcon.ARTIFACT
+        )
+    );
+    
     private final Collection<MagicCardDefinition> cards;
 
     public int totalCards;

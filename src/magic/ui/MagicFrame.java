@@ -1,17 +1,10 @@
 package magic.ui;
 
-import java.awt.Component;
+import magic.translate.UiString;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -19,68 +12,42 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Stack;
-import javax.activation.MimetypesFileTypeMap;
 import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import magic.MagicUtility;
 import magic.data.CardDefinitions;
 import magic.data.DuelConfig;
 import magic.data.GeneralConfig;
-import magic.data.IconImages;
+import magic.data.MagicIcon;
 import magic.data.OSXAdapter;
-import magic.model.MagicCardDefinition;
-import magic.model.MagicCardList;
+import magic.exception.DesktopNotSupportedException;
 import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.model.MagicDuel;
-import magic.model.MagicGame;
 import magic.model.MagicGameLog;
-import magic.model.player.IPlayerProfileListener;
-import magic.model.player.PlayerProfile;
-import magic.ui.duel.choice.MulliganChoicePanel;
-import magic.ui.dialog.PreferencesDialog;
 import magic.ui.screen.AbstractScreen;
-import magic.ui.screen.AvatarImagesScreen;
-import magic.ui.screen.CardExplorerScreen;
-import magic.ui.screen.CardScriptScreen;
-import magic.ui.screen.CardZoneScreen;
-import magic.ui.screen.DeckEditorSplitScreen;
-import magic.ui.screen.DeckEditorTabbedScreen;
-import magic.ui.screen.DeckViewScreen;
-import magic.ui.screen.DecksScreen;
-import magic.ui.screen.DuelDecksScreen;
-import magic.ui.screen.DuelGameScreen;
-import magic.ui.screen.GameLogScreen;
-import magic.ui.screen.HelpMenuScreen;
-import magic.ui.screen.KeywordsScreen;
-import magic.ui.screen.MainMenuScreen;
-import magic.ui.screen.MulliganScreen;
-import magic.ui.screen.NewDuelSettingsScreen;
-import magic.ui.screen.ReadmeScreen;
-import magic.ui.screen.SampleHandScreen;
-import magic.ui.screen.SelectAiPlayerScreen;
-import magic.ui.screen.SelectHumanPlayerScreen;
-import magic.ui.screen.SettingsMenuScreen;
-import magic.ui.screen.interfaces.IAvatarImageConsumer;
-import magic.ui.screen.interfaces.IDeckConsumer;
-import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.ThemeFactory;
-import magic.utility.GraphicsUtilities;
-import magic.utility.MagicFileSystem;
+import magic.ui.utility.DesktopUtils;
+import magic.ui.utility.GraphicsUtils;
 import magic.utility.MagicFileSystem.DataPath;
+import magic.utility.MagicFileSystem;
+import magic.utility.MagicSystem;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
 
 @SuppressWarnings("serial")
-public class MagicFrame extends JFrame {
+public class MagicFrame extends JFrame implements IImageDragDropListener {
+
+    // translatable strings
+    private static final String _S1 = "F11 : full screen";
+    private static final String _S2 = "No saved duel found.";
+    private static final String _S3 = "%s's deck is illegal.";
+    private static final String _S4 = "Are you sure you want to quit Magarena?";
+    private static final String _S5 = "Confirm Quit to Desktop";
+    private static final String _S6 = "Invalid action!";
 
     private boolean ignoreWindowDeactivate;
     private boolean confirmQuitToDesktop = true;
@@ -93,7 +60,6 @@ public class MagicFrame extends JFrame {
     private final GeneralConfig config;
     private final JPanel contentPanel;
     private MagicDuel duel;
-    private final Stack<AbstractScreen> screens;
 
     public MagicFrame(final String frameTitle) {
 
@@ -101,11 +67,9 @@ public class MagicFrame extends JFrame {
         
         config = GeneralConfig.getInstance();
 
-        screens = new Stack<AbstractScreen>();
-
         // Setup frame.
-        this.setTitle(frameTitle + "  [F11 : full screen]");
-        this.setIconImage(IconImages.ARENA.getImage());
+        this.setTitle(String.format("%s [%s]", frameTitle, UiString.get(_S1)));
+        this.setIconImage(IconImages.getIcon(MagicIcon.ARENA).getImage());
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListeners();
         registerForMacOSXEvents();
@@ -120,119 +84,9 @@ public class MagicFrame extends JFrame {
         setF12KeyInputMap();
 
         // Enable drag and drop of background image file.
-        new DropTarget(this, new ImageDragDropListener());
+        new DropTarget(this, new ImageDropTargetListener(this));
 
         setVisible(true);
-    }
-
-    //
-    // The various (Mag)screens that can currently be displayed.
-    //
-    public void showDeckChooserScreen(final IDeckConsumer deckConsumer) {
-        activateMagScreen(new DecksScreen(deckConsumer));
-    }
-    public void showCardScriptScreen(final MagicCardDefinition card) {
-        activateMagScreen(new CardScriptScreen(card));
-    }
-    public void showGameLogScreen() {
-        activateMagScreen(new GameLogScreen());
-    }
-    public void showDuelPlayersScreen() {
-        activateMagScreen(new NewDuelSettingsScreen());
-    }
-    public void showAvatarImagesScreen(final IAvatarImageConsumer consumer) {
-        activateMagScreen(new AvatarImagesScreen(consumer));
-    }
-    public void showSelectHumanPlayerScreen(final IPlayerProfileListener listener, final PlayerProfile profile) {
-        activateMagScreen(new SelectHumanPlayerScreen(listener, profile));
-    }
-    public void showSelectAiProfileScreen(final IPlayerProfileListener listener, final PlayerProfile profile) {
-        activateMagScreen(new SelectAiPlayerScreen(listener, profile));
-    }
-    public void showDeckView(final MagicDeck deck) {
-        activateMagScreen(new DeckViewScreen(deck));
-    }
-    public void showMulliganScreen(final MulliganChoicePanel choicePanel, final MagicCardList hand) {
-        if (screens.peek() instanceof MulliganScreen) {
-            final MulliganScreen screen = (MulliganScreen)screens.peek();
-            screen.dealNewHand(choicePanel, hand);
-        } else {
-            activateMagScreen(new MulliganScreen(choicePanel, hand));
-        }
-    }
-    public void showCardZoneScreen(final MagicCardList cards, final String zoneName, final boolean animateCards) {
-        activateMagScreen(new CardZoneScreen(cards, zoneName, animateCards));
-    }
-    public void showSampleHandGenerator(final MagicDeck deck) {
-        activateMagScreen(new SampleHandScreen(deck));
-    }
-    public void showDeckEditor() {
-        if (config.isSplitViewDeckEditor()) {
-            activateMagScreen(new DeckEditorSplitScreen());
-        } else {
-            activateMagScreen(new DeckEditorTabbedScreen());
-        }
-    }
-    public void showDeckEditor(final MagicDeck deck) {
-        if (config.isSplitViewDeckEditor()) {
-            activateMagScreen(new DeckEditorSplitScreen(deck));
-        } else {
-            activateMagScreen(new DeckEditorTabbedScreen(deck));
-        }
-    }
-    public void showCardExplorerScreen() {
-        activateMagScreen(new CardExplorerScreen());
-    }
-    public void showReadMeScreen() {
-        activateMagScreen(new ReadmeScreen());
-    }
-    public void showKeywordsScreen() {
-        activateMagScreen(new KeywordsScreen());
-    }
-    public void showHelpMenuScreen() {
-        activateMagScreen(new HelpMenuScreen());
-    }
-    public void showSettingsMenuScreen() {
-        activateMagScreen(new SettingsMenuScreen());
-    }
-    private void showDuelDecksScreen() {
-        if (screens.peek() instanceof DuelDecksScreen) {
-            screens.pop();
-        }
-        activateMagScreen(new DuelDecksScreen(duel));
-    }
-    public void showMainMenuScreen() {
-        screens.clear();
-        activateMagScreen(new MainMenuScreen());
-    }
-    private void activateMagScreen(final AbstractScreen screen) {
-        showMagScreen(screen);
-        screens.push(screen);
-        screen.requestFocus();
-    }
-    private void showMagScreen(final AbstractScreen screen) {
-        contentPanel.removeAll();
-        contentPanel.add(screen, "w 100%, h 100%");
-        contentPanel.revalidate();
-        contentPanel.repaint();
-    }
-    public void closeActiveScreen(final boolean isEscapeKeyAction) {
-        if (screens.size() == 1) {
-            quitToDesktop(isEscapeKeyAction);
-        } else {
-            final AbstractScreen activeScreen = screens.pop();
-            final AbstractScreen nextScreen = screens.peek();
-            if (activeScreen.isScreenReadyToClose(nextScreen)) {
-                showMagScreen(nextScreen);
-                if (nextScreen instanceof DuelGameScreen) {
-                    ((DuelGameScreen)nextScreen).updateView();
-                } else if (nextScreen instanceof MainMenuScreen) {
-                    ((MainMenuScreen)nextScreen).updateMissingImagesNotification();
-                }
-            } else {
-                screens.push(activeScreen);
-            }
-        }
     }
 
     private void addWindowListeners() {
@@ -242,9 +96,14 @@ public class MagicFrame extends JFrame {
                 onClose();
             }
             @Override
-            public void windowDeactivated(final WindowEvent e) {
-                if (isFullScreen() && e.getOppositeWindow() == null && !ignoreWindowDeactivate) {
-                    setState(Frame.ICONIFIED);
+            public void windowDeactivated(final WindowEvent ev) {
+                if (isFullScreen() && ev.getOppositeWindow() == null && !ignoreWindowDeactivate) {
+                    try {
+                        setState(Frame.ICONIFIED);
+                    } catch (Exception ex) {
+                        // see issue #130: Crashes when there is a change in focus? On Mac.
+                        System.err.println("setState(Frame.ICONIFIED) failed\n" + ex);
+                    }
                 }
                 ignoreWindowDeactivate = false;
             }
@@ -253,8 +112,8 @@ public class MagicFrame extends JFrame {
 
     public void showDuel() {
         if (duel!=null) {
-            showDuelDecksScreen();
-            if (Boolean.getBoolean("selfMode")) {
+            ScreenController.showDuelDecksScreen(duel);
+            if (MagicSystem.isAiVersusAi()) {
                 if (!duel.isFinished()) {
                     nextGame();
                 } else {
@@ -271,13 +130,13 @@ public class MagicFrame extends JFrame {
     }
 
     public void loadDuel() {
-        final File duelFile=MagicDuel.getDuelFile();
+        final File duelFile=MagicDuel.getLatestDuelFile();
         if (duelFile.exists()) {
             duel=new MagicDuel();
             duel.load(duelFile);
             showDuel();
         } else {
-            JOptionPane.showMessageDialog(this, "No saved duel found.", "Invalid Action", JOptionPane.WARNING_MESSAGE);
+            ScreenController.showWarningMessage(UiString.get(_S2));
         }
     }
 
@@ -293,11 +152,8 @@ public class MagicFrame extends JFrame {
                 MagicDeckConstructionRule.getRulesText(MagicDeckConstructionRule.checkDeck(deck));
 
         if (brokenRulesText.length() > 0) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    playerName + "'s deck is illegal.\n\n" + brokenRulesText,
-                    "Illegal Deck",
-                    JOptionPane.ERROR_MESSAGE);
+            ScreenController.showWarningMessage(
+                    String.format("%s\n\n%s", UiString.get(_S3, playerName), brokenRulesText));
             return false;
         }
 
@@ -305,11 +161,7 @@ public class MagicFrame extends JFrame {
     }
 
     public void nextGame() {
-        activateMagScreen(new DuelGameScreen(duel));
-    }
-
-    public void openGame(final MagicGame game) {
-        activateMagScreen(new DuelGameScreen(game));
+        ScreenController.showDuelGameScreen(duel);
     }
 
     /**
@@ -335,12 +187,12 @@ public class MagicFrame extends JFrame {
         if (!confirmQuitToDesktop) {
             doShutdownMagarena();
         } else {
-            final String message = "Are you sure you want to quit Magarena?\n";
+            final String message = String.format("%s\n", UiString.get(_S4));
             final Object[] params = {message};
             final int n = JOptionPane.showConfirmDialog(
                     contentPanel,
                     params,
-                    "Confirm Quit to Desktop",
+                    UiString.get(_S5),
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 doShutdownMagarena();
@@ -381,10 +233,6 @@ public class MagicFrame extends JFrame {
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
-    public void openPreferencesDialog() {
-        new PreferencesDialog(this);
-    }
-
     private void setSizeAndPosition() {
         setMinimumSize(MIN_SIZE);
         if (config.isFullScreen()) {
@@ -406,7 +254,7 @@ public class MagicFrame extends JFrame {
      *
      */
     public void closeDuelScreen() {
-        closeActiveScreen(false);
+        ScreenController.closeActiveScreen(false);
         showDuel();
     }
 
@@ -449,9 +297,9 @@ public class MagicFrame extends JFrame {
         contentPanel.getActionMap().put("Screenshot", new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                MagicUtility.setBusyMouseCursor(true);
+                GraphicsUtils.setBusyMouseCursor(true);
                 doScreenshot();
-                MagicUtility.setBusyMouseCursor(false);
+                GraphicsUtils.setBusyMouseCursor(false);
             }
         });
     }
@@ -474,7 +322,7 @@ public class MagicFrame extends JFrame {
         contentPanel.getActionMap().put("HideMenu", new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final AbstractScreen activeScreen = screens.peek();
+                final AbstractScreen activeScreen = ScreenController.getActiveScreen();
                 activeScreen.setVisible(!activeScreen.isVisible());
             }
         });
@@ -483,133 +331,43 @@ public class MagicFrame extends JFrame {
     private void doScreenshot() {
         try {
             final Path filePath = MagicFileSystem.getDataPath(DataPath.LOGS).resolve("screenshot.png");
-            final File imageFile = GraphicsUtilities.doScreenshotToFile(this.getContentPane(), filePath);
-            MagicFileSystem.openFileInDefaultOsEditor(imageFile);
-        } catch (IOException e) {
+            final File imageFile = GraphicsUtils.doScreenshotToFile(this.getContentPane(), filePath);
+            DesktopUtils.openFileInDefaultOsEditor(imageFile);
+        } catch (IOException | DesktopNotSupportedException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, e.toString(), "Screenshot Failed", JOptionPane.ERROR_MESSAGE);
+            ScreenController.showWarningMessage(e.toString());
         }
     }
 
-    /**
-     * Sets the background to an image that has been dragged into the Magarena frame.
-     * <p>
-     * This might be an image file or an image dragged directly from the internet browser.
-     */
-    private class ImageDragDropListener implements DropTargetListener {
-
-        @Override
-        public void drop(DropTargetDropEvent event) {
-            processDroppedImageFile(event);
+    @Override
+    public void setDroppedImageFile(File imageFile) {
+        final Path path = MagicFileSystem.getDataPath(DataPath.MODS).resolve("background.image");
+        try {
+            FileUtils.copyFile(imageFile, path.toFile());
+        } catch (IOException ex) {
+            ScreenController.showWarningMessage(
+                    String.format("%s\n\n%s", UiString.get(_S6), ex.getMessage()));
         }
-
-        @Override
-        public void dragEnter(DropTargetDragEvent event) { }
-        @Override
-        public void dragExit(DropTargetEvent event) { }
-        @Override
-        public void dragOver(DropTargetDragEvent event) { }
-        @Override
-        public void dropActionChanged(DropTargetDragEvent event) { }
-
-        @SuppressWarnings("unchecked")
-        private void processDroppedImageFile(final DropTargetDropEvent event) {
-
-            event.acceptDrop(DnDConstants.ACTION_COPY);
-
-            // Get the transfer which can provide the dropped item data
-            Transferable transferable = event.getTransferable();
-
-            // Get the data formats of the dropped item
-            DataFlavor[] flavors = transferable.getTransferDataFlavors();
-
-            for (DataFlavor flavor : flavors) {
-                try {
-                    // If the drop items are files then process the first one only.
-                    if (flavor.isFlavorJavaFileListType()) {
-
-                        final List<File> files = (List<File>)transferable.getTransferData(flavor);
-
-                        // linux workaround - no need to crash out.
-                        if (files == null || files.size() == 0) {
-                            JOptionPane.showMessageDialog(MagicFrame.this, "Sorry, this did not work.\nTry downloading the image first and then dragging the file into Magarena.", "Drag & drop failed!", JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }
-
-                        final File imageFile = new File(files.get(0).getPath());
-
-                        if (isValidImageFile(imageFile)) {
-                            final Path path = MagicFileSystem.getDataPath(DataPath.MODS).resolve("background.image");
-                            FileUtils.copyFile(imageFile, path.toFile());
-                            refreshBackground();
-                            config.setCustomBackground(true);
-                            config.save();
-                        } else {
-                            JOptionPane.showMessageDialog(contentPanel, "Invalid image!", "Invalid Image", JOptionPane.WARNING_MESSAGE);
-                        }
-                        break;
-                    }
-
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            // Inform that the drop is complete
-            event.dropComplete(true);
-
-        }
-
-        private boolean isValidImageFile(final File imageFile) {
-            return isValidMimeType(imageFile, "image") &&
-                    GraphicsUtilities.isValidImageFile(imageFile.toPath());
-        }
-
-        private boolean isValidMimeType(final File file, final String mimeType) {
-            final MimetypesFileTypeMap mtftp = new MimetypesFileTypeMap();
-            mtftp.addMimeTypes("image png tif jpg jpeg bmp");
-            final String mimetype = mtftp.getContentType(file);
-            final String fileType = mimetype.split("/")[0];
-            return fileType.equalsIgnoreCase(mimeType);
-        }
-
+        refreshBackground();
+        config.setCustomBackground(true);
+        config.save();
     }
 
     private void refreshBackground() {
         ((BackgroundPanel)contentPanel).refreshBackground();
     }
 
-    private void refreshComponentStyle(final JComponent container) {
-        for (Component component : container.getComponents()) {
-            if (component instanceof JComponent) {
-                final JComponent widget = (JComponent)component;
-                if (widget.getComponentCount() > 0) {
-                    refreshComponentStyle(widget);
-                }
-                if (widget instanceof IThemeStyle) {
-                    ((IThemeStyle)widget).refreshStyle();
-                }
-            }
-        }
-    }
 
     public void refreshLookAndFeel() {
-        for (AbstractScreen screen : screens) {
-            refreshComponentStyle(screen);
-        }
+        ScreenController.refreshStyle();
         refreshBackground();
     }
 
     public void refreshUI() {
         config.setIsMissingFiles(false);
         CardDefinitions.checkForMissingFiles();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ThemeFactory.getInstance().setCurrentTheme(config.getTheme());
-                refreshLookAndFeel();
-            }
-        });
+        ThemeFactory.getInstance().loadThemes();
+        refreshLookAndFeel();
     }
 
 }

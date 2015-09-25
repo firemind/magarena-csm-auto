@@ -22,8 +22,8 @@ public class MagicPermanentStaticMap {
         }
         //changes to power and toughness due to +1/+1 and -1/-1 counters
         add(MagicPermanentStatic.CountersEffect);
-        
-        //Handles basic lands abilities.
+
+        //Handles Basic Land mana abilities.
         add(MagicPermanentStatic.BasicLandEffect);
     }
 
@@ -118,6 +118,6 @@ public class MagicPermanentStaticMap {
                 keys[idx] = mpstatic.getStatic().hashCode(); idx++;
             }
         }
-        return magic.MurmurHash3.hash(keys);
+        return magic.model.MurmurHash3.hash(keys);
     }
 }

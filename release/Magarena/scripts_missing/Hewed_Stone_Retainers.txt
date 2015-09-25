@@ -1,0 +1,11 @@
+name=Hewed Stone Retainers
+image=http://magiccards.info/scans/en/frf/161.jpg
+value=2.500
+rarity=U
+type=Artifact,Creature
+subtype=Golem
+cost={3}
+pt=4/4
+ability=Cast SN only if you've cast another spell this turn.
+timing=artifact
+oracle=Cast Hewed Stone Retainers only if you've cast another spell this turn.

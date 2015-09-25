@@ -1,25 +1,26 @@
 package magic.utility;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import javax.swing.JOptionPane;
-import magic.MagicMain;
-import magic.MagicUtility;
-import magic.data.CardImagesProvider;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Utility class for useful or common file-system related tasks.
@@ -31,7 +32,7 @@ public final class MagicFileSystem {
     // card images
     public static final String CARD_IMAGE_FOLDER = "cards";
     public static final String TOKEN_IMAGE_FOLDER = "tokens";
-    private static final String CARD_IMAGE_EXT = CardImagesProvider.IMAGE_EXTENSION;
+    private static final String CARD_IMAGE_EXT = ".jpg";
 
     private enum ImagesPath {
 
@@ -60,8 +61,7 @@ public final class MagicFileSystem {
         }
     }
 
-    // TODO: rename to "data".
-    public static final String DATA_DIRECTORY_NAME = "Magarena";
+    public static final String DATA_DIRECTORY_NAME = System.getProperty("data.dir", "Magarena");
     private static final Path DATA_PATH = INSTALL_PATH.resolve(DATA_DIRECTORY_NAME);
 
     public enum DataPath {
@@ -70,13 +70,16 @@ public final class MagicFileSystem {
         MODS("mods"),
         SCRIPTS("scripts"),
         SCRIPTS_MISSING("scripts_missing"),
+        SCRIPTS_ORIG("scripts_orig"),
         SOUNDS("sounds"),
         LOGS("logs"),
         DUELS("duels"),
         PLAYERS("players"),
         AVATARS("avatars"),
         FIREMIND("firemind"),
-        SAVED_GAMES("saved_games");
+        SAVED_GAMES("saved_games"),
+        TRANSLATIONS("translations")
+        ;
 
         private final Path directoryPath;
 
@@ -160,46 +163,6 @@ public final class MagicFileSystem {
         }
     }
 
-    public static void openMagicDirectory(final DataPath directory) throws IOException {
-        openDirectory(getDataPath(directory).toString());
-    }
-
-    /**
-     * Opens specified directory in OS file explorer.
-     */
-    public static void openDirectory(final String path) throws IOException {
-        final File imagesPath = new File(path);
-        if (MagicUtility.IS_WINDOWS_OS) {
-            // Specific fix for Windows.
-            // If running Windows and path is the default "Magarena" directory
-            // then Desktop.getDesktop() will start a new instance of Magarena
-            // instead of opening the directory! This is because the "Magarena"
-            // directory and "Magarena.exe" are both at the same level and
-            // Windows incorrectly assumes you mean "Magarena.exe".
-            new ProcessBuilder("explorer.exe", imagesPath.getPath()).start();
-        } else {
-            Desktop.getDesktop().open(imagesPath);
-        }
-    }
-
-    public static void openFileInDefaultOsEditor(final File file) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                if (MagicUtility.IS_WINDOWS_OS) {
-                    // There is an issue in Windows where the open() method of getDesktop()
-                    // fails silently. The recommended solution is to use getRuntime().
-                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.toString());
-                } else {
-                    Desktop.getDesktop().open(file);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(MagicMain.rootFrame, "Unable to open the following file using default application :\n" + file.getAbsolutePath());
-            }
-        } else {
-            JOptionPane.showMessageDialog(MagicMain.rootFrame, "Sorry, opening this file with the default application is not supported on this OS.");
-        }
-    }
 
     public static void serializeStringList(final List<String> list, final File targetFile) {
         try (final FileOutputStream fos = new FileOutputStream(targetFile);
@@ -228,6 +191,51 @@ public final class MagicFileSystem {
                 throw new RuntimeException("!!! error creating " + path, ex);
             }
         }
+    }
+
+    public static File[] getSortedScriptFiles(final File scriptsDirectory) {
+        final File[] files = scriptsDirectory.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".txt");
+            }
+        });
+        Arrays.sort(files);
+        return files;
+    }
+
+    public static List<String> getTranslationFilenames() {
+        final List<String> filenames = new ArrayList<>();
+        final Path langPath = getDataPath(DataPath.TRANSLATIONS);
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(langPath, "*.txt")) {
+            for (Path p : ds) {
+                filenames.add(FilenameUtils.getBaseName(p.getFileName().toString()));
+            }
+            Collections.sort(filenames);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+        return filenames;
+    }
+
+    public static void deleteGeneralConfigFile() {
+        getDataPath().resolve(GeneralConfig.CONFIG_FILENAME).toFile().delete();
+    }
+
+    /**
+     * Should return the directory containing the current installation of Magarena.
+     * <p>
+     * The idea being that a new version of Magarena would most likely be
+     * installed to a new directory at the same level as the previous version,
+     * so it would display the previous version all ready to select & import.
+     */
+    public static Path getDefaultImportDirectory() {
+        final Path p = getDataPath().getParent().getParent();
+        if (p == null) {
+            // triggered if using a single relative path for -Dmagarena.dir.
+            return getDataPath().getParent();
+        }
+        return p;
     }
 
 }

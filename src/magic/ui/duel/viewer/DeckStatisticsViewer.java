@@ -1,21 +1,5 @@
 package magic.ui.duel.viewer;
 
-import magic.data.CardStatistics;
-import magic.data.IconImages;
-import magic.model.MagicColor;
-import magic.model.MagicDeck;
-import magic.model.MagicPlayerDefinition;
-import magic.ui.theme.ThemeFactory;
-import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.TexturedPanel;
-import magic.ui.widget.TitleBar;
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,10 +7,31 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import magic.data.CardStatistics;
+import magic.data.MagicIcon;
+import magic.model.DuelPlayerConfig;
+import magic.model.MagicColor;
+import magic.model.MagicDeck;
+import magic.ui.IconImages;
+import magic.translate.UiString;
+import magic.ui.theme.ThemeFactory;
+import magic.ui.widget.FontsAndBorders;
+import magic.ui.widget.TexturedPanel;
+import magic.ui.widget.TitleBar;
+import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public class DeckStatisticsViewer extends TexturedPanel implements ChangeListener {
 
-    private static final long serialVersionUID = 1L;
+    // translatable strings
+    private static final String _S1 = "Deck Statistics";
+    private static final String _S2 = "Deck Statistics : %d cards";
+    private static final String _S3 = "Mono : %d  Multi : %d  Colorless : %d";
+    private static final String _S4 = "Cards : %d  Monocolor : %d  Lands : %d";
 
     public static final Dimension PREFERRED_SIZE = new Dimension(300, 190);
 
@@ -47,7 +52,7 @@ public class DeckStatisticsViewer extends TexturedPanel implements ChangeListene
 
         setLayout(new BorderLayout());
 
-        titleBar=new TitleBar("Deck Statistics");
+        titleBar=new TitleBar(UiString.get(_S1));
         add(titleBar,BorderLayout.NORTH);
 
         final JPanel mainPanel = new JPanel();
@@ -81,8 +86,9 @@ public class DeckStatisticsViewer extends TexturedPanel implements ChangeListene
         curveBottomPanel.setBorder(FontsAndBorders.TABLE_BOTTOM_ROW_BORDER);
 
         final Dimension labelSize=new Dimension(25,20);
-        for (int index=0;index<CardStatistics.MANA_CURVE_SIZE;index++) {
-            final JLabel label=new JLabel(CardStatistics.MANA_CURVE_ICONS.get(index));
+        for (int index=0; index < CardStatistics.MANA_CURVE_SIZE; index++) {
+            final MagicIcon manaSymbol = CardStatistics.MANA_CURVE_ICONS.get(index);
+            final JLabel label = new JLabel(IconImages.getIcon(manaSymbol));
             label.setPreferredSize(labelSize);
             label.setHorizontalAlignment(JLabel.CENTER);
             label.setBorder(FontsAndBorders.TABLE_BORDER);
@@ -95,7 +101,7 @@ public class DeckStatisticsViewer extends TexturedPanel implements ChangeListene
             curveBottomPanel.add(curveLabels[index]);
         }
 
-        lines=new ArrayList<JLabel>();
+        lines=new ArrayList<>();
     }
 
     private void refreshCardTypeTotals(final CardStatistics statistics) {
@@ -105,7 +111,7 @@ public class DeckStatisticsViewer extends TexturedPanel implements ChangeListene
             final int total = statistics.totalTypes[index];
             // card count
             final JLabel totalLabel = new JLabel(Integer.toString(total));
-            totalLabel.setIcon(CardStatistics.TYPE_ICONS.get(index));
+            totalLabel.setIcon(IconImages.getIcon(CardStatistics.TYPE_ICONS.get(index)));
             totalLabel.setToolTipText(CardStatistics.TYPE_NAMES.get(index));
             totalLabel.setIconTextGap(4);
             topPanel.add(totalLabel, "w 35!");
@@ -121,28 +127,32 @@ public class DeckStatisticsViewer extends TexturedPanel implements ChangeListene
     public void setDeck(final MagicDeck deck) {
 
         final CardStatistics statistics = new CardStatistics(deck);
-        titleBar.setText("Deck Statistics : " + statistics.totalCards + " cards");
+        titleBar.setText(UiString.get(_S2, statistics.totalCards));
 
         refreshCardTypeTotals(statistics);
 
         lines.clear();
-        final JLabel allLabel=new JLabel(
-                "Mono : " + statistics.monoColor +
-                "  Multi : " + statistics.multiColor +
-                "  Colorless : "+statistics.colorless);
+        final JLabel allLabel = new JLabel(UiString.get(_S3,
+                statistics.monoColor,
+                statistics.multiColor,
+                statistics.colorless)
+        );
+
         allLabel.setForeground(textColor);
         lines.add(allLabel);
 
         for (int i = 0; i < statistics.colorCount.length; i++) {
             if (statistics.colorCount[i] > 0) {
                 final MagicColor color = MagicColor.values()[i];
-                final JLabel label=new JLabel(IconImages.getIcon(color.getManaType(), true));
+                final JLabel label=new JLabel(IconImages.getIcon(color.getManaType()));
                 label.setForeground(textColor);
                 label.setHorizontalAlignment(JLabel.LEFT);
                 label.setIconTextGap(5);
-                label.setText("Cards : "+statistics.colorCount[i]+
-                              "  Monocolor : "+statistics.colorMono[i]+
-                              "  Lands : "+statistics.colorLands[i]);
+                label.setText(UiString.get(_S4,
+                        statistics.colorCount[i],
+                        statistics.colorMono[i],
+                        statistics.colorLands[i])
+                );
                 lines.add(label);
             }
         }
@@ -165,6 +175,6 @@ public class DeckStatisticsViewer extends TexturedPanel implements ChangeListene
 
     @Override
     public void stateChanged(final ChangeEvent event) {
-        setDeck(((MagicPlayerDefinition)event.getSource()).getDeck());
+        setDeck(((DuelPlayerConfig)event.getSource()).getDeck());
     }
 }

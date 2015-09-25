@@ -9,12 +9,20 @@ function genName(name) {
         return "VEGAS-C"
     } else if (name == "monte carlo tree search (cheat)") {
         return "MCTS-C"
+    } else if (name == "monte carlo tree search 2 (cheat)") {
+        return "MCTS2-C"
     } else if (name == "minimax") {
         return "MMAB-H"
     } else if (name == "vegas") {
         return "VEGAS-H"
     } else if (name == "monte carlo tree search") {
         return "MCTS-H"
+    } else if (name == "monte carlo tree search 2") {
+        return "MCTS2-H"
+    } else if (name == "mtd(f)") {
+        return "MTDF-H"
+    } else if (name == "mtd(f) (cheat)") {
+        return "MTDF-C"
     } else {
         return "UNKNOWN"
     }

@@ -32,7 +32,7 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
             keys[idx] = card.getStateId();
             idx++;
         }
-        return magic.MurmurHash3.hash(keys);
+        return magic.model.MurmurHash3.hash(keys);
     }
 
     public long getUnorderedStateId() {
@@ -43,7 +43,7 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
             idx++;
         }
         Arrays.sort(keys);
-        return magic.MurmurHash3.hash(keys);
+        return magic.model.MurmurHash3.hash(keys);
     }
 
     public void addToBottom(final MagicCard card) {
@@ -61,6 +61,18 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
     public MagicCard getCardAtTop() {
         final int size = size();
         return size > 0 ? get(size-1) : MagicCard.NONE;
+    }
+    
+    public MagicCardList getRandomCards(final int amount) {
+        final MagicRandom rng = new MagicRandom(getStateId());
+        final MagicCardList copy = new MagicCardList(this);
+        final MagicCardList choiceList = new MagicCardList();
+        final int actual = Math.min(amount, copy.size());
+        for (int i = 1; i <= actual; i++) {
+            final int index = rng.nextInt(copy.size());
+            choiceList.add(copy.remove(index));
+        }
+        return choiceList;
     }
     
     public MagicCardList getCardsFromTop(final int amount) {
@@ -91,7 +103,7 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
         if (index >= 0) {
             remove(index);
         } else {
-            System.err.println("WARNING. Card " + card.getName() + " not found.");
+            throw new RuntimeException("Card " + card.getName() + " not found.");
         }
         return index;
     }

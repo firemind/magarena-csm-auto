@@ -8,13 +8,13 @@ public enum MagicAIImpl {
     VEGAS("vegas", new VegasAI(false)),
     VEGASC("vegas (cheat)", new VegasAI(true)),
     FIREMIND("firemind", new FiremindAI(false)),
+    MTDF("mtd(f)", new MTDF(false)),
+    MTDFC("mtd(f) (cheat)", new MTDF(true)),
     MMABFast("minimax (deck strength)", magic.ai.MMAB.DeckStrAI()),
-
-    MCTS2("monte carlo tree search 2", new magic.ai.next.MCTSAI(false)),
-    MCTSC2("monte carlo tree search 2 (cheat)", new magic.ai.next.MCTSAI(true)),
     ;
 
     public static final MagicAIImpl[] SUPPORTED_AIS = {MMAB, MMABC, MCTS, MCTSC, VEGAS, VEGASC, FIREMIND};
+    public static final MagicAIImpl[] DECKSTR_AIS = {MMABFast, MMABFast};
 
     private final String name;
     private final MagicAI ai;

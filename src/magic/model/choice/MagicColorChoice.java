@@ -7,15 +7,13 @@ import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
 import magic.model.target.MagicTargetFilterFactory;
-import magic.ui.GameController;
-import magic.ui.UndoClickedException;
-import magic.ui.duel.choice.ColorChoicePanel;
+import magic.exception.UndoClickedException;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
+import magic.model.IUIGameController;
 
 /** Contains optimal decision logic for each choice type. */
 public class MagicColorChoice extends MagicChoice {
@@ -26,18 +24,18 @@ public class MagicColorChoice extends MagicChoice {
     private static final int RED_WHITE_BLUE=3;
 
     private static final List<Object> COLOR_OPTIONS=Arrays.<Object>asList(
-            MagicColor.White,
-            MagicColor.Blue,
-            MagicColor.Black,
-            MagicColor.Green,
-            MagicColor.Red
-        );
+        MagicColor.White,
+        MagicColor.Blue,
+        MagicColor.Black,
+        MagicColor.Green,
+        MagicColor.Red
+    );
 
     private static final List<Object> RED_WHITE_BLUE_OPTIONS=Arrays.<Object>asList(
-            MagicColor.Red,
-            MagicColor.White,
-            MagicColor.Blue
-        );
+        MagicColor.Red,
+        MagicColor.White,
+        MagicColor.Blue
+    );
 
     public static final MagicColorChoice ALL_INSTANCE=new MagicColorChoice(ALL);
     public static final MagicColorChoice MOST_INSTANCE=new MagicColorChoice(MOST);
@@ -52,7 +50,7 @@ public class MagicColorChoice extends MagicChoice {
     }
 
     private static Collection<Object> getArtificialMostOptions(final MagicGame game,final MagicPlayer player) {
-        final Collection<MagicPermanent> targets=game.filterPermanents(player,MagicTargetFilterFactory.PERMANENT);
+        final Collection<MagicPermanent> targets = MagicTargetFilterFactory.PERMANENT.filter(player);
         final int[] counts=new int[MagicColor.NR_COLORS];
         for (final MagicPermanent permanent : targets) {
             for (final MagicColor color : MagicColor.values()) {
@@ -77,7 +75,7 @@ public class MagicColorChoice extends MagicChoice {
 
     private static Collection<Object> getArtificialUnsummonOptions(final MagicGame game,final MagicPlayer player) {
 
-        final Collection<MagicPermanent> targets=game.filterPermanents(player,MagicTargetFilterFactory.CREATURE);
+        final Collection<MagicPermanent> targets = MagicTargetFilterFactory.CREATURE.filter(player);
         final int[] scores=new int[MagicColor.NR_COLORS];
         for (final MagicPermanent permanent : targets) {
             int score=permanent.getScore();
@@ -105,11 +103,9 @@ public class MagicColorChoice extends MagicChoice {
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         switch (type) {
             case MOST: return getArtificialMostOptions(game,player);
@@ -120,18 +116,12 @@ public class MagicColorChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final GameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         controller.disableActionButton(false);
-        final ColorChoicePanel choicePanel = controller.waitForInput(new Callable<ColorChoicePanel>() {
-            public ColorChoicePanel call() {
-                return new ColorChoicePanel(controller,source);
-            }
-        });
-        return new Object[]{choicePanel.getColor()};
+        return new Object[]{controller.getColorChoice(source)};
     }
+
 }

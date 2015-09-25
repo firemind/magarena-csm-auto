@@ -1,44 +1,47 @@
 package magic.ui.duel.choice;
 
-import magic.data.IconImages;
-import magic.model.MagicSource;
-import magic.ui.GameController;
-import magic.ui.duel.viewer.UserActionPanel;
-import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.TextLabel;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import magic.data.MagicIcon;
+import magic.model.IGameController;
+import magic.model.MagicSource;
+import magic.ui.IconImages;
+import magic.ui.SwingGameController;
+import magic.translate.UiString;
+import magic.ui.duel.viewer.UserActionPanel;
+import magic.ui.widget.FontsAndBorders;
+import magic.ui.message.TextLabel;
 
+@SuppressWarnings("serial")
 public class ManaCostXChoicePanel extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
+    // translatable strings
+    private static final String _S1 = "Choose a value for X.";
 
-    private static final String MESSAGE="Choose a value for X.";
+    private static final String MESSAGE = UiString.get(_S1);
     private static final Dimension BUTTON_DIMENSION=new Dimension(50,35);
 
-    private final GameController controller;
+    private final SwingGameController controller;
     private final JButton leftButton;
     private final JButton numberButton;
     private final JButton rightButton;
     private final int maximumX;
     private int x;
 
-    public ManaCostXChoicePanel(final GameController controller,final MagicSource source,final int maximumX) {
-        this.controller=controller;
+    public ManaCostXChoicePanel(final IGameController controller,final MagicSource source,final int maximumX) {
+        this.controller = (SwingGameController)controller;
         this.maximumX=maximumX;
         x=maximumX;
 
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        final TextLabel textLabel=new TextLabel(GameController.getMessageWithSource(source,MESSAGE),UserActionPanel.TEXT_WIDTH,true);
+        final TextLabel textLabel=new TextLabel(SwingGameController.getMessageWithSource(source,MESSAGE),UserActionPanel.TEXT_WIDTH,true);
         add(textLabel,BorderLayout.CENTER);
 
         final JPanel buttonPanel=new JPanel(new FlowLayout(FlowLayout.CENTER,10,0));
@@ -46,7 +49,7 @@ public class ManaCostXChoicePanel extends JPanel implements ActionListener {
         buttonPanel.setBorder(FontsAndBorders.EMPTY_BORDER);
         add(buttonPanel,BorderLayout.SOUTH);
 
-        leftButton=new JButton("",IconImages.LEFT);
+        leftButton=new JButton("",IconImages.getIcon(MagicIcon.LEFT));
         leftButton.setPreferredSize(BUTTON_DIMENSION);
         leftButton.addActionListener(this);
         leftButton.setFocusable(false);
@@ -58,7 +61,7 @@ public class ManaCostXChoicePanel extends JPanel implements ActionListener {
         numberButton.setFocusable(false);
         buttonPanel.add(numberButton);
 
-        rightButton=new JButton(IconImages.RIGHT);
+        rightButton=new JButton(IconImages.getIcon(MagicIcon.RIGHT));
         rightButton.setPreferredSize(BUTTON_DIMENSION);
         rightButton.addActionListener(this);
         rightButton.setFocusable(false);

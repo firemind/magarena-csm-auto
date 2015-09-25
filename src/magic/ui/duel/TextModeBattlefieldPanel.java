@@ -1,15 +1,16 @@
 package magic.ui.duel;
 
-import magic.ui.duel.animation.PlayCardAnimation;
+import magic.model.MagicCard;
 import magic.model.MagicCardList;
 import magic.model.event.MagicEvent;
-import magic.ui.GameController;
+import magic.ui.SwingGameController;
+import magic.ui.duel.animation.PlayCardAnimation;
 import magic.ui.duel.resolution.ResolutionProfileResult;
 import magic.ui.duel.resolution.ResolutionProfileType;
 import magic.ui.duel.viewer.BattlefieldViewer;
 import magic.ui.duel.viewer.HandGraveyardExileViewer;
 import magic.ui.duel.viewer.StackCombatViewer;
-import magic.ui.duel.viewer.StackViewer;
+import magic.ui.duel.sidebar.StackViewer;
 
 @SuppressWarnings("serial")
 public class TextModeBattlefieldPanel extends BattlefieldPanel {
@@ -19,7 +20,7 @@ public class TextModeBattlefieldPanel extends BattlefieldPanel {
     private final BattlefieldViewer playerPermanentViewer;
     private final BattlefieldViewer opponentPermanentViewer;
 
-    public TextModeBattlefieldPanel(final GameController controller) {
+    public TextModeBattlefieldPanel(final SwingGameController controller) {
         setOpaque(false);
         //
         handGraveyardViewer = new HandGraveyardExileViewer(controller);
@@ -79,6 +80,11 @@ public class TextModeBattlefieldPanel extends BattlefieldPanel {
     @Override
     public void setPlayCardFromHandAnimation(PlayCardAnimation event) {
         // not implemented
+    }
+
+    @Override
+    public void highlightCard(MagicCard card, boolean b) {
+        // not supported
     }
 
 }

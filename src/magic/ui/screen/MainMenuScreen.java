@@ -1,47 +1,46 @@
 package magic.ui.screen;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.nio.file.Files;
+import java.io.File;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import magic.MagicMain;
-import magic.MagicUtility;
+import javax.swing.filechooser.FileFilter;
 import magic.data.GeneralConfig;
-import magic.data.IconImages;
-import magic.game.state.GameStateFileReader;
+import magic.data.MagicIcon;
+import magic.exception.InvalidDeckException;
 import magic.game.state.GameLoader;
-import magic.ui.dialog.ImportDialog;
-import magic.ui.screen.interfaces.IThemeStyle;
+import magic.game.state.GameStateFileReader;
+import magic.ui.IconImages;
+import magic.ui.ScreenController;
+import magic.translate.UiString;
+import magic.ui.screen.interfaces.IWikiPage;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuPanel;
-import magic.ui.theme.Theme;
-import magic.ui.widget.TexturedPanel;
-import net.miginfocom.swing.MigLayout;
-import magic.ui.screen.interfaces.IWikiPage;
 import magic.ui.widget.alerter.AlertPanel;
 import magic.utility.MagicFileSystem;
-import magic.utility.MagicStyle;
+import magic.utility.MagicSystem;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class MainMenuScreen extends AbstractScreen implements IWikiPage {
+
+    // translatable strings.
+    private static final String _S1 = "Main Menu";
+    private static final String _S2 = "New duel";
+    private static final String _S3 = "Resume duel";
+    private static final String _S4 = "Card explorer";
+    private static final String _S5 = "Deck editor";
+    private static final String _S6 = "Settings";
+    private static final String _S7 = "Help";
+    private static final String _S8 = "Quit to desktop";
 
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final AlertPanel alertPanel = new AlertPanel();
 
     public MainMenuScreen() {
         setContent(getScreenContent());
-        showImportDialogOnNewInstall();
         alertPanel.refreshAlerts();
-    }
-
-    private void showImportDialogOnNewInstall() {
-        if (!Files.exists(MagicFileSystem.getDataPath().resolve(GeneralConfig.CONFIG_FILENAME))) {
-            new ImportDialog(getFrame());
-        }
     }
 
     private JPanel getScreenContent() {
@@ -49,12 +48,8 @@ public class MainMenuScreen extends AbstractScreen implements IWikiPage {
         final MenuPanel menuPanel = getMenuPanel();
         menuPanel.refreshLayout();
 
-        final JPanel mainPanel = new JPanel();
-        mainPanel.setOpaque(false);
-        mainPanel.setLayout(new MigLayout("insets 0, gap 0, alignx center, flowy"));
-        mainPanel.add(menuPanel);
-        if (MagicUtility.isDevMode()) {
-            mainPanel.add(new IconPanel());
+        if (MagicSystem.isDevMode()) {
+            menuPanel.add(new IconPanel(), "w 100%, aligny bottom, pushy");
         }
 
         final JPanel content = new JPanel();
@@ -63,111 +58,97 @@ public class MainMenuScreen extends AbstractScreen implements IWikiPage {
         final MigLayout layout = new MigLayout();
         layout.setLayoutConstraints("insets 0, gap 0, flowy");
         layout.setRowConstraints("[30!][100%, center][30!]");
+        layout.setColumnConstraints("[center]");
         content.setLayout(layout);
-        content.add(new JLabel(), "w 100%, h 100%");
-        content.add(mainPanel, "w 100%");
-        content.add(alertPanel, "w 100%, h 100%");
+
+        content.add(menuPanel, "cell 0 1");
+        content.add(alertPanel, "w 100%, h 100%, cell 0 2");
+
         return content;
-        
+
     }
-    
+
     private MenuPanel getMenuPanel() {
 
-        final MenuPanel menuPanel = new MenuPanel("Main Menu");
+        final MenuPanel menuPanel = new MenuPanel(UiString.get(_S1));
 
-        if (MagicUtility.isDevMode()) {
-            menuPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.BLACK));
-            menuPanel.setPreferredSize(new Dimension(300, 340));
-            menuPanel.setMaximumSize(new Dimension(300, 340));
-        }
-
-        menuPanel.addMenuItem("New duel", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S2), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().showDuelPlayersScreen();
+                ScreenController.showDuelPlayersScreen();
             }
         });
-        menuPanel.addMenuItem("Resume duel", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S3), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().loadDuel();
+                try {
+                    getFrame().loadDuel();
+                } catch (InvalidDeckException ex) {
+                    ScreenController.showWarningMessage(ex.getMessage());
+                }
             }
         });
-        menuPanel.addMenuItem("Card explorer", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S4), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().showCardExplorerScreen();
+                ScreenController.showCardExplorerScreen();
             }
         });
-        menuPanel.addMenuItem("Deck editor", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S5), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().showDeckEditor();
+                ScreenController.showDeckEditor();
             }
         });
-        menuPanel.addMenuItem("Settings", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S6), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().showSettingsMenuScreen();
+                ScreenController.showSettingsMenuScreen();
             }
         });
-        menuPanel.addMenuItem("Help", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S7), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().showHelpMenuScreen();
+                ScreenController.showHelpMenuScreen();
             }
         });
-        menuPanel.addMenuItem("Quit to desktop", new AbstractAction() {
+        menuPanel.addMenuItem(UiString.get(_S8), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                getFrame().closeActiveScreen(false);
+                ScreenController.closeActiveScreen(false);
             }
         });
 
         return menuPanel;
     }
 
-
-    private class IconPanel extends TexturedPanel implements IThemeStyle  {
+    private class IconPanel extends JPanel {
 
         private final MigLayout miglayout = new MigLayout();
 
         public IconPanel() {
+            setOpaque(false);
             setLayout(miglayout);
-            setPreferredSize(new Dimension(300, 40));
-            setMaximumSize(new Dimension(300, 40));
-            refreshStyle();
             refreshLayout();
         }
 
         private void refreshLayout() {
             miglayout.setLayoutConstraints("insets 4 0 0 0");
             final ActionBarButton btn = new ActionBarButton(
-                        IconImages.LOAD_ICON,
-                        "Resume saved game", "Select a previously saved game and run.",
-                        new AbstractAction() {
-                            @Override
-                            public void actionPerformed(final ActionEvent e) {
-                                loadSavedGame();
-                            }
+                    IconImages.getIcon(MagicIcon.LOAD_ICON),
+                    "Resume saved game", "Select a previously saved game and run.",
+                    new AbstractAction() {
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
+                            loadSavedGame();
                         }
-                );
+                    }
+            );
             add(btn);
-        }
-
-        @Override
-        public void refreshStyle() {
-            final Color refBG = MagicStyle.getTheme().getColor(Theme.COLOR_TITLE_BACKGROUND);
-            final Color thisBG = MagicStyle.getTranslucentColor(refBG, 200);
-            setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, Color.BLACK));
-            setBackground(thisBG);
         }
 
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.MagScreen#isScreenReadyToClose(magic.ui.MagScreen)
-     */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         return true;
@@ -181,15 +162,42 @@ public class MainMenuScreen extends AbstractScreen implements IWikiPage {
     }
 
     private void loadSavedGame() {
-        final String filename = GameStateFileReader.getSaveGameFilename();
+        final String filename = getSaveGameFilename();
         if (!filename.isEmpty()) {
-            MagicMain.rootFrame.openGame(GameLoader.loadSavedGame(filename));
+            ScreenController.showDuelGameScreen(GameLoader.loadSavedGame(filename));
         }
     }
+
+    private static String getSaveGameFilename() {
+        final JFileChooser fileChooser = new JFileChooser(MagicFileSystem.getDataPath(MagicFileSystem.DataPath.SAVED_GAMES).toFile());
+        fileChooser.setDialogTitle("Load & resume saved game");
+        fileChooser.setFileFilter(TEST_FILE_FILTER);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        // Add the description preview pane
+//        fileChooser.setAccessory(new DeckDescriptionPreview(fileChooser));
+        final int action = fileChooser.showOpenDialog(ScreenController.getMainFrame());
+        if (action == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().getName();
+        } else {
+            return "";
+        }
+    }
+
+    private static final FileFilter TEST_FILE_FILTER = new FileFilter() {
+        @Override
+        public boolean accept(final File file) {
+            return file.isDirectory() || file.getName().endsWith(GameStateFileReader.TEST_FILE_EXTENSION);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Saved Game File";
+        }
+    };
 
     @Override
     public String getWikiPageName() {
         return "Main-Menu-Screen";
     }
-    
+
 }

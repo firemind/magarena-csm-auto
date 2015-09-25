@@ -1,6 +1,6 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.GameController;
+import magic.ui.SwingGameController;
 import magic.ui.theme.Theme;
 import magic.ui.widget.TabSelector;
 import magic.ui.widget.TitleBar;
@@ -11,7 +11,7 @@ import javax.swing.event.ChangeListener;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import magic.utility.MagicStyle;
+import magic.ui.utility.MagicStyle;
 
 public class StackCombatViewer extends JPanel implements ChangeListener {
 
@@ -23,7 +23,7 @@ public class StackCombatViewer extends JPanel implements ChangeListener {
     private final TitleBar titleBar;
     private final TabSelector tabSelector;
 
-    public StackCombatViewer(final GameController controller) {
+    public StackCombatViewer(final SwingGameController controller) {
 
         combatViewer=new CombatViewer(controller);
 

@@ -1,0 +1,9 @@
+name=Whisk Away
+image=http://magiccards.info/scans/en/frf/57.jpg
+value=2.500
+rarity=C
+type=Instant
+cost={2}{U}
+effect=Put target attacking or blocking creature on top of its owner's library.
+timing=removal
+oracle=Put target attacking or blocking creature on top of its owner's library.

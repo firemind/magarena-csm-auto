@@ -1,17 +1,23 @@
 package magic.test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import magic.ai.MagicAIImpl;
 import magic.data.CardDefinitions;
-import magic.data.TokenCardDefinitions;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
+import magic.model.MagicDeckProfile;
+import magic.model.MagicDuel;
 import magic.model.MagicGame;
+import magic.model.MagicPayedCost;
 import magic.model.MagicPermanent;
 import magic.model.MagicPermanentState;
 import magic.model.MagicPlayer;
-import magic.model.action.MagicPlayTokenAction;
-import magic.model.action.MagicPutIntoPlayAction;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import magic.model.DuelPlayerConfig;
+import magic.model.action.PlayCardFromStackAction;
+import magic.model.action.PlayTokenAction;
+import magic.model.player.AiProfile;
+import magic.model.player.HumanProfile;
+import magic.model.stack.MagicCardOnStack;
 
 public abstract class TestGameBuilder {
 
@@ -45,23 +51,18 @@ public abstract class TestGameBuilder {
         }
     }
 
-    static void createAllTokens(final MagicGame game, final MagicPlayer player) {
-        for (final MagicCardDefinition cardDefinition : TokenCardDefinitions.getAll()) {
-            game.doAction(new MagicPlayTokenAction(player,cardDefinition));
-        }
-    }
-
-    public static MagicPermanent createPermanent(final MagicGame game, final MagicPlayer player, final String name, final boolean tapped, final int count) {
-
+    public static MagicPermanent createPermanent(final MagicPlayer player, final String name, final boolean tapped, final int count) {
+        final MagicGame game = player.getGame();
         final MagicCardDefinition cardDefinition=CardDefinitions.getCard(name);
         MagicPermanent lastPermanent= MagicPermanent.NONE;
         for (int c=count;c>0;c--) {
 
             final MagicCard card=new MagicCard(cardDefinition,player,currentId.getAndIncrement());
+            final MagicCardOnStack cardOnStack = new MagicCardOnStack(card, player, MagicPayedCost.NOT_SPELL);
             final MagicPermanent permanent=new MagicPermanent(currentId.getAndIncrement(),card,player);
             lastPermanent=permanent;
 
-            game.doAction(new MagicPutIntoPlayAction() {
+            game.doAction(new PlayCardFromStackAction(cardOnStack) {
                 @Override
                 protected MagicPermanent createPermanent(final MagicGame game) {
                     return permanent;
@@ -69,6 +70,7 @@ public abstract class TestGameBuilder {
             });
 
             game.getEvents().clear();
+            game.checkStatePutTriggers();
             game.getStack().removeAllItems();
             permanent.clearState(MagicPermanentState.Summoned);
             if (tapped) {
@@ -76,6 +78,14 @@ public abstract class TestGameBuilder {
             }
         }
         return lastPermanent;
+    }
+    
+    public static MagicPermanent createPermanent(final MagicPlayer player,final String name,final int amount){
+        return createPermanent(player,name,false,amount);
+    }
+    
+    public static MagicPermanent createPermanent(final MagicPlayer player,final String name){
+        return createPermanent(player,name,false,1);
     }
 
     protected abstract MagicGame getGame();
@@ -96,5 +106,21 @@ public abstract class TestGameBuilder {
             throw new RuntimeException(ex);
         }
         return game;
+    }
+
+    public static MagicDuel createDuel(final MagicAIImpl aAiType, final int aAiLevel) {
+        final MagicDuel duel=new MagicDuel();
+
+        final MagicDeckProfile profile=new MagicDeckProfile("bgruw");
+        final DuelPlayerConfig player1=new DuelPlayerConfig(HumanProfile.create("Player"),profile);
+        final DuelPlayerConfig player2=new DuelPlayerConfig(AiProfile.create(aAiType, aAiLevel),profile);
+
+        duel.setPlayers(new DuelPlayerConfig[]{player1,player2});
+        duel.setStartPlayer(0);
+        return duel;
+    }
+
+    public static MagicDuel createDuel() {
+        return createDuel(MagicAIImpl.MMABFast, 6);
     }
 }

@@ -2,7 +2,7 @@ package magic.ui.duel.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,11 +12,12 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import magic.data.CachedImagesProvider;
-import magic.data.CardImagesProvider;
+import magic.ui.CachedImagesProvider;
+import magic.ui.CardImagesProvider;
 import magic.data.GeneralConfig;
-import magic.data.IconImages;
+import magic.ui.IconImages;
 import magic.model.MagicCardDefinition;
+import magic.ui.utility.GraphicsUtils;
 import magic.ui.cardtable.ICardSelectionListener;
 import magic.ui.widget.TransparentImagePanel;
 
@@ -91,7 +92,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (!isGameScreenPopup && currentCardDefinition.hasMultipleAspects() && !currentCardDefinition.isMissing()) {
+                if (!isGameScreenPopup && currentCardDefinition.hasMultipleAspects() && currentCardDefinition.isValid()) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 } else {
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -107,7 +108,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
     }
 
     private void switchCardAspect() {
-        if (currentCardDefinition.hasMultipleAspects()) {
+        if (currentCardDefinition.hasMultipleAspects() && currentCardDefinition.isValid()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             if (currentCardDefinition.isDoubleFaced()) {
                 setCard(currentCardDefinition.getTransformedDefinition());
@@ -139,13 +140,13 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
             } else {
                 cardImage = IMAGE_HELPER.getImage(cardDefinition,index,false);
                 if (isGameScreenPopup) {
-                    setSize(CONFIG.getMaxCardImageSize());
+                    setSize(GraphicsUtils.getMaxCardImageSize());
                     revalidate();
                 }
             }
 
-            if (cardDefinition.isMissing() && cardImage != IconImages.MISSING_CARD) {
-                setCardImage(getGreyScaleImage(cardImage));
+            if (cardDefinition.isInvalid() && cardImage != IconImages.MISSING_CARD) {
+                setCardImage(GraphicsUtils.getGreyScaleImage(cardImage));
             } else {
                 setCardImage(cardImage);
             }
@@ -156,19 +157,11 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
         setCard(cardDefinition, 0);
     }
 
-    private void setCardImage(final BufferedImage newImage) {
+    private void setCardImage(final Image newImage) {
         cardPanel.setImage(newImage);
         repaint();
     }
 
-
-    private BufferedImage getGreyScaleImage(final BufferedImage image) {
-        final BufferedImage gsImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-        final Graphics gsg = gsImage.getGraphics();
-        gsg.drawImage(image, 0, 0, this);
-        gsg.dispose();
-        return gsImage;
-    }
 
     public void showDelayed(final int delay) {
         timer.setInitialDelay(delay);

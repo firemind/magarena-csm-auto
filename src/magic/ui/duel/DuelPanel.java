@@ -1,5 +1,7 @@
 package magic.ui.duel;
 
+import magic.ui.duel.sidebar.DuelSideBarPanel;
+import java.awt.Component;
 import magic.ui.duel.dialog.DuelDialogPanel;
 import magic.ui.duel.animation.PlayCardAnimation;
 import java.awt.Dimension;
@@ -13,26 +15,28 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import magic.MagicMain;
 import magic.data.GeneralConfig;
+import magic.model.MagicCard;
 import magic.model.MagicCardList;
 import magic.model.MagicGame;
+import magic.model.MagicPlayer;
+import magic.model.MagicPlayerZone;
 import magic.model.event.MagicEvent;
-import magic.ui.GameController;
+import magic.ui.SwingGameController;
 import magic.ui.MagicFrame;
+import magic.ui.ScreenController;
 import magic.ui.card.AnnotatedCardPanel;
 import magic.ui.duel.animation.AnimationCanvas;
 import magic.ui.duel.animation.GamePlayAnimator;
 import magic.ui.duel.resolution.DefaultResolutionProfile;
 import magic.ui.duel.resolution.ResolutionProfileResult;
 import magic.ui.duel.resolution.ResolutionProfiles;
-import magic.ui.duel.viewer.LogBookViewer;
 import magic.ui.widget.ZoneBackgroundLabel;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public final class DuelPanel extends JPanel {
-
+    
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final String ACTION_KEY="action";
     private static final String UNDO_KEY="undo";
@@ -41,7 +45,7 @@ public final class DuelPanel extends JPanel {
 
     private final MagicFrame frame;
     private final ZoneBackgroundLabel backgroundLabel;
-    private final GameController controller;
+    private final SwingGameController controller;
   
     private final AnnotatedCardPanel imageCardViewer;
 
@@ -56,15 +60,12 @@ public final class DuelPanel extends JPanel {
     private final AnimationCanvas animationCanvas;
     private final DuelDialogPanel dialogPanel;
 
-    public DuelPanel(
-            final MagicFrame frame,
-            final MagicGame game,
-            final ZoneBackgroundLabel backgroundLabel) {
+    public DuelPanel(final MagicFrame frame, final MagicGame game, final ZoneBackgroundLabel backgroundLabel) {
 
         this.frame = frame;
         this.backgroundLabel = backgroundLabel;
         
-        controller = new GameController(this, game);
+        controller = new SwingGameController(this, game);
         animator = new GamePlayAnimator(frame, this);
         animationCanvas = new AnimationCanvas();
         dialogPanel = new DuelDialogPanel();
@@ -82,6 +83,9 @@ public final class DuelPanel extends JPanel {
 
         sidebarPanel = new DuelSideBarPanel(controller, battlefieldPanel.getStackViewer());
 
+        // TODO: should not have to run this, but required while sidebarPanel is created after battlefieldPanel.
+        controller.notifyPlayerZoneChanged(controller.getViewerInfo().getPlayerInfo(false), MagicPlayerZone.HAND);
+
         controller.setUserActionPanel(sidebarPanel.getGameStatusPanel().getUserActionPanel());
 
         updateView();
@@ -94,8 +98,8 @@ public final class DuelPanel extends JPanel {
 
     private static Rectangle getWindowRect() {
         return new Rectangle(
-                    MagicMain.rootFrame.getLocationOnScreen(),
-                    MagicMain.rootFrame.getSize());
+                    ScreenController.getMainFrame().getLocationOnScreen(),
+                    ScreenController.getMainFrame().getSize());
     }
 
     private void createMouseListener() {
@@ -183,16 +187,12 @@ public final class DuelPanel extends JPanel {
         return CONFIG.getTextView();
     }
 
-    public GameController getController() {
+    public SwingGameController getController() {
         return controller;
     }
 
     public AnnotatedCardPanel getImageCardViewer() {
         return imageCardViewer;
-    }
-
-    public LogBookViewer getLogBookViewer() {
-        return sidebarPanel.getLogBookViewer();
     }
 
     public void focusViewers(final int handGraveyard) {
@@ -225,7 +225,6 @@ public final class DuelPanel extends JPanel {
         final Dimension size = getSize();
         result = ResolutionProfiles.calculate(size);
         backgroundLabel.setZones(result);                
-        sidebarPanel.resizeComponents(result);
         battlefieldPanel.resizeComponents(result);
         setGamePanelLayout();
         // defer until all pending events on the EDT have been processed.
@@ -260,6 +259,9 @@ public final class DuelPanel extends JPanel {
         assert !SwingUtilities.isEventDispatchThread();
         final PlayCardAnimation animationEvent = battlefieldPanel.getPlayCardFromHandAnimation();
         if (animationEvent != null && CONFIG.isAnimateGameplay()) {
+            if (animationEvent.getPlayer() != controller.getGame().getVisiblePlayer()) {
+                controller.doFlashPlayerHandZoneButton();
+            }
             animator.runAnimation(animationEvent);
         }
         battlefieldPanel.setPlayCardFromHandAnimation(null);
@@ -288,7 +290,6 @@ public final class DuelPanel extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                sidebarPanel.setStartEndTurnState();
                 sidebarPanel.getGameStatusPanel().showNewTurnNotification(game);
             }
         });
@@ -311,11 +312,50 @@ public final class DuelPanel extends JPanel {
 
     public void showEndGameMessage() {
         dialogPanel.showEndGameMessage(controller);
-        sidebarPanel.setStartEndTurnState();
     }
 
     public JPanel getDialogPanel() {
         return dialogPanel;
+    }
+
+    public void refreshSidebarLayout() {
+        sidebarPanel.refreshLayout();
+    }
+
+    public Rectangle getPlayerZoneButtonRectangle(MagicPlayer player, MagicPlayerZone zone, Component canvas) {
+        return sidebarPanel.getPlayerZoneButtonRectangle(player, zone, canvas);
+    }
+
+    public Rectangle getStackViewerRectangle(Component canvas) {
+        return sidebarPanel.getStackViewerRectangle(canvas);
+    }
+
+    public void doFlashPlayerHandZoneButton() {
+        sidebarPanel.doFlashPlayerHandZoneButton();
+    }
+
+    public void highlightCard(MagicCard card, boolean b) {
+        switch (card.getLocation()) {
+            case Play:
+                battlefieldPanel.highlightCard(card, b);
+                break;
+            case Graveyard:
+                sidebarPanel.doHighlightPlayerZone(card, MagicPlayerZone.GRAVEYARD, b);
+                break;
+            case Exile:
+                sidebarPanel.doHighlightPlayerZone(card, MagicPlayerZone.EXILE, b);
+                break;
+            case OwnersHand:
+                sidebarPanel.doHighlightPlayerZone(card, MagicPlayerZone.HAND, b);
+                break;
+            case OwnersLibrary:
+                sidebarPanel.doHighlightPlayerZone(card, MagicPlayerZone.LIBRARY, b);
+                break;                                
+        }
+    }
+
+    public Rectangle getBattlefieldPanelBounds() {
+        return battlefieldPanel.getBounds();
     }
 
 }

@@ -1,0 +1,9 @@
+name=Neutralizing Blast
+image=http://magiccards.info/scans/en/frf/44.jpg
+value=2.500
+rarity=U
+type=Instant
+cost={1}{U}
+effect=Counter target multicolored spell.
+timing=counter
+oracle=Counter target multicolored spell.

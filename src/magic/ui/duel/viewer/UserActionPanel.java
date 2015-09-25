@@ -2,7 +2,6 @@ package magic.ui.duel.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -11,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -20,12 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import magic.data.IconImages;
+import magic.data.MagicIcon;
+import magic.ui.IconImages;
 import magic.model.MagicGame;
 import magic.model.phase.MagicPhaseType;
-import magic.ui.GameController;
-import magic.ui.widget.TextLabel;
-import magic.ui.widget.TitleBar;
+import magic.ui.SwingGameController;
+import magic.ui.message.TextLabel;
 
 @SuppressWarnings("serial")
 public class UserActionPanel extends JPanel implements ActionListener {
@@ -33,7 +31,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
     public static final int TEXT_WIDTH=230;
 
     private final MagicGame game;
-    private final GameController controller;
+    private final SwingGameController controller;
     private final JButton actionButton;
     private final JButton undoButton;
     private final JPanel actionPanel;
@@ -41,13 +39,14 @@ public class UserActionPanel extends JPanel implements ActionListener {
     private final JPanel contentPanel;
     private boolean actionEnabled;
 
-    public UserActionPanel(final GameController controller) {
+    public UserActionPanel(final SwingGameController controller) {
 
         this.game = controller.getGame();
         this.controller=controller;
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, Color.BLACK));
+        setMinimumSize(new Dimension(0, 114));
+        setOpaque(false);
 
         actionPanel=new JPanel();
         actionPanel.setOpaque(false);
@@ -57,7 +56,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
         final JLabel emptyLabel=new JLabel("");
         actionPanel.add(emptyLabel,"0");
 
-        final JLabel busyLabel=new JLabel(IconImages.BUSY);
+        final JLabel busyLabel=new JLabel(IconImages.getIcon(MagicIcon.BUSY));
         busyLabel.setHorizontalAlignment(JLabel.CENTER);
         actionPanel.add(busyLabel,"1");
 
@@ -66,17 +65,15 @@ public class UserActionPanel extends JPanel implements ActionListener {
         actionButton.addActionListener(this);
         actionButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 1) {
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
                     controller.passKeyPressed();
-                } else {
-                    super.mouseClicked(e);
                 }               
             }
         });
         actionPanel.add(actionButton,"2");
 
-        undoButton=new JButton(IconImages.UNDO);
+        undoButton=new JButton(IconImages.getIcon(MagicIcon.UNDO));
         undoButton.setMargin(new Insets(1,1,1,1));
         undoButton.setIconTextGap(2);
         undoButton.setEnabled(false);
@@ -116,13 +113,6 @@ public class UserActionPanel extends JPanel implements ActionListener {
         // (by DuelPanel) while mouse cursor is inside UserActionPanel.
         addMouseListener(new MouseAdapter(){});
 
-    }
-
-    public void setTitle(final TitleBar titleBar) {
-        titleBar.setText("Turn " + game.getTurn() + " : " + game.getPhase().getType().getName());
-    }
-    public String getTurnCaption() {
-        return "Turn " + game.getTurn() + " : " + game.getPhase().getType().getName();
     }
 
     public void clearContentPanel() {
@@ -194,7 +184,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
      * for use with the GameStatusPanel component.
      */
     public ImageIcon getTurnSizedPlayerAvatar() {
-        return game.getPriorityPlayer().getPlayerDefinition().getAvatar().getIcon(4);
+        return IconImages.getIconSize4(game.getPriorityPlayer().getPlayerDefinition());
     }
 
 }

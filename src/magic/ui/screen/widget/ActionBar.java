@@ -7,12 +7,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import magic.data.IconImages;
+import magic.data.MagicIcon;
+import magic.ui.IconImages;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.Theme;
 import magic.ui.widget.TexturedPanel;
-import magic.utility.MagicStyle;
+import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -29,9 +30,6 @@ public class ActionBar extends TexturedPanel implements IThemeStyle {
         setMagActionBarLayout();
     }
 
-    /**
-     *
-     */
     private void setMagActionBarLayout() {
         removeAll();
         setLayout(new MigLayout("insets 0, gap 10, flowx, aligny 50%", "[200][center,grow][200,right]"));
@@ -51,7 +49,7 @@ public class ActionBar extends TexturedPanel implements IThemeStyle {
         if (action != null) {
             action.setEnabled(action.isRunnable());
             if (action.getIcon() == null) {
-                action.setIcon(IconImages.NEXT_ICON);
+                action.setIcon(IconImages.getIcon(MagicIcon.NEXT_ICON));
             }
             action.setHorizontalTextPosition(SwingConstants.LEFT);
             add(action);
@@ -81,7 +79,7 @@ public class ActionBar extends TexturedPanel implements IThemeStyle {
         MenuButton action = actionProvider.getLeftAction();
         if (action != null) {
             action.setEnabled(action.isRunnable());
-            action.setIcon(IconImages.BACK_ICON);
+            action.setIcon(IconImages.getIcon(MagicIcon.BACK_ICON));
             action.setHorizontalTextPosition(SwingConstants.RIGHT);
             add(action);
         } else {

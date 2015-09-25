@@ -6,8 +6,7 @@ import magic.model.MagicGame;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
-import magic.ui.GameController;
-import magic.ui.UndoClickedException;
+import magic.exception.UndoClickedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import magic.model.IUIGameController;
 
 public class MagicCardChoice extends MagicChoice {
 
@@ -23,6 +23,7 @@ public class MagicCardChoice extends MagicChoice {
     private final int amount;
 
     public MagicCardChoice(final int amount) {
+
         super(genDescription(amount));
         this.amount=amount;
     }
@@ -36,12 +37,13 @@ public class MagicCardChoice extends MagicChoice {
     }
 
     private void createOptions(
-            final Collection<Object> options,
-            final MagicCardList hand,
-            final MagicCard[] cards,
-            final int count,
-            final int aAmount,
-            final int index) {
+        final Collection<Object> options,
+        final MagicCardList hand,
+        final MagicCard[] cards,
+        final int count,
+        final int aAmount,
+        final int index
+    ) {
 
         if (count == aAmount) {
             options.add(new MagicCardChoiceResult(cards));
@@ -59,13 +61,11 @@ public class MagicCardChoice extends MagicChoice {
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
-        final List<Object> options = new ArrayList<Object>();
+        final List<Object> options = new ArrayList<>();
         final MagicCardList hand = new MagicCardList(player.getHand());
         hand.remove(source);
         Collections.sort(hand);
@@ -79,11 +79,9 @@ public class MagicCardChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final GameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         final MagicCardChoiceResult result=new MagicCardChoiceResult();
         final Set<Object> validCards=new HashSet<Object>(player.getHand());
@@ -102,4 +100,5 @@ public class MagicCardChoice extends MagicChoice {
         }
         return new Object[]{result};
     }
+
 }

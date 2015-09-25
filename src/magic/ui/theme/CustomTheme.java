@@ -1,6 +1,6 @@
 package magic.ui.theme;
 
-import magic.data.IconImages;
+import magic.ui.IconImages;
 
 import javax.swing.ImageIcon;
 
@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import magic.ui.ImageFileIO;
+import magic.utility.FileIO;
 
 public class CustomTheme extends AbstractTheme {
 
@@ -30,14 +32,6 @@ public class CustomTheme extends AbstractTheme {
         super(name);
         this.file=file;
         playerAvatars=new PlayerAvatar[MAX_AVATARS];
-    }
-
-    @Override
-    public int getNumberOfAvatars() {
-        if (nrOfAvatars==0) {
-            return super.getNumberOfAvatars();
-        }
-        return nrOfAvatars;
     }
 
     @Override
@@ -108,7 +102,7 @@ public class CustomTheme extends AbstractTheme {
 
     private BufferedImage loadImage(final String filename) {
         final InputStream ins = getInputStream(filename);
-        return magic.data.FileIO.toImg(ins, IconImages.MISSING);
+        return ImageFileIO.toImg(ins, IconImages.MISSING);
     }
 
     @Override
@@ -124,7 +118,7 @@ public class CustomTheme extends AbstractTheme {
         }
 
         final InputStream inputStream=getInputStream(THEME_PROPERTIES_FILE);
-        final Properties properties=magic.data.FileIO.toProp(inputStream);
+        final Properties properties=FileIO.toProp(inputStream);
 
         for (final Map.Entry<Object,Object> entry : properties.entrySet()) {
             parseEntry(entry.getKey().toString(),entry.getValue().toString().trim());

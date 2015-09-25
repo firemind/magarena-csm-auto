@@ -79,6 +79,10 @@ public class MagicStack extends LinkedList<MagicItemOnStack> {
         }
         throw new RuntimeException("No corresponding MagicItemOnStack with id " + id);
     }
+    
+    public boolean hasItem() {
+        return isEmpty() == false;
+    }
 
     public boolean hasItem(final MagicSource source, final String description) {
         for (final MagicItemOnStack item : this) {
@@ -124,6 +128,6 @@ public class MagicStack extends LinkedList<MagicItemOnStack> {
             keys[idx] = item.getStateId();
             idx++;
         }
-        return magic.MurmurHash3.hash(keys);
+        return magic.model.MurmurHash3.hash(keys);
     }
 }

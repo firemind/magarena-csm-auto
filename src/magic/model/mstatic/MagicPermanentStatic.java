@@ -2,26 +2,24 @@ package magic.model.mstatic;
 
 import magic.model.MagicCopyMap;
 import magic.model.MagicCounterType;
+import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicPowerToughness;
+import magic.model.MagicType;
 import magic.model.target.MagicTargetFilterFactory;
 import magic.model.MagicSubType;
 import magic.model.MagicAbility;
-import magic.model.MagicManaType;
 import magic.model.event.*;
 
 import java.util.Set;
 
 public class MagicPermanentStatic implements Comparable<MagicPermanentStatic> {
-    public static final MagicPermanentStatic CountersEffect =
-        new MagicPermanentStatic(0, MagicPermanent.NONE, new MagicStatic(
-            MagicLayer.CountersPT,
-            MagicTargetFilterFactory.CREATURE) {
+    public static final MagicPermanentStatic CountersEffect = new MagicPermanentStatic(
+        0,
+        MagicPermanent.NONE,
+        new MagicStatic(MagicLayer.CountersPT, MagicTargetFilterFactory.CREATURE) {
             @Override
-            public void modPowerToughness(
-                final MagicPermanent source,
-                final MagicPermanent permanent,
-                final MagicPowerToughness pt) {
+            public void modPowerToughness(final MagicPermanent source, final MagicPermanent permanent, final MagicPowerToughness pt) {
                 final int amtP = permanent.getCounters(MagicCounterType.PlusOnePlusZero)
                                 + permanent.getCounters(MagicCounterType.PlusOne)
                                 + permanent.getCounters(MagicCounterType.PlusOnePlusTwo)
@@ -43,31 +41,33 @@ public class MagicPermanentStatic implements Comparable<MagicPermanentStatic> {
                                 - (2 * permanent.getCounters(MagicCounterType.MinusTwo));
                 pt.add(amtP,amtT);
             }
-        });
+        }
+    );
 
-    public static final MagicPermanentStatic BasicLandEffect = 
-        new MagicPermanentStatic(0, MagicPermanent.NONE, new MagicStatic(
-            MagicLayer.Ability,
-            MagicTargetFilterFactory.LAND) {
+    public static final MagicPermanentStatic BasicLandEffect = new MagicPermanentStatic(
+        0,
+        MagicPermanent.NONE,
+        new MagicStatic(MagicLayer.Ability, MagicTargetFilterFactory.LAND) {
             @Override
             public void modAbilityFlags(final MagicPermanent source, final MagicPermanent permanent, final Set<MagicAbility> flags) {
                 if (permanent.hasSubType(MagicSubType.Plains)) {
-                    permanent.addAbility(new MagicTapManaActivation(MagicManaType.getList("{W}")));
+                    permanent.addAbility(MagicTapManaActivation.White);
                 }
                 if (permanent.hasSubType(MagicSubType.Island)) {
-                    permanent.addAbility(new MagicTapManaActivation(MagicManaType.getList("{U}")));
+                    permanent.addAbility(MagicTapManaActivation.Blue);
                 }
                 if (permanent.hasSubType(MagicSubType.Swamp)) {
-                    permanent.addAbility(new MagicTapManaActivation(MagicManaType.getList("{B}")));
+                    permanent.addAbility(MagicTapManaActivation.Black);
                 }
                 if (permanent.hasSubType(MagicSubType.Mountain)) {
-                    permanent.addAbility(new MagicTapManaActivation(MagicManaType.getList("{R}")));
+                    permanent.addAbility(MagicTapManaActivation.Red);
                 }
                 if (permanent.hasSubType(MagicSubType.Forest)) {
-                    permanent.addAbility(new MagicTapManaActivation(MagicManaType.getList("{G}")));
+                    permanent.addAbility(MagicTapManaActivation.Green);
                 }
             }
-        });
+        }
+    );
 
     private final long id;
     private final MagicPermanent permanent;

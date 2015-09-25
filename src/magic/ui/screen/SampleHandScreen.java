@@ -1,36 +1,41 @@
 package magic.ui.screen;
 
-import magic.data.GeneralConfig;
-import magic.data.IconImages;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.JPanel;
+import magic.data.MagicIcon;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCardList;
 import magic.model.MagicDeck;
 import magic.model.MagicRandom;
-import magic.ui.canvas.cards.CardsCanvas;
+import magic.ui.CardImagesProvider;
+import magic.ui.IconImages;
+import magic.translate.UiString;
 import magic.ui.canvas.cards.CardsCanvas.LayoutMode;
-import magic.ui.canvas.cards.ICardCanvas;
+import magic.ui.canvas.cards.CardsCanvas;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IStatusBar;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.widget.deck.DeckStatusPanel;
 
-import javax.swing.AbstractAction;
-import javax.swing.JPanel;
-
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 @SuppressWarnings("serial")
 public class SampleHandScreen
     extends AbstractScreen
     implements IStatusBar, IActionBar {
 
-    private final static Dimension cardSize = GeneralConfig.PREFERRED_CARD_SIZE;
+    // translatable strings
+    private static final String _S1 = "Sample Hand";
+    private static final String _S2 = "Close";
+    private static final String _S3 = "Refresh";
+    private static final String _S4 = "Deal a new sample hand.";
+
+    private final static Dimension cardSize = CardImagesProvider.PREFERRED_CARD_SIZE;
 
     private final CardsCanvas content;
     private final MagicDeck deck;
@@ -41,16 +46,16 @@ public class SampleHandScreen
         this.content = new CardsCanvas(cardSize);
         content.setAnimationDelay(50, 20);
         this.content.setLayoutMode(LayoutMode.SCALE_TO_FIT);
-        this.content.refresh(getHandCards(deck), cardSize);
+        this.content.refresh(getRandomHand(deck), cardSize);
         setContent(this.content);
     }
 
-    private List<? extends ICardCanvas> getHandCards(final MagicDeck deck) {
+    private List<MagicCard> getRandomHand(final MagicDeck deck) {
         final MagicCardList library = new MagicCardList();
         for (MagicCardDefinition magicCardDef : deck) {
             library.add(new MagicCard(magicCardDef, null, 0));
         }
-        library.shuffle(MagicRandom.nextRNGInt(999999));
+        library.shuffle(MagicRandom.nextRNGInt());
         if (library.size() >= 7) {
             final List<MagicCard> hand = library.subList(0, 7);
             Collections.sort(hand);
@@ -60,45 +65,33 @@ public class SampleHandScreen
         }
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagStatusBar#getScreenCaption()
-     */
     @Override
     public String getScreenCaption() {
-        return "Sample Hand";
+        return UiString.get(_S1);
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getLeftAction()
-     */
     @Override
     public MenuButton getLeftAction() {
-        return MenuButton.getCloseScreenButton("Close");
+        return MenuButton.getCloseScreenButton(UiString.get(_S2));
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getRightAction()
-     */
     @Override
     public MenuButton getRightAction() {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getMiddleActions()
-     */
     @Override
     public List<MenuButton> getMiddleActions() {
-        final List<MenuButton> buttons = new ArrayList<MenuButton>();
+        final List<MenuButton> buttons = new ArrayList<>();
         buttons.add(
                 new ActionBarButton(
-                        IconImages.REFRESH_ICON,
-                        "Refresh", "Deal a new sample hand.",
+                        IconImages.getIcon(MagicIcon.REFRESH_ICON),
+                        UiString.get(_S3), UiString.get(_S4),
                         new AbstractAction() {
                             @Override
                             public void actionPerformed(final ActionEvent e) {
                                 if (!content.isBusy()) {
-                                    content.refresh(getHandCards(deck), cardSize);
+                                    content.refresh(getRandomHand(deck), cardSize);
                                 }
                             }
                         })
@@ -106,17 +99,11 @@ public class SampleHandScreen
         return buttons;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.MagScreen#canScreenClose()
-     */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.screen.interfaces.IStatusBar#getStatusPanel()
-     */
     @Override
     public JPanel getStatusPanel() {
         deckStatusPanel.setDeck(deck, false);

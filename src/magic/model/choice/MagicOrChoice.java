@@ -1,4 +1,3 @@
-
 package magic.model.choice;
 
 import magic.data.GeneralConfig;
@@ -6,14 +5,11 @@ import magic.model.MagicGame;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
-import magic.ui.GameController;
-import magic.ui.UndoClickedException;
-import magic.ui.duel.choice.ModeChoicePanel;
-
+import magic.exception.UndoClickedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
+import magic.model.IUIGameController;
 
 public class MagicOrChoice extends MagicChoice {
 
@@ -27,33 +23,47 @@ public class MagicOrChoice extends MagicChoice {
     public MagicOrChoice(final MagicChoice... choices) {
         this("Choose the mode.", choices);
     }
-
-    private MagicChoice[] getChoices() {
-        return choices;
+    
+    @Override
+    public MagicTargetChoice getTargetChoice(final Object[] chosen) {
+        final int idx = (Integer)chosen[0] - 1;
+        return choices[idx].getTargetChoice();
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    public boolean hasOptions(final MagicGame game,final MagicPlayer player,final MagicSource source,final boolean hints) {
+        for (final MagicChoice choice: choices) {
+            if (choice.hasOptions(game, player, source, hints)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Object[]> getArtificialChoiceResults(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    public List<Object[]> getArtificialChoiceResults(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
-        final List<Object[]> choiceResultsList=new ArrayList<Object[]>();
+        final List<Object[]> choiceResultsList=new ArrayList<>();
         for (int i = 0; i < choices.length; i++) {
             if (choices[i].hasOptions(game,player,source,true)) {
-                choiceResultsList.add(new Object[] {
-                    i + 1
-                });
+                for (final Object obj : choices[i].getArtificialOptions(game,event)) {
+                    choiceResultsList.add(new Object[] {
+                        i + 1,
+                        obj
+                    });
+                }
+                if (choices[i].isValid() == false) {
+                    choiceResultsList.add(new Object[] {
+                        i + 1
+                    });
+                }
             }
         }
        
@@ -65,15 +75,12 @@ public class MagicOrChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final GameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
-
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
         
         final boolean hints = GeneralConfig.getInstance().getSmartTarget();
-        final List<Integer> availableModes = new ArrayList<Integer>();
+        final List<Integer> availableModes = new ArrayList<>();
         for (int i = 0; i < choices.length; i++) {
             if (choices[i].hasOptions(game,player,source,hints)) {
                 availableModes.add(i + 1);
@@ -85,14 +92,14 @@ public class MagicOrChoice extends MagicChoice {
         }
 
         controller.disableActionButton(false);
-        final ModeChoicePanel choicePanel = controller.waitForInput(new Callable<ModeChoicePanel>() {
-            public ModeChoicePanel call() {
-                return new ModeChoicePanel(controller,source,availableModes);
-            }
-        });
-
-        return new Object[] {
-            choicePanel.getMode()
-        };
+        final int mode = controller.getModeChoice(source, availableModes);
+        return choices[mode - 1].isValid() ?
+            new Object[] {
+                mode,
+                choices[mode - 1].getPlayerChoiceResults(controller,game,event)[0]
+            }:
+            new Object[] {
+                mode
+            };
     }
 }

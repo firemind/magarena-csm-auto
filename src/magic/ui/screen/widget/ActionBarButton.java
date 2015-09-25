@@ -5,6 +5,9 @@ import javax.swing.ImageIcon;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import javax.swing.Icon;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class ActionBarButton extends MenuButton {
@@ -13,7 +16,9 @@ public class ActionBarButton extends MenuButton {
     public ActionBarButton(ImageIcon icon, String actionName, String tooltip, AbstractAction action, boolean showSeparator) {
         super("", action, tooltip, showSeparator);
         setIcon(icon);
-        setToolTipText("<html><b>" + actionName + "</b><br>" + tooltip + "</html>");
+        if (tooltip != null) {
+            setToolTipText("<html><b>" + actionName + "</b><br>" + tooltip + "</html>");
+        }
     }
     public ActionBarButton(ImageIcon icon, String actionName, String tooltip, AbstractAction action) {
         this(icon, actionName, tooltip, action, true);
@@ -37,5 +42,20 @@ public class ActionBarButton extends MenuButton {
     public Point getToolTipLocation(MouseEvent event) {
         return new Point(0, -45);
     }
+
+    @Override
+    public void setIcon(Icon defaultIcon) {
+        super.setIcon(defaultIcon);
+        setRolloverIcon(GraphicsUtils.getRecoloredIcon(
+                (ImageIcon) defaultIcon,
+                MagicStyle.getRolloverColor())
+        );
+        setPressedIcon(GraphicsUtils.getRecoloredIcon(
+                (ImageIcon) defaultIcon,
+                MagicStyle.getPressedColor())
+        );
+    }
+
+
 
 }

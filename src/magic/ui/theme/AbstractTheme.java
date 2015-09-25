@@ -1,7 +1,6 @@
 package magic.ui.theme;
 
-import magic.data.AvatarImages;
-import magic.data.IconImages;
+import magic.ui.IconImages;
 import magic.ui.widget.FontsAndBorders;
 
 import javax.swing.ImageIcon;
@@ -10,8 +9,13 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import magic.data.MagicIcon;
 
 public abstract class AbstractTheme implements Theme {
+
+    // Prevents horizontal scroll-bar appearing in the user action panel
+    // for custom themes with a VALUE_SPACING less than 5.
+    private static final int MIN_VALUE_SPACING = 5;
 
     private final String name;
     private final Map<String,Object> themeMap;
@@ -21,20 +25,20 @@ public abstract class AbstractTheme implements Theme {
         this.name=name;
         themeMap=new HashMap<>();
 
-        addToTheme(ICON_LIFE,IconImages.LIFE);
-        addToTheme(ICON_PREVENT,IconImages.PREVENT2);
-        addToTheme(ICON_POISON,IconImages.POISON);
-        addToTheme(ICON_LAND,IconImages.LAND2);
-        addToTheme(ICON_HAND,IconImages.HAND2);
-        addToTheme(ICON_LIBRARY,IconImages.LIBRARY2);
-        addToTheme(ICON_GRAVEYARD,IconImages.GRAVEYARD2);
-        addToTheme(ICON_MESSAGE,IconImages.LOG);
-        addToTheme(ICON_SMALL_BATTLEFIELD,IconImages.ALL);
-        addToTheme(ICON_SMALL_COMBAT,IconImages.COMBAT);
-        addToTheme(ICON_SMALL_STACK,IconImages.SPELL);
-        addToTheme(ICON_SMALL_HAND,IconImages.HAND);
-        addToTheme(ICON_SMALL_GRAVEYARD,IconImages.GRAVEYARD);
-        addToTheme(ICON_SMALL_EXILE,IconImages.EXILE);
+        addToTheme(ICON_LIFE,IconImages.getIcon(MagicIcon.LIFE));
+        addToTheme(ICON_PREVENT,IconImages.getIcon(MagicIcon.PREVENT2));
+        addToTheme(ICON_POISON,IconImages.getIcon(MagicIcon.POISON));
+        addToTheme(ICON_LAND,IconImages.getIcon(MagicIcon.LAND2));
+        addToTheme(ICON_HAND,IconImages.getIcon(MagicIcon.HAND2));
+        addToTheme(ICON_LIBRARY,IconImages.getIcon(MagicIcon.LIBRARY2));
+        addToTheme(ICON_GRAVEYARD,IconImages.getIcon(MagicIcon.GRAVEYARD2));
+        addToTheme(ICON_MESSAGE,IconImages.getIcon(MagicIcon.LOG));
+        addToTheme(ICON_SMALL_BATTLEFIELD,IconImages.getIcon(MagicIcon.ALL));
+        addToTheme(ICON_SMALL_COMBAT,IconImages.getIcon(MagicIcon.COMBAT));
+        addToTheme(ICON_SMALL_STACK,IconImages.getIcon(MagicIcon.SPELL));
+        addToTheme(ICON_SMALL_HAND,IconImages.getIcon(MagicIcon.HAND));
+        addToTheme(ICON_SMALL_GRAVEYARD,IconImages.getIcon(MagicIcon.GRAVEYARD));
+        addToTheme(ICON_SMALL_EXILE,IconImages.getIcon(MagicIcon.EXILE));
 
         addToTheme(COLOR_TITLE_FOREGROUND,Color.WHITE);
         addToTheme(COLOR_TITLE_BACKGROUND,new Color(0x23,0x6B,0x8E));
@@ -53,7 +57,7 @@ public abstract class AbstractTheme implements Theme {
         addToTheme(COLOR_VIEWER_BACKGROUND,Color.WHITE);
         addToTheme(COLOR_SEPARATOR_BACKGROUND,Color.LIGHT_GRAY);
 
-        addToTheme(VALUE_SPACING,0);
+        addToTheme(VALUE_SPACING, MIN_VALUE_SPACING);
         addToTheme(VALUE_BACKGROUND_STRETCH,0);
         addToTheme(VALUE_GAME_LAYOUT,1);
         addToTheme(VALUE_GAME_STRETCH,0);
@@ -62,7 +66,11 @@ public abstract class AbstractTheme implements Theme {
     }
 
     final void addToTheme(final String aName, final Object value) {
-        themeMap.put(aName,value);
+        if (VALUE_SPACING.equals(aName) && (int) value < MIN_VALUE_SPACING) {
+            themeMap.put(aName, MIN_VALUE_SPACING);
+        } else {
+            themeMap.put(aName,value);
+        }
     }
 
     @Override
@@ -90,7 +98,7 @@ public abstract class AbstractTheme implements Theme {
     @Override
     public ImageIcon getIcon(final String aName) {
         final Object value=themeMap.get(aName);
-        return value==null?IconImages.MISSING_ICON:(ImageIcon)value;
+        return value==null?IconImages.getIcon(MagicIcon.MISSING_ICON):(ImageIcon)value;
     }
 
     @Override
@@ -118,11 +126,6 @@ public abstract class AbstractTheme implements Theme {
     public int getValue(final String aName) {
         final Object value=themeMap.get(aName);
         return value==null?0:(Integer)value;
-    }
-
-    @Override
-    public int getNumberOfAvatars() {
-        return AvatarImages.getInstance().getNumberOfAvatars();
     }
 
     @Override

@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JPanel;
 import magic.data.GeneralConfig;
-import magic.ui.GameController;
+import magic.model.MagicCard;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.SwingGameController;
 
 public class ImagePermanentsViewer extends JPanel {
 
@@ -20,21 +22,21 @@ public class ImagePermanentsViewer extends JPanel {
     private static final int HORIZONTAL_SPACING = 40;
     private static final int VERTICAL_SPACING = 30;
 
-    private static final float CARD_WIDTH = (float) CONFIG.getMaxCardImageSize().width;
-    private static final float CARD_HEIGHT = (float) CONFIG.getMaxCardImageSize().height;
+    private static final float CARD_WIDTH = (float) GraphicsUtils.getMaxCardImageSize().width;
+    private static final float CARD_HEIGHT = (float) GraphicsUtils.getMaxCardImageSize().height;
     private static final float CARD_ASPECT_RATIO = CARD_WIDTH / CARD_HEIGHT;
 
-    private final GameController controller;
+    private final SwingGameController controller;
     private final boolean isTop;
 
     private List<ImagePermanentViewer> viewers;
     private Set<?> validChoices;
 
-    public ImagePermanentsViewer(final GameController controller) {
+    public ImagePermanentsViewer(final SwingGameController controller) {
         this(controller, false);
     }
 
-    public ImagePermanentsViewer(final GameController controller, final boolean isTop) {
+    public ImagePermanentsViewer(final SwingGameController controller, final boolean isTop) {
         this.controller = controller;
         this.isTop = isTop;
 
@@ -203,7 +205,7 @@ public class ImagePermanentsViewer extends JPanel {
         repaint();
     }
 
-    public GameController getController() {
+    public SwingGameController getController() {
         return controller;
     }
 
@@ -216,5 +218,30 @@ public class ImagePermanentsViewer extends JPanel {
 
     public boolean isValidChoice(final PermanentViewerInfo permanentInfo) {
         return validChoices.contains(permanentInfo.permanent);
+    }
+
+    ImagePermanentViewer getViewer(MagicCard card) {
+        for (final ImagePermanentViewer viewer : viewers) {
+            if (viewer.permanentInfo.magicCardId == card.getId()) {
+                return viewer;
+            }
+            for (final PermanentViewerInfo info : viewer.permanentInfo.linked) {
+                if (info.permanent.getCard().getId() == card.getId()) {
+                    return viewer;
+                }
+            }
+            for (final PermanentViewerInfo info : viewer.permanentInfo.blockers) {
+                if (info.permanent.getCard().getId() == card.getId()) {
+                    return viewer;
+                }
+            }
+        }
+        return null;
+    }
+
+    void highlightCard(ImagePermanentViewer aViewer, long cardId) {
+        if (aViewer != null) {
+            aViewer.doShowHighlight(cardId);
+        }
     }
 }

@@ -1,0 +1,12 @@
+name=Mistfire Adept
+image=http://magiccards.info/scans/en/frf/42.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Human,Monk
+cost={3}{U}
+pt=3/3
+ability=Prowess;\
+        Whenever you cast a noncreature spell, target creature gains flying until end of turn.
+timing=main
+oracle=Prowess\nWhenever you cast a noncreature spell, target creature gains flying until end of turn.

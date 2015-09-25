@@ -1,0 +1,8 @@
+name=2/1 black Warrior creature token
+token=Warrior
+image=http://magiccards.info/extras/token/fate-reforged/warrior.jpg
+value=1
+pt=2/1
+color=b
+subtype=Warrior
+type=Creature

@@ -8,16 +8,13 @@ import magic.model.MagicPlayer;
 import magic.model.MagicRandom;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
-import magic.ui.GameController;
-import magic.ui.UndoClickedException;
-import magic.ui.duel.choice.ManaCostXChoicePanel;
-
+import magic.exception.UndoClickedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
+import magic.model.IUIGameController;
 
 /** X must be at least one in a mana cost. */
 public class MagicPayManaCostChoice extends MagicChoice {
@@ -27,10 +24,6 @@ public class MagicPayManaCostChoice extends MagicChoice {
     public MagicPayManaCostChoice(final MagicManaCost cost) {
         super("Choose how to pay the mana cost.");
         this.cost=cost;
-    }
-
-    private MagicManaCost getCost() {
-        return cost;
     }
 
     @Override
@@ -46,7 +39,7 @@ public class MagicPayManaCostChoice extends MagicChoice {
     }
 
     private Collection<Object> genOptions(final MagicGame game, final MagicPlayer player) {
-        return game.getFastChoices() ?
+        return game.getFastMana() ?
             buildDelayedPayManaCostResults(game,player) :
             new MagicPayManaCostResultBuilder(game,player,cost.getBuilderCost()).getResults();
     }
@@ -70,17 +63,15 @@ public class MagicPayManaCostChoice extends MagicChoice {
     }
 
     @Override
-    Collection<Object> getArtificialOptions(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    Collection<Object> getArtificialOptions(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         final Collection<Object> options = genOptions(game, player);
 
         assert !options.isEmpty() :
             "No options to pay mana cost\n" +
-            "fastChoices = " + game.getFastChoices() + "\n" +
+            "fastMana = " + game.getFastMana() + "\n" +
             "source = " + source + "\n" +
             "player = " + player + "\n" +
             "event = " + event + "\n";
@@ -89,36 +80,27 @@ public class MagicPayManaCostChoice extends MagicChoice {
     }
 
     @Override
-    public Object[] getSimulationChoiceResult(
-            final MagicGame game,
-            final MagicEvent event,
-            final MagicPlayer player,
-            final MagicSource source) {
+    public Object[] getSimulationChoiceResult(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
         //in simulation use delayed pay mana cost
         final List<Object> choices = (List<Object>)buildDelayedPayManaCostResults(game,player);
         return new Object[]{choices.get(MagicRandom.nextRNGInt(choices.size()))};
     }
 
     @Override
-    public Object[] getPlayerChoiceResults(
-            final GameController controller,
-            final MagicGame game,
-            final MagicPlayer player,
-            final MagicSource source) throws UndoClickedException {
+    public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
+        final MagicPlayer player = event.getPlayer();
+        final MagicSource source = event.getSource();
 
         controller.disableActionButton(false);
 
         final int x;
         if (cost.hasX()) {
-            final int maximumX=player.getMaximumX(game,cost);
-            final ManaCostXChoicePanel choicePanel = controller.waitForInput(new Callable<ManaCostXChoicePanel>() {
-                public ManaCostXChoicePanel call() {
-                    return new ManaCostXChoicePanel(controller,source,maximumX);
-                }
-            });
-            x=choicePanel.getValueForX();
+            final int maximumX = player.getMaximumX(game, cost);
+            x = controller.getPayManaCostXChoice(source, maximumX);
         } else {
-            x=0;
+            x = 0;
         }
 
         final List<MagicCostManaType> costManaTypes=cost.getCostManaTypes(x * cost.getXCount());
@@ -168,4 +150,5 @@ public class MagicPayManaCostChoice extends MagicChoice {
         }
         return new Object[]{new MagicPlayerPayManaCostResult(x,costManaTypes.size())};
     }
+
 }

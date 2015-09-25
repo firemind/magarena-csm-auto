@@ -9,10 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import magic.MagicMain;
-import magic.data.IconImages;
-import magic.data.URLUtils;
+import magic.data.MagicIcon;
+import magic.ui.IconImages;
+import magic.ui.URLUtils;
 import magic.ui.MagicFrame;
+import magic.ui.ScreenController;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.interfaces.IStatusBar;
@@ -34,7 +35,7 @@ public abstract class AbstractScreen extends JPanel {
 
     // CTR
     public AbstractScreen() {
-        this.frame = MagicMain.rootFrame;
+        this.frame = ScreenController.getMainFrame();
         setBusy(true);
         setOpaque(false);
         setEscapeKeyInputMap();
@@ -104,7 +105,7 @@ public abstract class AbstractScreen extends JPanel {
         if (this.hasOptionsMenu()) {
             ((IOptionsMenu)this).showOptionsMenuOverlay();
         } else {
-            frame.closeActiveScreen(true);
+            ScreenController.closeActiveScreen(true);
         }
     }
 
@@ -135,7 +136,7 @@ public abstract class AbstractScreen extends JPanel {
 
     public void setBusy(final boolean isBusy) {
         if (isBusy) {
-          final ImageIcon ii = IconImages.BUSY;
+          final ImageIcon ii = IconImages.getIcon(MagicIcon.BUSY);
           final JPanel pnl = new JPanel(new MigLayout("insets 0, gap 0"));
           pnl.setOpaque(false);
           final JLabel lbl = new JLabel(ii);

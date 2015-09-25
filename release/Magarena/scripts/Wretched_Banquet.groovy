@@ -4,7 +4,7 @@
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_CREATURE,
+                NEG_TARGET_CREATURE,
                 MagicDestroyTargetPicker.Destroy,
                 this,
                 "Destroy target creature\$ if it has the least power or is " +
@@ -14,9 +14,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
-                final Collection<MagicPermanent> targets = game.filterPermanents(
-                        event.getPlayer(),
-                        MagicTargetFilterFactory.CREATURE);
+                final Collection<MagicPermanent> targets = CREATURE.filter(event);
                 final int power = it.getPower();
                 boolean least = true;
                 for (final MagicPermanent permanent : targets) {
@@ -26,7 +24,7 @@
                     }
                 }
                 if (least) {
-                    game.doAction(new MagicDestroyAction(it));
+                    game.doAction(new DestroyAction(it));
                 }
             });
         }

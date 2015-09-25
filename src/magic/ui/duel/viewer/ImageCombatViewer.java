@@ -1,6 +1,6 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.GameController;
+import magic.ui.SwingGameController;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 
@@ -12,17 +12,18 @@ import java.awt.Dimension;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import magic.utility.MagicStyle;
+import magic.model.MagicCard;
+import magic.ui.utility.MagicStyle;
 
 public class ImageCombatViewer extends JPanel implements ChoiceViewer {
 
     private static final long serialVersionUID = 1L;
 
-    private final ViewerInfo viewerInfo;
+    private final SwingGameController controller;
     private final ImagePermanentsViewer permanentsViewer;
 
-    public ImageCombatViewer(final GameController controller) {
-        viewerInfo = controller.getViewerInfo();
+    public ImageCombatViewer(final SwingGameController aController) {
+        controller = aController;
         controller.registerChoiceViewer(this);
 
         setLayout(new BorderLayout(6,0));
@@ -47,6 +48,8 @@ public class ImageCombatViewer extends JPanel implements ChoiceViewer {
         final SortedSet<PermanentViewerInfo> creatures =
             new TreeSet<>(PermanentViewerInfo.BLOCKED_NAME_COMPARATOR);
 
+        final ViewerInfo viewerInfo = controller.getViewerInfo();
+
         final PlayerViewerInfo attackingPlayerInfo=viewerInfo.getAttackingPlayerInfo();
         for (final PermanentViewerInfo permanentInfo : attackingPlayerInfo.permanents) {
             if (permanentInfo.attacking) {
@@ -68,5 +71,11 @@ public class ImageCombatViewer extends JPanel implements ChoiceViewer {
     @Override
     public void showValidChoices(final Set<?> validChoices) {
         permanentsViewer.showValidChoices(validChoices);
+    }
+
+    public boolean highlightCard(MagicCard card, boolean b) {
+        final ImagePermanentViewer viewer = permanentsViewer.getViewer(card);
+        permanentsViewer.highlightCard(viewer, b ? card.getId() : 0);
+        return viewer != null;
     }
 }

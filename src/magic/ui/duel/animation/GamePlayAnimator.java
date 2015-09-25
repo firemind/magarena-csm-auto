@@ -11,9 +11,9 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
-import magic.data.CardImagesProvider;
+import magic.ui.CardImagesProvider;
 import magic.data.GeneralConfig;
-import magic.data.CachedImagesProvider;
+import magic.ui.CachedImagesProvider;
 import magic.model.MagicType;
 import magic.ui.duel.DuelPanel;
 import magic.ui.MagicFrame;
@@ -111,7 +111,7 @@ public class GamePlayAnimator {
     }
 
     private Dimension getCardPreviewSize() {
-        final Dimension max = GeneralConfig.PREFERRED_CARD_SIZE;
+        final Dimension max = CardImagesProvider.PREFERRED_CARD_SIZE;
         final Dimension container = gamePanel.getSize();
         if (container.height < max.height) {
             final int newWidth = (int)((container.height / (double)max.height) * max.width);

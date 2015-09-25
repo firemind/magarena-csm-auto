@@ -1,10 +1,6 @@
 package magic.model.event;
 
-import javax.swing.ImageIcon;
-import magic.data.IconImages;
-
-import java.util.Arrays;
-
+import magic.data.CardDefinitions;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicColor;
@@ -19,26 +15,25 @@ import magic.model.MagicPayedCost;
 import magic.model.condition.MagicCondition;
 import magic.model.stack.MagicCardOnStack;
 import magic.model.action.MagicPlayMod;
-import magic.model.action.MagicPutItemOnStackAction;
-import magic.model.action.MagicRemoveCardAction;
-import magic.model.action.MagicPlayCardFromStackAction;
+import magic.model.action.PutItemOnStackAction;
+import magic.model.action.RemoveCardAction;
+import magic.model.action.PlayCardFromStackAction;
 
-public class MagicMorphCastActivation extends MagicCardActivation {
+import java.util.Arrays;
 
-    private static final MagicMorphCastActivation INSTANCE = new MagicMorphCastActivation();
+public class MagicMorphCastActivation extends MagicHandCastActivation {
 
-    private MagicMorphCastActivation() {
+    public static final MagicMorphCastActivation Morph = new MagicMorphCastActivation("Morph");
+    public static final MagicMorphCastActivation Megamorph = new MagicMorphCastActivation("Megamorph");
+
+    private MagicMorphCastActivation(final String name) {
         super(
             new MagicCondition[]{
                 MagicCondition.SORCERY_CONDITION
             },
             new MagicActivationHints(MagicTiming.Main, true),
-            "Morph"
+            name
         );
-    }
-
-    public static MagicMorphCastActivation create() {
-        return INSTANCE;
     }
 
     @Override
@@ -64,7 +59,9 @@ public class MagicMorphCastActivation extends MagicCardActivation {
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicCard card = event.getCard();
-            game.doAction(new MagicRemoveCardAction(card,MagicLocationType.OwnersHand));
+            game.doAction(new RemoveCardAction(card,MagicLocationType.OwnersHand));
+
+            final MagicCardDefinition morph = CardDefinitions.getCard("Morph");
                 
             final MagicCardOnStack cardOnStack=new MagicCardOnStack(
                 card,
@@ -73,36 +70,35 @@ public class MagicMorphCastActivation extends MagicCardActivation {
             ) {
                 @Override
                 public boolean hasColor(final MagicColor color) {
-                    return MagicCardDefinition.MORPH.hasColor(color);
+                    return morph.hasColor(color);
                 }
                 @Override
                 public boolean hasAbility(final MagicAbility ability) {
-                    return MagicCardDefinition.MORPH.hasAbility(ability);
+                    return morph.hasAbility(ability);
                 }
                 @Override
                 public boolean hasSubType(final MagicSubType subType) {
-                    return MagicCardDefinition.MORPH.hasSubType(subType);
+                    return morph.hasSubType(subType);
                 }
                 @Override
                 public boolean hasType(final MagicType type) {
-                    return MagicCardDefinition.MORPH.hasType(type);
+                    return morph.hasType(type);
                 }
                 @Override
                 public boolean canBeCountered() {
-                    return MagicCardDefinition.MORPH.hasAbility(MagicAbility.CannotBeCountered) == false;
+                    return hasAbility(MagicAbility.CannotBeCountered) == false;
                 }
-
                 @Override
-                public ImageIcon getIcon() {
-                    return IconImages.getIcon(MagicCardDefinition.MORPH);
+                public int getConvertedCost() {
+                    return 0;
                 }
                 @Override
                 public String getName() {
-                    return MagicCardDefinition.MORPH.getName();
+                    return "Face-down creature spell #" + (getId() % 1000);
                 }
             };
 
-            game.doAction(new MagicPutItemOnStackAction(cardOnStack));
+            game.doAction(new PutItemOnStackAction(cardOnStack));
         }
     };
     
@@ -117,6 +113,6 @@ public class MagicMorphCastActivation extends MagicCardActivation {
     
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
-        game.doAction(new MagicPlayCardFromStackAction(event.getCardOnStack(), MagicPlayMod.MORPH));
+        game.doAction(new PlayCardFromStackAction(event.getCardOnStack(), MagicPlayMod.MORPH));
     }
 }

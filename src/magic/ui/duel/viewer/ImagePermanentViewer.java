@@ -1,8 +1,9 @@
 package magic.ui.duel.viewer;
 
 import magic.data.GeneralConfig;
-import magic.data.CachedImagesProvider;
-import magic.data.IconImages;
+import magic.ui.CachedImagesProvider;
+import magic.ui.IconImages;
+import magic.model.MagicType;
 import magic.model.MagicAbility;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
@@ -33,8 +34,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.swing.SwingUtilities;
-import magic.data.CardImagesProvider;
-import magic.utility.MagicStyle;
+import magic.ui.CardImagesProvider;
+import magic.data.MagicIcon;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class ImagePermanentViewer extends JPanel {
@@ -42,12 +45,12 @@ public class ImagePermanentViewer extends JPanel {
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final int LOGICAL_X_MARGIN=50;
     private static final int LOGICAL_Y_MARGIN=70;
-    private static final Color MOUSE_OVER_COLOR = MagicStyle.HIGHLIGHT_COLOR;
+    private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
     private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 30);
 
     private final ImagePermanentsViewer viewer;
-    private final PermanentViewerInfo permanentInfo;
-    private final List<PermanentViewerInfo> linkedInfos;
+    public final PermanentViewerInfo permanentInfo;
+    public final List<PermanentViewerInfo> linkedInfos;
     private final Dimension logicalSize;
     private final List<Rectangle> linkedLogicalRectangles;
     private List<Rectangle> linkedScreenRectangles;
@@ -55,6 +58,7 @@ public class ImagePermanentViewer extends JPanel {
     private int logicalRow=1;
     private boolean isMouseOver = false;
     private static int currentCardIndex = -1;
+    private long highlightedId = 0;
 
     public ImagePermanentViewer(final ImagePermanentsViewer viewer,final PermanentViewerInfo permanentInfo) {
         this.viewer=viewer;
@@ -180,7 +184,7 @@ public class ImagePermanentViewer extends JPanel {
         int width=0;
         int height=0;
         int x=-LOGICAL_X_MARGIN;
-        final Dimension imageSize = CONFIG.getMaxCardImageSize();
+        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
         for (final PermanentViewerInfo linkedInfo : linkedInfos) {
             x+=LOGICAL_X_MARGIN;
             final int y=linkedInfo.lowered?LOGICAL_Y_MARGIN:0;
@@ -241,7 +245,7 @@ public class ImagePermanentViewer extends JPanel {
     @Override
     public void paintComponent(final Graphics g) {
 
-        final Dimension imageSize = CONFIG.getMaxCardImageSize();
+        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
 
         g.setFont(FontsAndBorders.FONT1);
         final FontMetrics metrics = g.getFontMetrics();
@@ -273,6 +277,8 @@ public class ImagePermanentViewer extends JPanel {
                 g.drawImage(image, x1, y1, x2, y2, 0, 0, imageSize.width, imageSize.height, this);
             }
 
+            ImageDrawingUtils.drawCardId(g, linkedInfo.permanent.getCard().getId(), 0, 0);
+
             // Add overlays, unless card image size is so small the overlays would be unreadable.
             if (linkedRect.height > CONFIG.getOverlayMinimumHeight()) {
 
@@ -286,7 +292,7 @@ public class ImagePermanentViewer extends JPanel {
                 // Common combat ability icons.
                 if (linkedInfo.creature) {
                     if (linkedInfo.canNotTap) {
-                        g.drawImage(IconImages.CANNOTTAP.getImage(), ax, ay, this);
+                        g.drawImage(IconImages.getIcon(MagicIcon.CANNOTTAP).getImage(), ax, ay, this);
                         ax += 16;
                     }
                     final Set<MagicAbility> abilityFlags = linkedInfo.abilityFlags;
@@ -294,8 +300,15 @@ public class ImagePermanentViewer extends JPanel {
                 }
 
                 // Mana symbols
-                if (linkedInfo.cardDefinition.getManaActivations().size() > 0) {
-                    ax = ImageDrawingUtils.drawManaInfo(g, this, linkedInfo.cardDefinition, ax, ay);
+                if (linkedInfo.permanent.getManaActivations().size() > 0) {
+                    ax = ImageDrawingUtils.drawManaInfo(
+                        g, 
+                        this, 
+                        linkedInfo.permanent.getManaActivations(), 
+                        linkedInfo.permanent.hasType(MagicType.Snow),
+                        ax, 
+                        ay
+                    );
                 }
 
                 // Power, toughness, damage
@@ -341,6 +354,13 @@ public class ImagePermanentViewer extends JPanel {
                 paintMouseOverHighlight(g2d, getMouseOverRectangle());
             }
 
+            if (highlightedId == linkedInfo.permanent.getCard().getId()) {
+                g2d.setPaint(MagicStyle.getRolloverColor());
+                g2d.setStroke(new BasicStroke(4));
+                g2d.drawRect(x1 + 2, y1 + 2, x2 - x1 - 2, y2 - y1 - 2);
+                g2d.setStroke(defaultStroke);
+            }
+
         }
     }
 
@@ -377,6 +397,11 @@ public class ImagePermanentViewer extends JPanel {
         transform.rotate(Math.PI/2);
         transform.translate(-imageSize.width/2, -imageSize.height/2);
         return transform;
+    }
+
+    void doShowHighlight(long id) {
+        highlightedId = id;
+        repaint();
     }
 
 }

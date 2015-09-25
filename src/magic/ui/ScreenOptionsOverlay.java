@@ -1,5 +1,7 @@
 package magic.ui;
 
+import magic.translate.UiString;
+import magic.ui.utility.MagicStyle;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -9,21 +11,32 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import magic.data.URLUtils;
 import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.MenuPanel;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
-import magic.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThemeStyle {
 
+    // translatable strings
+    private static final String _S1 = "General Options";
+    private static final String _S2 = "ReadMe";
+    private static final String _S3 = "Online help";
+    private static final String _S4 = "Keywords glossary";
+    private static final String _S5 = "Preferences";
+    private static final String _S6 = "Quit to main menu";
+    private static final String _S7 = "Quit to desktop";
+    private static final String _S8 = "Close Menu";
+    
     private final MenuPanel screenMenu;
     private MenuPanel menu = null;
+
+    protected abstract MenuPanel getScreenMenu();
+    protected abstract boolean showPreferencesOption();
 
     public ScreenOptionsOverlay(final MagicFrame frame) {
 
@@ -55,51 +68,52 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
 
     private void addGeneralOptionsMenu(final MagicFrame frame) {
 
-        menu = new MenuPanel("General Options");
+        menu = new MenuPanel(UiString.get(_S1));
 
         // Help stuff.
-        menu.addMenuItem("ReadMe", new AbstractAction() {
+        menu.addMenuItem(UiString.get(_S2), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                frame.showReadMeScreen();
+                ScreenController.showReadMeScreen();
                 hideOverlay();
             }
         });
-        menu.addMenuItem("Online help", new AbstractAction() {
+        menu.addMenuItem(UiString.get(_S3), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 URLUtils.openURL(URLUtils.URL_USERGUIDE);
                 hideOverlay();
             }
         });
-        menu.addMenuItem("Keywords glossary", new AbstractAction() {
+        menu.addMenuItem(UiString.get(_S4), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                frame.showKeywordsScreen();
+                ScreenController.showKeywordsScreen();
                 hideOverlay();
             }
         });
         menu.addBlankItem();
 
-        // System stuff.
-        menu.addMenuItem("Preferences", new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                hideAllMenuPanels();
-                frame.openPreferencesDialog();
-                hideOverlay();
-            }
-        });
-        menu.addBlankItem();
+        if (showPreferencesOption()) {
+            menu.addMenuItem(UiString.get(_S5), new AbstractAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    hideAllMenuPanels();
+                    ScreenController.showPreferencesDialog();
+                    hideOverlay();
+                }
+            });
+            menu.addBlankItem();
+        }
 
-        menu.addMenuItem("Quit to main menu", new AbstractAction() {
+        menu.addMenuItem(UiString.get(_S6), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                frame.showMainMenuScreen();
+                ScreenController.showMainMenuScreen();
                 hideOverlay();
             }
         });
-        menu.addMenuItem("Quit to desktop", new AbstractAction() {
+        menu.addMenuItem(UiString.get(_S7), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 frame.quitToDesktop(false);
@@ -108,7 +122,7 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
 
         if (showGeneralCloseMenuOption()) {
             menu.addBlankItem();
-            menu.addMenuItem(new MenuButton("Close Menu", new AbstractAction() {
+            menu.addMenuItem(new MenuButton(UiString.get(_S8), new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     hideOverlay();
@@ -131,7 +145,6 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
         return screenMenu == null;
     }
 
-    protected abstract MenuPanel getScreenMenu();
 
     public void hideOverlay() {
         setVisible(false);

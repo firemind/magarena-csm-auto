@@ -1,8 +1,9 @@
 package magic.ui;
 
+import magic.ui.utility.MagicStyle;
+import magic.ui.utility.GraphicsUtils;
 import magic.data.GeneralConfig;
 import magic.ui.theme.Theme;
-import magic.utility.GraphicsUtilities;
 
 import javax.swing.JPanel;
 
@@ -11,7 +12,6 @@ import java.awt.Graphics;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import magic.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class BackgroundPanel extends JPanel {
@@ -54,7 +54,7 @@ public class BackgroundPanel extends JPanel {
 
     private BufferedImage getBackgroundImage() {
         if (GeneralConfig.getInstance().isCustomBackground()) {
-            return GraphicsUtilities.getCustomBackgroundImage();
+            return GraphicsUtils.getCustomBackgroundImage();
         } else {
             return activeTheme.getTexture(Theme.TEXTURE_BACKGROUND);
         }

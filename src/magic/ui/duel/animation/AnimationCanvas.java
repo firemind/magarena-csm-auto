@@ -65,8 +65,8 @@ public class AnimationCanvas extends JPanel implements TimelineCallback {
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
                     doCancelAction();
                 }
             }
@@ -75,13 +75,14 @@ public class AnimationCanvas extends JPanel implements TimelineCallback {
     }
 
     public void playCardAnimation(
-            final BufferedImage image,
-            final Dimension startSize,
-            final Dimension endSize,
-            final Point startPosition,
-            final Point endPosition,
-            final Dimension previewSize,
-            final boolean highlightCardPosition) {
+        final BufferedImage image,
+        final Dimension startSize,
+        final Dimension endSize,
+        final Point startPosition,
+        final Point endPosition,
+        final Dimension previewSize,
+        final boolean highlightCardPosition
+    ) {
 
         assert SwingUtilities.isEventDispatchThread();
 

@@ -4,6 +4,7 @@ import magic.model.MagicGame;
 import magic.model.MagicGameLog;
 import magic.model.MagicPlayer;
 import magic.model.event.MagicEvent;
+import magic.model.phase.MagicStep;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +60,14 @@ public class MMAB implements MagicAI {
         final ArtificialScoreBoard scoreBoard = new ArtificialScoreBoard();
         final ExecutorService executor = Executors.newFixedThreadPool(THREADS);
         final List<ArtificialChoiceResults> achoices=new ArrayList<ArtificialChoiceResults>();
-        final int artificialLevel = sourceGame.getArtificialLevel(scorePlayer.getIndex());
+        final int artificialLevel = scorePlayer.getAiProfile().getAiLevel();
         final int rounds = (size + THREADS - 1) / THREADS;
         final long slice = artificialLevel * SEC_TO_NANO / rounds;
         
         for (final Object[] choice : choices) {
             final ArtificialChoiceResults achoice=new ArtificialChoiceResults(choice);
             achoices.add(achoice);
-            
+                    
             final MagicGame workerGame=new MagicGame(sourceGame,scorePlayer);
             if (!CHEAT) {
                 workerGame.hideHiddenCards();
@@ -74,17 +75,19 @@ public class MMAB implements MagicAI {
             if (DECKSTR) {
                 workerGame.setMainPhases(artificialLevel);
             }
-            workerGame.setFastChoices(true);
-            final MMABWorker worker=new MMABWorker(
-                Thread.currentThread().getId(),
-                workerGame,
-                scoreBoard,
-                CHEAT
-            );
+            workerGame.setFastMana(true);
+            workerGame.setFastTarget(true);
+            workerGame.setFastBlocker(true);
             
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
+                    final MMABWorker worker=new MMABWorker(
+                        Thread.currentThread().getId(),
+                        workerGame,
+                        scoreBoard,
+                        CHEAT
+                    );
                     worker.evaluateGame(achoice, scoreRef.get(), System.nanoTime() + slice);
                     scoreRef.update(achoice.aiScore.getScore());
                 }
@@ -145,6 +148,18 @@ class MMABWorker {
         this.scoreBoard=scoreBoard;
         this.CHEAT=CHEAT;
     }
+    
+    /** Determines if game score should be cached for this game state. */
+    public boolean shouldCache() {
+        switch (game.getPhase().getType()) {
+            case FirstMain:
+            case EndOfCombat:
+            case Cleanup:
+                return game.getStep()==MagicStep.NextPhase;
+            default:
+                return false;
+        }
+    }
 
     private ArtificialScore runGame(final Object[] nextChoiceResults, final ArtificialPruneScore pruneScore, final int depth, final long maxTime) {
         game.snapshot();
@@ -166,7 +181,7 @@ class MMABWorker {
                 game.executePhase();
 
                 // Caching of best score for game situations.
-                if (game.cacheState()) {
+                if (shouldCache()) {
                     final long gameId=game.getGameId(pruneScore.getScore());
                     ArtificialScore bestScore=scoreBoard.getGameScore(gameId);
                     if (bestScore==null) {

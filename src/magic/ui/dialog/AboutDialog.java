@@ -9,22 +9,20 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
-import javax.swing.WindowConstants;
-import magic.MagicMain;
-import magic.data.IconImages;
-import magic.data.URLUtils;
+import magic.data.GeneralConfig;
+import magic.ui.IconImages;
+import magic.ui.URLUtils;
 import magic.ui.MagicFrame;
+import magic.ui.ScreenController;
+import magic.translate.UiString;
+import magic.ui.dialog.button.SaveButton;
 import magic.ui.widget.LinkLabel;
+import magic.utility.MagicSystem;
 
-public class AboutDialog extends JDialog implements ActionListener {
-
-    private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+public class AboutDialog extends MagicDialog implements ActionListener {
 
     private static final Font FONT_BOLD48 = new Font("dialog", Font.BOLD, 48);
     private static final Font FONT_BOLD12 = new Font("dialog", Font.BOLD, 12);
@@ -38,14 +36,9 @@ public class AboutDialog extends JDialog implements ActionListener {
     private final JButton okButton;
 
     public AboutDialog(final MagicFrame frame) {
-        super(frame, true);
-        this.setLayout(new BorderLayout());
-        this.setTitle("About Magarena");
-        this.setSize(600, 320);
-        this.setLocationRelativeTo(frame);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
+        super(ScreenController.getMainFrame(), UiString.get("About..."), new Dimension(600, 320));
+      
         final JPanel aboutPanel = new JPanel();
         aboutPanel.setLayout(null);
 
@@ -65,7 +58,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         descriptionLabel.setFont(FONT_BOLD12);
         aboutPanel.add(descriptionLabel);
 
-        final JLabel versionLabel = new JLabel("Version: " + MagicMain.VERSION);
+        final JLabel versionLabel = new JLabel("Version: " + GeneralConfig.VERSION);
         versionLabel.setBounds(250, 105, 320, 25);
         versionLabel.setFont(FONT_PLAIN12);
         aboutPanel.add(versionLabel);
@@ -80,7 +73,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         repoTextLabel.setFont(FONT_PLAIN12);
         aboutPanel.add(repoTextLabel);
 
-        final JLabel memStatsLabel = new JLabel(MagicMain.getHeapUtilizationStats().replace("\n", ", "));
+        final JLabel memStatsLabel = new JLabel(MagicSystem.getHeapUtilizationStats().replace("\n", ", "));
         memStatsLabel.setBounds(210, 160, 367, 50);
         memStatsLabel.setFont(FONT_SMALL);
         memStatsLabel.setOpaque(false);
@@ -92,9 +85,8 @@ public class AboutDialog extends JDialog implements ActionListener {
         gnuLabel.setOpaque(false);
         aboutPanel.add(gnuLabel);
 
-        okButton = new JButton("OK");
+        okButton = new SaveButton("OK");
         okButton.setFocusable(false);
-        okButton.setIcon(IconImages.OK);
         okButton.addActionListener(this);
 
         final JPanel buttonPanel = new JPanel();
@@ -102,25 +94,12 @@ public class AboutDialog extends JDialog implements ActionListener {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         buttonPanel.add(okButton);
 
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(aboutPanel, BorderLayout.CENTER);
-        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-
-        setEscapeKeyAction();
+        final JPanel panel = getDialogContentPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(aboutPanel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
-    }
-
-    @SuppressWarnings("serial")
-    private void setEscapeKeyAction() {
-        JRootPane root = getRootPane();
-        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
-        root.getActionMap().put("closeDialog", new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                dispose();
-            }
-        });
     }
 
     @Override
@@ -129,6 +108,16 @@ public class AboutDialog extends JDialog implements ActionListener {
         if (source == okButton) {
             dispose();
         }
+    }
+
+    @Override
+    protected AbstractAction getCancelAction() {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                dispose();
+            }
+        };
     }
 
 }

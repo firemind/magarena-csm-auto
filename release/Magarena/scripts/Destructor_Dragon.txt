@@ -1,0 +1,12 @@
+name=Destructor Dragon
+image=http://magiccards.info/scans/en/frf/127.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Dragon
+cost={4}{G}{G}
+pt=4/4
+ability=Flying;\
+        When SN dies, destroy target noncreature permanent.
+timing=main
+oracle=Flying\nWhen Destructor Dragon dies, destroy target noncreature permanent.

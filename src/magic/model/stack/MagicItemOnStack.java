@@ -15,10 +15,10 @@ import magic.model.MagicType;
 import magic.model.MagicCounterType;
 import magic.model.event.MagicActivation;
 import magic.model.event.MagicEvent;
+import magic.model.choice.MagicTargetChoice;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
-
-import javax.swing.ImageIcon;
+import magic.model.target.MagicTargetNone;
 
 public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicTarget, MagicMappable<MagicItemOnStack> {
 
@@ -47,12 +47,15 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
     }
 
     MagicItemOnStack(final MagicCopyMap copyMap, final MagicItemOnStack sourceItem) {
+        id = sourceItem.id;
+        activation = sourceItem.activation;
+        
+        copyMap.put(sourceItem, this);
+
         source = copyMap.copy(sourceItem.source);
         controller = copyMap.copy(sourceItem.controller);
-        activation = sourceItem.activation;
         event = copyMap.copy(sourceItem.event);
         choiceResults = copyMap.copyObjects(sourceItem.choiceResults,Object.class);
-        id=sourceItem.id;
     }
 
     @Override
@@ -98,15 +101,17 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
         return choiceResults;
     }
 
-    public boolean containsInChoiceResults(final MagicObject obj) {
-        if (choiceResults != null) {
-            for (final Object choiceResult : choiceResults) {
-                if (choiceResult == obj) {
-                    return true;
-                }
+    public boolean isTarget(final MagicObject obj) {
+        return obj == getTarget();
+    }
+
+    public MagicTarget getTarget() {
+        for (Object obj : choiceResults) {
+            if (obj instanceof MagicTarget) {
+                return (MagicTarget)obj;
             }
         }
-        return false;
+        return MagicTargetNone.getInstance();
     }
 
     public long getId() {
@@ -177,8 +182,13 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
     }
     
     @Override
-    public boolean hasCounters(MagicCounterType counterType) {
-        return false;
+    public int getCounters(final MagicCounterType counterType) {
+        return 0;
+    }
+
+    @Override
+    public void changeCounters(final MagicCounterType counterType,final int amount) {
+        throw new RuntimeException(counterType + " cannot be modified on item on stack");
     }
 
     @Override
@@ -191,12 +201,12 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
         for (int i = 0; i < arr.length; i++) {
             keys[i] = MagicObjectImpl.getStateId(arr[i]);
         }
-        return magic.MurmurHash3.hash(keys);
+        return magic.model.MurmurHash3.hash(keys);
     }
 
     @Override
     public long getStateId() {
-        return magic.MurmurHash3.hash(new long[] {
+        return magic.model.MurmurHash3.hash(new long[] {
             source     != null ? source.getStateId() : -1L,
             controller != null ? controller.getId()  : -1L,
             activation != null ? activation.hashCode()   : -1L,
@@ -209,5 +219,4 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
 
     public abstract boolean canBeCountered();
 
-    public abstract ImageIcon getIcon();
 }

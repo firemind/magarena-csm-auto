@@ -1,0 +1,9 @@
+name=Ethereal Ambush
+image=http://magiccards.info/scans/en/frf/152.jpg
+value=2.500
+rarity=C
+type=Instant
+cost={3}{G}{U}
+effect=Manifest the top two cards of your library.
+timing=token
+oracle=Manifest the top two cards of your library.

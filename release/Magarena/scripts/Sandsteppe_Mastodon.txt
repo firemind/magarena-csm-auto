@@ -1,0 +1,12 @@
+name=Sandsteppe Mastodon
+image=http://magiccards.info/scans/en/frf/137.jpg
+value=2.500
+rarity=R
+type=Creature
+subtype=Elephant
+cost={5}{G}{G}
+pt=5/5
+ability=Reach;\
+        When SN enters the battlefield, bolster 5.
+timing=main
+oracle=Reach\nWhen Sandsteppe Mastodon enters the battlefield, bolster 5.
