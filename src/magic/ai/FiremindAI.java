@@ -1,91 +1,161 @@
 package magic.ai;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
+import magic.ai.MagicAI;
+import magic.data.LRUCache;
 import magic.firemind.GameState;
 import magic.firemind.ScoringSet;
 import magic.model.MagicGame;
 import magic.model.MagicGameLog;
 import magic.model.MagicPlayer;
+import magic.model.choice.MagicBuilderPayManaCostResult;
 import magic.model.event.MagicEvent;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+/*
+AI using Monte Carlo Tree Search
+
+Classical MCTS (UCT)
+ - use UCB1 formula for selection with C = sqrt(2)
+ - reward either 0 or 1
+ - backup by averaging
+ - uniform random simulated playout
+ - score = XX% (25000 matches against MMAB-1)
+
+Enchancements to basic UCT
+ - use ratio selection (v + 10)/(n + 10)
+ - UCB1 with C = 1.0
+ - UCB1 with C = 2.0
+ - UCB1 with C = 3.0
+ - use normal bound max(1,v + 2 * std(v))
+ - reward depends on length of playout
+ - backup by robust max
+
+References:
+UCT algorithm from Kocsis and Sezepesvari 2006
+
+Consistency Modifications for Automatically Tuned Monte-Carlo Tree Search
+  consistent -> child of root with greatest number of simulations is optimal
+  frugal -> do not need to visit the whole tree
+  eps-greedy is not consisteny for fixed eps (with prob eps select randomly, else use score)
+  eps-greedy is consistent but not frugal if eps dynamically decreases to 0
+  UCB1 is consistent but not frugal
+  score = average is not consistent
+  score = (total reward + K)/(total simulation + 2K) is consistent and frugal!
+  using v_t threshold ensures consistency for case of reward in {0,1} using any score function
+    v(s) < v_t (0.3), randomy pick a child, else pick child that maximize score
+
+Monte-Carlo Tree Search in Lines of Action
+  1-ply lookahread to detect direct win for player to move
+  secure child formula for decision v + A/sqrt(n)
+  evaluation cut-off: use score function to stop simulation early
+  use evaluation score to remove "bad" moves during simulation
+  use evaluation score to keep k-best moves
+  mixed: start with corrective, rest of the moves use greedy
+*/
 public class FiremindAI implements MagicAI {
 
-    private static final long SEC_TO_NANO=1000000000L;
-    private static final short MAXDEPTH=20;
+    private static int MIN_SCORE = Integer.MAX_VALUE;
+    static int MIN_SIM = Integer.MAX_VALUE;
+    private static final int MAX_CHOICES = 1000;
+    static double UCB1_C = 0.4;
+    static double RATIO_K = 1.0;
+    private int sims = 0;
+    
     private static final int THREADS = Runtime.getRuntime().availableProcessors();
+
+    static {
+        if (System.getProperty("min_sim") != null) {
+            MIN_SIM = Integer.parseInt(System.getProperty("min_sim"));
+            System.err.println("MIN_SIM = " + MIN_SIM);
+        }
+
+        if (System.getProperty("min_score") != null) {
+            MIN_SCORE = Integer.parseInt(System.getProperty("min_score"));
+            System.err.println("MIN_SCORE = " + MIN_SCORE);
+        }
+
+        if (System.getProperty("ucb1_c") != null) {
+            UCB1_C = Double.parseDouble(System.getProperty("ucb1_c"));
+            System.err.println("UCB1_C = " + UCB1_C);
+        }
+
+        if (System.getProperty("ratio_k") != null) {
+            RATIO_K = Double.parseDouble(System.getProperty("ratio_k"));
+            System.err.println("RATIO_K = " + RATIO_K);
+        }
+    }
+
     private final boolean CHEAT;
-    private final boolean DECKSTR;
-    public ScoringSet scoringSet = new ScoringSet();
-    
+
+    //cache the set of choices at the root to avoid recomputing it all the time
+    private List<Object[]> RCHOICES;
+
+    //cache nodes to reuse them in later decision
+    private final LRUCache<Long, FiremindGameTree> CACHE = new LRUCache<Long, FiremindGameTree>(1000);
+
     public FiremindAI(final boolean cheat) {
-        this(cheat, false);
-    }
-    
-    private FiremindAI(final boolean cheat, final boolean deckStr) {
         CHEAT = cheat;
-        DECKSTR = deckStr;
     }
-	@Override
-	public Object[] findNextEventChoiceResults(MagicGame sourceGame,
-			MagicPlayer scorePlayer) {
-        final long startTime = System.currentTimeMillis();
-		final MagicGame aiGame = new MagicGame(sourceGame, scorePlayer);
-		final MagicEvent event = aiGame.getNextEvent();
-		List<Object[]> choices = event.getArtificialChoiceResults(aiGame);
-        final int size = choices.size();
-        assert size != 0 : "ERROR: no choices available for FMAI";
 
-        // single choice result.
+    private void log(final String message) {
+        MagicGameLog.log(message);
+    }
+
+    public Object[] findNextEventChoiceResults(final MagicGame startGame, final MagicPlayer scorePlayer) {
+
+        // Determine possible choices
+        final MagicGame aiGame = new MagicGame(startGame, scorePlayer);
+        if (!CHEAT) {
+            aiGame.hideHiddenCards();
+        }
+        final MagicEvent event = aiGame.getNextEvent();
+        RCHOICES = event.getArtificialChoiceResults(aiGame);
+
+        final int size = RCHOICES.size();
+
+        // No choice
+        assert size > 0 : "ERROR! No choice found at start of MCTS";
+
+        // Single choice
         if (size == 1) {
-            return sourceGame.map(choices.get(0));
+            return startGame.map(RCHOICES.get(0));
         }
-        // submit jobs
-        final ArtificialPruneScoreRef scoreRef = new ArtificialPruneScoreRef(new ArtificialMultiPruneScore());
-        final ArtificialScoreBoard scoreBoard = new ArtificialScoreBoard();
-        final ExecutorService executor = Executors.newFixedThreadPool(THREADS);
-        final List<ArtificialChoiceResults> achoices=new ArrayList<ArtificialChoiceResults>();
-        final int artificialLevel = sourceGame.getArtificialLevel(scorePlayer.getIndex());
-        final int rounds = (size + THREADS - 1) / THREADS;
-        final long slice = artificialLevel * SEC_TO_NANO / rounds;
         
-        for (final Object[] choice : choices) {
-            final ArtificialChoiceResults achoice=new ArtificialChoiceResults(choice);
-            achoices.add(achoice);
-            
-            final MagicGame workerGame=new MagicGame(sourceGame,scorePlayer);
-//            if (!CHEAT) {
-//                workerGame.hideHiddenCards();
-//            }
-            if (DECKSTR) {
-                workerGame.setMainPhases(artificialLevel);
-            }
-            workerGame.setFastChoices(true);
-            final FiremindAIWorker worker=new FiremindAIWorker(
-                Thread.currentThread().getId(),
-                workerGame,
-                scoreBoard,
-                CHEAT,
-                scoringSet
-            );
-            
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    worker.evaluateGame(achoice, scoreRef.get(), System.nanoTime() + slice);
-                    scoreRef.update(achoice.aiScore.getScore());
-                }
-            });
-        }
+        //root represents the start state
+        final FiremindGameTree root = FiremindGameTree.getNode(CACHE, aiGame, RCHOICES);
 
-        executor.shutdown();
+        log("MCTS cached=" + root.getNumSim());
+        
+        sims = 0;
+        final ExecutorService executor = Executors.newFixedThreadPool(THREADS); 
+        final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+
+        // ensure tree update runs at least once
+        final int aiLevel = scorePlayer.getAiProfile().getAiLevel();
+        final long START_TIME = System.currentTimeMillis();
+        final long END_TIME = START_TIME + 1000 * aiLevel;
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                TreeUpdate(this, root, aiGame, executor, queue, END_TIME);
+            }
+        };
+        
+        updateTask.run();
+        
         try {
             // wait for artificialLevel + 1 seconds for jobs to finish
-            executor.awaitTermination(artificialLevel + 1, TimeUnit.SECONDS);
+            executor.awaitTermination(aiLevel + 1, TimeUnit.SECONDS);
         } catch (final InterruptedException ex) {
             throw new RuntimeException(ex);
         } finally {
@@ -93,158 +163,697 @@ public class FiremindAI implements MagicAI {
             executor.shutdownNow();
         }
 
-        // select the best scoring choice result.
-        ArtificialScore bestScore = ArtificialScore.INVALID_SCORE;
-        ArtificialChoiceResults bestAchoice = achoices.get(0);
-        for (final ArtificialChoiceResults achoice : achoices) {
-            if (bestScore.isBetter(achoice.aiScore,true)) {
-                bestScore = achoice.aiScore;
-                bestAchoice = achoice;
+        assert root.size() > 0 : "ERROR! Root has no children but there are " + size + " choices";
+
+        //select the best child/choice
+        final FiremindGameTree first = root.first();
+        double maxD = first.getDecision();
+        int bestC = first.getChoice();
+        for (final FiremindGameTree node : root) {
+            final double D = node.getDecision();
+            final int C = node.getChoice();
+            if (D > maxD) {
+                maxD = D;
+                bestC = C;
             }
         }
 
-        // Logging.
-        final long timeTaken = System.currentTimeMillis() - startTime;
-        log("FMAI" +
-            " cheat=" + CHEAT +
-            " index=" + scorePlayer.getIndex() +
-            " life=" + scorePlayer.getLife() +
-            " turn=" + sourceGame.getTurn() +
-            " phase=" + sourceGame.getPhase().getType() +
-            " slice=" + (slice/1000000) +
-            " time=" + timeTaken
-            );
-        for (final ArtificialChoiceResults achoice : achoices) {
-            log((achoice == bestAchoice ? "* " : "  ") + achoice);
-        }
+        log(outputChoice(scorePlayer, root, START_TIME, bestC, sims));
 
-        return sourceGame.map(bestAchoice.choiceResults);
+        return startGame.map(RCHOICES.get(bestC));
     }
 
-    private void log(final String message) {
-        MagicGameLog.log(message);
+    private Runnable genSimulationTask(final MagicGame rootGame, final LinkedList<FiremindGameTree> path, final BlockingQueue<Runnable> queue) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                // propagate result of random play up the path
+                final double score = randomPlay(path.getLast(), rootGame);
+                queue.offer(genBackpropagationTask(score, path));
+            }
+        };
+    }
+
+    private Runnable genBackpropagationTask(final double score, final LinkedList<FiremindGameTree> path) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                final Iterator<FiremindGameTree> iter = path.descendingIterator();
+                FiremindGameTree child = null;
+                FiremindGameTree parent = null;
+                while (iter.hasNext()) {
+                    child = parent;
+                    parent = iter.next();
+
+                    parent.removeVirtualLoss();
+                    parent.updateScore(child, score);
+                }
+            }
+        };
+    }
+
+    public void TreeUpdate(
+        final Runnable updateTask,
+        final FiremindGameTree root, 
+        final MagicGame aiGame, 
+        final ExecutorService executor, 
+        final BlockingQueue<Runnable> queue, 
+        final long END_TIME
+    ) {
+
+        //prioritize backpropagation tasks
+        while (queue.isEmpty() == false) {
+            try {
+                queue.take().run();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        sims++;
+
+        //clone the MagicGame object for simulation
+        final MagicGame rootGame = new MagicGame(aiGame, aiGame.getScorePlayer());
+        
+        //pass in a clone of the state,
+        //genNewTreeNode grows the tree by one node
+        //and returns the path from the root to the new node
+        final LinkedList<FiremindGameTree> path = growTree(root, rootGame);
+
+        assert path.size() >= 2 : "ERROR! length of MCTS path is " + path.size();
+        
+        // play a simulated game to get score
+        // update all nodes along the path from root to new node
+
+        final boolean running = System.currentTimeMillis() < END_TIME;
+
+        // submit random play to executor
+        if (running) {
+            executor.execute(genSimulationTask(rootGame, path, queue));
+        }
+        
+        // virtual loss + game theoretic value propagation
+        final Iterator<FiremindGameTree> iter = path.descendingIterator();
+        FiremindGameTree child = null;
+        FiremindGameTree parent = null;
+        while (iter.hasNext()) {
+            child = parent;
+            parent = iter.next();
+
+            parent.recordVirtualLoss();
+
+            if (child != null && child.isSolved()) {
+                final int steps = child.getSteps() + 1;
+                if (parent.isAI() && child.isAIWin()) {
+                    parent.setAIWin(steps);
+                } else if (parent.isOpp() && child.isAILose()) {
+                    parent.setAILose(steps);
+                } else if (parent.isAI() && child.isAILose()) {
+                    parent.incLose(steps);
+                } else if (parent.isOpp() && child.isAIWin()) {
+                    parent.incLose(steps);
+                }
+            }
+        }
+       
+        // end simulations once root is AI win or time is up
+        if (running && root.isAIWin() == false) {
+            executor.execute(updateTask);
+        } else {
+            executor.shutdown();
+        }
+    }
+
+    private String outputChoice(
+        final MagicPlayer scorePlayer,
+        final FiremindGameTree root,
+        final long START_TIME,
+        final int bestC,
+        final int sims
+    ) {
+
+        final StringBuilder out = new StringBuilder();
+        final long duration = System.currentTimeMillis() - START_TIME;
+
+        out.append("MCTS" +
+                   " cheat=" + CHEAT +
+                   " index=" + scorePlayer.getIndex() +
+                   " life=" + scorePlayer.getLife() +
+                   " turn=" + scorePlayer.getGame().getTurn() +
+                   " phase=" + scorePlayer.getGame().getPhase().getType() +
+                   " sims=" + sims +
+                   " time=" + duration);
+        out.append('\n');
+
+        for (final FiremindGameTree node : root) {
+            if (node.getChoice() == bestC) {
+                out.append("* ");
+            } else {
+                out.append("  ");
+            }
+            out.append('[');
+            out.append((int)(node.getV() * 100));
+            out.append('/');
+            out.append(node.getNumSim());
+            out.append('/');
+            if (node.isAIWin()) {
+                out.append("win");
+                out.append(':');
+                out.append(node.getSteps());
+            } else if (node.isAILose()) {
+                out.append("lose");
+                out.append(':');
+                out.append(node.getSteps());
+            } else {
+                out.append("?");
+            }
+            out.append(']');
+            out.append(CR2String(RCHOICES.get(node.getChoice())));
+            out.append('\n');
+        }
+        return out.toString().trim();
+    }
+
+    private LinkedList<FiremindGameTree> growTree(final FiremindGameTree root, final MagicGame game) {
+        final LinkedList<FiremindGameTree> path = new LinkedList<FiremindGameTree>();
+        boolean found = false;
+        FiremindGameTree curr = root;
+        path.add(curr);
+
+        for (List<Object[]> choices = getNextChoices(game);
+             !choices.isEmpty();
+             choices = getNextChoices(game)) {
+
+            assert choices.size() > 0 : "ERROR! No choice at start of genNewTreeNode";
+
+            assert !curr.hasDetails() || FiremindGameTree.checkNode(curr, choices) :
+                "ERROR! Inconsistent node found" + "\n" +
+                game + " " +
+                printPath(path) + " " +
+                FiremindGameTree.printNode(curr, choices);
+
+            final MagicEvent event = game.getNextEvent();
+
+            //first time considering the choices available at this node,
+            //fill in additional details for curr
+            if (!curr.hasDetails()) {
+                curr.setIsAI(game.getScorePlayer() == event.getPlayer());
+                curr.setMaxChildren(choices.size());
+                assert curr.setChoicesStr(choices);
+            }
+
+            //look for first non root AI node along this path and add it to cache
+            if (!found && curr != root && curr.isAI()) {
+                found = true;
+                //assert curr.isCached() || printPath(path);
+                FiremindGameTree.addNode(CACHE, game, curr);
+            }
+
+            //there are unexplored children of node
+            //assume we explore children of a node in increasing order of the choices
+            if (curr.size() < choices.size()) {
+                final int idx = curr.size();
+                final Object[] choice = choices.get(idx);
+                final String choiceStr = FiremindGameTree.obj2String(choice[0]);
+                game.executeNextEvent(choice);
+                
+                // added by mike
+                GameState gsMe = new GameState(game.getScorePlayer(), new ScoringSet());
+                GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), new ScoringSet());
+                final FiremindGameTree child = new FiremindGameTree(curr, idx, gsMe.getScore()-gsOp.getScore());
+                
+                
+                //final FiremindGameTree child = new FiremindGameTree(curr, idx, game.getScore());
+                assert (child.desc = choiceStr).equals(child.desc);
+                curr.addChild(child);
+                path.add(child);
+                return path;
+
+            //all the children are in the tree, find the "best" child to explore
+            } else {
+
+                assert curr.size() == choices.size() : "ERROR! Different number of choices in node and game" +
+                    printPath(path) + FiremindGameTree.printNode(curr, choices);
+
+                FiremindGameTree next = null;
+                double bestS = Double.NEGATIVE_INFINITY ;
+                for (final FiremindGameTree child : curr) {
+                    final double raw = child.getUCT();
+                    final double S = child.modify(raw);
+                    if (S > bestS) {
+                        bestS = S;
+                        next = child;
+                    }
+                }
+
+                //move down the tree
+                curr = next;
+
+                //update the game state and path
+                game.executeNextEvent(choices.get(curr.getChoice()));
+                path.add(curr);
+            }
+        }
+
+        return path;
+    }
+
+    //returns a reward in the range [0, 1]
+    private double randomPlay(final FiremindGameTree node, final MagicGame game) {
+        //terminal node, no need for random play
+        if (game.isFinished()) {
+            if (game.getLosingPlayer() == game.getScorePlayer()) {
+                node.setAILose(0);
+                return 0.0;
+            } else {
+                node.setAIWin(0);
+                return 1.0;
+            }
+        }
+
+        if (!CHEAT) {
+            game.showRandomizedHiddenCards();
+        }
+        final int[] counts = runSimulation(game);
+
+        //System.err.println("COUNTS:\t" + counts[0] + "\t" + counts[1]);
+
+        if (!game.isFinished()) {
+            return 0.5;
+        } else if (game.getLosingPlayer() == game.getScorePlayer()) {
+            // bias losing simulations towards ones where opponent makes more choices
+            return counts[1] / (2.0 * MAX_CHOICES);
+        } else {
+            // bias winning simulations towards ones where AI makes less choices
+            return 1.0 - counts[0] / (2.0 * MAX_CHOICES);
+        }
     }
     
-    class FiremindAIWorker {
+    private int[] runSimulation(final MagicGame game) {
 
-        private final boolean CHEAT;
-        private final long id;
-        private final MagicGame game;
-        private final ArtificialScoreBoard scoreBoard;
-        private final ScoringSet scoringSet;
+        int aiChoices = 0;
+        int oppChoices = 0;
 
-        private int gameCount;
+        //use fast choices during simulation
+        game.setFastChoices(true);
 
-        FiremindAIWorker(final long id,final MagicGame game,final ArtificialScoreBoard scoreBoard, final boolean CHEAT, ScoringSet scoringSet) {
-            this.id=id;
-            this.game=game;
-            this.scoreBoard=scoreBoard;
-            this.CHEAT=CHEAT;
-            this.scoringSet = scoringSet;
-        }
-
-        private ArtificialScore runGame(final Object[] nextChoiceResults, final ArtificialPruneScore pruneScore, final int depth, final long maxTime) {
-            game.snapshot();
-
-            if (nextChoiceResults!=null) {
-                game.executeNextEvent(nextChoiceResults);
+        // simulate game until it is finished or reached MAX_CHOICES
+        while (game.advanceToNextEventWithChoice() && aiChoices < MAX_CHOICES && oppChoices < MAX_CHOICES) {
+            final MagicEvent event = game.getNextEvent();
+            
+            if (event.getPlayer() == game.getScorePlayer()) {
+                aiChoices++;
+            } else {
+                oppChoices++;
             }
 
-            if (depth == MAXDEPTH || System.nanoTime() > maxTime || Thread.currentThread().isInterrupted()) {
-                GameState gsMe = new GameState(game.getScorePlayer(), scoringSet);
-                GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), scoringSet);
-                final ArtificialScore aiScore=new ArtificialScore(gsMe.getScore()-gsOp.getScore(),depth);
-                game.restore();
-                gameCount++;
-                return aiScore;
+            //get simulation choice and execute
+            final Object[] choice = event.getSimulationChoiceResult(game);
+            assert choice != null : "ERROR! No choice found during MCTS sim";
+            game.executeNextEvent(choice);
+
+            //terminate early if score > MIN_SCORE or score < -MIN_SCORE
+            if (game.getScore() < -MIN_SCORE) {
+                game.setLosingPlayer(game.getScorePlayer());
             }
-
-            // Play game until given end turn for all possible choices.
-            while (!game.isFinished()) {
-                if (!game.hasNextEvent()) {
-                    game.executePhase();
-
-                    // Caching of best score for game situations.
-                    if (game.cacheState()) {
-                        final long gameId=game.getGameId(pruneScore.getScore());
-                        ArtificialScore bestScore=scoreBoard.getGameScore(gameId);
-                        if (bestScore==null) {
-                            bestScore=runGame(null,pruneScore,depth,maxTime);
-                            scoreBoard.setGameScore(gameId,bestScore.getScore(-depth));
-                        } else {
-                            bestScore=bestScore.getScore(depth);
-                        }
-                        game.restore();
-                        return bestScore;
-                    }
-                    continue;
-                }
-
-                final MagicEvent event=game.getNextEvent();
-
-                if (!event.hasChoice()) {
-                    game.executeNextEvent();
-                    continue;
-                }
-
-                //final long startExpansion = System.nanoTime();
-                final List<Object[]> choiceResultsList=event.getArtificialChoiceResults(game);
-                //final long timeExpansion = System.nanoTime() - startExpansion;
-
-                /*
-                System.out.println(
-                    "EXPANSION" +
-                    " cheat=" + CHEAT +
-                    " choice=" + event.getChoice().getClass().getSimpleName() +
-                    " time=" + timeExpansion
-                );
-                */
-
-                final int nrOfChoices=choiceResultsList.size();
-
-                assert nrOfChoices > 0 : "nrOfChoices is 0";
-
-                if (nrOfChoices==1) {
-                    game.executeNextEvent(choiceResultsList.get(0));
-                    continue;
-                }
-
-                final boolean best=game.getScorePlayer()==event.getPlayer();
-                ArtificialScore bestScore=ArtificialScore.INVALID_SCORE;
-                ArtificialPruneScore newPruneScore=pruneScore;
-                long end = System.nanoTime();
-                final long slice = (maxTime - end) / nrOfChoices;
-                for (final Object[] choiceResults : choiceResultsList) {
-                    end += slice;
-                    final ArtificialScore score=runGame(choiceResults, newPruneScore, depth + 1, end);
-                    if (bestScore.isBetter(score,best)) {
-                        bestScore=score;
-                        // Stop when best score can no longer become the best score at previous levels.
-                        if (pruneScore.pruneScore(bestScore.getScore(),best)) {
-                            break;
-                        }
-                        newPruneScore=newPruneScore.getPruneScore(bestScore.getScore(),best);
-                    }
-                }
-                game.restore();
-                return bestScore;
+            if (game.getScore() > MIN_SCORE) {
+                game.setLosingPlayer(game.getScorePlayer().getOpponent());
             }
-
-            // Game is finished.
-            final ArtificialScore aiScore=new ArtificialScore(game.getScore(),depth);
-            game.restore();
-            gameCount++;
-            return aiScore;
         }
 
-        void evaluateGame(final ArtificialChoiceResults aiChoiceResults, final ArtificialPruneScore pruneScore, long maxTime) {
-            gameCount = 0;
+        //game is finished or reached MAX_CHOICES
+        return new int[]{aiChoices, oppChoices};
+    }
 
-            aiChoiceResults.worker    = id;
-            aiChoiceResults.aiScore   = runGame(game.map(aiChoiceResults.choiceResults),pruneScore,0,maxTime);
-            aiChoiceResults.gameCount = gameCount;
+    private List<Object[]> getNextChoices(final MagicGame game) {
+        //disable fast choices
+        game.setFastChoices(false);
 
-            game.undoAllActions();
+        while (game.advanceToNextEventWithChoice()) {
+
+            //do not accumulate score down the tree when not in simulation
+            game.setScore(0);
+
+            final MagicEvent event = game.getNextEvent();
+
+            //get list of possible AI choices
+            List<Object[]> choices = null;
+            if (game.getNumActions() == 0) {
+                //map the RCHOICES to the current game instead of recomputing the choices
+                choices = new ArrayList<Object[]>(RCHOICES.size());
+                for (final Object[] choice : RCHOICES) {
+                    choices.add(game.map(choice));
+                }
+            } else {
+                choices = event.getArtificialChoiceResults(game);
+            }
+            assert choices != null;
+
+            final int size = choices.size();
+            assert size > 0 : "ERROR! No choice found during MCTS getACR";
+
+            if (size == 1) {
+                //single choice
+                game.executeNextEvent(choices.get(0));
+            } else {
+                //multiple choice
+                return choices;
+            }
         }
+
+        //game is finished
+        return Collections.emptyList();
+    }
+
+    private static String CR2String(final Object[] choiceResults) {
+        final StringBuilder buffer=new StringBuilder();
+        if (choiceResults!=null) {
+            buffer.append(" (");
+            boolean first=true;
+            for (final Object choiceResult : choiceResults) {
+                if (first) {
+                    first=false;
+                } else {
+                    buffer.append(',');
+                }
+                buffer.append(choiceResult);
+            }
+            buffer.append(')');
+        }
+        return buffer.toString();
+    }
+
+    private boolean printPath(final List<FiremindGameTree> path) {
+        final StringBuilder sb = new StringBuilder();
+        for (final FiremindGameTree p : path) {
+            sb.append(" -> ").append(p.desc);
+        }
+        log(sb.toString());
+        return true;
     }
 }
+
+//each tree node stores the choice from the parent that leads to this node
+class FiremindGameTree implements Iterable<FiremindGameTree> {
+
+    private final FiremindGameTree parent;
+    private final LinkedList<FiremindGameTree> children = new LinkedList<FiremindGameTree>();
+    private final int choice;
+    private boolean isAI;
+    private boolean isCached;
+    private int maxChildren = -1;
+    private int numLose;
+    private int numSim;
+    private int evalScore;
+    private int steps;
+    private double sum;
+    private double S;
+    String desc;
+    private String[] choicesStr;
+
+    //min sim for using robust max
+    private int maxChildSim = MCTSAI.MIN_SIM;
+
+    FiremindGameTree(final FiremindGameTree parent, final int choice, final int evalScore) {
+        this.evalScore = evalScore;
+        this.choice = choice;
+        this.parent = parent;
+    }
+
+    private static boolean log(final String message) {
+        MagicGameLog.log(message);
+        return true;
+    }
+
+    private static int obj2StringHash(final Object obj) {
+        return obj2String(obj).hashCode();
+    }
+
+    static String obj2String(final Object obj) {
+        if (obj == null) {
+            return "null";
+        } else if (obj instanceof MagicBuilderPayManaCostResult) {
+            return ((MagicBuilderPayManaCostResult)obj).getText();
+        } else {
+            return obj.toString();
+        }
+    }
+
+    static void addNode(final LRUCache<Long, FiremindGameTree> cache, final MagicGame game, final FiremindGameTree node) {
+        if (node.isCached()) {
+            return;
+        }
+        final long gid = game.getStateId();
+        cache.put(gid, node);
+        node.setCached();
+        assert log("ADDED: " + game.getIdString());
+    }
+
+    static FiremindGameTree getNode(final LRUCache<Long, FiremindGameTree> cache, final MagicGame game, final List<Object[]> choices) {
+        final long gid = game.getStateId();
+        final FiremindGameTree candidate = cache.get(gid);
+
+        if (candidate != null) {
+            assert log("CACHE HIT");
+            assert log("HIT  : " + game.getIdString());
+            //assert printNode(candidate, choices);
+            return candidate;
+        } else {
+            assert log("CACHE MISS");
+            assert log("MISS : " + game.getIdString());
+            final FiremindGameTree root = new FiremindGameTree(null, -1, -1);
+            assert (root.desc = "root").equals(root.desc);
+            return root;
+        }
+    }
+
+    static boolean checkNode(final FiremindGameTree curr, final List<Object[]> choices) {
+        if (curr.getMaxChildren() != choices.size()) {
+            return false;
+        }
+        for (int i = 0; i < choices.size(); i++) {
+            final String checkStr = obj2String(choices.get(i)[0]);
+            if (!curr.choicesStr[i].equals(checkStr)) {
+                return false;
+            }
+        }
+        for (final FiremindGameTree child : curr) {
+            final String checkStr = obj2String(choices.get(child.getChoice())[0]);
+            if (!child.desc.equals(checkStr)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    static boolean printNode(final FiremindGameTree curr, final List<Object[]> choices) {
+        if (curr.choicesStr != null) {
+            for (final String str : curr.choicesStr) {
+                log("PAREN: " + str);
+            }
+        } else {
+            log("PAREN: not defined");
+        }
+        for (final FiremindGameTree child : curr) {
+            log("CHILD: " + child.desc);
+        }
+        for (final Object[] choice : choices) {
+            log("GAME : " + obj2String(choice[0]));
+        }
+        return true;
+    }
+
+
+    boolean isCached() {
+        return isCached;
+    }
+
+    private void setCached() {
+        isCached = true;
+    }
+
+    boolean hasDetails() {
+        return maxChildren != -1;
+    }
+
+    boolean setChoicesStr(final List<Object[]> choices) {
+        choicesStr = new String[choices.size()];
+        for (int i = 0; i < choices.size(); i++) {
+            choicesStr[i] = obj2String(choices.get(i)[0]);
+        }
+        return true;
+    }
+
+    void setMaxChildren(final int mc) {
+        maxChildren = mc;
+    }
+
+    private int getMaxChildren() {
+        return maxChildren;
+    }
+
+    boolean isAI() {
+        return isAI;
+    }
+
+    boolean isOpp() {
+        return !isAI;
+    }
+
+    void setIsAI(final boolean ai) {
+        this.isAI = ai;
+    }
+
+    boolean isSolved() {
+        return evalScore == Integer.MAX_VALUE || evalScore == Integer.MIN_VALUE;
+    }
+    
+    void recordVirtualLoss() {
+        numSim++;
+    }
+    
+    void removeVirtualLoss() {
+        numSim--;
+    }
+
+    void updateScore(final FiremindGameTree child, final double delta) {
+        final double oldMean = (numSim > 0) ? sum/numSim : 0;
+        sum += delta;
+        numSim += 1;
+        final double newMean = sum/numSim;
+        S += (delta - oldMean) * (delta - newMean);
+
+        //if child has sufficient simulations, backup using robust max instead of average
+        if (child != null && child.getNumSim() > maxChildSim) {
+            maxChildSim = child.getNumSim();
+            sum = child.sum;
+            numSim = child.numSim;
+        }
+    }
+
+    double getUCT() {
+        return getV() + MCTSAI.UCB1_C * Math.sqrt(Math.log(parent.getNumSim()) / getNumSim());
+    }
+
+    private double getRatio() {
+        return (getSum() + MCTSAI.RATIO_K)/(getNumSim() + 2*MCTSAI.RATIO_K);
+    }
+
+    private double getNormal() {
+        return Math.max(1.0, getV() + 2 * Math.sqrt(getVar()));
+    }
+
+    //decrease score of lose node, boost score of win nodes
+    double modify(final double sc) {
+        if ((!parent.isAI() && isAIWin()) || (parent.isAI() && isAILose())) {
+            return sc - 2.0;
+        } else if ((parent.isAI() && isAIWin()) || (!parent.isAI() && isAILose())) {
+            return sc + 2.0;
+        } else {
+            return sc;
+        }
+    }
+
+    private double getVar() {
+        final int MIN_SAMPLES = 10;
+        if (numSim < MIN_SAMPLES) {
+            return 1.0;
+        } else {
+            return S/(numSim - 1);
+        }
+    }
+
+    boolean isAIWin() {
+        return evalScore == Integer.MAX_VALUE;
+    }
+
+    boolean isAILose() {
+        return evalScore == Integer.MIN_VALUE;
+    }
+
+    void incLose(final int lsteps) {
+        numLose++;
+        steps = Math.max(steps, lsteps);
+        if (numLose == maxChildren) {
+            if (isAI) {
+                setAILose(steps);
+            } else {
+                setAIWin(steps);
+            }
+        }
+    }
+
+    int getChoice() {
+        return choice;
+    }
+
+    int getSteps() {
+        return steps;
+    }
+
+    void setAIWin(final int aSteps) {
+        evalScore = Integer.MAX_VALUE;
+        steps = aSteps;
+    }
+
+    void setAILose(final int aSteps) {
+        evalScore = Integer.MIN_VALUE;
+        steps = aSteps;
+    }
+
+    private int getEvalScore() {
+        return evalScore;
+    }
+
+    double getDecision() {
+        //boost decision score of win nodes by BOOST
+        final int BOOST = 1000000;
+        if (isAIWin()) {
+            return BOOST + getNumSim();
+        } else if (isAILose()) {
+            return getNumSim();
+        } else {
+            return getNumSim();
+        }
+    }
+
+    int getNumSim() {
+        return numSim;
+    }
+
+    private double getSum() {
+        // AI is max player, other is min player
+        return parent.isAI() ? sum : -sum;
+    }
+
+    public double getAvg() {
+        return sum / numSim;
+    }
+
+    double getV() {
+        return getSum() / numSim;
+    }
+
+    private double getSecureScore() {
+        return getV() + 1.0/Math.sqrt(numSim);
+    }
+
+    void addChild(final FiremindGameTree child) {
+        assert children.size() < maxChildren : "ERROR! Number of children nodes exceed maxChildren";
+        children.add(child);
+    }
+
+    FiremindGameTree first() {
+        return children.get(0);
+    }
+
+    public Iterator<FiremindGameTree> iterator() {
+        return children.iterator();
+    }
+
+    int size() {
+        return children.size();
+    }
+}
+

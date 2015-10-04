@@ -3,15 +3,12 @@ package magic;
 import magic.ai.FiremindAI;
 import magic.ai.MagicAI;
 import magic.ai.MagicAIImpl;
-import magic.data.DeckUtils;
 import magic.data.DuelConfig;
 import magic.firemind.ScoringSet;
 import magic.model.MagicDuel;
 import magic.model.MagicGame;
 import magic.model.MagicGameLog;
-import magic.model.MagicGameReport;
 import magic.model.MagicRandom;
-import magic.ui.GameController;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,21 +125,21 @@ public class DeckStrCalGauntlet {
         // Set difficulty.
         final MagicDuel testDuel=new MagicDuel(config);
         testDuel.initialize();
-        testDuel.setDifficulty(0, str1);
-        testDuel.setDifficulty(1, str2);
-
-        // Set the AI
-        testDuel.setAIs(new MagicAI[]{ai1.getAI(), ai2.getAI()});
-        testDuel.getPlayer(0).setArtificial(true);
-        testDuel.getPlayer(1).setArtificial(true);
-
-        // Set the deck.
-        if (deck1.length() > 0) {
-            DeckUtils.loadDeck(deck1, testDuel.getPlayer(0));
-        }
-        if (deck2.length() > 0) {
-            DeckUtils.loadDeck(deck2, testDuel.getPlayer(1));
-        }
+//        testDuel.setDifficulty(0, str1);
+//        testDuel.setDifficulty(1, str2);
+//
+//        // Set the AI
+//        testDuel.setAIs(new MagicAI[]{ai1.getAI(), ai2.getAI()});
+//        testDuel.getPlayer(0).setArtificial(true);
+//        testDuel.getPlayer(1).setArtificial(true);
+//
+//        // Set the deck.
+//        if (deck1.length() > 0) {
+//            DeckUtils.loadDeck(deck1, testDuel.getPlayer(0));
+//        }
+//        if (deck2.length() > 0) {
+//            DeckUtils.loadDeck(deck2, testDuel.getPlayer(1));
+//        }
 
         return testDuel;
     }

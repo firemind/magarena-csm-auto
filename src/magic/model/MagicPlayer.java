@@ -1,7 +1,6 @@
 package magic.model;
 
 import magic.firemind.ScoringSet;
-import magic.model.action.MagicLoseGameAction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -403,17 +402,17 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
             library.add(new MagicCard(cardDefinition,this,id));
         }
 
-        //library order depends on player index, game no, random seed
-        final long seed = magic.MurmurHash3.hash(new long[] {
-            1, //2 * index - 1,
-            MagicGame.getCount(),
-            (System.getProperty("rndSeed") != null) ?
-                Long.parseLong(System.getProperty("rndSeed")) :
-                System.currentTimeMillis()
-        });
-
-        library.initialShuffle(seed);
-        // library.initialShuffle(MagicRandom.nextRNGInt());
+//        //library order depends on player index, game no, random seed
+//        final long seed = magic.MurmurHash3.hash(new long[] {
+//            1, //2 * index - 1,
+//            MagicGame.getCount(),
+//            (System.getProperty("rndSeed") != null) ?
+//                Long.parseLong(System.getProperty("rndSeed")) :
+//                System.currentTimeMillis()
+//        });
+//
+//        library.initialShuffle(seed);
+        library.initialShuffle(MagicRandom.nextRNGInt());
 
         for (int count = handSize; count > 0 && !library.isEmpty(); count--) {
             addCardToHand(library.removeCardAtTop());
