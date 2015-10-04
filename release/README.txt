@@ -68,23 +68,32 @@ Thanks to
 Thank you for your support and have fun!
 
 
+Release 1.67 (October 31, 2015)
+============
+
 Release 1.66 (September 26, 2015)
 ============
 lodici
 melvin
 ShawnieBoy
 
-    replace clunky (two clicks) log/stack popup menu with single click icon buttons.
-    Restore last selected view (basic/advanced) when opening log file screen.
-    Change log message default font to plain, StackButton message uses same default plain font as log.
-    Display alert at startup if current JRE is less than 1.8. (see issue #429).
-    highlight image or player zone on mouse over log entry; click to show full size card image.
+- card names in log/stack are now interactive, mouse over to highlight card
+  location or click to view full size image
+
+- choose one of four styles for the log/stack messages
+
+- replaced clunky two-click log/stack popup menu with single click icon bar
+
+- restore last selected view (basic/advanced) when opening log file screen
+
+- display alert at startup if current JRE is less than 1.8
 
 - fixed the following bugs:
-    move adding of target indicator into personalize method, put it before the
-    final period. fixes #442
+  * libpng warning: iCCP: known incorrect sRGB profile (issue #439).
+  * target indicator should appear before before period instead of after it (issue #442)
 
 - added the following cards:
+Embermaw Hellion, Unholy Hunger
 
 Release 1.65 (August 30, 2015)
 ============
