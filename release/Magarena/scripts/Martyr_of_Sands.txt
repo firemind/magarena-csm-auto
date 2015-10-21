@@ -1,0 +1,11 @@
+name=Martyr of Sands
+image=http://magiccards.info/scans/en/cs/15.jpg
+value=4.315
+rarity=C
+type=Creature
+subtype=Human,Cleric
+cost={W}
+pt=1/1
+ability={1}, Reveal X white cards from your hand, Sacrifice SN: You gain three times X life.
+timing=main
+oracle={1}, Reveal X white cards from your hand, Sacrifice Martyr of Sands: You gain three times X life.
