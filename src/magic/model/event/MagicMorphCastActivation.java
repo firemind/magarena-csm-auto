@@ -69,6 +69,10 @@ public class MagicMorphCastActivation extends MagicHandCastActivation {
                 game.getPayedCost()
             ) {
                 @Override
+                public MagicCardDefinition getCardDefinition() {
+                    return morph;
+                }
+                @Override
                 public boolean hasColor(final MagicColor color) {
                     return morph.hasColor(color);
                 }
@@ -96,6 +100,10 @@ public class MagicMorphCastActivation extends MagicHandCastActivation {
                 public String getName() {
                     return "Face-down creature spell #" + (getId() % 1000);
                 }
+                @Override
+                public boolean isFaceDown() {
+                    return true;
+                }
             };
 
             game.doAction(new PutItemOnStackAction(cardOnStack));
@@ -113,6 +121,8 @@ public class MagicMorphCastActivation extends MagicHandCastActivation {
     
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
-        game.doAction(new PlayCardFromStackAction(event.getCardOnStack(), MagicPlayMod.MORPH));
+        final MagicCardOnStack spell = event.getCardOnStack();
+        final MagicCardDefinition carddef = spell.getSource().getCardDefinition();
+        game.doAction(new PlayCardFromStackAction(spell, carddef, MagicPlayMod.MORPH));
     }
 }

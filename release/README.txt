@@ -3,7 +3,7 @@ Magarena
 Homepage: http://magarena.github.io
 Forum   : http://www.slightlymagic.net/forum/viewforum.php?f=82
 
-Requires: Java Runtime Environment 7 (http://java.com) or above must be installed on your computer
+Requires: Java Runtime Environment 8 (http://java.com) or above must be installed on your computer
 
 Starting Magarena:
   On Windows, double click on Magarena.exe
@@ -70,6 +70,63 @@ Thank you for your support and have fun!
 
 Release 1.67 (October 31, 2015)
 ============
+lodici
+melvin
+Mike
+ShawnieBoy
+
+- update to format and legality as of Oct 2nd
+- display usable proxy image when card image is missing
+- move "cards" and "tokens" images folders to Magarena/images/cards and Magarena/images/tokens
+- clicking a card image in any of the following screens to view image at original size:
+    tiled deck view, sample hand, mulligan, and player zones
+- display deck sidebar in deck tiled view.
+
+- fixed the following bugs:
+  * crash when firemind json feed contains formats with no decks (issue #461)
+  * crash when attacking with face down permanents (issue #474)
+  * crash when trying to dynamically load Morph and Manifest card definitions (issue #470)
+  * crash when showing proxy image if oracle text contains hybrid mana symbol
+  * crash when MCTS is invoked before previous instance has completed (issue #479)
+  * undoing the log item was not removed because the log was not being repainted properly
+  * missing event description for first event in repeated events (issue #436)
+  * disable interactive card names in message text displayed in user prompt panel (issue #456)
+  * horizontal scrollbar goes missing in deck editor (issue #469)
+  * text in user prompt is not interactive so don't color (issue #457)
+  * visible stack button style not updated as toggle button is clicked
+  * card names in log messages not interactive (issue #463, #464)
+  * player able to view actual face of opponent's face down spells
+  * condition "two or fewer other lands" not applying correctly (issue #467)
+  * Manor Gargoyle does not lose indestructible when it loses defender (issue #447)
+  * Stoneshock Giant's ability should affect creatures that come into play after monstrous (issue #443)
+  * Avoid Fate can be cast without target and it remains in play (issue #473)
+  * Somberwald Alpha's first ability pumped itself instead of creature being blocked
+
+- added the following cards:
+Angel of Renewal, Belligerent Whiptail, Benthic Infiltrator,
+Blighted Cataract, Blighted Fen, Blighted Gorge, Blighted Steppe,
+Blighted Woodland, Bloodbond Vampire, Broodhunter Wurm, Canopy Vista,
+Chasm Guide, Cinder Glade, Cliffside Lookout, Cloud Manta,
+Coralhelm Guide, Courier Griffin, Culling Drone, Dampening Pulse,
+Demon's Grasp, Drana, Liberator of Malakir, Dust Stalker,
+Eldrazi Devastator, Endless One, Expedition Envoy, Felidar Cub,
+Forerunner of Slaughter, Ghostly Sentinel, Gideon's Reproach,
+Grove Rumbler, Hagra Sharpshooter, Hero of Goma Fada, Jaddi Offshoot,
+Kalastria Nightwatch, Kitesail Scout, Kor Bladewhirl, Kor Entanglers,
+Lantern Scout, Lavastep Raider, Lifespring Druid, Looming Spires,
+Lumbering Falls, Makindi Patrol, Makindi Sliderunner, Malakir Familiar,
+Mist Intruder, Mortuary Mire, Murasa Ranger, Natural Connection,
+Nirkana Assassin, Ondu Champion, Ondu Greathorn, Outnumber,
+Plated Crusher, Prairie Stream, Reckless Cohort, Reclaiming Vines,
+Resolute Blademaster, Retreat to Coralhelm, Retreat to Kazandu,
+Retreat to Valakut, Rot Shambler, Ruination Guide, Salvage Drone,
+Scour from Existence, Scythe Leopard, Serene Steward, Shadow Glider,
+Shambling Vent, Silent Skimmer, Skitterskin, Skyline Cascade,
+Sludge Crawler, Smoldering Marsh, Snapping Gnarlid, Stonefury,
+Stone Haven Medic, Sunken Hollow, Sure Strike, Tajuru Beastmaster,
+Tajuru Warcaller, Tide Drifter, Tunneling Geopede, Valakut Invoker,
+Valakut Predator, Vestige of Emrakul, Vile Aggregate, Volcanic Upheaval,
+Voracious Null, Wave-Wing Elemental
 
 Release 1.66 (September 26, 2015)
 ============

@@ -2,12 +2,13 @@ package magic.model;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 import magic.model.phase.MagicPhaseType;
 import magic.model.stack.MagicCardOnStack;
 
 public class MagicMessage {
 
-    public static final char CARD_ID_DELIMITER = '#';
+    public static final char CARD_ID_DELIMITER = '~';
 
     private final MagicPlayer player;
     private final int life;
@@ -114,6 +115,13 @@ public class MagicMessage {
 
         return obj.toString();
 
+    }
+
+    public static String getTokenizedCardNames(final Collection<MagicCard> cards) {
+        return cards.stream()
+            .map(card -> MagicMessage.getCardToken(card))
+            .sorted()
+            .collect(Collectors.joining(", ", "", cards.isEmpty() ? "" : "."));
     }
 
 }

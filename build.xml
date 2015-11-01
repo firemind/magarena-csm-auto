@@ -22,7 +22,7 @@
   <!-- deps - Download dependencies -->
   <target name="deps" unless="skip.download">
       <echo message="downloading groovy to ${lib}"/>
-      <get src="http://search.maven.org/remotecontent?filepath=org/codehaus/groovy/groovy-all/${groovy-version}/groovy-all-${groovy-version}-indy.jar" 
+      <get src="https://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/${groovy-version}/groovy-all-${groovy-version}-indy.jar"
            dest="${lib}/groovy-all-${groovy-version}.jar" 
            skipexisting="true" />
       <echo message="downloading MigLayout to ${lib}"/>
