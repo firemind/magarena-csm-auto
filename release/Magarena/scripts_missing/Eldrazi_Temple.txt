@@ -1,5 +1,5 @@
 name=Eldrazi Temple
-image=http://magiccards.info/scans/en/ddp/68.jpg
+image=http://magiccards.info/scans/en/mm2/240.jpg
 value=2.500
 rarity=U
 type=Land

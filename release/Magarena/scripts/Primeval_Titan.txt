@@ -1,6 +1,6 @@
 name=Primeval Titan
 image=http://magiccards.info/scans/en/mm2/156.jpg
-value=2.500
+value=4.282
 rarity=M
 type=Creature
 subtype=Giant

@@ -1,6 +1,7 @@
 name=Hammerhead Shark
 image=http://magiccards.info/scans/en/tpr/52.jpg
-value=2.500
+image_updated=2015-11-14
+value=3.245
 rarity=C
 type=Creature
 subtype=Fish

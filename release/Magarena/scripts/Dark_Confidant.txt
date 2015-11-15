@@ -1,6 +1,7 @@
 name=Dark Confidant
 image=http://magiccards.info/scans/en/mm2/75.jpg
-value=2.500
+image_updated=2015-11-05
+value=4.609
 rarity=M
 type=Creature
 subtype=Human,Wizard

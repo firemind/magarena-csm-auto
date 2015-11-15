@@ -1,11 +1,13 @@
 name=Victual Sliver
 image=http://magiccards.info/scans/en/tpr/215.jpg
-value=2.500
+image_updated=2015-11-14
+value=3.737
 rarity=U
 type=Creature
 subtype=Sliver
 cost={G}{W}
 pt=2/2
 ability=All Slivers have "{2}, Sacrifice this permanent: You gain 4 life."
+static=all
 timing=main
 oracle=All Slivers have "{2}, Sacrifice this permanent: You gain 4 life."

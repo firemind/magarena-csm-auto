@@ -1,6 +1,6 @@
 name=Paladin en-Vec
-image=http://magiccards.info/scans/en/tpr/23.jpg
-value=2.500
+image=http://magiccards.info/scans/en/10e/32.jpg
+value=4.280
 rarity=R
 type=Creature
 subtype=Human,Knight

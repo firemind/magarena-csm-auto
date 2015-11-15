@@ -18,7 +18,7 @@ import magic.utility.MagicSystem;
 
 public class GeneralConfig {
 
-    public static final String VERSION = "1.67";
+    public static final String VERSION = "1.68";
     public static final String SOFTWARE_TITLE =
             "Magarena " + GeneralConfig.VERSION + (MagicSystem.isDevMode() ? " [DEV MODE]" : "");
 
@@ -223,11 +223,11 @@ public class GeneralConfig {
             return Paths.get(cardImagesPath);
         }
     }
-    public void setCardImagesPath(final Path path) {
-        if (path.equals(MagicFileSystem.getDataPath())) {
+    public void setCardImagesPath(final Path p) {
+        if (MagicFileSystem.directoryContains(MagicFileSystem.INSTALL_PATH, p)) {
             this.cardImagesPath = "";
         } else {
-            this.cardImagesPath = path.toAbsolutePath().toString();
+            this.cardImagesPath = p.toAbsolutePath().toString();
         }
     }
 

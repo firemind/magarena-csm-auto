@@ -1,6 +1,7 @@
 name=Bitterblossom
 image=http://magiccards.info/scans/en/mm2/71.jpg
-value=2.500
+image_updated=2015-11-05
+value=4.392
 rarity=M
 type=Tribal,Enchantment
 subtype=Faerie

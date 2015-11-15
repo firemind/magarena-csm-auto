@@ -1,7 +1,7 @@
 name=Whispers of the Muse
-image=http://magiccards.info/scans/en/tpr/79.jpg
-value=2.500
-rarity=C
+image=http://magiccards.info/scans/en/tsts/35.jpg
+value=3.486
+rarity=U
 type=Instant
 cost={U}
 ability=Buyback {5}

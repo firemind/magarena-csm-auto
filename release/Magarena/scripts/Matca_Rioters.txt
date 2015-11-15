@@ -1,6 +1,6 @@
 name=Matca Rioters
 image=http://magiccards.info/scans/en/mm2/148.jpg
-value=2.500
+value=2.674
 rarity=C
 type=Creature
 subtype=Human,Warrior

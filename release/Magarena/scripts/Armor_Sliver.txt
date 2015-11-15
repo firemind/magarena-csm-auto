@@ -1,11 +1,13 @@
 name=Armor Sliver
 image=http://magiccards.info/scans/en/tpr/4.jpg
-value=2.500
+image_updated=2015-11-14
+value=2.462
 rarity=C
 type=Creature
 subtype=Sliver
 cost={2}{W}
 pt=2/2
+static=all
 ability=All Sliver creatures have "{2}: This creature gets +0/+1 until end of turn."
 timing=main
 oracle=All Sliver creatures have "{2}: This creature gets +0/+1 until end of turn."

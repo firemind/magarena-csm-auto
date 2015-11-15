@@ -1,6 +1,7 @@
 name=Ghostly Changeling
 image=http://magiccards.info/scans/en/mm2/83.jpg
-value=2.500
+image_updated=2015-11-05
+value=2.684
 rarity=C
 type=Creature
 subtype=Shapeshifter

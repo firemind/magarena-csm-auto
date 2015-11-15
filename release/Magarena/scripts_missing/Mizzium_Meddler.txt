@@ -1,5 +1,6 @@
 name=Mizzium Meddler
 image=http://magiccards.info/scans/en/ori/64.jpg
+image_updated=2015-11-05
 value=2.500
 rarity=R
 type=Creature
@@ -8,5 +9,5 @@ cost={2}{U}
 pt=1/4
 ability=Flash;\
         When SN enters the battlefield, you may change a target of target spell or ability to SN.
-timing=main
+timing=flash
 oracle=Flash\nWhen Mizzium Meddler enters the battlefield, you may change a target of target spell or ability to Mizzium Meddler.

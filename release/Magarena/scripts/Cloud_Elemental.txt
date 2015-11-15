@@ -1,6 +1,6 @@
 name=Cloud Elemental
 image=http://magiccards.info/scans/en/mm2/42.jpg
-value=2.500
+value=2.887
 rarity=C
 type=Creature
 subtype=Elemental

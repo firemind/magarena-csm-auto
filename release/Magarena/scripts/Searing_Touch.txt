@@ -1,6 +1,7 @@
 name=Searing Touch
-image=http://magiccards.info/scans/en/tpr/155.jpg
-value=2.500
+image=http://magiccards.info/scans/en/tp/201.jpg
+value=2.703
+removal=1
 rarity=U
 type=Instant
 cost={R}

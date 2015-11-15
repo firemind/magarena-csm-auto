@@ -1,7 +1,7 @@
 name=Capsize
-image=http://magiccards.info/scans/en/tpr/42.jpg
-value=2.500
-rarity=U
+image=http://magiccards.info/scans/en/tp/55.jpg
+value=4.549
+rarity=C
 type=Instant
 cost={1}{U}{U}
 ability=Buyback {3}

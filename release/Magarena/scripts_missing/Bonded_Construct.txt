@@ -1,5 +1,6 @@
 name=Bonded Construct
 image=http://magiccards.info/scans/en/ori/223.jpg
+image_updated=2015-11-05
 value=2.500
 rarity=C
 type=Artifact,Creature
@@ -7,5 +8,5 @@ subtype=Construct
 cost={1}
 pt=2/1
 ability=SN can't attack alone.
-timing=artifact
+timing=main
 oracle=Bonded Construct can't attack alone.

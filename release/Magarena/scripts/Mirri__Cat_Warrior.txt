@@ -1,6 +1,6 @@
 name=Mirri, Cat Warrior
-image=http://magiccards.info/scans/en/tpr/180.jpg
-value=2.500
+image=http://magiccards.info/scans/en/10e/279.jpg
+value=4.226
 rarity=R
 type=Legendary,Creature
 subtype=Cat,Warrior

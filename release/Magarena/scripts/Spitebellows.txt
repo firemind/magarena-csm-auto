@@ -1,6 +1,6 @@
 name=Spitebellows
 image=http://magiccards.info/scans/en/mm2/128.jpg
-value=2.500
+value=3.600
 rarity=U
 type=Creature
 subtype=Elemental

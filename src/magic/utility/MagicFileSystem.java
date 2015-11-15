@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -27,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  */
 public final class MagicFileSystem {
+
     private MagicFileSystem() {}
 
     // card images
@@ -36,8 +38,9 @@ public final class MagicFileSystem {
 
     private enum ImagesPath {
 
-        CARDS("cards"),
-        TOKENS("tokens");
+        CARDS(CARD_IMAGE_FOLDER),
+        TOKENS(TOKEN_IMAGE_FOLDER),
+        CUSTOM("custom");
 
         private final String directoryName;
 
@@ -51,7 +54,7 @@ public final class MagicFileSystem {
     }
 
     // Top level install directory containing exe, etc.
-    private static final Path INSTALL_PATH;
+    public static final Path INSTALL_PATH;
     static {
         if (System.getProperty("magarena.dir", "").isEmpty()) {
             INSTALL_PATH = Paths.get(System.getProperty("user.dir"));
@@ -78,7 +81,8 @@ public final class MagicFileSystem {
         FIREMIND("firemind"),
         SAVED_GAMES("saved_games"),
         TRANSLATIONS("translations"),
-        IMAGES("images")
+        IMAGES("images"),
+        REPORTS("reports")
         ;
 
         private final Path directoryPath;
@@ -142,6 +146,9 @@ public final class MagicFileSystem {
      * Deletes all directory contents and then directory itself.
      */
     public static void deleteDirectory(final Path root) {
+        if (Files.exists(root) == false) {
+            return;
+        }
         try {
             Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
                 @Override
@@ -188,7 +195,7 @@ public final class MagicFileSystem {
             try {
                 Files.createDirectory(path);
             } catch (IOException ex) {
-                throw new RuntimeException("!!! error creating " + path, ex);
+                throw new RuntimeException(String.format("Failed to create '%s'.", path), ex);
             }
         }
     }
@@ -236,6 +243,41 @@ public final class MagicFileSystem {
             return getDataPath().getParent();
         }
         return p;
+    }
+
+    /**
+     * Confirms if two paths point to the same location regardless of whether
+     * the path is relative or absolute.
+     */
+    public static boolean isSamePath(Path p1, Path p2) {
+        return p1.toAbsolutePath().equals(p2.toAbsolutePath());
+    }
+
+    /**
+     * Determines whether p2 is the same as or a sub-directory of p1.
+     */
+    public static boolean directoryContains(Path p1, Path p2) {
+        if (p1 == null || p2 == null) {
+            return false;
+        }
+        if (isSamePath(p1, p2)) {
+            return true;
+        } else {
+            return directoryContains(p1, p2.getParent());
+        }
+    }
+
+    public static Path getCustomImagesPath() {
+        return getImagesPath(ImagesPath.CUSTOM);
+    }
+
+    public static Path getGameplayReportDirectory() {
+        return getDataPath(DataPath.REPORTS).resolve("gameplay");
+    }
+
+    public static void clearGameplayReportDirectory() throws IOException {
+        verifyDirectoryPath(getGameplayReportDirectory());
+        FileUtils.cleanDirectory(getGameplayReportDirectory().toFile());
     }
 
 }

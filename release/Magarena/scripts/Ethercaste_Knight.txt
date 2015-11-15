@@ -1,6 +1,7 @@
 name=Ethercaste Knight
 image=http://magiccards.info/scans/en/mm2/175.jpg
-value=2.500
+image_updated=2015-11-05
+value=3.061
 rarity=U
 type=Artifact,Creature
 subtype=Human,Knight

@@ -1,6 +1,7 @@
 name=Verdant Touch
 image=http://magiccards.info/scans/en/tpr/203.jpg
-value=2.500
+image_updated=2015-11-14
+value=3.311
 rarity=U
 type=Sorcery
 cost={1}{G}

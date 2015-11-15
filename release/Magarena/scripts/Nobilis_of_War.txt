@@ -1,6 +1,6 @@
 name=Nobilis of War
 image=http://magiccards.info/scans/en/mm2/195.jpg
-value=2.500
+value=4.182
 rarity=R
 type=Creature
 subtype=Spirit,Avatar

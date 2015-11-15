@@ -1,7 +1,7 @@
 name=Sarcomancy
-image=http://magiccards.info/scans/en/tpr/115.jpg
-value=2.500
-rarity=U
+image=http://magiccards.info/scans/en/vma/139.jpg
+value=4.500
+rarity=R
 type=Enchantment
 cost={B}
 ability=When SN enters the battlefield, put a 2/2 black Zombie creature token onto the battlefield.;\

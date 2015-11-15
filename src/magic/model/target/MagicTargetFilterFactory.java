@@ -915,12 +915,20 @@ public class MagicTargetFilterFactory {
             final MagicPermanent perm = (MagicPermanent)source;
             return perm.getEnchantedPermanent() == target;
         }
+        @Override
+        public boolean isStatic() {
+            return true;
+        }
     };
 
     public static final MagicPermanentFilterImpl ENCHANTED_ARTIFACT = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
             final MagicPermanent perm = (MagicPermanent)source;
             return perm.getEnchantedPermanent() == target && target.isArtifact();
+        }
+        @Override
+        public boolean isStatic() {
+            return true;
         }
     };
 
@@ -929,12 +937,9 @@ public class MagicTargetFilterFactory {
             final MagicPermanent perm = (MagicPermanent)source;
             return perm.getEnchantedPermanent() == target && target.isCreature();
         }
-    };
-
-    public static final MagicPermanentFilterImpl CREATURE_WITH_ANOTHER_AURA = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
-            final int amount = source.isPermanent() && source.hasSubType(MagicSubType.Aura) ? 1 : 0;
-            return target.isCreature() && target.getAuraPermanents().size() >= 1+amount;
+        @Override
+        public boolean isStatic() {
+            return true;
         }
     };
 
@@ -943,12 +948,27 @@ public class MagicTargetFilterFactory {
             final MagicPermanent perm = (MagicPermanent)source;
             return perm.getEnchantedPermanent() == target && target.isLand();
         }
+        @Override
+        public boolean isStatic() {
+            return true;
+        }
     };
 
     public static final MagicPermanentFilterImpl EQUIPPED_CREATURE = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             final MagicPermanent perm = (MagicPermanent)source;
             return perm.getEquippedCreature() == target && target.isCreature();
+        }
+        @Override
+        public boolean isStatic() {
+            return true;
+        }
+    };
+
+    public static final MagicPermanentFilterImpl CREATURE_WITH_ANOTHER_AURA = new MagicPermanentFilterImpl() {
+        public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
+            final int amount = source.isPermanent() && source.hasSubType(MagicSubType.Aura) ? 1 : 0;
+            return target.isCreature() && target.getAuraPermanents().size() >= 1+amount;
         }
     };
 
@@ -1775,7 +1795,7 @@ public class MagicTargetFilterFactory {
             return MagicColor.isMulti(permanent);
         }
     };
-    
+
     public static final MagicPermanentFilterImpl COLORLESS_CREATURE = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return  target.isCreature() && MagicColor.isColorless(target);
@@ -1785,6 +1805,12 @@ public class MagicTargetFilterFactory {
     public static final MagicPermanentFilterImpl COLORLESS_CREATURE_YOU_CONTROL = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return  target.isCreature() && MagicColor.isColorless(target) && target.isController(player);
+        }
+    };
+
+    public static final MagicStackFilterImpl COLORLESS_SPELL = new MagicStackFilterImpl() {
+        public boolean accept(final MagicSource source,final MagicPlayer player,final MagicItemOnStack itemOnStack) {
+            return itemOnStack.isSpell() && MagicColor.isColorless(itemOnStack.getSource());
         }
     };
 
@@ -2661,6 +2687,7 @@ public class MagicTargetFilterFactory {
         single.put("creature or sorcery spell", CREATURE_OR_SORCERY_SPELL);
         single.put("Spirit or Arcane spell", SPIRIT_OR_ARCANE_SPELL);
         single.put("multicolored spell", MULTICOLORED_SPELL);
+        single.put("colorless spell", COLORLESS_SPELL);
 
         // player
         single.put("opponent", OPPONENT);

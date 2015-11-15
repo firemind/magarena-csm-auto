@@ -1,6 +1,6 @@
 name=Kami of Ancient Law
 image=http://magiccards.info/scans/en/mm2/21.jpg
-value=2.500
+value=4.317
 rarity=C
 type=Creature
 subtype=Spirit

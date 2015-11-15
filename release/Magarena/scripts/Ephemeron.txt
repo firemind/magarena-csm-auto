@@ -1,6 +1,6 @@
 name=Ephemeron
-image=http://magiccards.info/scans/en/tpr/48.jpg
-value=2.500
+image=http://magiccards.info/scans/en/vma/66.jpg
+value=3.427
 rarity=R
 type=Creature
 subtype=Illusion

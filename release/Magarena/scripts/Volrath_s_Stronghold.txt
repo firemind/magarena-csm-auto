@@ -1,6 +1,7 @@
 name=Volrath's Stronghold
 image=http://magiccards.info/scans/en/tpr/248.jpg
-value=2.500
+image_updated=2015-11-14
+value=4.453
 rarity=M
 type=Legendary,Land
 ability={T}: Add {1} to your mana pool.;\

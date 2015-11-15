@@ -1,6 +1,6 @@
 name=Selesnya Guildmage
 image=http://magiccards.info/scans/en/mm2/197.jpg
-value=2.500
+value=3.636
 rarity=U
 type=Creature
 subtype=Elf,Wizard

@@ -1,6 +1,7 @@
 name=Shadowmage Infiltrator
-image=http://magiccards.info/scans/en/tsts/99.jpg
-value=2.500
+image=http://magiccards.info/scans/en/mm2/186.jpg
+image_updated=2015-11-05
+value=4.357
 rarity=R
 type=Creature
 subtype=Human,Wizard

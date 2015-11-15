@@ -1,6 +1,6 @@
 name=Fighting Drake
-image=http://magiccards.info/scans/en/tpr/49.jpg
-value=2.500
+image=http://magiccards.info/scans/en/8e/77.jpg
+value=2.636
 rarity=U
 type=Creature
 subtype=Drake

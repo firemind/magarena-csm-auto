@@ -1,6 +1,7 @@
 name=Niv-Mizzet, the Firemind
 image=http://magiccards.info/scans/en/mm2/182.jpg
-value=2.500
+image_updated=2015-11-05
+value=3.960
 rarity=R
 type=Legendary,Creature
 subtype=Dragon,Wizard

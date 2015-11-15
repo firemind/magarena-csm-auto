@@ -1,6 +1,7 @@
 name=Heartwood Giant
 image=http://magiccards.info/scans/en/tpr/174.jpg
-value=2.500
+image_updated=2015-11-14
+value=2.845
 rarity=R
 type=Creature
 subtype=Giant

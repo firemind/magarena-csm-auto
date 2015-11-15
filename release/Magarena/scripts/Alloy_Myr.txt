@@ -1,6 +1,7 @@
 name=Alloy Myr
 image=http://magiccards.info/scans/en/mm2/201.jpg
-value=2.500
+image_updated=2015-11-05
+value=3.651
 rarity=C
 type=Artifact,Creature
 subtype=Myr

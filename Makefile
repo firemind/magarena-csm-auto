@@ -131,7 +131,6 @@ M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 			release/Magarena.jar \
 			release/Magarena.exe \
 			release/Magarena.sh \
-			release/Magarena.command \
 			release/README.txt \
 			release/lib \
 			Magarena-1.$*
@@ -204,6 +203,7 @@ life ?= 10
 ai1 ?= MMABFast
 ai2 ?= MMABFast
 debug ?= false
+devMode ?= true
 selfMode ?= false
 flags ?= 
 
@@ -213,6 +213,7 @@ flags ?=
 	$(RUN) ${flags} \
 	-Dmagarena.dir=`pwd`/release \
 	-Ddebug=${debug} \
+	-DdevMode=${devMode} \
 	-Dgame.log=$*.log \
 	-Djava.awt.headless=true \
 	magic.DeckStrCal \
@@ -229,7 +230,7 @@ debug: $(MAG)
 	make 101.t debug=true games=0 flags=-ea || (cat 101.out && false)
 
 %.d: $(MAG)
-	$(DEBUG) -DrndSeed=$* -DselfMode=$(selfMode) -Ddebug=$(debug) -Dmagarena.dir=`pwd`/release -jar $^ |& tee $*.log
+	$(DEBUG) -DrndSeed=$* -DselfMode=$(selfMode) -Ddebug=${debug} -DdevMode=${devMode} -Dmagarena.dir=`pwd`/release -jar $^ |& tee $*.log
 
 # Z = 4.4172 (99.999%)
 # E = 0.01
@@ -738,13 +739,6 @@ properties.diff:
 common_costs:
 	 grep "[^\"]*:" grammar/rules.txt -o | sed 's/>//;s/, /\n/g;s/://' | sort | uniq -c | sort -n | grep -v "{" > $@
 
-github-releases.json:
-	curl https://api.github.com/repos/magarena/magarena/releases > $@
-
-correct-release-label:
-	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${mac} -H"Content-Type: application/json" -d'{"name": "Magarena-${ver}.app.zip", "label":"Magarena-${ver}.app.zip for Mac"}' -u ${username}
-	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${linux} -H"Content-Type: application/json" -d'{"name": "Magarena-${ver}.zip", "label":"Magarena-${ver}.zip for Linux/Windows"}' -u ${username}
-
 push: clean normalize_files checks debug
 	git push origin master
 
@@ -820,3 +814,10 @@ upload-mac-release:
     --tag "${tag}" \
     --name "Magarena-${tag}.app.zip" \
     --file Magarena-${tag}.app.zip
+
+github-releases.json:
+	curl https://api.github.com/repos/magarena/magarena/releases > $@
+
+correct-release-label:
+	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${mac} -H"Content-Type: application/json" -d'{"name": "Magarena-${ver}.app.zip", "label":"Magarena-${ver}.app.zip for Mac"}' -u ${username}
+	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${linux} -H"Content-Type: application/json" -d'{"name": "Magarena-${ver}.zip", "label":"Magarena-${ver}.zip for Linux/Windows"}' -u ${username}

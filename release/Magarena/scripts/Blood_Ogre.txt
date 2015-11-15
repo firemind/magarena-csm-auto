@@ -1,6 +1,6 @@
 name=Blood Ogre
 image=http://magiccards.info/scans/en/mm2/106.jpg
-value=2.500
+value=3.700
 rarity=C
 type=Creature
 subtype=Ogre,Warrior

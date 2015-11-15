@@ -1,6 +1,6 @@
 name=Stalking Stones
-image=http://magiccards.info/scans/en/tpr/245.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ddf/75.jpg
+value=3.500
 rarity=U
 type=Land
 ability={T}: Add {1} to your mana pool.;\

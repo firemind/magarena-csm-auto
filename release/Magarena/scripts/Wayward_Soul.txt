@@ -1,6 +1,6 @@
 name=Wayward Soul
-image=http://magiccards.info/scans/en/tpr/78.jpg
-value=2.500
+image=http://magiccards.info/scans/en/bd/18.jpg
+value=3.019
 rarity=C
 type=Creature
 subtype=Spirit

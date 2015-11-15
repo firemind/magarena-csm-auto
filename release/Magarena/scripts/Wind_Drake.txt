@@ -1,6 +1,6 @@
 name=Wind Drake
-image=http://magiccards.info/scans/en/tpr/81.jpg
-value=2.500
+image=http://magiccards.info/scans/en/dgm/20.jpg
+value=2.819
 rarity=C
 type=Creature
 subtype=Drake

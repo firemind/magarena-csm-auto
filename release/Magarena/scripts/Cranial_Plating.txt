@@ -1,6 +1,7 @@
 name=Cranial Plating
 image=http://magiccards.info/scans/en/mm2/206.jpg
-value=2.500
+image_updated=2015-11-05
+value=4.552
 rarity=U
 type=Artifact
 subtype=Equipment

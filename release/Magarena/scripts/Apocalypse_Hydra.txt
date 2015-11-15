@@ -1,6 +1,7 @@
 name=Apocalypse Hydra
 image=http://magiccards.info/scans/en/mm2/171.jpg
-value=2.500
+image_updated=2015-11-05
+value=3.901
 rarity=R
 type=Creature
 subtype=Hydra

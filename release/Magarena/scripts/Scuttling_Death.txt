@@ -1,6 +1,6 @@
 name=Scuttling Death
 image=http://magiccards.info/scans/en/mm2/94.jpg
-value=2.500
+value=1.141
 rarity=C
 type=Creature
 subtype=Spirit

@@ -1,6 +1,6 @@
 name=Midnight Banshee
 image=http://magiccards.info/scans/en/mm2/86.jpg
-value=2.500
+value=3.948
 rarity=R
 type=Creature
 subtype=Spirit

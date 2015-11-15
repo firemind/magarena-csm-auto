@@ -1,6 +1,7 @@
 name=Maze of Shadows
 image=http://magiccards.info/scans/en/tpr/238.jpg
-value=2.500
+image_updated=2015-11-14
+value=3.162
 rarity=U
 type=Land
 ability={T}: Add {1} to your mana pool.

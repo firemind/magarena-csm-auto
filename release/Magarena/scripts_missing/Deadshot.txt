@@ -1,5 +1,6 @@
 name=Deadshot
 image=http://magiccards.info/scans/en/tpr/129.jpg
+image_updated=2015-11-14
 value=2.500
 rarity=U
 type=Sorcery

@@ -1,6 +1,6 @@
 name=Rampant Growth
 image=http://magiccards.info/scans/en/mm2/157.jpg
-value=2.500
+value=4.011
 rarity=C
 type=Sorcery
 cost={1}{G}
