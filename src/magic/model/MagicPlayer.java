@@ -59,6 +59,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     private int lifeLossThisTurn;
     private int lifeGainThisTurn;
     private int poison;
+    private int experience;
     private int preventDamage;
     private int extraTurns;
     private int drawnCards;
@@ -101,6 +102,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         lifeGainThisTurn = sourcePlayer.lifeGainThisTurn;
         lifeLossThisTurn = sourcePlayer.lifeLossThisTurn;
         poison=sourcePlayer.poison;
+        experience=sourcePlayer.experience;
         stateFlags=sourcePlayer.stateFlags;
         preventDamage=sourcePlayer.preventDamage;
         extraTurns=sourcePlayer.extraTurns;
@@ -143,6 +145,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
             lifeLossThisTurn,
             lifeGainThisTurn,
             poison,
+            experience,
             stateFlags,
             preventDamage,
             extraTurns,
@@ -179,6 +182,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         long playerId=id;
         playerId=playerId*ID_FACTOR+life;
         playerId=playerId*ID_FACTOR+poison;
+        playerId=playerId*ID_FACTOR+experience;
         playerId=playerId*ID_FACTOR+builderCost.getMinimumAmount();
         playerId=playerId*ID_FACTOR+permanents.getStateId();
         playerId=playerId*ID_FACTOR+hand.getStateId();
@@ -261,20 +265,28 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         return lifeLossThisTurn;
     }
 
-    public void setLifeLossThisTurn(final int lifeLossThisTurn) {
-        this.lifeLossThisTurn=lifeLossThisTurn;
+    public void setLifeLossThisTurn(final int life) {
+        lifeLossThisTurn = life;
     }
 
-    public void changeLifeLossThisTurn(final int lifeLossThisTurn) {
-        this.lifeLossThisTurn+=lifeLossThisTurn;
+    public void changeLifeLossThisTurn(final int life) {
+        lifeLossThisTurn += life;
     }
 
-    public void setPoison(final int poison) {
-        this.poison=poison;
+    public void setPoison(final int p) {
+        poison = p;
     }
 
     public int getPoison() {
         return poison;
+    }
+    
+    public void setExperience(final int e) {
+        experience = e;
+    }
+
+    public int getExperience() {
+        return experience;
     }
 
     public void changeExtraTurns(final int amount) {
@@ -584,9 +596,13 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     }
 
     public int getNrOfPermanents(final MagicTargetFilter<MagicPermanent> filter) {
+        return getNrOfPermanents(MagicSource.NONE, filter);
+    }
+
+    public int getNrOfPermanents(final MagicSource source, final MagicTargetFilter<MagicPermanent> filter) {
         int count = 0;
         for (final MagicPermanent permanent : permanents) {
-            if (filter.accept(MagicSource.NONE, this, permanent)) {
+            if (filter.accept(source, this, permanent)) {
                 count++;
             }
         }
@@ -594,8 +610,12 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     }
 
     public boolean controlsPermanent(final MagicTargetFilter<MagicPermanent> filter) {
+        return controlsPermanent(MagicSource.NONE, filter);
+    }
+
+    public boolean controlsPermanent(final MagicSource source, final MagicTargetFilter<MagicPermanent> filter) {
         for (final MagicPermanent permanent : permanents) {
-            if (filter.accept(MagicSource.NONE, this, permanent)) {
+            if (filter.accept(source, this, permanent)) {
                 return true;
             }
         }
@@ -818,13 +838,22 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     @Override
     public int getCounters(final MagicCounterType counterType) {
-        return (counterType == MagicCounterType.Poison) ? getPoison() : 0;
+        switch (counterType) {
+            case Poison:
+                return getPoison();
+            case Experience:
+                return getExperience();
+            default:
+                return 0;
+        }
     }
 
     @Override
     public void changeCounters(final MagicCounterType counterType,final int amount) {
         if (counterType == MagicCounterType.Poison) {
-            poison = poison + amount;
+            poison += amount;
+        } else if (counterType == MagicCounterType.Experience) {
+            experience += amount;
         } else {
             throw new RuntimeException(counterType + " cannot be modified on player");
         }

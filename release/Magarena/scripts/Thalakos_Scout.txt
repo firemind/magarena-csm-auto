@@ -1,11 +1,13 @@
 name=Thalakos Scout
-image=http://magiccards.info/scans/en/ex/48.jpg
+image=http://magiccards.info/scans/en/tpr/71.jpg
+image_updated=2015-11-14
 value=3.455
 rarity=C
 type=Creature
 subtype=Thalakos,Soldier,Scout
 cost={2}{U}
 pt=2/1
-ability=shadow;Discard a card: Return SN to its owner's hand.
+ability=Shadow;\
+        Discard a card: Return SN to its owner's hand.
 timing=main
 oracle=Shadow\nDiscard a card: Return Thalakos Scout to its owner's hand.

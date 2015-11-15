@@ -22,6 +22,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import magic.ai.MagicAI;
@@ -62,13 +64,13 @@ import magic.ui.duel.choice.ModeChoicePanel;
 import magic.ui.duel.choice.MulliganChoicePanel;
 import magic.ui.duel.choice.MultiKickerChoicePanel;
 import magic.ui.duel.choice.PlayChoicePanel;
-import magic.ui.duel.viewer.ChoiceViewer;
-import magic.ui.duel.viewer.PlayerViewerInfo;
+import magic.ui.duel.PlayerViewerInfo;
 import magic.ui.duel.viewer.PlayerZoneViewer;
 import magic.ui.duel.viewer.UserActionPanel;
-import magic.ui.duel.viewer.ViewerInfo;
+import magic.ui.duel.ViewerInfo;
 import magic.ui.screen.MulliganScreen;
 import magic.utility.MagicSystem;
+import magic.utility.MagicFileSystem;
 
 public class SwingGameController implements IUIGameController {
 
@@ -89,7 +91,7 @@ public class SwingGameController implements IUIGameController {
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final AtomicBoolean isPaused =  new AtomicBoolean(false);
     private final AtomicBoolean gameConceded = new AtomicBoolean(false);
-    private final Collection<ChoiceViewer> choiceViewers = new ArrayList<>();
+    private final Collection<IChoiceViewer> choiceViewers = new ArrayList<>();
     private Set<?> validChoices = Collections.emptySet();
     private AnnotatedCardPanel cardPopup;
     private UserActionPanel userActionPanel;
@@ -518,13 +520,13 @@ public class SwingGameController implements IUIGameController {
         });
     }
 
-    public void registerChoiceViewer(final ChoiceViewer choiceViewer) {
+    public void registerChoiceViewer(final IChoiceViewer choiceViewer) {
         choiceViewers.add(choiceViewer);
     }
 
     private void showValidChoices() {
         assert SwingUtilities.isEventDispatchThread();
-        for (final ChoiceViewer choiceViewer : choiceViewers) {
+        for (final IChoiceViewer choiceViewer : choiceViewers) {
             choiceViewer.showValidChoices(validChoices);
         }
     }
@@ -840,6 +842,29 @@ public class SwingGameController implements IUIGameController {
         } else {
             ScreenController.showInfoMessage("Can not save game state at this time.");
         }
+    }
+
+    public void createGameplayReport() {
+        setGamePaused(true);
+        try {
+            GameplayReport.createNewReport(game);
+        } catch (Exception ex) {
+            Logger.getLogger(GameplayReport.class.getName()).log(Level.WARNING, null, ex);
+            ScreenController.showWarningMessage("There was a problem creating the report :-\n\n" + ex.getMessage());
+        }
+
+        try {
+            GameplayReport.openReportDirectory();
+        } catch (Exception ex) {
+            Logger.getLogger(GameplayReport.class.getName()).log(Level.WARNING, null, ex);
+            ScreenController.showWarningMessage(
+                "There was a problem opening the reports folder at " +
+                MagicFileSystem.getDataPath(MagicFileSystem.DataPath.REPORTS).toString() +
+                " :-\n\n" + ex.getMessage()
+           );
+        }
+
+        setGamePaused(false);
     }
 
     private boolean isValidSaveState() {

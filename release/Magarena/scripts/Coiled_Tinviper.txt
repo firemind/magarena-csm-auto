@@ -1,11 +1,12 @@
 name=Coiled Tinviper
-image=http://magiccards.info/scans/en/tp/269.jpg
+image=http://magiccards.info/scans/en/tpr/219.jpg
+image_updated=2015-11-14
 value=2.432
 rarity=C
 type=Artifact,Creature
 subtype=Snake
 cost={3}
 pt=2/1
-ability=first strike
+ability=First strike
 timing=main
 oracle=First strike

@@ -2,6 +2,7 @@ package magic.model.event;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +37,7 @@ import magic.model.condition.MagicCondition;
 import magic.model.condition.MagicConditionFactory;
 import magic.model.condition.MagicConditionParser;
 import magic.model.mstatic.MagicStatic;
+import magic.model.mstatic.MagicLayer;
 import magic.model.stack.MagicCardOnStack;
 import magic.model.stack.MagicItemOnStack;
 import magic.model.target.*;
@@ -87,7 +89,7 @@ public enum MagicRuleEventAction {
         }
     },
     DestroyChosen(
-        "destroy " + ARG.TARGET + "\\.(?<noregen> it can't be regenerated\\.)?",
+        "destroy " + ARG.SINGLE + "\\.(?<noregen> it can't be regenerated\\.)?",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Destroy"
@@ -329,7 +331,7 @@ public enum MagicRuleEventAction {
         }
     },
     ExilePermanent(
-        "exile " + ARG.TARGET + "\\.",
+        "exile " + ARG.SINGLE + "\\.",
         MagicTargetHint.Negative,
         MagicExileTargetPicker.create(),
         MagicTiming.Removal,
@@ -373,7 +375,7 @@ public enum MagicRuleEventAction {
         }
     },
     DamageChosenAndController(
-        "sn deal(s)? (?<amount>[0-9]+) damage to " + ARG.TARGET + " and (?<amount2>[0-9]+) damage to you\\.",
+        "sn deal(s)? (?<amount>[0-9]+) damage to " + ARG.SINGLE + " and (?<amount2>[0-9]+) damage to you\\.",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Damage"
@@ -401,7 +403,7 @@ public enum MagicRuleEventAction {
         }
     },
     DamageChosen(
-        ARG.IT + " deal(s)? (?<amount>[0-9]+) damage to " + ARG.TARGET + "(\\.)?",
+        ARG.IT + " deal(s)? (?<amount>[0-9]+) damage to " + ARG.SINGLE + "(\\.)?",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Damage"
@@ -426,7 +428,7 @@ public enum MagicRuleEventAction {
         }
     },
     DamageChosenEqual(
-        ARG.IT + " deal(s)? damage equal to " + ARG.WORDRUN + " to " + ARG.TARGET + "(\\.)?",
+        ARG.IT + " deal(s)? damage equal to " + ARG.WORDRUN + " to " + ARG.SINGLE + "(\\.)?",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Damage"
@@ -453,7 +455,7 @@ public enum MagicRuleEventAction {
         }
     },
     DamageChosenEqualAlt(
-        ARG.IT + " deal(s)? damage to " + ARG.TARGET + " equal to " + ARG.WORDRUN + "(\\.)?",
+        ARG.IT + " deal(s)? damage to " + ARG.SINGLE + " equal to " + ARG.WORDRUN + "(\\.)?",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Damage"
@@ -1050,7 +1052,7 @@ public enum MagicRuleEventAction {
         }
     },
     PumpChosen(
-        ARG.TARGET + " get(s)? (?<pt>[0-9+]+/[0-9+]+) until end of turn\\.",
+        ARG.SINGLE + " get(s)? (?<pt>[0-9+]+/[0-9+]+) until end of turn\\.",
         MagicTargetHint.Positive,
         MagicPumpTargetPicker.create(),
         MagicTiming.Pump,
@@ -1140,7 +1142,7 @@ public enum MagicRuleEventAction {
         }
     },
     PumpGainChosen(
-        ARG.TARGET + " get(s)? (?<pt>[0-9+]+/[0-9+]+) and (gain(s)?|is) (?<ability>.+) until end of turn\\.",
+        ARG.SINGLE + " get(s)? (?<pt>[0-9+]+/[0-9+]+) and (gain(s)?|is) (?<ability>.+) until end of turn\\.",
         MagicTargetHint.Positive
     ) {
         @Override
@@ -1175,7 +1177,7 @@ public enum MagicRuleEventAction {
         }
     },
     PumpGainChosenCan(
-        ARG.TARGET + " get(s)? (?<pt>[0-9+]+/[0-9+]+) (until end of turn and|and) (?<ability>can('t)? .+) this turn\\.",
+        ARG.SINGLE + " get(s)? (?<pt>[0-9+]+/[0-9+]+) (until end of turn and|and) (?<ability>can('t)? .+) this turn\\.",
         MagicTargetHint.Positive
     ) {
         @Override
@@ -1196,7 +1198,7 @@ public enum MagicRuleEventAction {
         }
     },
     PumpGainChosenAlt(
-        "until end of turn, " + ARG.TARGET + " get(s)? (?<pt>[0-9+]+/[0-9+]+) and (gain(s)?|is) (?<ability>.+)(\\.)?",
+        "until end of turn, " + ARG.SINGLE + " get(s)? (?<pt>[0-9+]+/[0-9+]+) and (gain(s)?|is) (?<ability>.+)(\\.)?",
         MagicTargetHint.Positive
     ) {
         @Override
@@ -1251,7 +1253,7 @@ public enum MagicRuleEventAction {
         }
     },
     WeakenChosen(
-        ARG.TARGET + " get(s)? (?<pt>[0-9-]+/[0-9-]+) until end of turn\\.",
+        ARG.SINGLE + " get(s)? (?<pt>[0-9-]+/[0-9-]+) until end of turn\\.",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Weaken"
@@ -1303,7 +1305,7 @@ public enum MagicRuleEventAction {
         }
     },
     ModPTChosen(
-        ARG.TARGET + " get(s)? (?<pt>[0-9+-]+/[0-9+-]+) until end of turn\\.",
+        ARG.SINGLE + " get(s)? (?<pt>[0-9+-]+/[0-9+-]+) until end of turn\\.",
         MagicTiming.Removal,
         "Pump"
     ) {
@@ -1325,7 +1327,7 @@ public enum MagicRuleEventAction {
         }
     },
     ModPTGainChosen(
-        ARG.TARGET + " get(s)? (?<pt>[0-9+-]+/[0-9+-]+) and gains (?<ability>.+) until end of turn\\.",
+        ARG.SINGLE + " get(s)? (?<pt>[0-9+-]+/[0-9+-]+) and gains (?<ability>.+) until end of turn\\.",
         MagicTiming.Removal
     ) {
         @Override
@@ -1399,7 +1401,7 @@ public enum MagicRuleEventAction {
         }
     },
     CounterOnChosen(
-        "put (?<amount>[a-z]+) (?<type>[^ ]+) counter(s)? on " + ARG.TARGET + "\\."
+        "put (?<amount>[a-z]+) (?<type>[^ ]+) counter(s)? on " + ARG.SINGLE + "\\."
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
@@ -2120,7 +2122,7 @@ public enum MagicRuleEventAction {
         }
     },
     TapChosen(
-        "tap " + ARG.TARGET + "\\.",
+        "tap " + ARG.SINGLE + "\\.",
         MagicTargetHint.Negative,
         MagicTapTargetPicker.Tap,
         MagicTiming.Tapping,
@@ -2215,7 +2217,7 @@ public enum MagicRuleEventAction {
         }
     },
     UntapChosen(
-        "untap " + ARG.TARGET + "\\.",
+        "untap " + ARG.SINGLE + "\\.",
         MagicTargetHint.Positive,
         MagicTapTargetPicker.Untap,
         MagicTiming.Tapping,
@@ -2572,7 +2574,7 @@ public enum MagicRuleEventAction {
         }
     },
     RegenerateChosen(
-        "regenerate " + ARG.TARGET + "\\.",
+        "regenerate " + ARG.SINGLE + "\\.",
         MagicTargetHint.Positive,
         MagicRegenerateTargetPicker.create(),
         MagicTiming.Pump,
@@ -3037,7 +3039,7 @@ public enum MagicRuleEventAction {
         }
     },
     GainProtectionChosen(
-        ARG.TARGET + " gain(s)? protection from the color of your choice until end of turn\\.",
+        ARG.SINGLE + " gain(s)? protection from the color of your choice until end of turn\\.",
         MagicTargetHint.Positive,
         MagicTiming.Pump,
         "Protection",
@@ -3057,7 +3059,7 @@ public enum MagicRuleEventAction {
         }
     ),
     GainChosen(
-        ARG.TARGET + " gain(s)? (?<ability>.+) until end of turn\\.",
+        ARG.SINGLE + " gain(s)? (?<ability>.+) until end of turn\\.",
         MagicTargetHint.Positive
     ) {
         @Override
@@ -3117,7 +3119,7 @@ public enum MagicRuleEventAction {
         }
     },
     GainChosenAlt(
-        "until end of turn, " + ARG.TARGET + " gain(s)? (?<ability>.+)(\\.)?",
+        "until end of turn, " + ARG.SINGLE + " gain(s)? (?<ability>.+)(\\.)?",
         MagicTargetHint.Positive
     ) {
         @Override
@@ -3138,7 +3140,7 @@ public enum MagicRuleEventAction {
         }
     },
     GainChosenCan(
-        ARG.TARGET + " (?<ability>can('t)? .+) this turn\\."
+        ARG.SINGLE + " (?<ability>can('t)? .+) this turn\\."
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
@@ -3245,7 +3247,29 @@ public enum MagicRuleEventAction {
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
-            return GainGroup.getAction(matcher);
+            final MagicAbilityList abilityList = MagicAbility.getAbilityList(matcher.group("ability"));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(matcher.group("group"));
+            return new MagicEventAction() {
+                @Override
+                public void executeEvent(final MagicGame game, final MagicEvent event) {
+                    if (filter.isStatic()) {
+                        final Collection<MagicPermanent> targets = filter.filter(event);
+                        for (final MagicPermanent creature : targets) {
+                            game.doAction(new GainAbilityAction(creature,abilityList));
+                        }
+                    } else {
+                        final int pIdx = event.getPlayer().getIndex();
+                        game.doAction(new AddStaticAction(new MagicStatic(MagicLayer.Game, MagicStatic.UntilEOT) {
+                            @Override
+                            public void modGame(final MagicPermanent source, final MagicGame game) {
+                                for (MagicPermanent perm : filter.filter(game.getPlayer(pIdx))) {
+                                    perm.addAbility(abilityList);
+                                }
+                            }
+                        }));
+                    }
+                }
+            };
         }
         @Override
         public MagicTiming getTiming(final Matcher matcher) {
@@ -3286,7 +3310,7 @@ public enum MagicRuleEventAction {
         }
     },
     LoseChosen(
-        ARG.TARGET + " loses (?<ability>.+) until end of turn\\.",
+        ARG.SINGLE + " loses (?<ability>.+) until end of turn\\.",
         MagicTargetHint.Negative
     ) {
         @Override
@@ -3318,7 +3342,7 @@ public enum MagicRuleEventAction {
         }
     },
     GainControl(
-        "gain control of " + ARG.TARGET + "(?<ueot> until end of turn)?\\.",
+        "gain control of " + ARG.SINGLE + "(?<ueot> until end of turn)?\\.",
         MagicTargetHint.Negative,
         MagicExileTargetPicker.create(),
         MagicTiming.Removal,

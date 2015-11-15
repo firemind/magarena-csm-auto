@@ -1,5 +1,5 @@
 name=Copper Carapace
-image=http://magiccards.info/scans/en/mbs/102.jpg
+image=http://magiccards.info/scans/en/mm2/205.jpg
 value=2.234
 rarity=C
 type=Artifact
@@ -7,5 +7,5 @@ subtype=Equipment
 cost={1}
 ability=Equipped creature gets +2/+2 and can't block.;\
         Equip {3}
-timing=main
+timing=equipment
 oracle=Equipped creature gets +2/+2 and can't block.\nEquip {3}

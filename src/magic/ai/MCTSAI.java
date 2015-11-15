@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.RejectedExecutionException;
 
 /*
 AI using Monte Carlo Tree Search
@@ -97,9 +98,6 @@ public class MCTSAI implements MagicAI {
 
     private final boolean CHEAT;
 
-    //cache the set of choices at the root to avoid recomputing it all the time
-    private List<Object[]> RCHOICES;
-
     //cache nodes to reuse them in later decision
     private final LRUCache<Long, MCTSGameTree> CACHE = new LRUCache<Long, MCTSGameTree>(1000);
 
@@ -119,7 +117,7 @@ public class MCTSAI implements MagicAI {
             aiGame.hideHiddenCards();
         }
         final MagicEvent event = aiGame.getNextEvent();
-        RCHOICES = event.getArtificialChoiceResults(aiGame);
+        final List<Object[]> RCHOICES = event.getArtificialChoiceResults(aiGame);
 
         final int size = RCHOICES.size();
 
@@ -147,7 +145,7 @@ public class MCTSAI implements MagicAI {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                TreeUpdate(this, root, aiGame, executor, queue, END_TIME);
+                TreeUpdate(this, root, aiGame, executor, queue, END_TIME, RCHOICES);
             }
         };
         
@@ -178,7 +176,7 @@ public class MCTSAI implements MagicAI {
             }
         }
 
-        log(outputChoice(scorePlayer, root, START_TIME, bestC, sims));
+        log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
 
         return startGame.map(RCHOICES.get(bestC));
     }
@@ -218,7 +216,8 @@ public class MCTSAI implements MagicAI {
         final MagicGame aiGame, 
         final ExecutorService executor, 
         final BlockingQueue<Runnable> queue, 
-        final long END_TIME
+        final long END_TIME,
+        final List<Object[]> RCHOICES
     ) {
 
         //prioritize backpropagation tasks
@@ -226,7 +225,8 @@ public class MCTSAI implements MagicAI {
             try {
                 queue.take().run();
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                // occurs when shutdownNow is invoked
+                return;
             }
         }
 
@@ -238,7 +238,7 @@ public class MCTSAI implements MagicAI {
         //pass in a clone of the state,
         //genNewTreeNode grows the tree by one node
         //and returns the path from the root to the new node
-        final LinkedList<MCTSGameTree> path = growTree(root, rootGame);
+        final LinkedList<MCTSGameTree> path = growTree(root, rootGame, RCHOICES);
 
         assert path.size() >= 2 : "ERROR! length of MCTS path is " + path.size();
         
@@ -249,7 +249,12 @@ public class MCTSAI implements MagicAI {
 
         // submit random play to executor
         if (running) {
-            executor.execute(genSimulationTask(rootGame, path, queue));
+            try {
+                executor.execute(genSimulationTask(rootGame, path, queue));
+            } catch (RejectedExecutionException e) {
+                // occurs when trying to submit to a execute that has shutdown
+                return;
+            }
         }
         
         // virtual loss + game theoretic value propagation
@@ -278,7 +283,12 @@ public class MCTSAI implements MagicAI {
        
         // end simulations once root is AI win or time is up
         if (running && root.isAIWin() == false) {
-            executor.execute(updateTask);
+            try {
+                executor.execute(updateTask);
+            } catch (RejectedExecutionException e) {
+                // occurs when trying to submit to a execute that has shutdown
+                return;
+            }
         } else {
             executor.shutdown();
         }
@@ -289,7 +299,8 @@ public class MCTSAI implements MagicAI {
         final MCTSGameTree root,
         final long START_TIME,
         final int bestC,
-        final int sims
+        final int sims,
+        final List<Object[]> RCHOICES
     ) {
 
         final StringBuilder out = new StringBuilder();
@@ -334,15 +345,15 @@ public class MCTSAI implements MagicAI {
         return out.toString().trim();
     }
 
-    private LinkedList<MCTSGameTree> growTree(final MCTSGameTree root, final MagicGame game) {
+    private LinkedList<MCTSGameTree> growTree(final MCTSGameTree root, final MagicGame game, final List<Object[]> RCHOICES) {
         final LinkedList<MCTSGameTree> path = new LinkedList<MCTSGameTree>();
         boolean found = false;
         MCTSGameTree curr = root;
         path.add(curr);
 
-        for (List<Object[]> choices = getNextChoices(game);
-             !choices.isEmpty();
-             choices = getNextChoices(game)) {
+        for (List<Object[]> choices = getNextChoices(game, RCHOICES);
+             !choices.isEmpty() && !Thread.currentThread().isInterrupted();
+             choices = getNextChoices(game, RCHOICES)) {
 
             assert choices.size() > 0 : "ERROR! No choice at start of genNewTreeNode";
 
@@ -458,7 +469,10 @@ public class MCTSAI implements MagicAI {
         game.setFastChoices(true);
 
         // simulate game until it is finished or reached MAX_CHOICES
-        while (game.advanceToNextEventWithChoice() && aiChoices < MAX_CHOICES && oppChoices < MAX_CHOICES) {
+        while (aiChoices < MAX_CHOICES &&
+               oppChoices < MAX_CHOICES &&
+               !Thread.currentThread().isInterrupted() &&
+               game.advanceToNextEventWithChoice()) {
             final MagicEvent event = game.getNextEvent();
             
             if (event.getPlayer() == game.getScorePlayer()) {
@@ -485,7 +499,7 @@ public class MCTSAI implements MagicAI {
         return new int[]{aiChoices, oppChoices};
     }
 
-    private List<Object[]> getNextChoices(final MagicGame game) {
+    private List<Object[]> getNextChoices(final MagicGame game, final List<Object[]> RCHOICES) {
         //disable fast choices
         game.setFastChoices(false);
 

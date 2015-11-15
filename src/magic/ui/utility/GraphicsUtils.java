@@ -137,13 +137,17 @@ final public class GraphicsUtils {
         return ret;
     }
 
+    public static File doScreenshotToFile(final Component container, final Path filePath, final String imageType) throws IOException {
+        final File imageFile = new File(filePath.toString());
+        ImageIO.write(getScreenshotImage(container), imageType, imageFile);
+        return imageFile;
+    }
+
     /**
      * Creates an image of the contents of container and saves to file.
      */
     public static File doScreenshotToFile(final Component container, final Path filePath) throws IOException {
-        final File imageFile = new File(filePath.toString());
-        ImageIO.write(getScreenshotImage(container), "png", imageFile);
-        return imageFile;
+        return doScreenshotToFile(container, filePath, "png");
     }
 
     private static BufferedImage getScreenshotImage(final Component container) {
@@ -164,6 +168,10 @@ final public class GraphicsUtils {
 
     public static BufferedImage getCompatibleBufferedImage(final int width, final int height) {
         return getCompatibleBufferedImage(width, height, Transparency.OPAQUE);
+    }
+
+    public static BufferedImage getCompatibleBufferedImage(BufferedImage image) {
+        return getCompatibleBufferedImage(image.getWidth(), image.getHeight(), image.getTransparency());
     }
 
     public static boolean isValidImageFile(final Path imageFilePath) {
@@ -284,6 +292,15 @@ final public class GraphicsUtils {
                 GRAYSCALE_FILTER
         );
         return Toolkit.getDefaultToolkit().createImage(fis);
+    }
+
+    public static BufferedImage getTranslucentImage(BufferedImage image, float opacity) {
+        final BufferedImage newImage = GraphicsUtils.getCompatibleBufferedImage(image);
+        final Graphics2D g2d = newImage.createGraphics();
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return newImage;
     }
 
 }

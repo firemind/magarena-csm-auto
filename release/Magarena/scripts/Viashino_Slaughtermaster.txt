@@ -1,12 +1,13 @@
 name=Viashino Slaughtermaster
-image=http://magiccards.info/scans/en/cfx/73.jpg
+image=http://magiccards.info/scans/en/mm2/133.jpg
+image_updated=2015-11-05
 value=3.140
-rarity=U
+rarity=C
 type=Creature
 subtype=Viashino,Warrior
 cost={1}{R}
 pt=1/1
-ability=double strike;\
+ability=Double strike;\
         {B}{G}: SN gets +1/+1 until end of turn. Activate this ability only once each turn.
 timing=main
 oracle=Double strike\n{B}{G}: Viashino Slaughtermaster gets +1/+1 until end of turn. Activate this ability only once each turn.

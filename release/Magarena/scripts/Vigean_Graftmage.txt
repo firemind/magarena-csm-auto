@@ -1,11 +1,13 @@
 name=Vigean Graftmage
-image=http://magiccards.info/scans/en/di/35.jpg
+image=http://magiccards.info/scans/en/mm2/68.jpg
+image_updated=2015-11-05
 value=3.054
-rarity=U
+rarity=C
 type=Creature
 subtype=Vedalken,Wizard,Mutant
 cost={2}{U}
 pt=0/0
-ability=graft 2;{1}{U}:Untap target creature with a +1/+1 counter on it.
+ability=Graft 2;\
+        {1}{U}: Untap target creature with a +1/+1 counter on it.
 timing=main
 oracle=Graft 2\n{1}{U}: Untap target creature with a +1/+1 counter on it.

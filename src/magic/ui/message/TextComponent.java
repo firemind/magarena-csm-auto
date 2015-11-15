@@ -13,6 +13,7 @@ import magic.model.MagicMessage;
 public class TextComponent extends TComponent {
 
     public static MessageStyle messageStyle = GeneralConfig.getInstance().getLogMessageStyle();
+    private static final String CARD_ID_DELIM = String.valueOf(MagicMessage.CARD_ID_DELIMITER);
 
     private final String text;
     private final Font font;
@@ -27,12 +28,13 @@ public class TextComponent extends TComponent {
         final Font aFont,
         final boolean isChoice,
         final String aCardInfo,
-        final Color choiceColor) {
+        final Color choiceColor,
+        final Color interactiveColor) {
 
         this.text = text;
         this.cardInfo = aCardInfo;
 
-        this.fontColor = getTextColor(isChoice, choiceColor);
+        this.fontColor = getTextColor(isChoice, choiceColor, interactiveColor);
         this.font = getTextFont(aFont);
         this.metrics = component.getFontMetrics(this.font);
         
@@ -40,16 +42,16 @@ public class TextComponent extends TComponent {
 
     }
     
-    private Color getTextColor(boolean isChoice, Color choiceColor) {
+    private Color getTextColor(boolean isChoice, Color choiceColor, Color interactiveColor) {
         if (isCardId() && isChoice == false) {
             return Color.DARK_GRAY;
         }
         if (isInteractive() && messageStyle != MessageStyle.PLAINBOLDMONO) {
-            return Color.BLUE;
+            return interactiveColor;
         }
         if (text.equals("(") || text.equals(")")) {
             return messageStyle != MessageStyle.PLAINBOLDMONO
-                ? Color.BLUE
+                ? interactiveColor
                 : choiceColor;
         }
         if (isChoice) {
@@ -71,7 +73,7 @@ public class TextComponent extends TComponent {
     }
 
     private boolean isCardId() {
-        return text.startsWith("#");
+        return text.startsWith(CARD_ID_DELIM);
     }
 
     @Override
@@ -106,7 +108,7 @@ public class TextComponent extends TComponent {
     }
 
     long getCardId() {
-        final String[] info = cardInfo.split(String.valueOf(MagicMessage.CARD_ID_DELIMITER));
+        final String[] info = cardInfo.split(CARD_ID_DELIM);
         if (info.length > 1) {
             return Long.parseLong(info[1]);
         } else {

@@ -1,11 +1,13 @@
 name=Selenia, Dark Angel
-image=http://magiccards.info/scans/en/tp/345.jpg
+image=http://magiccards.info/scans/en/tpr/210.jpg
+image_updated=2015-11-14
 value=3.900
 rarity=R
 type=Legendary,Creature
 subtype=Angel
 cost={3}{W}{B}
 pt=3/3
-ability=flying;Pay 2 life: Return SN to its owner's hand.
+ability=Flying;\
+        Pay 2 life: Return SN to its owner's hand.
 timing=main
 oracle=Flying\nPay 2 life: Return Selenia, Dark Angel to its owner's hand.

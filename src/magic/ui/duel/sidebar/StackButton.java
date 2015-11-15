@@ -8,15 +8,15 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import magic.ui.SwingGameController;
-import magic.ui.duel.viewer.ChoiceViewer;
-import magic.ui.duel.viewer.StackViewerInfo;
+import magic.ui.IChoiceViewer;
+import magic.ui.duel.StackViewerInfo;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.PanelButton;
 import magic.ui.message.TextLabel;
 
 @SuppressWarnings("serial")
-class StackButton extends PanelButton implements ChoiceViewer {
+class StackButton extends PanelButton implements IChoiceViewer {
 
     private final StackViewerInfo stackInfo;
     private final SwingGameController controller;
@@ -46,6 +46,8 @@ class StackButton extends PanelButton implements ChoiceViewer {
             aController
         );
         panel.add(textLabel, BorderLayout.CENTER);
+
+        setBackground(FontsAndBorders.TRANSLUCENT_WHITE_STRONG);
     }
 
     private void doShowCardImage() {

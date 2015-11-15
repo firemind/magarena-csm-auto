@@ -1,20 +1,20 @@
 package magic.model.action;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import magic.model.MagicCard;
 import magic.model.MagicGame;
-import magic.model.MagicSource;
+import magic.model.MagicMessage;
 import magic.model.MagicPlayer;
+import magic.model.MagicSource;
 import magic.model.choice.MagicFromCardListChoice;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicEventAction;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class RevealAction extends MagicAction {
     
-    private final List<MagicCard> cards = new ArrayList<MagicCard>();
+    private final List<MagicCard> cards = new ArrayList<>();
 
     public RevealAction(final MagicCard aCard) {
         cards.add(aCard);
@@ -24,13 +24,14 @@ public class RevealAction extends MagicAction {
         cards.addAll(aCards);
     }
 
+    @Override
     public void doAction(final MagicGame game) {
         if (cards.isEmpty()) {
             return;
         }
         game.doAction(new AIRevealAction(cards));
         final MagicPlayer you = cards.get(0).getController();
-        final String message = you + " reveals " + cardNames(cards);
+        final String message = you + " reveals " + MagicMessage.getTokenizedCardNames(cards);
         game.logAppendMessage(you, message);
         game.addEvent(new MagicEvent(
             MagicSource.NONE,
@@ -41,18 +42,9 @@ public class RevealAction extends MagicAction {
         ));
     }
 
+    @Override
     public void undoAction(final MagicGame game) {
         //do nothing for now
     }
 
-    private static String cardNames(final Collection<MagicCard> cards) {
-        final StringBuffer sb = new StringBuffer();
-        for (final MagicCard card : cards) {
-            sb.append(card.toString());
-            sb.append(", ");
-        }
-        sb.delete(sb.length() - 2, sb.length());
-        sb.append('.');
-        return sb.toString();
-    }
 }
