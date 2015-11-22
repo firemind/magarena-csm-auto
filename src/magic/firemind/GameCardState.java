@@ -46,6 +46,9 @@ public class GameCardState {
             }
             return score;
         }
+        if(card.getName() == "Unknown"){
+            return 350;
+        }
         int score=(int)(card.getValue()*100);
         if(!inPlay){
            score -= card.getConvertedCost() * 20;

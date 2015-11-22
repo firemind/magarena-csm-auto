@@ -81,13 +81,14 @@ public class GameState {
 
             //System.out.println(gcs.getCardName()+" scored at "+score);
 			if (! gcs.isTapped() ){
-			    permanentValues +=10;
+			    permanentValues +=50;
 			}
 		}
         int handValues = 0;
 	    for(GameCardState gcs : hand){
 	            double score = gcs.getCardDefinitionScore(false);
-	            handValues +=  scoringSet.get("scorePermanents")*score;
+	            handValues +=  scoringSet.get("scoreHand")*score;
+	            //System.out.println(gcs.getCardName()+" scored at "+score);
 	    }
 		//return (int) (Math.random()*1000);
 		// TODO go wider, consider multiple outcomes for same action
