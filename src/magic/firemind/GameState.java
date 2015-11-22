@@ -75,14 +75,20 @@ public class GameState {
 		int totalPower = 0;
 		int totalToughness = 0;
 		int permanentValues = 0;
-		MagicCardDefinition mcd;
 		for(GameCardState gcs : permanents){
-			permanentValues += gcs.isTapped() ?  scoringSet.get("scorePermanents") : scoringSet.get("scorePermanents")+1;
-			if((mcd = gcs.getCardDef()).isCreature()){
-			  totalPower += mcd.getCardPower();	
-			  totalToughness += mcd.getCardToughness();
+		    double score = gcs.getCardDefinitionScore(true);
+			permanentValues +=  scoringSet.get("scorePermanents")*score;
+
+            //System.out.println(gcs.getCardName()+" scored at "+score);
+			if (! gcs.isTapped() ){
+			    permanentValues +=10;
 			}
 		}
+        int handValues = 0;
+	    for(GameCardState gcs : hand){
+	            double score = gcs.getCardDefinitionScore(false);
+	            handValues +=  scoringSet.get("scorePermanents")*score;
+	    }
 		//return (int) (Math.random()*1000);
 		// TODO go wider, consider multiple outcomes for same action
 		//    -> this leads to the question: is draw different or same in all simulations?
@@ -91,9 +97,9 @@ public class GameState {
 		// TODO add learning element
 		// TODO calculate scoring with gen algo
 		int score =  permanentValues + 
-				totalPower * scoringSet.get("scorePower") +
-				totalToughness * scoringSet.get("scoreToughness") + 
-				hand.size() * scoringSet.get("scoreHand") +
+				//totalPower * scoringSet.get("scorePower") +
+				//totalToughness * scoringSet.get("scoreToughness") + 
+		        handValues * scoringSet.get("scoreHand") +
 				graveyard.size() * scoringSet.get("scoreGraveyard") +
 				exiled.size() * scoringSet.get("scoreExiled") + 
 				life * scoringSet.get("scoreLife") + 

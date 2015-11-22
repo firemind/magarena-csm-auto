@@ -15,14 +15,14 @@ public class ScoringSet {
 	protected Map<String, Integer> scoringHash;
 	public ScoringSet(){
 		scoringHash =  new HashMap<>();
-		scoringHash.put("scorePermanents", 13);
-		scoringHash.put("scorePower", 14);
-		scoringHash.put("scoreToughness", 10);
-		scoringHash.put("scoreHand", 3);
+		scoringHash.put("scorePermanents", 2);
+		//scoringHash.put("scorePower", 14);
+		//scoringHash.put("scoreToughness", 10);
+		scoringHash.put("scoreHand", 1);
 		scoringHash.put("scoreGraveyard", 0);
 		scoringHash.put("scoreExiled", 0);
-		scoringHash.put("scoreLife", 3);
-		scoringHash.put("scorePoison", -5);
+		scoringHash.put("scoreLife", 75);
+		scoringHash.put("scorePoison", -500);
 	}
 	public ScoringSet(ScoringSet origScoringSet) {
 		scoringHash =  new HashMap<>();

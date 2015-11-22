@@ -1,7 +1,11 @@
 package magic.firemind;
 
+import java.util.Collection;
+
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
+import magic.model.MagicColor;
+import magic.model.mstatic.MagicStatic;
 
 public class GameCardState {
 
@@ -32,6 +36,25 @@ public class GameCardState {
 
     public boolean isTapped() {
         return isTapped;
+    }
+    
+    int getCardDefinitionScore(boolean inPlay) {
+        if (card.isLand()) {
+            int score=(int)(card.getValue()*50);
+            for (final MagicColor color : MagicColor.values()) {
+                score+=card.getManaSource(color)*50;
+            }
+            return score;
+        }
+        int score=(int)(card.getValue()*100);
+        if(!inPlay){
+           score -= card.getConvertedCost() * 20;
+        }
+        if (card.isCreature()) {
+            return score+(card.getCardPower()+card.getCardToughness())*10;
+        } else {
+            return score;
+        }
     }
 
     @Override
