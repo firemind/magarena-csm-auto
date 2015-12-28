@@ -14,7 +14,7 @@ import magic.model.MagicCardList;
 import magic.model.MagicDeck;
 import magic.model.MagicRandom;
 import magic.ui.CardImagesProvider;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.translate.UiString;
 import magic.ui.canvas.cards.CardsCanvas.LayoutMode;
 import magic.ui.canvas.cards.CardsCanvas;
@@ -35,7 +35,7 @@ public class SampleHandScreen
     private static final String _S3 = "Refresh";
     private static final String _S4 = "Deal a new sample hand.";
 
-    private final static Dimension cardSize = CardImagesProvider.PREFERRED_CARD_SIZE;
+    private final static Dimension cardSize = CardImagesProvider.HIGH_QUALITY_IMAGE_SIZE;
 
     private final CardsCanvas content;
     private final MagicDeck deck;
@@ -83,9 +83,8 @@ public class SampleHandScreen
     @Override
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.REFRESH_ICON),
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.REFRESH_ICON),
                         UiString.get(_S3), UiString.get(_S4),
                         new AbstractAction() {
                             @Override

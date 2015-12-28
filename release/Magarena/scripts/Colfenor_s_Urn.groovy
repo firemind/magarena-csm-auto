@@ -1,16 +1,14 @@
 [
-    new MagicWhenOtherPutIntoGraveyardTrigger() {
+    new OtherDiesTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MoveCardAction act) {
-            final MagicCard card = act.card;
-            return (act.fromLocation == MagicLocationType.Play &&
-                    card.isFriend(permanent) &&
-                    card.hasType(MagicType.Creature) &&
-                    card.getToughness() >= 4) ?
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent died) {
+            return (died.isOwner(permanent.getController()) &&
+                    died.hasType(MagicType.Creature) &&
+                    died.getToughness() >= 4) ?
                 new MagicEvent(
                     permanent,
                     new MagicMayChoice(),
-                    card,
+                    died.getCard(),
                     this,
                     "PN may\$ exile RN with SN."
                 ) :
@@ -27,14 +25,14 @@
             }
         }
     },
-    new MagicAtEndOfTurnTrigger() {
+    new AtEndOfTurnTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer endOfTurnPlayer) {
             return permanent.getExiledCards().size() >= 3 ?
                 new MagicEvent(
                     permanent,
                     this,
-                    "Sacrifice SN. If you do, return the cards exiled with it to the battlefield under their owner's control."
+                    "Sacrifice SN. If PN does, return the cards exiled with it to the battlefield under their owner's control."
                 ):
                 MagicEvent.NONE;
         }
@@ -43,7 +41,7 @@
             final MagicEvent sac = new MagicSacrificeEvent(event.getPermanent());
             if (sac.isSatisfied()) {
                 game.addEvent(sac);
-                game.doAction(new ReturnLinkedExileAction(event.getPermanent(),MagicLocationType.Play));
+                game.doAction(new ReturnLinkedExileAction(event.getPermanent(),MagicLocationType.Battlefield));
             }
         }
     }

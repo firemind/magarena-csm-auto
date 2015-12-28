@@ -10,14 +10,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import magic.model.MagicCard;
 import magic.model.MagicCardList;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.IChoiceViewer;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.FontsAndBorders;
 
+@SuppressWarnings("serial")
 abstract class CardListViewer extends JPanel implements IChoiceViewer {
-    private static final long serialVersionUID = 1L;
     private static final int  LINE_HEIGHT      = 26;
 
     private final SwingGameController controller;

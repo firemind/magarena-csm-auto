@@ -1,7 +1,8 @@
 name=Alloy Myr
-image=http://magiccards.info/scans/en/nph/129.jpg
+image=http://magiccards.info/scans/en/mm2/201.jpg
+image_updated=2015-11-05
 value=3.651
-rarity=U
+rarity=C
 type=Artifact,Creature
 subtype=Myr
 cost={3}

@@ -1,7 +1,8 @@
 name=Cathodion
-image=http://magiccards.info/scans/en/c14/234.jpg
+image=http://magiccards.info/scans/en/mm2/203.jpg
+image_updated=2015-11-05
 value=2.500
-rarity=U
+rarity=C
 type=Artifact,Creature
 subtype=Construct
 cost={3}

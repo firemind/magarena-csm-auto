@@ -1,7 +1,8 @@
 name=Sphere of the Suns
-image=http://magiccards.info/scans/en/mbs/134.jpg
+image=http://magiccards.info/scans/en/mm2/231.jpg
+image_updated=2015-11-05
 value=3.575
-rarity=U
+rarity=C
 type=Artifact
 cost={2}
 ability=SN enters the battlefield tapped.;\

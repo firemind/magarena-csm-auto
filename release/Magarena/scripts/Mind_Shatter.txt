@@ -1,9 +1,10 @@
 name=Mind Shatter
-image=http://magiccards.info/scans/en/m10/106.jpg
+image=http://magiccards.info/scans/en/dpa/28.jpg
+image_updated=2015-11-11
 value=3.731
 rarity=R
 type=Sorcery
 cost={X}{B}{B}
+effect=Target player discards X cards at random.
 timing=main
-requires_groovy_code
 oracle=Target player discards X cards at random.

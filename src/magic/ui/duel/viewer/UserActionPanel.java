@@ -19,10 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
-import magic.model.MagicGame;
+import magic.ui.MagicImages;
 import magic.model.phase.MagicPhaseType;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.message.TextLabel;
 
 @SuppressWarnings("serial")
@@ -30,7 +29,6 @@ public class UserActionPanel extends JPanel implements ActionListener {
 
     public static final int TEXT_WIDTH=230;
 
-    private final MagicGame game;
     private final SwingGameController controller;
     private final JButton actionButton;
     private final JButton undoButton;
@@ -41,7 +39,6 @@ public class UserActionPanel extends JPanel implements ActionListener {
 
     public UserActionPanel(final SwingGameController controller) {
 
-        this.game = controller.getGame();
         this.controller=controller;
 
         setLayout(new BorderLayout());
@@ -56,7 +53,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
         final JLabel emptyLabel=new JLabel("");
         actionPanel.add(emptyLabel,"0");
 
-        final JLabel busyLabel=new JLabel(IconImages.getIcon(MagicIcon.BUSY));
+        final JLabel busyLabel=new JLabel(MagicImages.getIcon(MagicIcon.BUSY));
         busyLabel.setHorizontalAlignment(JLabel.CENTER);
         actionPanel.add(busyLabel,"1");
 
@@ -73,7 +70,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
         });
         actionPanel.add(actionButton,"2");
 
-        undoButton=new JButton(IconImages.getIcon(MagicIcon.UNDO));
+        undoButton=new JButton(MagicImages.getIcon(MagicIcon.UNDO));
         undoButton.setMargin(new Insets(1,1,1,1));
         undoButton.setIconTextGap(2);
         undoButton.setEnabled(false);
@@ -140,7 +137,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
     }
 
     public void enableUndoButton(final boolean thinking) {
-        final int undoPoints=game.getNrOfUndoPoints();
+        final int undoPoints=controller.getViewerInfo().getUndoPoints();
         final boolean allowUndo=undoPoints>0&&!thinking;
         undoButton.setEnabled(allowUndo);
     }
@@ -176,7 +173,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
     }
 
     public MagicPhaseType getMagicPhaseType() {
-        return game.getPhase().getType();
+        return controller.getViewerInfo().getPhaseType();
     }
 
     /**
@@ -184,7 +181,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
      * for use with the GameStatusPanel component.
      */
     public ImageIcon getTurnSizedPlayerAvatar() {
-        return IconImages.getIconSize4(game.getPriorityPlayer().getPlayerDefinition());
+        return controller.getViewerInfo().getPriorityPlayer().getAvatar();
     }
 
 }

@@ -1,9 +1,10 @@
 name=Enrage
-image=http://magiccards.info/scans/en/9e/180.jpg
+image=http://magiccards.info/scans/en/dpa/43.jpg
+image_updated=2015-11-11
 value=3.053
 rarity=U
 type=Instant
 cost={X}{R}
+effect=Target creature gets +X/+0 until end of turn.
 timing=pump
-requires_groovy_code=Bloodcurdling Scream
 oracle=Target creature gets +X/+0 until end of turn.

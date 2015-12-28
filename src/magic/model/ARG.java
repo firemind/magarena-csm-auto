@@ -2,21 +2,44 @@ package magic.model;
 
 import magic.model.MagicSource;
 import magic.model.MagicPlayer;
+import magic.model.MagicAmountParser;
+import magic.model.stack.MagicItemOnStack;
 import magic.model.target.MagicTarget;
+import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetFilterFactory;
 import magic.model.event.MagicEvent;
+import magic.model.action.MagicPlayMod;
 import magic.data.EnglishToInt;
 
 import java.util.regex.Matcher;
+import java.util.List;
+import java.util.Collections;
 
 public class ARG {
+    public static final String COLON = "\\s*:\\s*";
+
+    public static final String CHOICE = "(?<choice>(a|an|another|target) [^\\.]+?)";
+    public static final String CARD   = "(?<choice>[^\\.]* card [^\\.]+?)";
+    public static final String GRAVEYARD = "(?<choice>[^\\.]* card [^\\.]+? graveyard)";
+    public static final String THING = "(permanent|creature|artifact|land|player|opponent|spell or ability|spell|ability)";
+    public static final String EVENQUOTES = "(?=([^\"]*'[^\"]*')*[^\"]*$)";
+    
     public static final String NUMBER = "(?<number>[0-9]+)";
     public static int number(final Matcher m) {
         return Integer.parseInt(m.group("number"));
     }
 
-    public static final String AMOUNT = "(?<amount>[^ ]+)";
+    public static final String AMOUNT = "(?<amount>[^ ]+?)";
     public static int amount(final Matcher m) {
         return EnglishToInt.convert(m.group("amount"));
+    }
+    public static MagicAmount amountObj(final Matcher m) {
+        return MagicAmountParser.build(m.group("amount"));
+    }
+    
+    public static final String AMOUNT2 = "(?<amount2>[^ ]+?)";
+    public static int amount2(final Matcher m) {
+        return EnglishToInt.convert(m.group("amount2"));
     }
 
     public static final String COST = "(?<cost>.+)";
@@ -77,9 +100,17 @@ public class ARG {
         final String[] pt = m.group("pt").replace("+","").split("/");
         return new int[]{Integer.parseInt(pt[0]), Integer.parseInt(pt[1])};
     }
+    public static String[] ptStr(final Matcher m) {
+        return m.group("pt").replace("+","").split("/");
+    }
     public static MagicPowerToughness mpt(final Matcher m) {
         final String[] pt = m.group("pt").replace("+","").split("/");
         return new MagicPowerToughness(Integer.parseInt(pt[0]), Integer.parseInt(pt[1]));
+    }
+
+    public static final String MODS = "(\\.|,)?( )?(?<mods>.+?)??";
+    public static List<MagicPlayMod> mods(final Matcher m) {
+        return MagicPlayMod.build(m.group("mods"));
     }
 
     public static final String IT = "((?<rn>rn)|(?<sn>sn))";
@@ -113,11 +144,139 @@ public class ARG {
             return event.getPlayer();
         }
     }
+    
+    private static final String TNC = "(that [^ ]+'s|its) controller( or that player)?";
+    public static final String PLAYERS = "((?<rnc>rn's controller)|(?<tnc>" + TNC + ")|(?<rn>rn)|(?<pn>(pn||you))|" + CHOICE + "|(?<group>[^\\.]+?))";
+    public static List<MagicPlayer> players(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicPlayer> filter) {
+        if (m.group("rnc") != null) {
+            return Collections.singletonList(event.getRefObject().getController());
+        } else if (m.group("tnc") != null) {
+            return event.listTargetController();
+        } else if (m.group("rn") != null) {
+            return Collections.singletonList(event.getRefPlayer());
+        } else if (m.group("pn") != null) {
+            return Collections.singletonList(event.getPlayer());
+        } else if (m.group("choice") != null) {
+            return event.listTargetPlayer();
+        } else {
+            return filter.filter(event);
+        }
+    }
 
-    public static final String COLON = "\\s*:\\s*";
+    public static MagicTargetFilter<MagicPlayer> playersParse(final Matcher m) {
+        if (m.group("group") != null) {
+            return MagicTargetFilterFactory.Player(m.group("group"));
+        } else {
+            return MagicTargetFilterFactory.PLAYER;
+        }
+    }
 
-    public static final String TARGET = "(?<choice>(another )?target [^\\.]+?)";
-    public static final String CHOICE = "(?<choice>(a|an|another|target) [^\\.]+?)";
-    public static final String CARD   = "(?<choice>[^\\.]* card [^\\.]+?)";
-    public static final String GRAVEYARD = "(?<choice>[^\\.]* card [^\\.]+? graveyard)";
+    public static final String PERMANENTS = "((?<rn>rn)|(?<sn>sn)|" + CHOICE + "|(?<group>[^\\.]+?))";
+    public static List<MagicPermanent> permanents(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicPermanent> filter) {
+        if (m.group("rn") != null) {
+            return Collections.singletonList(event.getRefPermanent());
+        } else if (m.group("sn") != null) {
+            return Collections.singletonList(event.getPermanent());
+        } else if (m.group("choice") != null) {
+            return event.listTargetPermanent();
+        } else {
+            return filter.filter(event);
+        }
+    }
+    
+    public static MagicTargetFilter<MagicPermanent> permanentsParse(final Matcher m) {
+        if (m.group("group") != null) {
+            return MagicTargetFilterFactory.Permanent(m.group("group"));
+        } else {
+            return MagicTargetFilterFactory.ANY;
+        }
+    }
+    
+    public static final String TARGETS = "((?<rnc1>rn's controller)|(?<tnc1>" + TNC + ")|(?<rn1>rn)|(?<sn1>sn)|(?<pn1>(pn||you))|" + CHOICE + "|(?<group1>[^\\.]+?))";
+    public static List<? extends MagicTarget> targets(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicTarget> filter) {
+        if (m.group("rnc1") != null) {
+            return Collections.singletonList(event.getRefObject().getController());
+        } else if (m.group("tnc1") != null) {
+            return event.listTargetController();
+        } else if (m.group("rn1") != null) {
+            return Collections.singletonList(event.getRefTarget());
+        } else if (m.group("pn1") != null) {
+            return Collections.singletonList(event.getPlayer());
+        } else if (m.group("sn1") != null) {
+            return Collections.singletonList(event.getPermanent());
+        } else if (m.group("choice") != null) {
+            return event.listTarget();
+        } else {
+            return filter.filter(event);
+        }
+    }
+
+    public static MagicTargetFilter<MagicTarget> targetsParse(final Matcher m) {
+        if (m.group("group1") != null) {
+            return MagicTargetFilterFactory.Target(m.group("group1"));
+        } else {
+            return MagicTargetFilterFactory.ONE;
+        }
+    }
+    
+    public static final String TARGETS2 = "((?<tnc2>" + TNC + ")|(?<rn2>rn)|(?<sn2>sn)|(?<pn2>(pn||you))|(?<group2>[^\\.]+?))";
+    public static List<? extends MagicTarget> targets2(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicTarget> filter) {
+        if (m.group("tnc2") != null) {
+            return event.listTargetController();
+        } else if (m.group("rn2") != null) {
+            return Collections.singletonList(event.getRefTarget());
+        } else if (m.group("pn2") != null) {
+            return Collections.singletonList(event.getPlayer());
+        } else if (m.group("sn2") != null) {
+            return Collections.singletonList(event.getPermanent());
+        } else {
+            return filter.filter(event);
+        }
+    }
+
+    public static MagicTargetFilter<MagicTarget> targets2Parse(final Matcher m) {
+        if (m.group("group2") != null) {
+            return MagicTargetFilterFactory.Target(m.group("group2"));
+        } else {
+            return MagicTargetFilterFactory.ONE;
+        }
+    }
+    
+    public static final String CARDS = "((?<choice>[^\\.]* card [^\\.]+?)|(?<group>[^\\.]* cards [^\\.]+?))";
+    public static List<MagicCard> cards(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicCard> filter) {
+        if (m.group("choice") != null) {
+            return event.listTargetCard();
+        } else {
+            return filter.filter(event);
+        }
+    }
+    
+    public static MagicTargetFilter<MagicCard> cardsParse(final Matcher m) {
+        if (m.group("group") != null) {
+            return MagicTargetFilterFactory.Card(m.group("group"));
+        } else {
+            return MagicTargetFilterFactory.CARD_FROM_HAND;
+        }
+    }
+
+    public static final String ITEMS = "((?<rn>rn)|(?<sn>sn)|" + CHOICE + "|(?<group>[^\\.]+?))";
+    public static List<MagicItemOnStack> items(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicItemOnStack> filter) {
+        if (m.group("rn") != null) {
+            return Collections.singletonList(event.getRefItemOnStack());
+        } else if (m.group("sn") != null) {
+            return Collections.singletonList(event.getItemOnStack());
+        } else if (m.group("choice") != null) {
+            return event.listTargetItem();
+        } else {
+            return filter.filter(event);
+        }
+    }
+    
+    public static MagicTargetFilter<MagicItemOnStack> itemsParse(final Matcher m) {
+        if (m.group("group") != null) {
+            return MagicTargetFilterFactory.ItemOnStack(m.group("group"));
+        } else {
+            return MagicTargetFilterFactory.SPELL_OR_ABILITY;
+        }
+    }
 }

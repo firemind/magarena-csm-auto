@@ -131,7 +131,6 @@ M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 			release/Magarena.jar \
 			release/Magarena.exe \
 			release/Magarena.sh \
-			release/Magarena.command \
 			release/README.txt \
 			release/lib \
 			Magarena-1.$*
@@ -204,6 +203,7 @@ life ?= 10
 ai1 ?= MMABFast
 ai2 ?= MMABFast
 debug ?= false
+devMode ?= false
 selfMode ?= false
 flags ?= 
 
@@ -213,6 +213,7 @@ flags ?=
 	$(RUN) ${flags} \
 	-Dmagarena.dir=`pwd`/release \
 	-Ddebug=${debug} \
+	-DdevMode=${devMode} \
 	-Dgame.log=$*.log \
 	-Djava.awt.headless=true \
 	magic.DeckStrCal \
@@ -229,7 +230,13 @@ debug: $(MAG)
 	make 101.t debug=true games=0 flags=-ea || (cat 101.out && false)
 
 %.d: $(MAG)
-	$(DEBUG) -DrndSeed=$* -DselfMode=$(selfMode) -Ddebug=$(debug) -Dmagarena.dir=`pwd`/release -jar $^ |& tee $*.log
+	$(DEBUG) \
+	-DrndSeed=$* \
+	-DselfMode=$(selfMode) \
+	-Ddebug=${debug} \
+	-DdevMode=${devMode} \
+	-Dmagarena.dir=`pwd`/release \
+	-jar $^ |& tee $*.log
 
 # Z = 4.4172 (99.999%)
 # E = 0.01
@@ -490,7 +497,8 @@ checks: \
 	check_image \
 	check_meta \
 	check_rarity \
-	check_decks
+	check_decks \
+	check_mana_or_combat
 
 remove_extra_missing:
 	git rm `join <(ls -1 release/Magarena/scripts | sort) <(ls -1 release/Magarena/scripts_missing | sort) | sed 's/^/release\/Magarena\/scripts_missing\//'`
@@ -512,10 +520,12 @@ check_image:
 
 # every card that requires groovy code has a corresponding groovy script file
 # every groovy script file has a corresponding card script that requires groovy code
+# every groovy script file has a txt file with the same name that requires groovy code
 check_requires_groovy_code:
 	diff \
 	<(ls -1 release/Magarena/scripts/*.groovy | cut -d'/' -f 4 | sed 's/.groovy//' | sort) \
 	<(grep requires_groovy_code -r release/Magarena/scripts/ | sed 's/.*=//' | sed 's/;/\n/g' | sed 's/.*scripts\///;s/.txt.*//' | sed -f scripts/normalize_name.sed | sort | uniq)
+	grep -L requires_groovy `ls -1 release/Magarena/scripts/*.groovy | sed 's/groovy/txt/'` | ${NO_OUTPUT}
 
 # $ must be escaped as \$ in groovy script
 check_groovy_escape:
@@ -579,6 +589,11 @@ check_all_cards:
 	diff \
 	<(grep "name=" `grep "token=\|^overlay" -Lr release/Magarena/scripts release/Magarena/scripts_missing` -h | sed 's/name=//' | sort | uniq) \
 	<(sort resources/magic/data/AllCardNames.txt)
+
+check_mana_or_combat:
+	diff \
+	<(grep mana_or_combat -lr release/Magarena/scripts) \
+	<(grep "mana pool.*becomes a" -r release/Magarena/scripts -l)
 
 crash.txt: $(wildcard *.log)
 	for i in `grep "^Excep" -l $^`; do \
@@ -648,6 +663,9 @@ ai/benchmark.rnd:
 	
 exp/zermelo.tsv: $(wildcard exp/136*.log)
 	awk -f exp/extract_games.awk $^ | ./exp/whr.rb | tac > $@
+
+bytes_per_card.txt:
+	for i in `seq 39 68`; do echo -n "1.$$i "; make bytes_per_card.1.$$i -s ; done > bytes_per_card.txt
 
 bytes_per_card.%:
 	echo `git show $*:release/Magarena/scripts | tail -n+3 | sed 's/^/$*:release\/Magarena\/scripts\//' | git cat-file --batch | grep -v " blob " | sed 's/^[[:space:]]*//;/^$$/d' | wc -c` \
@@ -759,6 +777,18 @@ parse_new.txt:
 	join -v2 -t'_' cards/existing_master.txt parse_ok.txt > $@
 	diff parse_new.ignore $@
 
+parse_groovy.txt:
+	patch -p1 < parse_missing.patch
+	cp scripts-builder/OUTPUT/scripts_missing/* release/Magarena/scripts
+	-rm 101.out
+	make debug
+	grep "ERROR " 101.out | sed 's/java.lang.RuntimeException: //' | sed 's/\(ERROR.*\) \(cause: .*\)/\2 \1/' | sort > parse_missing.txt
+	grep OK 101.out | sed 's/OK card: //' | sort > parse_ok.txt
+	git checkout -- release/Magarena/scripts
+	patch -p1 -R < parse_missing.patch
+	join -t'_' <(sort cards/groovy.txt) <(sort parse_ok.txt) > $@
+	diff parse_groovy.ignore $@
+
 # extract name<tab>image url from gallery page
 %.tsv: %.html
 	grep "alt.*src.*media" $^ | sed 's/.*alt="\([^"]*\)".*src="\([^"]*\)".*/\1\t\2/' > $@
@@ -790,6 +820,10 @@ update_card_property:
 sims_count:
 	grep "sims=[0-9]*" -r 14* -o -h | sed 's/sims=//' | sort -n | histogram.py -x 800 > $@
 
+groovy-by-size:
+	ls -1Sr `grep executeEvent release/Magarena/scripts/*.groovy -l` > $@
+
+# export GITHUB_TOKEN=`cat token`
 create-draft-release:
 	github-release release \
     --user magarena \

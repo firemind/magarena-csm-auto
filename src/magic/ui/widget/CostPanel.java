@@ -10,11 +10,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 
+@SuppressWarnings("serial")
 public class CostPanel extends JPanel {
-
-    private static final long serialVersionUID = 1L;
 
     private static final Dimension MANA_ICON_SIZE = new Dimension(17,17);
 
@@ -58,7 +57,7 @@ public class CostPanel extends JPanel {
         }
         int index=0;
         for (final MagicIcon icon : icons) {
-            manaLabels[index++].setIcon(IconImages.getIcon(icon));
+            manaLabels[index++].setIcon(MagicImages.getIcon(icon));
             if (index==manaLabels.length) {
                 break;
             }

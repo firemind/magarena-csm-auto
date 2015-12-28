@@ -1,11 +1,12 @@
 name=Nantuko Husk
 image=http://magiccards.info/scans/en/ori/109.jpg
+image_updated=2015-11-05
 value=2.500
 rarity=C
 type=Creature
 subtype=Zombie,Insect
 cost={2}{B}
 pt=2/2
-ability=Sacrifice a creature: SN gets +2/+2 until end of turn.
+ability=Sacrifice a creature: SN gets +2/+2 until end of turn. Activate this ability with AI only if you control another creature.
 timing=main
 oracle=Sacrifice a creature: Nantuko Husk gets +2/+2 until end of turn.

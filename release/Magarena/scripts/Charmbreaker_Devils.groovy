@@ -1,11 +1,11 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Return an instant or sorcery card at random from your graveyard to your hand."
+                "PN returns an instant or sorcery card at random from his or her graveyard to his or her hand."
             );
         }
         @Override

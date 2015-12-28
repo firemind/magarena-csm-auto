@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfDamagePlayerTrigger() {     
+    new ThisDamagePlayerTrigger() {     
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {    
             final int amount = permanent.getCounters(MagicCounterType.Charge);

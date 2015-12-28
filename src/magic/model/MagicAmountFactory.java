@@ -1,5 +1,6 @@
 package magic.model;
 
+import magic.model.event.MagicEvent;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetHint;
@@ -44,7 +45,24 @@ public class MagicAmountFactory {
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 return 1;
             }
+            @Override
+            public boolean isConstant() {
+                return true;
+            }
         };
+    
+    public static MagicAmount Constant(final int n) { 
+        return new MagicAmount() {
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                return n;
+            }
+            @Override
+            public boolean isConstant() {
+                return true;
+            }
+        };
+    }
     
     public static MagicAmount Equipment = 
         new MagicAmount() {
@@ -100,6 +118,30 @@ public class MagicAmountFactory {
                     }
                 }
                 return amount;
+            }
+        };
+    
+    public static MagicAmount XCost = 
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicEvent event) {
+                return event.getX();
+            }
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                throw new RuntimeException("getAmount(source, player) called on XCost");
+            }
+        };
+    
+    public static MagicAmount NegXCost = 
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicEvent event) {
+                return -event.getX();
+            }
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                throw new RuntimeException("getAmount(source, player) called on NegXCost");
             }
         };
 }

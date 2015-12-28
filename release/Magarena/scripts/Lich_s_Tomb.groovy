@@ -1,5 +1,5 @@
 [
-    new MagicIfPlayerWouldLoseTrigger() {
+    new IfPlayerWouldLoseTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final LoseGameAction loseAct) {
             if (permanent.isController(loseAct.getPlayer()) && loseAct.getReason() == LoseGameAction.LIFE_REASON) {
@@ -9,7 +9,7 @@
         }
     },
     
-    new MagicWhenLifeIsLostTrigger() {
+    new LifeIsLostTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicLifeChangeTriggerData lifeChange) {
             final int amount = lifeChange.amount;

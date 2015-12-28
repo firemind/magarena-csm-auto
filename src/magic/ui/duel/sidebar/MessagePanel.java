@@ -10,8 +10,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import magic.data.MagicIcon;
 import magic.model.MagicMessage;
-import magic.ui.IconImages;
-import magic.ui.SwingGameController;
+import magic.ui.MagicImages;
+import magic.ui.duel.SwingGameController;
 import magic.ui.message.TextLabel;
 import magic.ui.widget.FontsAndBorders;
 import net.miginfocom.swing.MigLayout;
@@ -122,12 +122,12 @@ class MessagePanel extends JPanel {
         if (life<=0) {
             lifeLabel.setForeground(Color.RED);
         }
-        lifePanel.add(new JLabel(IconImages.getIcon(MagicIcon.REGENERATED)), "center");
+        lifePanel.add(new JLabel(MagicImages.getIcon(MagicIcon.REGENERATED)), "center");
         lifePanel.add(lifeLabel, "w 100%");
         return lifePanel;
     }
 
     private JLabel getPlayerAvatar() {
-        return new JLabel(IconImages.getIconSize1(message.getPlayer().getPlayerDefinition()));
+        return new JLabel(MagicImages.getIconSize1(message.getPlayer().getPlayerDefinition()));
     }
 }

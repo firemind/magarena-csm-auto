@@ -1,30 +1,23 @@
-def EXCEPT_SELF = new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-        return target != source && target.isController(player);
-    }
-};
-
-def SACRIFICE_EXCEPT = {
-    final MagicSource source ->
-    return new MagicTargetChoice(
-        EXCEPT_SELF,
-        "a permanent to sacrifice except ${source.getName()}"
-    );
-};
+def choice = new MagicTargetChoice("another permanent you control");
 
 def action = {
     final MagicGame game, final MagicEvent event ->
     final MagicSource source = event.getSource();
-    final MagicEvent discard = new MagicDiscardEvent(source, 1);
+    final MagicPlayer player = event.getPlayer();
+    final MagicEvent discard = new MagicDiscardEvent(source, player);
     if (event.isYes() && discard.isSatisfied()) {
         game.addEvent(discard);
     } else {
-        game.addEvent(new MagicSacrificePermanentEvent(source, event.getPlayer(), SACRIFICE_EXCEPT(source)))
+        game.addEvent(new MagicSacrificePermanentEvent(
+            source, 
+            player,
+            choice
+        ))
     }
 }
 
 [
-    new MagicWhenLifeIsLostTrigger() {
+    new LifeIsLostTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicLifeChangeTriggerData lifeChange) {
             final int amount = lifeChange.amount;

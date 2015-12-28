@@ -2,9 +2,10 @@ package magic.ui.theme;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.model.MagicAbility;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicObject;
@@ -71,7 +72,7 @@ public enum AbilityIcon {
     private void setIconImage(final MagicIcon magicIcon) {
         final ImageIcon themeIcon = MagicStyle.getTheme().getAbilityIcon(this);
         if (themeIcon == null) {
-            iconImage = magicIcon != null ? IconImages.getIcon(magicIcon) : null;
+            iconImage = magicIcon != null ? MagicImages.getIcon(magicIcon) : null;
         } else {
             iconImage = themeIcon;
         }
@@ -107,6 +108,16 @@ public enum AbilityIcon {
         final List<CardIcon> icons = new ArrayList<>();
         for (AbilityIcon abilityIcon : AbilityIcon.values()) {
             if (abilityIcon.getIcon() != null && cardDef.hasAbility(abilityIcon.getAbility())) {
+                icons.add(getAbilityIcon(abilityIcon));
+            }
+        }
+        return icons;
+    }
+    
+    public static List<CardIcon> getIcons(final Set<MagicAbility> abilities) {
+        final List<CardIcon> icons = new ArrayList<>();
+        for (AbilityIcon abilityIcon : AbilityIcon.values()) {
+            if (abilityIcon.getIcon() != null && abilities.contains(abilityIcon.getAbility())) {
                 icons.add(getAbilityIcon(abilityIcon));
             }
         }

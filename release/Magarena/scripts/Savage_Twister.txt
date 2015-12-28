@@ -1,10 +1,10 @@
 name=Savage Twister
-image=http://magiccards.info/scans/en/c13/208.jpg
+image=http://magiccards.info/scans/en/mm2/185.jpg
 value=4.200
 removal=3
 rarity=U
 type=Sorcery
 cost={X}{R}{G}
+effect=SN deals X damage to each creature.
 timing=removal
-requires_groovy_code
 oracle=Savage Twister deals X damage to each creature.

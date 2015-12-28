@@ -18,8 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
+import magic.ui.cardBuilder.IRenderableCard;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -27,6 +30,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  */
 public final class MagicFileSystem {
+
     private MagicFileSystem() {}
 
     // card images
@@ -36,8 +40,10 @@ public final class MagicFileSystem {
 
     private enum ImagesPath {
 
-        CARDS("cards"),
-        TOKENS("tokens");
+        CARDS(CARD_IMAGE_FOLDER),
+        TOKENS(TOKEN_IMAGE_FOLDER),
+        CUSTOM("custom"),
+        CROPS("crops");
 
         private final String directoryName;
 
@@ -78,7 +84,8 @@ public final class MagicFileSystem {
         FIREMIND("firemind"),
         SAVED_GAMES("saved_games"),
         TRANSLATIONS("translations"),
-        IMAGES("images")
+        IMAGES("images"),
+        REPORTS("reports")
         ;
 
         private final Path directoryPath;
@@ -91,13 +98,13 @@ public final class MagicFileSystem {
         public Path getPath() {
             return directoryPath;
         }
-        
+
     }
-    
+
     /**
      * Returns the main data directory.
      * <p>
-     * Generally, this will contain sub-directories for the 
+     * Generally, this will contain sub-directories for the
      * different categories of data that can be generated.
      */
     public static Path getDataPath() {
@@ -120,12 +127,12 @@ public final class MagicFileSystem {
         final String indexPostfix = imageIndex > 0 ? String.valueOf(imageIndex + 1) : "";
         return card.getImageName() + indexPostfix + CARD_IMAGE_EXT;
     }
-    
+
     /**
      * Returns a File object representing the given card's image file.
      */
     public static File getCardImageFile(final MagicCardDefinition card, final int index) {
-        final Path imageDirectory = card.isToken() ? 
+        final Path imageDirectory = card.isToken() ?
                 getImagesPath(ImagesPath.TOKENS) :
                 getImagesPath(ImagesPath.CARDS);
         return new File(imageDirectory.toFile(), getImageFilename(card, index));
@@ -139,9 +146,20 @@ public final class MagicFileSystem {
     }
 
     /**
+     * Returns a File object representing the given card's cropped image file.
+     */
+    public static File getCroppedCardImageFile(final IRenderableCard cardDef) {
+        final Path imageDirectory = getImagesPath(ImagesPath.CROPS);
+        return new File(imageDirectory.toFile(), cardDef.getImageName() + ".crop.jpg");
+    }
+
+    /**
      * Deletes all directory contents and then directory itself.
      */
     public static void deleteDirectory(final Path root) {
+        if (Files.exists(root) == false) {
+            return;
+        }
         try {
             Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
                 @Override
@@ -166,7 +184,7 @@ public final class MagicFileSystem {
 
     public static void serializeStringList(final List<String> list, final File targetFile) {
         try (final FileOutputStream fos = new FileOutputStream(targetFile);
-             final ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            final ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(list);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -176,7 +194,7 @@ public final class MagicFileSystem {
     @SuppressWarnings("unchecked")
     public static List<String> deserializeStringList(final File sourceFile) {
         try (final FileInputStream fis = new FileInputStream(sourceFile);
-             final ObjectInputStream ois = new ObjectInputStream(fis)) {
+            final ObjectInputStream ois = new ObjectInputStream(fis)) {
             return (List<String>)ois.readObject();
         } catch (IOException|ClassNotFoundException ex) {
             throw new RuntimeException(ex);
@@ -188,7 +206,7 @@ public final class MagicFileSystem {
             try {
                 Files.createDirectory(path);
             } catch (IOException ex) {
-                throw new RuntimeException("!!! error creating " + path, ex);
+                throw new RuntimeException(String.format("Failed to create '%s'.", path), ex);
             }
         }
     }
@@ -258,6 +276,19 @@ public final class MagicFileSystem {
         } else {
             return directoryContains(p1, p2.getParent());
         }
+    }
+
+    public static Path getCustomImagesPath() {
+        return getImagesPath(ImagesPath.CUSTOM);
+    }
+
+    public static Path getGameplayReportDirectory() {
+        return getDataPath(DataPath.REPORTS).resolve("gameplay");
+    }
+
+    public static void clearGameplayReportDirectory() throws IOException {
+        verifyDirectoryPath(getGameplayReportDirectory());
+        FileUtils.cleanDirectory(getGameplayReportDirectory().toFile());
     }
 
 }

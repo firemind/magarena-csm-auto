@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final RemoveFromPlayAction act) {
             final MagicPermanent enchantedPermanent = permanent.getEnchantedPermanent();

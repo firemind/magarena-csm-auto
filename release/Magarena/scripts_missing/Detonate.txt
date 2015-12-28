@@ -1,9 +1,10 @@
 name=Detonate
-image=http://magiccards.info/scans/en/me4/111.jpg
+image=http://magiccards.info/scans/en/mi/88.jpg
+image_updated=2015-11-13
 value=3.688
 rarity=U
 type=Sorcery
 cost={X}{R}
+effect=Destroy target artifact with converted mana cost X. It can't be regenerated. SN deals X damage to that artifact's controller.
 timing=main
-requires_groovy_code
 oracle=Destroy target artifact with converted mana cost X. It can't be regenerated. Detonate deals X damage to that artifact's controller.

@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -8,7 +8,7 @@
                     new MagicMayChoice(),
                     this,
                     "PN may\$ sacrifice SN. " +
-                    "If you do, defending player discards 3 cards."
+                    "If PN does, defending player discards 3 cards."
                 ):
                 MagicEvent.NONE;
         }

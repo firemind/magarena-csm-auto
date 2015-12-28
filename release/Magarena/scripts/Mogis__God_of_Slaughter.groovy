@@ -13,7 +13,7 @@
             return source.getController().getDevotion(MagicColor.Black, MagicColor.Red) < 7;
         }
     },
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return permanent.isOpponent(upkeepPlayer) ? 
@@ -22,7 +22,7 @@
                     upkeepPlayer,
                     new MagicMayChoice("Sacrifice a creature?"),
                     this,
-                    "PN may\$ sacrifice a creature. If you don't, SN deals 2 damage to you."
+                    "PN may\$ sacrifice a creature. If PN doesn't, SN deals 2 damage to him or her."
                 ):
                 MagicEvent.NONE
         }

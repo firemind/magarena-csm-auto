@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isEnemy(permanent) &&
@@ -10,7 +10,7 @@
                     new MagicMayChoice(),
                     otherPermanent.getCard(),
                     this,
-                    "You may\$ return RN to the battlefield under your control."
+                    "PN may\$ return RN to the battlefield under his or her control."
                 ):
                 MagicEvent.NONE;
         }

@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return (otherPermanent != permanent &&
@@ -12,7 +12,7 @@
                     ),
                     otherPermanent,
                     this,
-                    "You may\$ pay {2}\$. If you do, put a token that's a " +
+                    "PN may\$ pay {2}\$. If PN does, put a token that's a " +
                     "copy of RN onto the battlefield."
                 ):
                 MagicEvent.NONE;

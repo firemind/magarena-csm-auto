@@ -32,7 +32,6 @@ import magic.model.MagicManaCost;
 import magic.model.MagicRarity;
 import magic.model.MagicSubType;
 import magic.model.MagicType;
-import magic.ui.dialog.DownloadImagesDialog;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.ButtonControlledPopup;
 import magic.ui.widget.FontsAndBorders;
@@ -446,7 +445,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
                     public boolean checkCard(final MagicCardDefinition card, final int i) {
                         final String status = statusCheckBoxes[i].getText();
                         if (status.equals(UiString.get(_S17))) {
-                            return DownloadImagesDialog.isCardInDownloadsLog(card);
+                            return MagicLogs.isCardInDownloadsLog(card);
                         } else if (status.equals(UiString.get(_S18))) {
                             return CardDefinitions.isCardPlayable(card);
                         } else if (status.equals(UiString.get(_S19))) {
@@ -626,7 +625,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
             colorCheckBoxes[i].setAlignmentY(Component.CENTER_ALIGNMENT);
             colorCheckBoxes[i].setActionCommand(Character.toString(color.getSymbol()));
             colorPanel.add(colorCheckBoxes[i]);
-            colorPanel.add(new JLabel(IconImages.getIcon(color.getManaType())));
+            colorPanel.add(new JLabel(MagicImages.getIcon(color.getManaType())));
             colorsPanel.add(colorPanel);
         }
         colorsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);

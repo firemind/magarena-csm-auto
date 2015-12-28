@@ -1,5 +1,6 @@
 name=Hangarback Walker
 image=http://magiccards.info/scans/en/ori/229.jpg
+image_updated=2015-11-05
 value=2.500
 rarity=R
 type=Artifact,Creature
@@ -9,5 +10,5 @@ pt=0/0
 ability=SN enters the battlefield with X +1/+1 counters on it.;\
         When SN dies, put a 1/1 colorless Thopter artifact creature token with flying onto the battlefield for each +1/+1 counter on SN.;\
         {1}, {T}: Put a +1/+1 counter on SN.
-timing=artifact
+timing=main
 oracle=Hangarback Walker enters the battlefield with X +1/+1 counters on it.\nWhen Hangarback Walker dies, put a 1/1 colorless Thopter artifact creature token with flying onto the battlefield for each +1/+1 counter on Hangarback Walker.\n{1}, {T}: Put a +1/+1 counter on Hangarback Walker.

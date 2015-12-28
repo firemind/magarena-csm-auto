@@ -16,7 +16,8 @@
                 source,
                 new MagicMayChoice(),
                 this,
-                "PN may\$ return another creature you control to its owner's hand. If you do, SN gains indestructible until end of turn."
+                "PN may\$ return another creature he or she controls to its owner's hand. "+
+                "If PN does, SN gains indestructible until end of turn."
             );
         }
 
@@ -25,7 +26,7 @@
             final MagicEvent bounce = new MagicBounceChosenPermanentEvent(
                 event.getSource(), 
                 event.getPlayer(),
-                Other("a creature you control", event.getPermanent())
+                MagicTargetChoice.ANOTHER_CREATURE_YOU_CONTROL
             );
             if (event.isYes() && bounce.isSatisfied()) {
                 game.addEvent(bounce);

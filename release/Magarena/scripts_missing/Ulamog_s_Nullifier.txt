@@ -1,5 +1,6 @@
 name=Ulamog's Nullifier
 image=http://magiccards.info/scans/en/bfz/207.jpg
+image_updated=2015-11-08
 value=2.500
 rarity=U
 type=Creature
@@ -10,5 +11,5 @@ ability=Devoid;\
         Flash;\
         Flying;\
         When SN enters the battlefield, you may put two cards your opponents own from exile into their owners' graveyards. If you do, counter target spell.
-timing=main
+timing=flash
 oracle=Devoid\nFlash\nFlying\nWhen Ulamog's Nullifier enters the battlefield, you may put two cards your opponents own from exile into their owners' graveyards. If you do, counter target spell.

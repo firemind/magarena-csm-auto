@@ -1,5 +1,5 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             final MagicPermanent enchanted = permanent.getEnchantedPermanent();
@@ -8,7 +8,7 @@
                     enchanted,
                     new MagicMayChoice("Sacrifice a land?"),
                     this,
-                    "PN may\$ sacrifice a land. If you don't, " +
+                    "PN may\$ sacrifice a land. If PN doesn't, " +
                     upkeepPlayer.getOpponent() + " gains control of SN."
                 ) :
                 MagicEvent.NONE;

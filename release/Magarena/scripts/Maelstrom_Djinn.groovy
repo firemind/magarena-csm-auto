@@ -1,5 +1,5 @@
 [
-    new MagicWhenTurnedFaceUpTrigger() {
+    new ThisTurnedFaceUpTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return new MagicEvent(
@@ -12,7 +12,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.Time,2));
-            game.doAction(new AddTriggerAction(event.getPermanent(), MagicFadeVanishCounterTrigger.Time));
+            game.doAction(new AddTriggerAction(event.getPermanent(), FadeVanishCounterTrigger.Time));
         }
     }
 ]

@@ -21,18 +21,18 @@ def event = {
         choice,
         MagicGraveyardTargetPicker.ReturnToHand,
         action,
-        "Return another target creature card\$ from your graveyard to your hand."
+        "PN returns another target creature card from his or her graveyard\$ to his or her hand."
     );
 }
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return event(permanent);
         }
     },
-    new MagicWhenSelfLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return event(permanent);

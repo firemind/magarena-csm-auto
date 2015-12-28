@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfBecomesBlockedTrigger() {
+    new ThisBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             final int power = permanent.getPower(); //May change, but gives a value for log
@@ -9,7 +9,7 @@
                 new MagicDamageTargetPicker(power),
                 this,
                 "PN may\$ have SN deal damage equal to its power ("+power+") to target creature\$. " +
-                "If you do, SN assigns no combat damage this turn."
+                "If PN does, SN assigns no combat damage this turn."
             );
         }
 

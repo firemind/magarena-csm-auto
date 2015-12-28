@@ -1,7 +1,8 @@
 name=Gruul Turf
-image=http://magiccards.info/scans/en/pc2/119.jpg
+image=http://magiccards.info/scans/en/mm2/244.jpg
+image_updated=2015-11-05
 value=2.500
-rarity=C
+rarity=U
 type=Land
 ability=SN enters the battlefield tapped.;\
         When SN enters the battlefield, return a land you control to its owner's hand.;\

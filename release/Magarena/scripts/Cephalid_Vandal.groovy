@@ -1,12 +1,12 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Put a shred counter on SN. " + 
-                "Then put the top card of PN's library into PN's graveyard for each shred counter on SN."
+                "PN puts a shred counter on SN. " + 
+                "Then puts the top card of PN's library into his or her graveyard for each shred counter on SN."
             );
         }
         @Override

@@ -13,13 +13,10 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
-                final MagicCardList graveyard = new MagicCardList(event.getPlayer().getGraveyard());
-                if (graveyard.size > 0) {
-                    for (final MagicCard card : graveyard) {
-                        game.doAction(new ShiftCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
-                    }
-                    game.doAction(new MillLibraryAction(it,graveyard.size()));
-                }
+                final MagicPlayer player = event.getPlayer();
+                final MagicCardList graveyard = new MagicCardList(player.getGraveyard());
+                game.doAction(new ShuffleCardsIntoLibraryAction(graveyard, MagicLocationType.Graveyard))
+                game.doAction(new MillLibraryAction(it,graveyard.size()));
             });
         }
     }

@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -9,7 +9,7 @@
                     new MagicDamageTargetPicker(permanent.getPower()),
                     this,
                     "PN may\$ have SN deal damage equal to its power to target creature\$. " +
-                    "If you do, SN assigns no combat damage this turn."
+                    "If PN does, SN assigns no combat damage this turn."
                 ):
                 MagicEvent.NONE;
         }

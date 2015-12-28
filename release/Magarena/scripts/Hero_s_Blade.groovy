@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isCreature() &&
@@ -10,7 +10,7 @@
                     new MagicMayChoice(),
                     otherPermanent,
                     this,
-                    "You may\$ attach SN to RN."
+                    "PN may\$ attach SN to RN."
                 ) :
                 MagicEvent.NONE;
         }

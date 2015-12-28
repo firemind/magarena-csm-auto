@@ -1,11 +1,11 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Exile SN, then return two creature cards at random from your graveyard to the battlefield."
+                "Exile SN, then return two creature cards at random from PN's graveyard to the battlefield."
             );
         }
         @Override

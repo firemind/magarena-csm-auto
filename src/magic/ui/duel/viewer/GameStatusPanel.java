@@ -1,11 +1,14 @@
 package magic.ui.duel.viewer;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import magic.model.MagicGame;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.GameViewerInfo;
 import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -53,7 +56,7 @@ public class GameStatusPanel extends TexturedPanel implements ChangeListener {
     }
 
     public void update() {
-        turnStatusPanel.refresh(controller.getGame(), userActionPanel.getMagicPhaseType());
+        turnStatusPanel.refresh(controller.getViewerInfo(), userActionPanel.getMagicPhaseType());
     }
 
     @Override
@@ -61,10 +64,10 @@ public class GameStatusPanel extends TexturedPanel implements ChangeListener {
         update();
     }
 
-    public void showNewTurnNotification(final MagicGame game) {
+    public void showNewTurnNotification(GameViewerInfo gameInfo) {
         assert SwingUtilities.isEventDispatchThread();
         isNewTurnNotification = true;
-        newTurnPanel.refreshData(game);
+        newTurnPanel.refreshData(gameInfo);
         refreshLayout();
     }
 
@@ -72,6 +75,11 @@ public class GameStatusPanel extends TexturedPanel implements ChangeListener {
         assert SwingUtilities.isEventDispatchThread();
         isNewTurnNotification = false;
         refreshLayout();
+    }
+
+    public Rectangle getTurnPanelLayout(Component container) {
+        final Point pt = SwingUtilities.convertPoint(this, turnStatusPanel.getLocation(), container);
+        return new Rectangle(pt.x, pt.y, turnStatusPanel.getWidth(), turnStatusPanel.getHeight());
     }
 
 }

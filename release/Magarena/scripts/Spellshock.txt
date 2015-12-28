@@ -1,9 +1,10 @@
 name=Spellshock
-image=http://magiccards.info/scans/en/ex/104.jpg
+image=http://magiccards.info/scans/en/tpr/160.jpg
+image_updated=2015-11-14
 value=3.932
 rarity=U
 type=Enchantment
 cost={2}{R}
+ability=Whenever a player casts a spell, SN deals 2 damage to that player.
 timing=enchantment
-requires_groovy_code
 oracle=Whenever a player casts a spell, Spellshock deals 2 damage to that player.

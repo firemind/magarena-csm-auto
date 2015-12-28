@@ -1,0 +1,11 @@
+name=Stasis Snare
+image=http://magiccards.info/scans/en/bfz/50.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=U
+type=Enchantment
+cost={1}{W}{W}
+ability=Flash
+timing=enchantment
+requires_groovy_code=Banisher Priest
+oracle=Flash\nWhen Stasis Snare enters the battlefield, exile target creature an opponent controls until Stasis Snare leaves the battlefield.

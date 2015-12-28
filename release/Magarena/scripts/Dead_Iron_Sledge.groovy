@@ -1,5 +1,5 @@
 [
-    new MagicWhenBlocksTrigger() {
+    new BlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             final MagicPermanent equippedCreature = permanent.getEquippedCreature();
@@ -9,17 +9,19 @@
             return (isInvolved && target.isValid()) ?
                 new MagicEvent(
                     permanent,
-                    target,
+                    new MagicPermanentList(equippedCreature, target),
                     this,
-                    "Destroy RN and equipped creature."
+                    String.format(
+                        "Destroy %s and %s.",
+                        MagicMessage.getCardToken(equippedCreature),
+                        MagicMessage.getCardToken(target)
+                    )
                 ):
                 MagicEvent.NONE;
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicPermanent creature = event.getRefPermanent();
-            game.doAction(new DestroyAction(creature));
-            game.doAction(new DestroyAction(event.getPermanent().getEquippedCreature()));
+            game.doAction(new DestroyAction(event.getRefPermanentList()));
         }
     }
 ]

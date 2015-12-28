@@ -5,7 +5,7 @@ def Spirit = new MagicStatic(MagicLayer.Type) {
     }
 };
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -37,7 +37,7 @@ def Spirit = new MagicStatic(MagicLayer.Type) {
                         {
                             final MagicPermanent perm ->
                             game.doAction(new AddStaticAction(perm, Spirit));
-                            game.doAction(new AddTriggerAction(perm, MagicAtEndOfTurnTrigger.ExileAtEnd));
+                            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.ExileAtEnd));
                         }
                     ));
                 });

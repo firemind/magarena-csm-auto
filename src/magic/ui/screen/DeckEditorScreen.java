@@ -14,7 +14,7 @@ import magic.data.DeckType;
 import magic.utility.DeckUtils;
 import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.data.MagicSetDefinitions;
 import magic.exception.InvalidDeckException;
 import magic.model.MagicCardDefinition;
@@ -24,7 +24,7 @@ import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.ui.ScreenOptionsOverlay;
 import magic.translate.UiString;
-import magic.ui.dialog.DownloadImagesDialog;
+import magic.ui.MagicLogs;
 import magic.ui.deck.editor.DeckEditorScreenPanel;
 import magic.ui.deck.editor.IDeckEditorListener;
 import magic.ui.screen.interfaces.IActionBar;
@@ -36,6 +36,7 @@ import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.MenuPanel;
 import magic.ui.widget.deck.DeckStatusPanel;
+import magic.utility.MagicFileSystem;
 
 @SuppressWarnings("serial")
 public class DeckEditorScreen
@@ -133,9 +134,8 @@ public class DeckEditorScreen
     @Override
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.OPEN_ICON),
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.OPEN_ICON),
                         UiString.get(_S4), UiString.get(_S5),
                         new AbstractAction() {
                             @Override
@@ -144,9 +144,8 @@ public class DeckEditorScreen
                             }
                         })
                 );
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.SAVE_ICON),
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.SAVE_ICON),
                         UiString.get(_S6), UiString.get(_S7),
                         new AbstractAction() {
                             @Override
@@ -155,9 +154,8 @@ public class DeckEditorScreen
                             }
                         })
                 );
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.HAND_ICON),
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.HAND_ICON),
                         UiString.get(_S8), UiString.get(_S9),
                         new AbstractAction() {
                             @Override
@@ -170,9 +168,8 @@ public class DeckEditorScreen
                             }
                         })
                 );
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.TILED_ICON),
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.TILED_ICON),
                         UiString.get(_S11), UiString.get(_S12),
                         new AbstractAction() {
                             @Override
@@ -211,6 +208,11 @@ public class DeckEditorScreen
         ScreenController.showDeckChooserScreen(this);
     }
 
+    private boolean isReservedDeckFolder(final Path saveFolder) {
+        return MagicFileSystem.isSamePath(saveFolder, DeckUtils.getPrebuiltDecksFolder())
+            || MagicFileSystem.isSamePath(saveFolder, DeckUtils.getFiremindDecksFolder());
+    }
+
     public void saveDeck() {
 
         if (screenContent.getDeck().size() == 0) {
@@ -226,9 +228,7 @@ public class DeckEditorScreen
                 if (!filename.endsWith(DeckUtils.DECK_EXTENSION)) {
                     setSelectedFile(new File(filename + DeckUtils.DECK_EXTENSION));
                 }
-                final Path prebuiltDecksFolder = DeckUtils.getPrebuiltDecksFolder();
-                final Path saveFolder = getSelectedFile().toPath().getParent();
-                if (saveFolder.equals(prebuiltDecksFolder)) {
+                if (isReservedDeckFolder(getSelectedFile().toPath().getParent())) {
                     ScreenController.showWarningMessage(UiString.get(_S16));
                 } else if (Files.exists(getSelectedFile().toPath())) {
                     int response = JOptionPane.showConfirmDialog(
@@ -278,7 +278,7 @@ public class DeckEditorScreen
             ((DuelDecksScreen)nextScreen).updateDecksAfterEdit();
         }
         MagicSetDefinitions.clearLoadedSets();
-        DownloadImagesDialog.clearLoadedLogs();
+        MagicLogs.clearLoadedLogs();
         return true;
     }
 

@@ -1,5 +1,5 @@
 [
-    new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.REPLACE_DAMAGE) {
+    new IfDamageWouldBeDealtTrigger(MagicTrigger.REPLACE_DAMAGE) {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
             int amt = 0;
@@ -13,7 +13,7 @@
                     permanent,
                     amt,
                     this,
-                    "Exile RN cards from the top of your library."
+                    "PN exiles RN cards from the top of his or her library."
                 ):
                 MagicEvent.NONE;
         }

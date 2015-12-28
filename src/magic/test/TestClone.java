@@ -23,11 +23,13 @@ class TestClone extends TestGameBuilder {
         createPermanent(P,"Glorious Anthem",false,1);
         createPermanent(P,"Chromatic Lantern",false,1);
         createPermanent(P,"Young Wolf",false,1);
+        createPermanent(P,"Tuktuk Grunts",false,1);
         addToHand(P, "Phantasmal Image", 1);
         addToHand(P, "Clone", 1);
         addToHand(P, "Body Double", 1);
         addToHand(P, "Evil Twin", 1);
         addToHand(P, "Progenitor Mimic", 1);
+        addToHand(P, "Jwari Shapeshifter", 1);
         addToHand(P, "Lightning Bolt", 3);
 
         P = opponent;

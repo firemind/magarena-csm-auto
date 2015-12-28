@@ -11,17 +11,16 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.IChoiceViewer;
-import magic.ui.duel.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
 import magic.ui.IUpdatable;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.TitleBar;
 
+@SuppressWarnings("serial")
 abstract class PermanentsViewer extends JPanel implements IChoiceViewer, IUpdatable {
-
-    private static final long serialVersionUID = 1L;
 
     private static final Dimension SEPARATOR_DIMENSION=new Dimension(0,10);
 

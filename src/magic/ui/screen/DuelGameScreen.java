@@ -1,10 +1,9 @@
 package magic.ui.screen;
 
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.util.concurrent.ExecutionException;
 import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.SwingWorker;
+import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
 import magic.model.MagicDuel;
 import magic.model.MagicGame;
@@ -12,11 +11,11 @@ import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.ui.ScreenOptionsOverlay;
 import magic.translate.UiString;
+import magic.ui.duel.SwingGameController;
 import magic.ui.duel.DuelLayeredPane;
-import magic.ui.duel.DuelPanel;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.widget.MenuPanel;
-import magic.ui.widget.ZoneBackgroundLabel;
+import magic.ui.widget.GameLoadingMessage;
 import magic.utility.MagicSystem;
 
 @SuppressWarnings("serial")
@@ -28,78 +27,81 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
     private static final String _S3 = "Restart game";
     private static final String _S4 = "Image mode";
     private static final String _S5 = "Text mode";
-    private static final String _S6 = "Game Log";
     private static final String _S7 = "Sidebar Layout";
     private static final String _S8 = "Resume game";
+    private static final String _S9 = "Gameplay Report";
 
-    private final static GeneralConfig config = GeneralConfig.getInstance();
+    private static final GeneralConfig config = GeneralConfig.getInstance();
 
-    private DuelPanel gamePanel;
-    private DuelLayeredPane gamePane;
+    private DuelLayeredPane duelPane;
+    private SwingGameController controller;
+    private final GameLoadingMessage loadingMessage = new GameLoadingMessage();
 
     public DuelGameScreen(final MagicDuel duel) {
-        
-        final SwingWorker<MagicGame, Void> worker = new SwingWorker<MagicGame, Void> () {
-            @Override
-            protected MagicGame doInBackground() throws Exception {
-                config.setTextView(false);
-                return duel.nextGame();
-            }
-            @Override
-            protected void done() {
-                try {
-                    setContent(getScreenContent(get()));
-                    if (!config.showMulliganScreen() || MagicSystem.isAiVersusAi()) {
-                        gamePane.setVisible(true);
-                        quickFixSpaceKeyShortcut();
-                    }
-                } catch (InterruptedException | ExecutionException e1) {
-                    throw new RuntimeException(e1);
-                }
-                gamePanel.startGameThread();
-            }
-        };
-        worker.execute();
-
+        config.setTextView(false);
+        showScreen(duel.nextGame());
     }
 
     // CTR - called when using -DtestGame=X argument.
     public DuelGameScreen(final MagicGame game) {
-        setContent(getScreenContent(game));
-        gamePane.setVisible(true);
-        gamePanel.startGameThread();
+        showScreen(game);
     }
 
-    private JComponent getScreenContent(final MagicGame game) {
-        final ZoneBackgroundLabel backgroundLabel = new ZoneBackgroundLabel();
-        backgroundLabel.setGame(true);
-        gamePanel = new DuelPanel(getFrame(), game, backgroundLabel);
-        gamePane = new DuelLayeredPane(gamePanel, backgroundLabel);
-        gamePane.setVisible(false);
-        return gamePane;
+    public void showScreen(MagicGame aGame) {
+        setContent(getScreenContent(aGame));
+        if (!config.showMulliganScreen() || MagicSystem.isAiVersusAi() || MagicSystem.isTestGame()) {
+            duelPane.setVisible(true);
+            quickFixSpaceKeyShortcut();
+        }
+        startGameThread();
+        loadingMessage.setEnabled(false);
+    }
+
+    private DuelLayeredPane getScreenContent(final MagicGame aGame) {
+        duelPane = new DuelLayeredPane(aGame);
+        controller = new SwingGameController(duelPane, aGame);
+        return duelPane;
+    }
+
+    /**
+     * Runs game loop on non-EDT.
+     */
+    private void startGameThread() {
+        assert SwingUtilities.isEventDispatchThread();
+        final Thread t = new Thread() {
+            @Override
+            public void run() {
+                Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+                controller.runGame();
+            }
+        };
+        t.setDaemon(true);
+        t.start();
     }
 
     @Override
     public void showOptionsMenuOverlay() {
-        if (gamePanel.getDialogPanel().isVisible()) {
-            gamePanel.getDialogPanel().setVisible(false);
+        if (duelPane == null) {
+            //do nothing
+        } else if (duelPane.getDialogPanel().isVisible()) {
+            duelPane.getDialogPanel().setVisible(false);
         } else {
             new ScreenOptions(getFrame(), this);
         }
     }
 
     public void updateView() {
-        gamePanel.updateView();
-        gamePane.setVisible(true);
+        duelPane.updateView();
+        duelPane.setVisible(true);
         quickFixSpaceKeyShortcut();
     }
 
     public void concedeGame() {
-        gamePanel.getController().concede();
+        controller.concede();
     }
 
     public void resetGame() {
-        gamePanel.getController().resetGame();
+        controller.resetGame();
     }
 
     @Override
@@ -109,8 +111,8 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
 
     @Override
     public void requestFocus() {
-        if (gamePanel != null) {
-            gamePanel.requestFocus();
+        if (duelPane != null) {
+            duelPane.requestFocus();
         }
     }
 
@@ -142,26 +144,30 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
                     setVisible(false);
                 }
             });
-            final boolean isTextMode = config.getTextView();
-            menu.addMenuItem(isTextMode ? UiString.get(_S4) : UiString.get(_S5), new AbstractAction() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    config.setTextView(!isTextMode);
-                    screen.updateView();
-                    setVisible(false);
-                }
-            });
-            menu.addMenuItem(UiString.get(_S6), new AbstractAction() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    ScreenController.showGameLogScreen();
-                }
-            });
+            if (config.showTextModeOption()) {
+                final boolean isTextMode = config.getTextView();
+                menu.addMenuItem(isTextMode ? UiString.get(_S4) : UiString.get(_S5), new AbstractAction() {
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        config.setTextView(!isTextMode);
+                        screen.updateView();
+                        setVisible(false);
+                    }
+                });
+            }
             menu.addMenuItem(UiString.get(_S7), new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     hideOverlay();
-                    ScreenController.showDuelSidebarDialog(gamePanel.getController());
+                    ScreenController.showDuelSidebarDialog(controller);
+                }
+            });
+            menu.addBlankItem();
+            menu.addMenuItem(UiString.get(_S9), new AbstractAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    controller.createGameplayReport();
+                    setVisible(false);
                 }
             });
             menu.addBlankItem();
@@ -190,7 +196,13 @@ public class DuelGameScreen extends AbstractScreen implements IOptionsMenu {
      * TODO: look at implementing a more consistent focusing system.
      */
     private void quickFixSpaceKeyShortcut() {
-        gamePanel.requestFocusInWindow();
+        duelPane.requestFocusInWindow();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        loadingMessage.render(g, getSize());
+        super.paintComponent(g);
     }
 
 }

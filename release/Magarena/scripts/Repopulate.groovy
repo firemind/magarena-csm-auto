@@ -12,10 +12,10 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
-                final List<MagicCard> graveyard = CREATURE_CARD_FROM_GRAVEYARD.filter(it);
-                for (final MagicCard card : graveyard) {
-                    game.doAction(new ShiftCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
-                }
+                game.doAction(new ShuffleCardsIntoLibraryAction(
+                    CREATURE_CARD_FROM_GRAVEYARD.filter(it),
+                    MagicLocationType.Graveyard
+                ));
             });
         }
     }

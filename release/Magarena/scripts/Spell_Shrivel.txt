@@ -1,0 +1,11 @@
+name=Spell Shrivel
+image=http://magiccards.info/scans/en/bfz/66.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=C
+type=Instant
+cost={2}{U}
+ability=Devoid
+timing=counter
+requires_groovy_code
+oracle=Devoid\nCounter target spell unless its controller pays {4}. If that spell is countered this way, exile it instead of putting it into its owner's graveyard.

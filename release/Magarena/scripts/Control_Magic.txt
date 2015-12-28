@@ -1,11 +1,11 @@
 name=Control Magic
 image=http://magiccards.info/scans/en/vma/63.jpg
 value=4.500
-rarity=U
+rarity=R
 type=Enchantment
 subtype=Aura
 cost={2}{U}{U}
-timing=aura
 ability=You control enchanted creature.
 enchant=gain control,neg creature
+timing=aura
 oracle=Enchant creature\nYou control enchanted creature.

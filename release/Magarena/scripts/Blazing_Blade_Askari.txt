@@ -1,0 +1,12 @@
+name=Blazing Blade Askari
+image=http://magiccards.info/scans/en/ts/146.jpg
+value=2.686
+rarity=C
+type=Creature
+subtype=Human,Knight
+cost={2}{R}
+pt=2/2
+ability=Flanking
+timing=main
+requires_groovy_code=Raging Spirit
+oracle=Flanking\n{2}: Blazing Blade Askari becomes colorless until end of turn.

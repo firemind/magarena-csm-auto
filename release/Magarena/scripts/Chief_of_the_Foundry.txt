@@ -1,5 +1,6 @@
 name=Chief of the Foundry
 image=http://magiccards.info/scans/en/ori/225.jpg
+image_updated=2015-11-05
 value=2.500
 rarity=U
 type=Artifact,Creature
@@ -7,5 +8,5 @@ subtype=Construct
 cost={3}
 pt=2/3
 ability=Other artifact creatures you control get +1/+1.
-timing=artifact
+timing=main
 oracle=Other artifact creatures you control get +1/+1.

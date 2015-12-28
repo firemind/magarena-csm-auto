@@ -32,11 +32,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import magic.ui.CachedImagesProvider;
 import magic.data.GeneralConfig;
-import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicObject;
 import magic.model.MagicPermanent;
-import magic.ui.SwingGameController;
+import magic.ui.MagicImages;
+import magic.ui.ScreenController;
+import magic.ui.duel.viewer.info.CardViewerInfo;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.animation.AnimationFx;
+import magic.ui.duel.animation.MagicAnimations;
 import magic.ui.theme.AbilityIcon;
 import magic.ui.utility.GraphicsUtils;
 import magic.ui.widget.FontsAndBorders;
@@ -48,9 +52,7 @@ import org.pushingpixels.trident.ease.Spline;
 public class AnnotatedCardPanel extends JPanel {
 
     private static final Color BCOLOR = new Color(0, 0, 0, 0);
-    private static final Dimension MAX_CARD_SIZE = new Dimension(480, 680);
-    private static final Font PT_ADJ_FONT = new Font("Serif", Font.BOLD, 28);
-    private static final Font PT_ORIG_FONT = new Font("Dialog", Font.PLAIN, 14);
+    private static final Font PT_FONT = new Font("Serif", Font.BOLD, 16);
     private static final Color GRADIENT_FROM_COLOR = Color.WHITE;
     private static final Color GRADIENT_TO_COLOR = Color.WHITE.darker();
 
@@ -59,25 +61,22 @@ public class AnnotatedCardPanel extends JPanel {
     private MagicObject magicObject = null;
     private Timeline fadeInTimeline;
     private float opacity = 1.0f;
-    private final SwingGameController controller;
+    private SwingGameController controller;
     private BufferedImage cardImage;
     private String modifiedPT;
-    private String basePT;
     private Dimension imageOnlyPopupSize;
     private Dimension popupSize;
     private List<CardIcon> cardIcons = new ArrayList<>();
     private final List<Shape> iconShapes = new ArrayList<>();
-    private final boolean isFadeInActive = true;
     private Timer visibilityTimer;
     private BufferedImage popupImage;
     private final MagicInfoWindow infoWindow = new MagicInfoWindow();
     private final Rectangle containerRect;
     private boolean preferredVisibility = false;
     
-    public AnnotatedCardPanel(final Rectangle containerRect, final SwingGameController controller) {
+    public AnnotatedCardPanel() {
 
-        this.containerRect = containerRect;
-        this.controller = controller;
+        this.containerRect = getWindowRect();
 
         setOpaque(false);
 
@@ -100,6 +99,15 @@ public class AnnotatedCardPanel extends JPanel {
                 infoWindow.setVisible(false);
             }
         });
+        
+        setVisible(false);
+
+    }
+
+    private static Rectangle getWindowRect() {
+        return new Rectangle(
+                    ScreenController.getMainFrame().getLocationOnScreen(),
+                    ScreenController.getMainFrame().getSize());
     }
 
     private void setDelayedVisibilityTimer() {
@@ -155,9 +163,8 @@ public class AnnotatedCardPanel extends JPanel {
     }
     
     private void showPopup() {
-        if (isFadeInActive) {
+        if (MagicAnimations.isOn(AnimationFx.CARD_FADEIN)) {
             if (opacity == 0f) {
-                setVisible(true);
                 fadeInTimeline = new Timeline();
                 fadeInTimeline.setDuration(200);
                 fadeInTimeline.setEase(new Spline(0.8f));
@@ -169,23 +176,32 @@ public class AnnotatedCardPanel extends JPanel {
                 fadeInTimeline.play();
             } else {
                 opacity = 1.0f;
-                setVisible(true);
             }
         } else {
             opacity = 1.0f;
-            setVisible(true);
         }
+        setVisible(true);
     }
 
     public void setCard(final MagicCardDefinition cardDef, final Dimension containerSize) {
+        this.cardImage = getCardImage(cardDef);
         // <--- order important
         cardIcons = AbilityIcon.getIcons(cardDef);
         setPanelSize(containerSize);
         // --->
         this.magicObject = null;
-        this.cardImage = getCardImage(cardDef); 
         this.modifiedPT = "";
-        this.basePT = "";
+        setPopupImage();
+    }
+
+    public void setCard(CardViewerInfo cardInfo, final Dimension containerSize) {
+        this.cardImage = cardInfo.getImage();
+        // <--- order important
+        cardIcons = AbilityIcon.getIcons(cardInfo.getMagicObject());
+        setPanelSize(containerSize);
+        // --->
+        this.modifiedPT = getModifiedPT(cardInfo.getMagicObject());
+        this.magicObject = cardInfo.getMagicObject();
         setPopupImage();
     }
 
@@ -195,14 +211,13 @@ public class AnnotatedCardPanel extends JPanel {
      * additional abilities added during game-play (via enchantments, etc).
      */
     public void setCard(final MagicObject magicObject, final Dimension containerSize) {
+        this.cardImage = getCardImage(magicObject);
         // <--- order important
         cardIcons = AbilityIcon.getIcons(magicObject);
         setPanelSize(containerSize);
         // --->
         this.magicObject = magicObject;
-        this.cardImage = getCardImage(magicObject);
         this.modifiedPT = getModifiedPT(magicObject);
-        this.basePT = getBasePT(magicObject);
         setPopupImage();
     }
 
@@ -238,30 +253,61 @@ public class AnnotatedCardPanel extends JPanel {
         return imageCopy;
     }
 
-    private void drawPowerToughnessOverlay(final BufferedImage cardImage) {
-        if (!modifiedPT.isEmpty()) {
-            final int maskX = cardImage.getWidth() - (int)(cardImage.getWidth() * 0.22d);
-            final int maskY = cardImage.getHeight() - (int)(cardImage.getHeight() * 0.084d);
-            final int maskWidth = (int)(cardImage.getWidth() * 0.15d);
-            final int maskHeight = (int)(cardImage.getHeight() * 0.038d);
-            final Graphics g = cardImage.getGraphics();
-            final Graphics2D g2d = (Graphics2D)g;
-            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            g.setColor(getPTOverlayBackgroundColor(maskX, maskY));
-            g.fillRect(maskX, maskY, maskWidth, maskHeight);
-            g.setColor(Color.BLACK);
-            g.setFont(PT_ADJ_FONT);
-            final FontMetrics metrics = g.getFontMetrics();
-            final int ptWidth = metrics.stringWidth(modifiedPT);
-            g.drawString(modifiedPT, maskX + 12, maskY + 24);
-            //
-            g.setFont(PT_ORIG_FONT);
-            g.drawString(basePT, maskX + 14 + ptWidth, maskY + 16);
-        }
+    private BufferedImage getPTOverlay(Color maskColor) {
+
+        // create fixed size empty transparent image.
+        final BufferedImage overlay = GraphicsUtils.getCompatibleBufferedImage(312, 445, Transparency.TRANSLUCENT);
+        final Graphics2D g2d = overlay.createGraphics();
+
+        // use a rectangular opaque mask to hide original P/T.
+        final Rectangle mask = new Rectangle(254, 408, 38, 18);
+        g2d.setColor(maskColor);
+        g2d.fillRect(mask.x, mask.y, mask.width, mask.height);
+
+        // draw the modified P/T on top of the mask.
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(PT_FONT);
+        final FontMetrics metrics = g2d.getFontMetrics();
+        final int ptWidth = metrics.stringWidth(modifiedPT);
+        g2d.drawString(modifiedPT, mask.x + ((mask.width - ptWidth) / 2), mask.y + 14);
+        g2d.dispose();
+
+        return overlay;
     }
 
-    private Color getPTOverlayBackgroundColor(final int x, final int y) {
-        final int rgb = cardImage.getRGB(x, y);
+    /**
+     * Draws modified P/T onto a 312 x 445 overlay which is then scaled to-
+     * and drawn on top of the original card image.
+     */
+    private void drawPowerToughnessOverlay(final BufferedImage cardImage) {
+        
+        if (modifiedPT.isEmpty())
+            return;
+
+        // get approximate background color of P/T box on card.
+        final Color maskColor = getPTOverlayBackgroundColor(
+            cardImage,
+            (int)(cardImage.getWidth() * 0.929d),
+            (int)(cardImage.getHeight() * 0.919d)
+        );
+
+        // get transparent P/T overlay and size to card image.
+        final BufferedImage overlay = GraphicsUtils.scale(
+            getPTOverlay(maskColor),
+            cardImage.getWidth(),
+            cardImage.getHeight()
+        );
+        
+        // draw tranparent P/T overlay on top of original card.
+        final Graphics2D g2d = cardImage.createGraphics();
+        g2d.drawImage(overlay, 0, 0, null);
+        g2d.dispose();
+
+    }
+
+    private Color getPTOverlayBackgroundColor(BufferedImage image, final int x, final int y) {
+        final int rgb = image.getRGB(x, y);
         final int r = (rgb >> 16) & 0xFF;
         final int g = (rgb >> 8) & 0xFF;
         final int b = (rgb & 0xFF);
@@ -305,25 +351,13 @@ public class AnnotatedCardPanel extends JPanel {
         }
     }
 
-    private String getBasePT(final MagicObject magicObject) {
-        if (magicObject instanceof MagicPermanent) {
-            final MagicPermanent permanent = (MagicPermanent)magicObject;
-            return permanent.getCardDefinition().getCardPower() + "/" + permanent.getCardDefinition().getCardToughness();
-        } else if (magicObject instanceof MagicCard) {
-            final MagicCard card = (MagicCard)magicObject;
-            return card.getCardDefinition().getCardPower() + "/" + card.getCardDefinition().getCardToughness();
-        } else {
-            return "";
-        }
-    }
-
     public MagicObject getMagicObject() {
         return magicObject;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        if (opacity < 1.0f && isFadeInActive) {
+        if (opacity < 1.0f) {
             final Graphics2D g2d = (Graphics2D)g;
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
             g2d.setColor(BCOLOR);
@@ -348,19 +382,16 @@ public class AnnotatedCardPanel extends JPanel {
     public void setVisible(final boolean isVisible) {
         super.setVisible(isVisible);
         if (controller != null && CONFIG.isGamePausedOnPopup()) {
-            final boolean aiHasPriority = !controller.getGame().getPriorityPlayer().isHuman();
+            final boolean aiHasPriority = controller.getViewerInfo().getPriorityPlayer().isAi();
             controller.setGamePaused(isVisible && aiHasPriority);
         }
     }
 
     private void setPanelSize(final Dimension containerSize) {
+        final Dimension preferredSize = MagicImages.getPreferredImageSize(cardImage);
         // keep scaled card in correct proportion.
-        final double cardAspectRatio = (double)MAX_CARD_SIZE.height / MAX_CARD_SIZE.width;
-        // Height
-        final int maxHeight = CONFIG.isCardPopupScaledToScreen() ? containerSize.height : MAX_CARD_SIZE.height;
-        final int scaledHeight = (int)(maxHeight * CONFIG.getCardPopupScale());
-        final int actualHeight = Math.min(Math.min(scaledHeight, containerSize.height), MAX_CARD_SIZE.height);
-        // Width
+        final double cardAspectRatio = (double)preferredSize.height / preferredSize.width;
+        final int actualHeight = Math.min(containerSize.height, preferredSize.height);
         final int actualWidth = (int)(actualHeight / cardAspectRatio);
         final Dimension actualCardImageSize = new Dimension(actualWidth, actualHeight);
         imageOnlyPopupSize = actualCardImageSize;
@@ -458,6 +489,11 @@ public class AnnotatedCardPanel extends JPanel {
         infoWindow.setLocation(p);
         infoWindow.setAlwaysOnTop(true);
         infoWindow.setVisible(true);
+    }
+
+    public void setController(SwingGameController aController) {
+        this.controller = aController;
+        this.controller.setImageCardViewer(this);
     }
 
 }

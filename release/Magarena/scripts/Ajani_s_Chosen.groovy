@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return otherPermanent.isEnchantment() && otherPermanent.isFriend(permanent) ?
@@ -35,7 +35,7 @@
                                     ));
                                 }
                             },
-                            "You may\$ attach SN to RN."
+                            "PN may\$ attach SN to RN."
                         ));
                     }
                 }

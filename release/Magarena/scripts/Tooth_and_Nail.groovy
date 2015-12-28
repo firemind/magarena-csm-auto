@@ -1,10 +1,6 @@
-def TEXT1 = "Search your library for up to two creature cards, reveal them, put them into your hand, then shuffle your library."
+def TEXT1 = "PN searches his or her library for up to two creature cards, reveals them, puts them into his or her hand, then shuffles his or her library."
 
-def TEXT2 = "Put up to two creature cards from your hand onto the battlefield."
-
-def choice = new MagicTargetChoice("a creature card from your hand");
-
-def effect1 = MagicRuleEventAction.create(TEXT1);
+def TEXT2 = "PN puts up to two creature cards from his or her hand onto the battlefield."
 
 [
     new MagicSpellCardEvent() {
@@ -27,17 +23,26 @@ def effect1 = MagicRuleEventAction.create(TEXT1);
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isKicked() || event.isMode(1)) {
-                game.addEvent(effect1.getEvent(event));
+                game.addEvent(new MagicSearchToLocationEvent(
+                    event,
+                    new MagicFromCardFilterChoice(
+                        MagicTargetFilterFactory.CREATURE_CARD_FROM_LIBRARY,
+                        2,
+                        true,
+                        "to put into your hand"
+                    ),
+                    MagicLocationType.OwnersHand
+                ));
             } 
             
             if (event.isKicked() || event.isMode(2)) {
                 game.addEvent(new MagicPutOntoBattlefieldEvent(
                     event,
-                    new MagicMayChoice(choice)
+                    new MagicMayChoice(MagicTargetChoice.A_CREATURE_CARD_FROM_HAND)
                 ));
                 game.addEvent(new MagicPutOntoBattlefieldEvent(
                     event,
-                    new MagicMayChoice(choice)
+                    new MagicMayChoice(MagicTargetChoice.A_CREATURE_CARD_FROM_HAND)
                 ));
             }
         }

@@ -1,9 +1,10 @@
 name=Artificer's Epiphany
 image=http://magiccards.info/scans/en/ori/45.jpg
+image_updated=2015-11-05
 value=2.500
 rarity=C
 type=Instant
 cost={2}{U}
+effect=Draw two cards.~If you control no artifacts, discard a card.
 timing=draw
-requires_groovy_code
 oracle=Draw two cards. If you control no artifacts, discard a card.

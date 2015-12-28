@@ -1,9 +1,0 @@
-name=Statute of Denial
-image=http://magiccards.info/scans/en/m15/79.jpg
-value=1.714
-rarity=C
-type=Instant
-cost={2}{U}{U}
-effect=Counter target spell. If you control a blue creature, draw a card, then discard a card.
-timing=removal
-oracle=Counter target spell. If you control a blue creature, draw a card, then discard a card.

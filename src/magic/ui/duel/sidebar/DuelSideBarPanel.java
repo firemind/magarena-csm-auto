@@ -9,17 +9,18 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import magic.data.GeneralConfig;
-import magic.model.MagicCard;
 import magic.model.MagicPlayer;
 import magic.model.MagicPlayerZone;
 import magic.ui.IPlayerZoneListener;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.GameViewerInfo;
 import magic.ui.duel.player.GamePlayerPanel;
 import magic.ui.duel.player.PlayerZoneButtonsPanel;
 import magic.ui.duel.resolution.DefaultResolutionProfile;
 import magic.ui.duel.viewer.GameStatusPanel;
-import magic.ui.duel.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
 import magic.ui.duel.viewer.UserActionPanel;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import magic.utility.MagicSystem;
@@ -68,7 +69,7 @@ public class DuelSideBarPanel extends JPanel implements IPlayerZoneListener {
         
         final PlayerViewerInfo playerInfo = controller.getViewerInfo().getPlayerInfo(false);
 
-        if (playerInfo.isAi || MagicSystem.isAiVersusAi()) {
+        if (playerInfo.isAi() || MagicSystem.isAiVersusAi()) {
             playerCompositePanels[0] = new PlayerCompositePanel(
                     new GamePlayerPanel(controller, playerInfo)
             );
@@ -110,9 +111,9 @@ public class DuelSideBarPanel extends JPanel implements IPlayerZoneListener {
 
     }
 
-    public void doUpdate() {
-        playerCompositePanels[0].getPlayerPanel().updateDisplay(controller.getViewerInfo().getPlayerInfo(false));
-        playerCompositePanels[1].getPlayerPanel().updateDisplay(controller.getViewerInfo().getPlayerInfo(true));
+    public void doUpdate(final GameViewerInfo gameInfo) {
+        playerCompositePanels[0].getPlayerPanel().updateDisplay(gameInfo.getPlayerInfo(false));
+        playerCompositePanels[1].getPlayerPanel().updateDisplay(gameInfo.getPlayerInfo(true));
         gameStatusPanel.update();
         logBookViewer.update();
     }
@@ -150,17 +151,16 @@ public class DuelSideBarPanel extends JPanel implements IPlayerZoneListener {
         doSetLayout();
     }
 
-    public void doFlashPlayerHandZoneButton() {
-        final GamePlayerPanel playerPanel = playerCompositePanels[1].getPlayerPanel();
-        playerPanel.doFlashPlayerHandZoneButton();
+    public void doFlashLibraryZoneButton(PlayerViewerInfo playerInfo) {
+        getPlayerPanel(playerInfo.player).doFlashLibraryZoneButton();
+    }
+
+    public void doFlashPlayerHandZoneButton(PlayerViewerInfo playerInfo) {
+        getPlayerPanel(playerInfo.player).doFlashPlayerHandZoneButton();
     }
 
     public Rectangle getStackViewerRectangle(Component canvas) {
         return logStackViewer.getStackViewerRectangle(canvas);
-    }
-
-    public Rectangle getPlayerZoneButtonRectangle(MagicPlayer player, MagicPlayerZone zone, Component canvas) {
-        return getPlayerPanel(player).getZoneButtonRectangle(zone, canvas);
     }
 
     private GamePlayerPanel getPlayerPanel(final MagicPlayer player) {
@@ -172,9 +172,21 @@ public class DuelSideBarPanel extends JPanel implements IPlayerZoneListener {
         throw new RuntimeException("Missing GamePlayerPanel for " + player.getName());
     }
 
-    public void doHighlightPlayerZone(MagicCard card, MagicPlayerZone zone, boolean b) {
-        final GamePlayerPanel playerPanel = playerCompositePanels[card.getController().getIndex()].getPlayerPanel();
+    public void doHighlightPlayerZone(CardViewerInfo cardInfo, MagicPlayerZone zone, boolean b) {
+        final GamePlayerPanel playerPanel = playerCompositePanels[cardInfo.getControllerIndex()].getPlayerPanel();
         playerPanel.doHighlightPlayerZone(zone, b);
+    }
+
+    public Rectangle getLibraryButtonLayout(PlayerViewerInfo aPlayer, Component canvas) {
+        return playerCompositePanels[aPlayer.player.getIndex()].getPlayerPanel().getLibraryButtonLayout(canvas);
+    }
+
+    public Rectangle getHandButtonLayout(PlayerViewerInfo aPlayer, Component canvas) {
+        return playerCompositePanels[aPlayer.player.getIndex()].getPlayerPanel().getHandButtonLayout(canvas);
+    }
+
+    public Rectangle getTurnPanelLayout(Component container) {
+        return gameStatusPanel.getTurnPanelLayout(container);
     }
 
     private class LayoutSlot {
@@ -184,7 +196,7 @@ public class DuelSideBarPanel extends JPanel implements IPlayerZoneListener {
 
         public LayoutSlot(final JComponent component, final String constraints) {
             this.component = component;
-             this.constraints = constraints;
+            this.constraints = constraints;
         }
 
         public LayoutSlot(final JComponent component) {

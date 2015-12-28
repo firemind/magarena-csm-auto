@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -10,7 +10,7 @@
                 MagicSacrificeTargetPicker.create(),
                 this,
                 "PN may\$ sacrifice a Merfolk\$. " +
-                "If you do, take an extra turn after this one"
+                "If PN does, he or she takes an extra turn after this one"
             );
         }
 

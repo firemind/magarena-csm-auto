@@ -1,5 +1,6 @@
 name=Caller of the Claw
-image=http://magiccards.info/scans/en/le/121.jpg
+image=http://magiccards.info/scans/en/c15/177.jpg
+image_updated=2015-11-15
 value=3.955
 rarity=R
 type=Creature
@@ -8,5 +9,5 @@ cost={2}{G}
 pt=2/2
 ability=Flash;\
         When SN enters the battlefield, put a 2/2 green Bear creature token onto the battlefield for each nontoken creature put into your graveyard from the battlefield this turn.
-timing=main
+timing=flash
 oracle=Flash\nWhen Caller of the Claw enters the battlefield, put a 2/2 green Bear creature token onto the battlefield for each nontoken creature put into your graveyard from the battlefield this turn.

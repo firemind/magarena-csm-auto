@@ -20,7 +20,7 @@ def ST = new MagicStatic(MagicLayer.Type, MagicStatic.UntilEOT) {
         return flags | MagicType.Creature.getMask();
     }
 };
-def LifeGainAbility = new MagicWhenDamageIsDealtTrigger() {
+def LifeGainAbility = new DamageIsDealtTrigger() {
     @Override
     public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
         return (damage.getSource() == permanent) ?
@@ -70,7 +70,7 @@ def AB = new MagicStatic(MagicLayer.Ability, MagicStatic.UntilEOT) {
             game.doAction(new BecomesCreatureAction(event.getRefPermanent(),PT,AB,ST,LC));
         }
     },
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return (permanent.getEnchantedPermanent() == died) ?

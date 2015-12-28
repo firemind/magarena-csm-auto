@@ -1,11 +1,11 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Scry 1, then reveal the top card of your library. " + 
+                "Scry 1, then reveal the top card of PN's library. " + 
                 "SN gets -X/-X until end of turn, where X is that card's converted mana cost."
             );
         }
