@@ -1,9 +1,6 @@
 package magic.firemind;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +18,7 @@ public class ScoringSet {
 		scoringHash.put("scoreHand", 2);
 		scoringHash.put("scoreGraveyard", 0);
 		scoringHash.put("scoreExiled", 0);
-		scoringHash.put("scoreLife", 300);
+		scoringHash.put("scoreLife", 450);
 		scoringHash.put("scorePoison", -500);
 	}
 	public ScoringSet(ScoringSet origScoringSet) {

@@ -97,14 +97,14 @@ public class GameState {
 		//    -> Note: currently library state is fixed so the drawn card is always the same
 		// TODO add learning element
 		// TODO calculate scoring with gen algo
-		int score =  permanentValues + 
+		int score =  (int) (permanentValues + 
 				//totalPower * scoringSet.get("scorePower") +
 				//totalToughness * scoringSet.get("scoreToughness") + 
 		        handValues * scoringSet.get("scoreHand") +
 				graveyard.size() * scoringSet.get("scoreGraveyard") +
 				exiled.size() * scoringSet.get("scoreExiled") + 
-				life * scoringSet.get("scoreLife") + 
-				poison * scoringSet.get("scorePoison");
+				Math.round(3*Math.pow(life, 1/3) * scoringSet.get("scoreLife")) + 
+				poison * scoringSet.get("scorePoison"));
 //		System.out.println("Scored state (Life:"+life+"): "+score);
 //		System.out.print("Hand: "); printCards(hand);
 //		System.out.print("Board: "); printCards(permanents);
