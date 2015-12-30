@@ -38,7 +38,7 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
         return new MagicSpellCardEvent() {
             @Override
             public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
-                return sourceEvent.getEvent(cardOnStack);
+                return sourceEvent.getEvent(cardOnStack, payedCost);
             }
         };
     }
@@ -52,6 +52,7 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
                 return new MagicEvent(
                     event.getSource(),
                     event.getChoice(),
+                    payedCost,
                     this,
                     event.getDescription()
                 );
@@ -89,8 +90,8 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
         if (choice1.isValid() && choice2.isValid()) {
             throw new RuntimeException("effect cannot have two valid choices: \"" + rule + "\"");
         }
-        final String desc1 = MagicRuleEventAction.personalize(text1) + (choice1.isValid() ? "$" : "");
-        final String desc2 = MagicRuleEventAction.personalize(text2) + (choice2.isValid() ? "$" : "");
+        final String desc1 = MagicRuleEventAction.personalize(choice1, text1);
+        final String desc2 = MagicRuleEventAction.personalize(choice2, text2);
 
         return new MagicSpellCardEvent() {
             @Override
@@ -103,6 +104,7 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
                             choice1, 
                             choice2
                         ),
+                    payedCost,
                     this,
                     payedCost.isKicked() ?
                         desc1 + " " + desc2 :

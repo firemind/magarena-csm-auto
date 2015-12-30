@@ -1,15 +1,9 @@
 package magic.data;
 
-public enum MagicIcon {
+import java.util.EnumSet;
+import java.util.Set;
 
-    // Future Sight symbols
-    FS_CREATURE("creature_black.png"),
-    FS_LAND("land_black.png"),
-    FS_INSTANT("instant_black.png"),
-    FS_ARTIFACT("artifact_black.png"),
-    FS_ENCHANTMENT("enchantment_black.png"),
-    FS_SORCERY("sorcery_black.png"),
-    FS_PLANESWALKER("planeswalker_black.png"),
+public enum MagicIcon {
 
     ILLEGAL_ICON("card_illegal.png"),
     LEGAL_ICON("card_legal.png"),
@@ -19,7 +13,6 @@ public enum MagicIcon {
     UPARROW_ICON("w_up.png"),
     DOWNARROW_ICON("w_down.png"),
     MENU_ICON("w_menu5@18.png"),
-    HEADER_ICON("headerIcon.png"),
     OPTIONS_ICON("w_book.png"),
     OPTIONBAR_ICON("w_book24.png"),
     REFRESH_ICON("w_refresh.png"),
@@ -51,7 +44,6 @@ public enum MagicIcon {
     MARKER_ICON("w_marker.png"),
 
     MISSING_ICON("missing2.png"),
-    ARENA("arena.png"),
     ANY("any.png"),
     FOLDER("folder.png"),
     LOG("log.png"),
@@ -185,74 +177,71 @@ public enum MagicIcon {
     DIVINITYCOUNTER("divinity-counter.png"),
     DEATHCOUNTER("death-counter.png"),
     WINDCOUNTER("wind-counter.png"),
+    TOWERCOUNTER("tower-counter.png"),
 
     MANA_ANY("anymana.gif"),
+    MANA_PHYREXIAN_NULL("P.png"),
 
-    // mana icons are stored in a sprite/icon sheet.
-    MANA_UNTAPPED(51),
-    MANA_TAPPED(50),
-    MANA_WHITE(24),
-    MANA_BLUE(25),
-    MANA_BLACK(26),
-    MANA_RED(27),
-    MANA_GREEN(28),
-    MANA_SNOW(29),
-    MANA_HYBRID_WHITE(40),
-    MANA_HYBRID_BLUE(41),
-    MANA_HYBRID_BLACK(42),
-    MANA_HYBRID_RED(43),
-    MANA_HYBRID_GREEN(44),
-    MANA_PHYREXIAN_WHITE(45),
-    MANA_PHYREXIAN_BLUE(46),
-    MANA_PHYREXIAN_BLACK(47),
-    MANA_PHYREXIAN_RED(48),
-    MANA_PHYREXIAN_GREEN(49),
-    MANA_WHITE_BLUE(30),
-    MANA_WHITE_BLACK(31),
-    MANA_BLUE_BLACK(32),
-    MANA_BLUE_RED(33),
-    MANA_BLACK_RED(34),
-    MANA_BLACK_GREEN(35),
-    MANA_RED_WHITE(36),
-    MANA_RED_GREEN(37),
-    MANA_GREEN_WHITE(38),
-    MANA_GREEN_BLUE(39),
-    MANA_0(0),
-    MANA_1(1),
-    MANA_2(2),
-    MANA_3(3),
-    MANA_4(4),
-    MANA_5(5),
-    MANA_6(6),
-    MANA_7(7),
-    MANA_8(8),
-    MANA_9(9),
-    MANA_10(10),
-    MANA_11(11),
-    MANA_12(12),
-    MANA_13(13),
-    MANA_14(14),
-    MANA_15(15),
-    MANA_16(16),
-    MANA_17(17),
-    MANA_18(18),
-    MANA_19(19),
-    MANA_20(20),
-    MANA_X(21);
+    MANA_UNTAP("Q.png"),
+    MANA_TAP("T.png"),
+    MANA_WHITE("W.png"),
+    MANA_BLUE("U.png"),
+    MANA_BLACK("B.png"),
+    MANA_RED("R.png"),
+    MANA_GREEN("G.png"),
+    MANA_SNOW("S.png"),
+    MANA_COLORLESS("C.png"),
+    MANA_HYBRID_WHITE("2W.png"),
+    MANA_HYBRID_BLUE("2U.png"),
+    MANA_HYBRID_BLACK("2B.png"),
+    MANA_HYBRID_RED("2R.png"),
+    MANA_HYBRID_GREEN("2G.png"),
+    MANA_PHYREXIAN_WHITE("WP.png"),
+    MANA_PHYREXIAN_BLUE("UP.png"),
+    MANA_PHYREXIAN_BLACK("BP.png"),
+    MANA_PHYREXIAN_RED("RP.png"),
+    MANA_PHYREXIAN_GREEN("GP.png"),
+    MANA_WHITE_BLUE("WU.png"),
+    MANA_WHITE_BLACK("WB.png"),
+    MANA_BLUE_BLACK("UB.png"),
+    MANA_BLUE_RED("UR.png"),
+    MANA_BLACK_RED("BR.png"),
+    MANA_BLACK_GREEN("BG.png"),
+    MANA_RED_WHITE("RW.png"),
+    MANA_RED_GREEN("RG.png"),
+    MANA_GREEN_WHITE("GW.png"),
+    MANA_GREEN_BLUE("GU.png"),
+    MANA_0("0.png"),
+    MANA_1("1.png"),
+    MANA_2("2.png"),
+    MANA_3("3.png"),
+    MANA_4("4.png"),
+    MANA_5("5.png"),
+    MANA_6("6.png"),
+    MANA_7("7.png"),
+    MANA_8("8.png"),
+    MANA_9("9.png"),
+    MANA_10("10.png"),
+    MANA_11("11.png"),
+    MANA_12("12.png"),
+    MANA_13("13.png"),
+    MANA_14("14.png"),
+    MANA_15("15.png"),
+    MANA_16("16.png"),
+    MANA_17("17.png"),
+    MANA_18("18.png"),
+    MANA_19("19.png"),
+    MANA_20("20.png"),
+    MANA_X("X.png");
 
-    public static final String MANA_ICON_SHEET = "Mana.png";
+    public static final Set<MagicIcon> COLOR_MANA = EnumSet.range(MANA_WHITE, MANA_GREEN);
+    public static final Set<MagicIcon> HYBRID_COLOR_MANA = EnumSet.range(MANA_WHITE_BLUE, MANA_GREEN_BLUE);
+    private static final Set<MagicIcon> MANA_ICONS = EnumSet.range(MANA_UNTAP, MANA_X);
 
     private final String iconFilename;
-    private final int iconIndex;
 
-    private MagicIcon(final String iconFilename) {
+    MagicIcon(String iconFilename) {
         this.iconFilename = iconFilename;
-        this.iconIndex = -1;
-    }
-
-    private MagicIcon(final int iconIndex) {
-        this.iconFilename = null;
-        this.iconIndex = iconIndex;
     }
 
     public String getFilename() {
@@ -263,16 +252,8 @@ public enum MagicIcon {
         }
     }
 
-    public int getIconIndex() {
-        if (iconIndex >= 0) {
-            return iconIndex;
-        } else {
-            throw new UnsupportedOperationException("Only mana icons have a (icon sheet) index.");
-        }
-    }
-
     public boolean isManaIcon() {
-        return iconFilename == null && iconIndex >= 0;
+        return MANA_ICONS.contains(this);
     }
 
 }

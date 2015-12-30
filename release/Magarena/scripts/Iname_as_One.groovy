@@ -16,7 +16,7 @@ def TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicTargetChoice(
 );
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return permanent.hasState(MagicPermanentState.CastFromHand) ? 
@@ -40,14 +40,14 @@ def TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD = new MagicTargetChoice(
             }
         }
     },
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
                 permanent,
                 new MagicMayChoice(TARGET_SPIRIT_PERMANENT_FROM_GRAVEYARD),
                 this,
-                "PN may\$ exile SN. If you do, return target Spirit permanent card\$ from your graveyard to the battlefield."
+                "PN may\$ exile SN. If PN does, return target Spirit permanent card\$ from his or her graveyard to the battlefield."
             );
         }
 

@@ -29,11 +29,11 @@
                 game.doAction(new GainAbilityAction(it, MagicAbility.Unblockable));
                 game.doAction(new AddTurnTriggerAction(
                     it,
-                    MagicAtEndOfCombatTrigger.Destroy
+                    AtEndOfCombatTrigger.Destroy
                 ));
                 game.doAction(new AddTurnTriggerAction(
                     event.getPermanent(),
-                    MagicAtEndOfCombatTrigger.Destroy
+                    AtEndOfCombatTrigger.Destroy
                 ))
             });
         }
@@ -69,7 +69,7 @@
                 game.doAction(new GainAbilityAction(it, MagicAbility.Unblockable));
                 game.doAction(new AddTurnTriggerAction(
                     it,
-                    MagicAtEndOfCombatTrigger.Destroy
+                    AtEndOfCombatTrigger.Destroy
                 ));
             });
         }

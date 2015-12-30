@@ -1,0 +1,9 @@
+name=Chill
+image=http://magiccards.info/scans/en/6e/60.jpg
+value=4.180
+rarity=U
+type=Enchantment
+cost={1}{U}
+requires_groovy_code
+timing=enchantment
+oracle=Red spells cost {2} more to cast.

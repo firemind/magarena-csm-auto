@@ -5,7 +5,8 @@ rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{B}
+ability=Whenever enchanted creature attacks or blocks, RN's controller loses 3 life.;\
+        {1}{R}: Enchanted creature attacks this turn if able.
 timing=aura
 enchant=can't block,neg creature
-requires_groovy_code=Nettling Curse;Contaminated Bond
 oracle=Enchant creature\nWhenever enchanted creature attacks or blocks, its controller loses 3 life.\n{1}{R}: Enchanted creature attacks this turn if able.

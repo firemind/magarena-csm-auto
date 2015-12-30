@@ -44,9 +44,6 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice NEG_TARGET_CREATURE_SPELL = 
         MagicTargetChoice.Negative("target creature spell");
 
-    public static final MagicTargetChoice NEG_TARGET_NONCREATURE_SPELL = 
-        MagicTargetChoice.Negative("target noncreature spell");
-
     public static final MagicTargetChoice TARGET_INSTANT_OR_SORCERY_SPELL = 
         new MagicTargetChoice("target instant or sorcery spell");
 
@@ -86,20 +83,11 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice NEG_TARGET_PERMANENT = 
         MagicTargetChoice.Negative("target permanent");
     
-    public static final MagicTargetChoice TARGET_NONBASIC_LAND = 
-        new MagicTargetChoice("target nonbasic land");
-    
-    public static final MagicTargetChoice NEG_TARGET_NONBASIC_LAND = 
-        MagicTargetChoice.Negative("target nonbasic land");
-
     public static final MagicTargetChoice TARGET_LAND = 
         new MagicTargetChoice("target land");
     
     public static final MagicTargetChoice NEG_TARGET_LAND = 
         MagicTargetChoice.Negative("target land");
-    
-    public static final MagicTargetChoice POS_TARGET_LAND = 
-        MagicTargetChoice.Positive("target land");
     
     public static final MagicTargetChoice A_LAND_YOU_CONTROL =
         new MagicTargetChoice("a land you control");
@@ -119,9 +107,6 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice NEG_TARGET_NONLAND_PERMANENT = 
         MagicTargetChoice.Negative("target nonland permanent");
     
-    public static final MagicTargetChoice AN_ARTIFACT_YOU_CONTROL = 
-        new MagicTargetChoice("an artifact you control");
-
     public static final MagicTargetChoice TARGET_ARTIFACT =
         new MagicTargetChoice("target artifact");
 
@@ -218,9 +203,6 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice POS_TARGET_ATTACKING_CREATURE = 
         MagicTargetChoice.Positive("target attacking creature");
     
-    public static final MagicTargetChoice NEG_TARGET_ATTACKING_OR_BLOCKING_CREATURE = 
-        MagicTargetChoice.Negative("target attacking or blocking creature");
-    
     public static final MagicTargetChoice TARGET_ATTACKING_OR_BLOCKING_CREATURE = 
         new MagicTargetChoice("target attacking or blocking creature");
     
@@ -263,17 +245,11 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice SACRIFICE_ENCHANTMENT = 
         new MagicTargetChoice("an enchantment to sacrifice");
     
-    public static final MagicTargetChoice SACRIFICE_MOUNTAIN = 
-        new MagicTargetChoice("a Mountain to sacrifice");
-    
     public static final MagicTargetChoice SACRIFICE_FOREST = 
         new MagicTargetChoice("a Forest to sacrifice");
     
     public static final MagicTargetChoice SACRIFICE_GOBLIN = 
         new MagicTargetChoice("a Goblin to sacrifice");
-    
-    public static final MagicTargetChoice SACRIFICE_NON_ZOMBIE = 
-        new MagicTargetChoice("a non-Zombie creature to sacrifice");
     
     public static final MagicTargetChoice SACRIFICE_MERFOLK = 
         new MagicTargetChoice("a Merfolk to sacrifice");
@@ -305,9 +281,6 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice TARGET_CREATURE_CARD_FROM_ALL_GRAVEYARDS = 
         new MagicTargetChoice("target creature card from a graveyard");
 
-    public static final MagicTargetChoice TARGET_ARTIFACT_OR_CREATURE_CARD_FROM_ALL_GRAVEYARDS = 
-        new MagicTargetChoice("target artifact or creature card from a graveyard");
-    
     public static final MagicTargetChoice A_CARD_FROM_HAND = 
         new MagicTargetChoice("a card from your hand");
     
@@ -347,14 +320,11 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice TARGET_CREATURE_YOUR_OPPONENT_CONTROLS = 
         new MagicTargetChoice("target creature an opponent controls");
 
-    public static final MagicTargetChoice TARGET_CREATURE_YOU_DONT_CONTROL = 
-        new MagicTargetChoice("target creature you don't control");
-
-    public static final MagicTargetChoice TARGET_CREATURE_WITHOUT_FLYING_YOU_DONT_CONTROL = 
-        new MagicTargetChoice("target creature without flying you don't control");
-
     public static final MagicTargetChoice TARGET_ARTIFACT_YOUR_OPPONENT_CONTROLS = 
         new MagicTargetChoice("target artifact an opponent controls");
+
+    public static final MagicTargetChoice ANOTHER_CREATURE_YOU_CONTROL =
+        new MagicTargetChoice("another creature you control");
 
     private final String targetDescription;
     private final MagicTargetFilter<? extends MagicTarget> targetFilter;
@@ -383,33 +353,38 @@ public class MagicTargetChoice extends MagicChoice {
     
     private static MagicTargetChoice Other(final String aTargetDescription, final MagicPermanent permanent, final MagicTargetHint hint) {
         final MagicTargetChoice withoutOther = new MagicTargetChoice(aTargetDescription);
+        final String compactDescription = aTargetDescription.replaceFirst("^a(n)? ", "");
         return new MagicTargetChoice(
             new MagicOtherPermanentTargetFilter(
                 withoutOther.getPermanentFilter(),
                 permanent
             ),
             hint,
-            "another " + aTargetDescription
+            "another " + compactDescription
         );
     }
     
     public MagicTargetChoice(final String aTargetDescription) {
         this(MagicTargetHint.None, aTargetDescription);
     }
+        
+    private static String decapitalize(final String text) {
+        return Character.toLowerCase(text.charAt(0)) + text.substring(1);
+    }
     
     public MagicTargetChoice(final MagicTargetHint aTargetHint, final String aTargetDescription) {
-        super("Choose " + aTargetDescription + '.');
+        super("Choose " + decapitalize(aTargetDescription) + '.');
         targetHint        = aTargetHint;
-        targetDescription = aTargetDescription;
+        targetDescription = decapitalize(aTargetDescription);
 
-        if (targetDescription.matches("(T|t)arget .*")) {
-            targetFilter = MagicTargetFilterFactory.single(targetDescription.replaceFirst("(T|t)arget ", ""));
+        if (targetDescription.matches("target .*")) {
+            targetFilter = MagicTargetFilterFactory.single(targetDescription.replaceFirst("target ", ""));
             targeted     = true;
-        } else if (targetDescription.matches("(A|a)nother target .*")) {
-            targetFilter = new MagicOtherPermanentTargetFilter(MagicTargetFilterFactory.Permanent(targetDescription.replaceFirst("(A|a)nother target ", "")));
+        } else if (targetDescription.matches("another target .*")) {
+            targetFilter = new MagicOtherPermanentTargetFilter(MagicTargetFilterFactory.Permanent(targetDescription.replaceFirst("another target ", "")));
             targeted     = true;
-        } else if (targetDescription.matches("(A|a)nother .*")) {
-            targetFilter = new MagicOtherPermanentTargetFilter(MagicTargetFilterFactory.Permanent(targetDescription.replaceFirst("(A|a)nother ", "")));
+        } else if (targetDescription.matches("another .*")) {
+            targetFilter = new MagicOtherPermanentTargetFilter(MagicTargetFilterFactory.Permanent(targetDescription.replaceFirst("another ", "")));
             targeted     = false;
         } else if (targetDescription.matches("a(n)? .*")) {
             targetFilter = MagicTargetFilterFactory.single(targetDescription.replaceFirst("a(n)? ", ""));
@@ -513,7 +488,7 @@ public class MagicTargetChoice extends MagicChoice {
         if (game.getFastTarget()) {
             @SuppressWarnings("unchecked")
             final MagicTargetPicker<MagicTarget> targetPicker = (MagicTargetPicker<MagicTarget>)event.getTargetPicker();
-            targets = targetPicker.pickTargets(game,player,targets);
+            targets = targetPicker.pickTargets(game,event,targets);
         }
         return targets;
     }

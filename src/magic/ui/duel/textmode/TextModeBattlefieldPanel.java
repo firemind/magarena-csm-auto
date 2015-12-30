@@ -1,15 +1,12 @@
 package magic.ui.duel.textmode;
 
-import magic.model.MagicCard;
 import magic.model.MagicCardList;
-import magic.model.event.MagicEvent;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.duel.BattlefieldPanel;
-import magic.ui.duel.DuelPanel;
-import magic.ui.duel.animation.PlayCardAnimation;
 import magic.ui.duel.resolution.ResolutionProfileResult;
 import magic.ui.duel.resolution.ResolutionProfileType;
 import magic.ui.duel.sidebar.StackViewer;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 
 @SuppressWarnings("serial")
 public class TextModeBattlefieldPanel extends BattlefieldPanel {
@@ -62,27 +59,12 @@ public class TextModeBattlefieldPanel extends BattlefieldPanel {
     }
 
     @Override
-    public void setAnimationEvent(MagicEvent event, DuelPanel gamePanel) {
-        // not implemented
-    }
-
-    @Override
     public StackViewer getStackViewer() {
         return null;
     }
 
     @Override
-    public PlayCardAnimation getPlayCardFromHandAnimation() {
-        return null;
-    }
-
-    @Override
-    public void setPlayCardFromHandAnimation(PlayCardAnimation event) {
-        // not implemented
-    }
-
-    @Override
-    public void highlightCard(MagicCard card, boolean b) {
+    public void highlightCard(CardViewerInfo cardInfo, boolean b) {
         // not supported
     }
 

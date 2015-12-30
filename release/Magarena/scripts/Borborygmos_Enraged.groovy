@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -18,8 +18,8 @@
                     top,
                     MagicLocationType.OwnersLibrary,
                     top.hasType(MagicType.Land) ?
-                      MagicLocationType.OwnersHand :
-                      MagicLocationType.Graveyard
+                        MagicLocationType.OwnersHand :
+                        MagicLocationType.Graveyard
                 ));
             }
         }

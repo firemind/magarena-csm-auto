@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable {
-
-    private static final long serialVersionUID = 1L;
 
     public MagicCardList() {}
 
@@ -208,12 +207,12 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
                     if (!high||lowLeft==0||highCount==0||blocks==1) {
                         add(card);
                         spells.remove(index);
-                         spellCount++;
-                         if (high) {
-                             highCount++;
-                         } else {
-                             lowLeft--;
-                         }
+                        spellCount++;
+                        if (high) {
+                            highCount++;
+                        } else {
+                            lowLeft--;
+                        }
                     }
                 }
             }

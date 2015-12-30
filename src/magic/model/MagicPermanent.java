@@ -1,7 +1,18 @@
 package magic.model;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import magic.ai.ArtificialScoringSystem;
 import magic.data.CardDefinitions;
+import magic.data.MagicIcon;
 import magic.model.action.AttachAction;
 import magic.model.action.ChangeControlAction;
 import magic.model.action.ChangeCountersAction;
@@ -21,19 +32,12 @@ import magic.model.mstatic.MagicStatic;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetFilterFactory;
+import magic.model.trigger.EntersBattlefieldTrigger;
 import magic.model.trigger.MagicTrigger;
 import magic.model.trigger.MagicTriggerType;
-import magic.model.trigger.MagicWhenComesIntoPlayTrigger;
+import magic.ui.cardBuilder.IRenderableCard;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-public class MagicPermanent extends MagicObjectImpl implements MagicSource,MagicTarget,Comparable<MagicPermanent>,MagicMappable<MagicPermanent> {
+public class MagicPermanent extends MagicObjectImpl implements MagicSource,MagicTarget,Comparable<MagicPermanent>,MagicMappable<MagicPermanent>,IRenderableCard {
 
     public static final int NO_COLOR_FLAGS=-1;
 
@@ -71,7 +75,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
     private List<MagicActivation<MagicPermanent>> cachedActivations;
     private List<MagicManaActivation> cachedManaActivations;
     private List<MagicTrigger<?>> cachedTriggers;
-    private List<MagicWhenComesIntoPlayTrigger> etbTriggers;
+    private List<EntersBattlefieldTrigger> etbTriggers;
 
     // remember order among blockers (blockedName + id + block order)
     private String blockedName;
@@ -95,14 +99,14 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
 
         cachedController = firstController;
         cachedTypeFlags = getCardDefinition().getTypeFlags();
-        cachedSubTypeFlags = getCardDefinition().genSubTypeFlags();
+        cachedSubTypeFlags = getCardDefinition().genSubTypes();
         cachedColorFlags = getCardDefinition().getColorFlags();
         cachedAbilityFlags = getCardDefinition().genAbilityFlags();
         cachedPowerToughness = getCardDefinition().genPowerToughness();
         cachedActivations = new LinkedList<MagicActivation<MagicPermanent>>();
         cachedManaActivations = new LinkedList<MagicManaActivation>();
         cachedTriggers = new LinkedList<MagicTrigger<?>>();
-        etbTriggers = new LinkedList<MagicWhenComesIntoPlayTrigger>();
+        etbTriggers = new LinkedList<EntersBattlefieldTrigger>();
     }
 
     private MagicPermanent(final MagicCopyMap copyMap, final MagicPermanent sourcePermanent) {
@@ -140,7 +144,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
         cachedActivations    = new LinkedList<MagicActivation<MagicPermanent>>(sourcePermanent.cachedActivations);
         cachedManaActivations = new LinkedList<MagicManaActivation>(sourcePermanent.cachedManaActivations);
         cachedTriggers       = new LinkedList<MagicTrigger<?>>(sourcePermanent.cachedTriggers);
-        etbTriggers          = new LinkedList<MagicWhenComesIntoPlayTrigger>(sourcePermanent.etbTriggers);
+        etbTriggers          = new LinkedList<EntersBattlefieldTrigger>(sourcePermanent.etbTriggers);
     }
 
     @Override
@@ -296,7 +300,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
         ability.addAbility(abilityList);
         abilityList.giveAbility(this, flags);
     }
-    
+
     public void addAbility(final MagicAbilityList abilityList) {
         abilityList.giveAbility(this, cachedAbilityFlags);
     }
@@ -312,8 +316,8 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
     }
 
     public void addAbility(final MagicTrigger<?> trig) {
-        if (trig instanceof MagicWhenComesIntoPlayTrigger) {
-            etbTriggers.add((MagicWhenComesIntoPlayTrigger)trig);
+        if (trig instanceof EntersBattlefieldTrigger) {
+            etbTriggers.add((EntersBattlefieldTrigger)trig);
         } else {
             cachedTriggers.add(trig);
         }
@@ -339,7 +343,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
         return cachedTriggers;
     }
 
-    public Collection<MagicWhenComesIntoPlayTrigger> getComeIntoPlayTriggers() {
+    public Collection<EntersBattlefieldTrigger> getComeIntoPlayTriggers() {
         return etbTriggers;
     }
 
@@ -350,7 +354,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
     public int getDevotion(final MagicColor... colors) {
         int devotion = 0;
         for (final MagicCostManaType mt : getCardDefinition().getCost().getCostManaTypes(0)) {
-            if (mt == MagicCostManaType.Colorless) {
+            if (mt == MagicCostManaType.Generic) {
                 continue;
             }
             for (final MagicColor c : colors) {
@@ -450,7 +454,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
                 for (final MagicPlayer player : game.getPlayers()) {
                 for (final MagicPermanent perm : player.getPermanents()) {
                     if (mstatic.accept(game, source, perm)) {
-                       perm.apply(source, mstatic);
+                        perm.apply(source, mstatic);
                     }
                 }}
             }
@@ -462,14 +466,14 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
             case Card:
                 cachedController = firstController;
                 cachedTypeFlags = getCardDefinition().getTypeFlags();
-                cachedSubTypeFlags = getCardDefinition().genSubTypeFlags();
+                cachedSubTypeFlags = getCardDefinition().genSubTypes();
                 cachedColorFlags = getCardDefinition().getColorFlags();
                 cachedAbilityFlags = getCardDefinition().genAbilityFlags();
                 cachedPowerToughness = getCardDefinition().genPowerToughness();
                 cachedActivations = new LinkedList<MagicActivation<MagicPermanent>>(getCardDefinition().getActivations());
                 cachedManaActivations = new LinkedList<MagicManaActivation>(getCardDefinition().getManaActivations());
                 cachedTriggers = new LinkedList<MagicTrigger<?>>(getCardDefinition().getTriggers());
-                etbTriggers = new LinkedList<MagicWhenComesIntoPlayTrigger>(getCardDefinition().getComeIntoPlayTriggers());
+                etbTriggers = new LinkedList<EntersBattlefieldTrigger>(getCardDefinition().getComeIntoPlayTriggers());
                 break;
             case CDASubtype:
                 getCardDefinition().applyCDASubType(getGame(), getController(), cachedSubTypeFlags);
@@ -548,7 +552,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
         return !hasState(MagicPermanentState.Tapped);
     }
 
-    private int getColorFlags() {
+    public int getColorFlags() {
         return cachedColorFlags;
     }
 
@@ -803,7 +807,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
 
             // Soulbond
             if (pairedCreature.isValid() && pairedCreature.isCreature() == false) {
-                game.logAppendMessage(getController(), 
+                game.logAppendMessage(getController(),
                     String.format("%s becomes unpaired as %s is no longer a creature.",
                         MagicMessage.getCardToken(this),
                         MagicMessage.getCardToken(pairedCreature))
@@ -831,7 +835,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
                 if (hasAbility(MagicAbility.Bestow)) {
                     game.logAppendMessage(getController(),
                         String.format("%s becomes unattached as %s",
-                            MagicMessage.getCardToken(this), 
+                            MagicMessage.getCardToken(this),
                             reason)
                     );
                     game.addDelayedAction(new AttachAction(this, MagicPermanent.NONE));
@@ -1327,4 +1331,99 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource,Magic
             //do nothing
         }
     };
+
+    @Override
+    public MagicManaCost getCost() {
+        // Returning from CardDefinition, no in-game changes
+        return getCardDefinition().getCost();
+    }
+
+    @Override
+    public String getText() {
+        // Returning from CardDefinition, no in-game changes
+        return getCardDefinition().getText();
+    }
+
+    @Override
+    public Set<MagicSubType> getSubTypes() {
+        return EnumSet.copyOf(cachedSubTypeFlags);
+    }
+
+    @Override
+    public int getNumColors() {
+        int numColors = 0;
+        for (final MagicColor color : MagicColor.values()) {
+            if (hasColor(color)) {
+                numColors++;
+            }
+        }
+        return numColors;
+    }
+
+    @Override
+    public String getImageName() {
+        return getCardDefinition().getImageName();
+    }
+
+    @Override
+    public String getPowerToughnessText() {
+        if (isCreature()) {
+            return getPower()+"/"+getToughness();
+        } else {
+            return "";
+        }
+    }
+
+    @Override
+    public String getSubTypeText() {
+        // Returning from CardDefinition, no in-game changes
+        return getCardDefinition().getSubTypeText();
+    }
+
+    @Override
+    public Set<MagicType> getTypes() {
+        Set<MagicType> types = new HashSet<MagicType>();
+        for (MagicType type : MagicType.values()) {
+            if (hasType(type)) {
+                types.add(type);
+            }
+        }
+        return types;
+    }
+
+    @Override
+    public boolean isHybrid() {
+        final List<MagicIcon> list = getCost().getIcons();
+        //If doesn't contain single color mana, and does contain hybrid mana. Checks for absence
+        if (Collections.disjoint(list, MagicIcon.COLOR_MANA)==true && Collections.disjoint(list, MagicIcon.HYBRID_COLOR_MANA)==false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isMulti() {
+        return getNumColors() > 1;
+    }
+
+    @Override
+    public boolean hasText() {
+        return cardDefinition.hasText();
+    }
+
+    @Override
+    public int getStartingLoyalty() {
+        return getCardDefinition().getStartingLoyalty();
+    }
+
+    @Override
+    public boolean isSorcery() {return hasType(MagicType.Sorcery);}
+
+    @Override
+    public boolean isInstant() {return hasType(MagicType.Instant);}
+
+    @Override
+    public boolean isHidden() {return cardDefinition.isHidden();}
+
 }

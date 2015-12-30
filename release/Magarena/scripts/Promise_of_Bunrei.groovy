@@ -1,6 +1,6 @@
 
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isCreature() &&
@@ -8,8 +8,8 @@
                 new MagicEvent(
                     permanent,
                     this,
-                    "Sacrifice SN. If you do, " +
-                    "put four 1/1 colorless Spirit creature tokens onto the battlefield."
+                    "Sacrifice SN. If PN does, " +
+                    "he or she puts four 1/1 colorless Spirit creature tokens onto the battlefield."
                 ):
                 MagicEvent.NONE;
         }

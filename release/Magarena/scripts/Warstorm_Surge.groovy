@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isCreature() && otherPermanent.isFriend(permanent)) ?
@@ -19,7 +19,7 @@
             final MagicPermanent permanent = event.getRefPermanent();
             event.processTarget(game, {
                 game.doAction(new DealDamageAction(permanent,it,permanent.getPower()));
-           });
+            });
         }
     }
 ]

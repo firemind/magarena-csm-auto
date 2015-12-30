@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isNonToken() &&
@@ -10,7 +10,8 @@
                     new MagicMayChoice(),
                     otherPermanent, 
                     this,
-                    "PN may\$ search your library for a card named RN, reveal it, put it in your hand, and shuffle your library."
+                    "PN may\$ search his or her library for a card named RN, reveal it, and put it into his or her hand. "+
+                    "If PN does, he or she shuffles his or her library."
                 ):
                 MagicEvent.NONE;
         }

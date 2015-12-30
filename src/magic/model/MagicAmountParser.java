@@ -4,6 +4,7 @@ import magic.model.ARG;
 import magic.model.MagicCounterType;
 import magic.model.MagicAbility;
 import magic.model.target.MagicTargetFilterFactory;
+import magic.data.EnglishToInt;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +51,21 @@ public enum MagicAmountParser {
     ColorOnPerms("color among permanents you control") {
         public MagicAmount toAmount(final Matcher arg) {
             return MagicAmountFactory.ColorsOnPerms;
+        }
+    },
+    XCost("x") {
+        public MagicAmount toAmount(final Matcher arg) {
+            return MagicAmountFactory.XCost;
+        }
+    },
+    NegXCost("-x") {
+        public MagicAmount toAmount(final Matcher arg) {
+            return MagicAmountFactory.NegXCost;
+        }
+    },
+    Number("[^ ]+") {
+        public MagicAmount toAmount(final Matcher arg) {
+            return MagicAmountFactory.Constant(EnglishToInt.convert(arg.group()));
         }
     },
     FromFilter(ARG.ANY) {

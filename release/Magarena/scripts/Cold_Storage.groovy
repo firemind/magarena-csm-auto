@@ -16,7 +16,7 @@
             return new MagicEvent(
                 source,
                 this,
-                "Return each creature card exiled with SN to the battlefield under your control."
+                "PN return each creature card exiled with SN to the battlefield under his or her control."
             );
         }
 
@@ -24,7 +24,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.doAction(new ReturnLinkedExileAction(
                 event.getPermanent(),
-                MagicLocationType.Play,
+                MagicLocationType.Battlefield,
                 event.getPlayer()
             ));
         }

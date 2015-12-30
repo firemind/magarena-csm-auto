@@ -3,6 +3,7 @@ package magic.model;
 import magic.ai.ArtificialScoringSystem;
 import magic.data.CardDefinitions;
 import magic.data.CardProperty;
+import magic.data.MagicIcon;
 import magic.model.event.MagicActivation;
 import magic.model.event.MagicActivationHints;
 import magic.model.event.MagicHandCastActivation;
@@ -17,23 +18,20 @@ import magic.model.event.MagicTiming;
 import magic.model.mstatic.MagicCDA;
 import magic.model.mstatic.MagicStatic;
 import magic.model.trigger.MagicTrigger;
-import magic.model.trigger.MagicWhenComesIntoPlayTrigger;
-import magic.model.trigger.MagicComesIntoPlayWithCounterTrigger;
-import magic.model.trigger.MagicWhenDrawnTrigger;
-import magic.model.trigger.MagicWhenPutIntoGraveyardTrigger;
-import magic.model.trigger.MagicWhenSpellIsCastTrigger;
-import magic.model.trigger.MagicWhenCycleTrigger;
+import magic.model.trigger.MagicTriggerType;
+import magic.model.trigger.EntersBattlefieldTrigger;
+import magic.model.trigger.EntersWithCounterTrigger;
+import magic.model.trigger.ThisDrawnTrigger;
+import magic.model.trigger.ThisPutIntoGraveyardTrigger;
+import magic.model.trigger.ThisSpellIsCastTrigger;
+import magic.model.trigger.ThisCycleTrigger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Date;
+import java.util.*;
 
-public class MagicCardDefinition implements MagicAbilityStore {
+import magic.ui.cardBuilder.IRenderableCard;
+import magic.utility.MagicFileSystem;
+
+public class MagicCardDefinition implements MagicAbilityStore, IRenderableCard {
 
     public static final MagicCardDefinition UNKNOWN = new MagicCardDefinition() {
         //definition for unknown cards
@@ -76,6 +74,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private int typeFlags;
     private EnumSet<MagicType> cardType = EnumSet.noneOf(MagicType.class);
     private EnumSet<MagicSubType> subTypeFlags = EnumSet.noneOf(MagicSubType.class);
+    private String subTypeText ="";
     private EnumSet<MagicAbility> abilityFlags = EnumSet.noneOf(MagicAbility.class);
     private int colorFlags = -1;
     private MagicManaCost cost=MagicManaCost.ZERO;
@@ -83,6 +82,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private final int[] manaSource=new int[MagicColor.NR_COLORS];
     private int power;
     private int toughness;
+    private String powerToughnessText = "";
     private int startingLoyalty;
     private String text = "";
     private MagicStaticType staticType=MagicStaticType.None;
@@ -95,11 +95,11 @@ public class MagicCardDefinition implements MagicAbilityStore {
     private final Collection<MagicCDA> CDAs = new ArrayList<MagicCDA>();
     private final Collection<MagicTrigger<?>> triggers = new ArrayList<MagicTrigger<?>>();
     private final Collection<MagicStatic> statics=new ArrayList<MagicStatic>();
-    private final LinkedList<MagicWhenComesIntoPlayTrigger> comeIntoPlayTriggers = new LinkedList<MagicWhenComesIntoPlayTrigger>();
-    private final Collection<MagicWhenSpellIsCastTrigger> spellIsCastTriggers = new ArrayList<MagicWhenSpellIsCastTrigger>();
-    private final Collection<MagicWhenCycleTrigger> cycleTriggers = new ArrayList<MagicWhenCycleTrigger>();
-    private final Collection<MagicWhenDrawnTrigger> drawnTriggers = new ArrayList<MagicWhenDrawnTrigger>();
-    private final Collection<MagicWhenPutIntoGraveyardTrigger> putIntoGraveyardTriggers = new ArrayList<MagicWhenPutIntoGraveyardTrigger>();
+    private final LinkedList<EntersBattlefieldTrigger> comeIntoPlayTriggers = new LinkedList<EntersBattlefieldTrigger>();
+    private final Collection<ThisSpellIsCastTrigger> spellIsCastTriggers = new ArrayList<ThisSpellIsCastTrigger>();
+    private final Collection<ThisCycleTrigger> cycleTriggers = new ArrayList<ThisCycleTrigger>();
+    private final Collection<ThisDrawnTrigger> drawnTriggers = new ArrayList<ThisDrawnTrigger>();
+    private final Collection<ThisPutIntoGraveyardTrigger> putIntoGraveyardTriggers = new ArrayList<ThisPutIntoGraveyardTrigger>();
     private final Collection<MagicManaActivation> manaActivations=new ArrayList<MagicManaActivation>();
     private final Collection<MagicEventSource> costEventSources=new ArrayList<MagicEventSource>();
 
@@ -148,15 +148,15 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public void setHidden() {
         hidden = true;
     }
-    
+
     public boolean isHidden() {
         return hidden;
     }
-    
+
     public void setOverlay() {
         overlay = true;
     }
-    
+
     public boolean isOverlay() {
         return overlay;
     }
@@ -164,14 +164,14 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public boolean isPlayable() {
         return overlay == false && token == false && hidden == false;
     }
-    
+
     public boolean isNonPlayable() {
         return isPlayable() == false;
     }
 
-    public void loadAbilities() {
+    public synchronized void loadAbilities() {
         if (startingLoyalty > 0 && comeIntoPlayTriggers.isEmpty()) {
-            add(new MagicComesIntoPlayWithCounterTrigger(
+            add(new EntersWithCounterTrigger(
                 MagicCounterType.Loyalty,
                 startingLoyalty
             ));
@@ -212,6 +212,10 @@ public class MagicCardDefinition implements MagicAbilityStore {
         imageUpdated = d;
     }
 
+    /**
+     * Returns true if script file has a non-null {@code image_updated} property
+     * whose value is a date that comes after the given date.
+     */
     public boolean isImageUpdatedAfter(final Date d) {
         return imageUpdated != null && imageUpdated.after(d);
     }
@@ -291,6 +295,10 @@ public class MagicCardDefinition implements MagicAbilityStore {
 
     public String getImageURL() {
         return imageURL;
+    }
+
+    public boolean hasImageUrl() {
+        return imageURL != null;
     }
 
     public String getCardTextName() {
@@ -540,12 +548,12 @@ public class MagicCardDefinition implements MagicAbilityStore {
         subTypeFlags.add(subType);
     }
 
-    EnumSet<MagicSubType> genSubTypeFlags() {
+    EnumSet<MagicSubType> genSubTypes() {
         return subTypeFlags.clone();
     }
 
-    public EnumSet<MagicSubType> getSubTypeFlags() {
-        final EnumSet<MagicSubType> subTypes = genSubTypeFlags();
+    public EnumSet<MagicSubType> getSubTypes() {
+        final EnumSet<MagicSubType> subTypes = genSubTypes();
         applyCDASubType(null, null, subTypes);
         return subTypes;
     }
@@ -557,7 +565,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     }
 
     public String getSubTypeString() {
-        final String brackets = getSubTypeFlags().toString(); // [...,...]
+        final String brackets = getSubTypes().toString(); // [...,...]
         if (brackets.length() <= 2) {
             return "";
         }
@@ -565,7 +573,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     }
 
     public boolean hasSubType(final MagicSubType subType) {
-        return getSubTypeFlags().contains(subType);
+        return getSubTypes().contains(subType);
     }
 
     public void setColors(final String colors) {
@@ -584,7 +592,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public int getColorFlags() {
         return colorFlags;
     }
-    
+
     public int applyCDAColor(final MagicGame game, final MagicPlayer player, final int initColor) {
         int color = initColor;
         for (final MagicCDA lv : CDAs) {
@@ -654,16 +662,18 @@ public class MagicCardDefinition implements MagicAbilityStore {
 
     public List<MagicEvent> getCostEvent(final MagicCard source) {
         final List<MagicEvent> costEvent = new ArrayList<MagicEvent>();
-        if (cost != MagicManaCost.ZERO) {
+        final MagicManaCost modCost = source.getGame().modCost(source, cost);
+        
+        if (modCost != MagicManaCost.ZERO) {
             costEvent.add(new MagicPayManaCostEvent(
                 source,
-                cost
+                modCost
             ));
         }
         costEvent.addAll(getAdditionalCostEvent(source));
         return costEvent;
     }
-        
+
     public List<MagicEvent> getAdditionalCostEvent(final MagicCard source) {
         final List<MagicEvent> costEvent = new ArrayList<MagicEvent>();
         for (final MagicEventSource eventSource : costEventSources) {
@@ -697,7 +707,7 @@ public class MagicCardDefinition implements MagicAbilityStore {
     public int getManaSource(final MagicColor color) {
         return manaSource[color.ordinal()];
     }
-    
+
     public void setStartingLoyalty(final int aLoyalty) {
         startingLoyalty = aLoyalty;
     }
@@ -808,15 +818,15 @@ public class MagicCardDefinition implements MagicAbilityStore {
         costEventSources.add(eventSource);
     }
 
-    public void addTrigger(final MagicWhenSpellIsCastTrigger trigger) {
+    public void addTrigger(final ThisSpellIsCastTrigger trigger) {
         spellIsCastTriggers.add(trigger);
     }
 
-    public void addTrigger(final MagicWhenCycleTrigger trigger) {
+    public void addTrigger(final ThisCycleTrigger trigger) {
         cycleTriggers.add(trigger);
     }
 
-    public void addTrigger(final MagicWhenComesIntoPlayTrigger trigger) {
+    public void addTrigger(final EntersBattlefieldTrigger trigger) {
         if (trigger.usesStack()) {
             comeIntoPlayTriggers.add(trigger);
         } else {
@@ -824,11 +834,11 @@ public class MagicCardDefinition implements MagicAbilityStore {
         }
     }
 
-    public void addTrigger(final MagicWhenPutIntoGraveyardTrigger trigger) {
+    public void addTrigger(final ThisPutIntoGraveyardTrigger trigger) {
         putIntoGraveyardTriggers.add(trigger);
     }
 
-    public void addTrigger(final MagicWhenDrawnTrigger trigger) {
+    public void addTrigger(final ThisDrawnTrigger trigger) {
         drawnTriggers.add(trigger);
     }
 
@@ -848,23 +858,23 @@ public class MagicCardDefinition implements MagicAbilityStore {
         return statics;
     }
 
-    public Collection<MagicWhenSpellIsCastTrigger> getSpellIsCastTriggers() {
+    public Collection<ThisSpellIsCastTrigger> getSpellIsCastTriggers() {
         return spellIsCastTriggers;
     }
 
-    public Collection<MagicWhenCycleTrigger> getCycleTriggers() {
+    public Collection<ThisCycleTrigger> getCycleTriggers() {
         return cycleTriggers;
     }
 
-    public Collection<MagicWhenComesIntoPlayTrigger> getComeIntoPlayTriggers() {
+    public Collection<EntersBattlefieldTrigger> getComeIntoPlayTriggers() {
         return comeIntoPlayTriggers;
     }
 
-    public Collection<MagicWhenPutIntoGraveyardTrigger> getPutIntoGraveyardTriggers() {
+    public Collection<ThisPutIntoGraveyardTrigger> getPutIntoGraveyardTriggers() {
         return putIntoGraveyardTriggers;
     }
 
-    public Collection<MagicWhenDrawnTrigger> getDrawnTriggers() {
+    public Collection<ThisDrawnTrigger> getDrawnTriggers() {
         return drawnTriggers;
     }
 
@@ -1054,4 +1064,87 @@ public class MagicCardDefinition implements MagicAbilityStore {
             return TOUGHNESS_COMPARATOR_DESC.compare(cardDefinition2, cardDefinition1);
         }
     };
+
+    public boolean isImageFileMissing() {
+        return MagicFileSystem.getCardImageFile(this).exists() == false;
+    }
+
+    public boolean isHybrid() {
+        final List<MagicIcon> list = getCost().getIcons();
+        //If doesn't contain single color mana, and does contain hybrid mana. Checks for absence
+        if (Collections.disjoint(list, MagicIcon.COLOR_MANA)==true && Collections.disjoint(list, MagicIcon.HYBRID_COLOR_MANA)==false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setPowerToughnessText(String string) {
+        powerToughnessText = string;
+    }
+
+    public String getPowerToughnessText() {
+        return powerToughnessText;
+    }
+
+    public void setSubtypeText(String string) {
+        final String subTypeList = string.replaceAll("(\\w),(\\w)", "$1, $2");// Not automatically adding space unless space is there
+        subTypeText = subTypeList;
+    }
+
+    public String getSubTypeText() {
+        return subTypeText;
+    }
+
+    public String getPowerLabel() {
+        if (isCreature() && "".equals(powerToughnessText) == false) {
+            return powerToughnessText.split("/")[0];
+        } else {
+            return "";
+        }
+    }
+
+    public String getToughnessLabel() {
+        if (isCreature() && "".equals(powerToughnessText) == false) {
+            return powerToughnessText.split("/")[1];
+        } else {
+            return "";
+        }
+    }
+
+    @Override
+    public int getNumColors() {
+        int numColors = 0;
+        for (final MagicColor color : MagicColor.values()) {
+            if (hasColor(color)) {
+                numColors++;
+            }
+        }
+        return numColors;
+    }
+
+    @Override
+    public Set<MagicType> getTypes() {
+        Set<MagicType> types = new HashSet<MagicType>();
+        for (MagicType type : MagicType.values()) {
+            if (hasType(type)) {
+                types.add(type);
+            }
+        }
+        return types;
+    }
+
+    @Override
+    public boolean isMulti() {
+        return getNumColors() > 1;
+    }
+
+    @Override
+    public boolean hasText() {
+        if (getText().contains("NONE") || getText().length() <=1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

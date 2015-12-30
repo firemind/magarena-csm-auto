@@ -9,9 +9,9 @@ import java.util.Set;
 import javax.swing.JLabel;
 import magic.data.GeneralConfig;
 import magic.model.MagicPlayerZone;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.IChoiceViewer;
-import magic.ui.duel.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.PanelButton;
 import magic.ui.widget.TexturedPanel;
@@ -35,7 +35,7 @@ public class GamePlayerPanel extends TexturedPanel implements IChoiceViewer {
 
         zoneButtonsPanel = new PlayerZoneButtonsPanel(playerInfo, controller);
 
-        avatarPanel = new PlayerImagePanel(playerInfo, controller.getGame());
+        avatarPanel = new PlayerImagePanel(playerInfo);
         avatarPanel.setOpaque(false);
 
         avatarButton = new PanelButton() {
@@ -74,7 +74,7 @@ public class GamePlayerPanel extends TexturedPanel implements IChoiceViewer {
     @Override
     public void showValidChoices(Set<?> validChoices) {
         final boolean isValid = isThisPlayerValidChoice(validChoices);
-        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+        if (GeneralConfig.getInstance().showGameplayAnimations()) {
             avatarPanel.doPulsingBorderAnimation(isValid);
             avatarButton.setValidNoOverlay(isValid);
         } else {
@@ -96,16 +96,24 @@ public class GamePlayerPanel extends TexturedPanel implements IChoiceViewer {
         return playerInfo;
     }
 
-    public Rectangle getZoneButtonRectangle(MagicPlayerZone zone, Component canvas) {
-        return zoneButtonsPanel.getZoneButtonRectangle(zone, canvas);
-    }
-
     public void doFlashPlayerHandZoneButton() {
         zoneButtonsPanel.doFlashPlayerHandZoneButton();
     }
 
+    public void doFlashLibraryZoneButton() {
+        zoneButtonsPanel.doFlashLibraryZoneButton();
+    }
+
     public void doHighlightPlayerZone(MagicPlayerZone zone, boolean b) {
         zoneButtonsPanel.doHighlightPlayerZone(zone, b);
+    }
+
+    public Rectangle getLibraryButtonLayout(Component canvas) {
+        return zoneButtonsPanel.getZoneButtonRectangle(MagicPlayerZone.LIBRARY, canvas);
+    }
+
+    public Rectangle getHandButtonLayout(Component canvas) {
+        return zoneButtonsPanel.getZoneButtonRectangle(MagicPlayerZone.HAND, canvas);
     }
 
 }

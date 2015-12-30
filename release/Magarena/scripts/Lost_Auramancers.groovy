@@ -1,6 +1,6 @@
 def choice = new MagicTargetChoice("an enchantment card from your library");
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return permanent.getCounters(MagicCounterType.Time) == 0 ?
@@ -8,8 +8,8 @@ def choice = new MagicTargetChoice("an enchantment card from your library");
                     permanent,
                     new MagicMayChoice(),
                     this,
-                    "PN may\$ search your library for an enchantment card and put it onto the battlefield. " +
-                    "If you do, shuffle your library."
+                    "PN may\$ search his or her library for an enchantment card and put it onto the battlefield. " +
+                    "If PN does, he or she shuffles his or her library."
                 ) :
                 MagicEvent.NONE;
         }

@@ -177,11 +177,11 @@ public class CardDefinitions {
     }
     
     public static void loadCardDefinition(final String cardName) {
-         final File cardFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt");
-         if (cardFile.isFile() == false) {
-             throw new RuntimeException("card script file not found: " + cardFile);
-         }
-         loadCardDefinition(cardFile);
+        final File cardFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt");
+        if (cardFile.isFile() == false) {
+            throw new RuntimeException("card script file not found: " + cardFile);
+        }
+        loadCardDefinition(cardFile);
     }
 
     /**
@@ -409,22 +409,16 @@ public class CardDefinitions {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GeneralConfig.getInstance().setIsMissingFiles(isMissingImages());
+                GeneralConfig.getInstance().setIsMissingFiles(isMissingPlayableImages());
             }
         }).start();
     }
 
-    public static boolean isMissingImages() {
-        final Date lastDownloaderRunDate = GeneralConfig.getInstance().getImageDownloaderRunDate();
-        for (final MagicCardDefinition card : getAllPlayableCardDefs()) {
-            if (card.getImageURL() != null) {
-                if (!MagicFileSystem.getCardImageFile(card).exists() || 
-                        card.isImageUpdatedAfter(lastDownloaderRunDate)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public static boolean isMissingPlayableImages() {
+        final Date aDate = GeneralConfig.getInstance().getPlayableImagesDownloadDate();
+        return getAllPlayableCardDefs().stream()
+            .filter(MagicCardDefinition::hasImageUrl)
+            .anyMatch(card -> card.isImageUpdatedAfter(aDate) || card.isImageFileMissing());
     }
 
     public static String getScriptFilename(final MagicCardDefinition card) {

@@ -64,7 +64,7 @@
                 }
             ));
             outerGame.doAction(new AddTriggerAction(
-                new MagicWhenOtherPutIntoGraveyardTrigger() {
+                new OtherPutIntoGraveyardTrigger() {
                     @Override
                     public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MoveCardAction act) {
                         return act.card.getOwner().getId() == you.getId() ?
@@ -73,7 +73,7 @@
                                 act.card,
                                 new MagicMayChoice(),
                                 this,
-                                "PN may\$ return SN to your hand."
+                                "PN may\$ return SN to his or her hand."
                             ):
                             MagicEvent.NONE
                     }

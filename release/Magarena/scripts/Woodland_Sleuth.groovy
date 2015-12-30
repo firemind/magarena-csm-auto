@@ -1,12 +1,12 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return (game.getCreatureDiedThisTurn()) ?
                 new MagicEvent(
                     permanent,
                     this,
-                    "Return a creature card at random from your graveyard to your hand."
+                    "PN returns a creature card at random from his or her graveyard to his or her hand."
                 ) :
                 MagicEvent.NONE;
         }

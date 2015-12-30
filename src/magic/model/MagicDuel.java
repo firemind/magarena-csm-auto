@@ -27,7 +27,8 @@ public class MagicDuel {
     private static final String START = "duel.start";
 
     private final DuelConfig duelConfig;
-    private int opponentIndex;
+    private final int playerIndex = 0;
+    private final int opponentIndex = 1;
     private int gameNr;
     private int gamesPlayed;
     private int gamesWon;
@@ -88,18 +89,14 @@ public class MagicDuel {
     }
 
     void advance(final boolean won, final MagicGame game) {
+        gameNr++;
         gamesPlayed++;
+        
         if (won) {
             gamesWon++;
-            startPlayer=1;
+            startPlayer = opponentIndex;
         } else {
-            startPlayer=0;
-        }
-        gameNr++;
-        if (gameNr>duelConfig.getNrOfGames()) {
-            gameNr=1;
-            opponentIndex++;
-            determineStartPlayer();
+            startPlayer = playerIndex;
         }
 
         if (game.isReal() && !MagicSystem.isTestGame() && !MagicSystem.isAiVersusAi()) {
@@ -110,20 +107,21 @@ public class MagicDuel {
 
     public MagicGame nextGame() {
         //create players
-        final MagicPlayer player   = new MagicPlayer(duelConfig.getStartLife(), duelConfig.getPlayerConfig(0), 0);
-        final MagicPlayer opponent = new MagicPlayer(duelConfig.getStartLife(), duelConfig.getPlayerConfig(opponentIndex), 1);
+        final MagicPlayer player   = new MagicPlayer(duelConfig.getStartLife(), duelConfig.getPlayerConfig(playerIndex),   playerIndex);
+        final MagicPlayer opponent = new MagicPlayer(duelConfig.getStartLife(), duelConfig.getPlayerConfig(opponentIndex), opponentIndex);
 
         //give the AI player extra life
         opponent.setLife(opponent.getLife() + opponent.getAiProfile().getExtraLife());
 
         //determine who starts first
-        final MagicPlayer start    = startPlayer == 0 ? player : opponent;
+        final MagicPlayer[] players = new MagicPlayer[]{player,opponent};
+        final MagicPlayer start = players[startPlayer];
 
         //create game
         final MagicGame game = MagicGame.create(
             this,
             MagicDefaultGameplay.getInstance(),
-            new MagicPlayer[]{player,opponent},
+            players,
             start
         );
 
@@ -195,7 +193,6 @@ public class MagicDuel {
 
     private void save(final Properties properties) {
         duelConfig.save(properties);
-        properties.setProperty(OPPONENT,Integer.toString(opponentIndex));
         properties.setProperty(GAME,Integer.toString(gameNr));
         properties.setProperty(PLAYED,Integer.toString(gamesPlayed));
         properties.setProperty(WON,Integer.toString(gamesWon));
@@ -214,17 +211,16 @@ public class MagicDuel {
 
     @SuppressWarnings("serial")
     private Properties getNewSortedProperties() {
-       return new Properties() {
-           @Override
-           public synchronized Enumeration<Object> keys() {
-               return Collections.enumeration(new TreeSet<>(super.keySet()));
-           }
-       };
+        return new Properties() {
+            @Override
+            public synchronized Enumeration<Object> keys() {
+                return Collections.enumeration(new TreeSet<>(super.keySet()));
+            }
+        };
     }
 
     private void load(final Properties properties) {
         duelConfig.load(properties, true);
-        opponentIndex=Integer.parseInt(properties.getProperty(OPPONENT,"1"));
         gameNr=Integer.parseInt(properties.getProperty(GAME,"1"));
         gamesPlayed=Integer.parseInt(properties.getProperty(PLAYED,"0"));
         gamesWon=Integer.parseInt(properties.getProperty(WON,"0"));
@@ -236,7 +232,6 @@ public class MagicDuel {
     }
 
     public void restart() {
-        opponentIndex=1;
         gameNr=1;
         gamesPlayed=0;
         gamesWon=0;

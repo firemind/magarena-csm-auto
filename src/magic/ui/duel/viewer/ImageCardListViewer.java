@@ -33,7 +33,8 @@ import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCardList;
 import magic.ui.utility.GraphicsUtils;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.FontsAndBorders;
@@ -234,14 +235,17 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
             final MagicCard card=cardList.get(index);
             final MagicCardDefinition cardDefinition=card.getCardDefinition();
             final Point point=cardPoints.get(index);
-            final BufferedImage image = imageCache.getImage(cardDefinition, card.getImageIndex(), false);
             final int x1=point.x;
             final int y1=point.y;
             final int x2=point.x+CARD_WIDTH;
             final int y2=point.y+CARD_HEIGHT;
-
-            //draw the card image
-            g.drawImage(image, x1, y1, x2, y2, 0, 0, imageSize.width, imageSize.height, this);
+                        
+            final BufferedImage image = GraphicsUtils.scale(
+                imageCache.getImage(cardDefinition, card.getImageIndex(), true),
+                CARD_WIDTH,
+                CARD_HEIGHT
+            );
+            g2d.drawImage(image, x1, y1, this);
 
             ImageDrawingUtils.drawCardId(g, card.getId(), x1, 0);
 
@@ -310,13 +314,12 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
         repaint();
     }
 
-    public Point getCardPosition(final MagicCardDefinition cardDef) {
+    public Point getCardPosition(final CardViewerInfo cardInfo) {
         Point cardPosition = null;
         for (int index=0; index < cardList.size(); index++) {
             final MagicCard card = cardList.get(index);
-            if (card.getName().equals(cardDef.getName())) {
+            if (card.getId() == cardInfo.getId()) {
                 cardPosition = cardPoints.get(index);
-//                System.out.println("cardPosition = " + cardPosition);
                 break;
             }
         }

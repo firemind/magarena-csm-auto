@@ -5,14 +5,13 @@ import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.swing.border.Border;
-import magic.ui.SwingGameController;
-import magic.ui.duel.PermanentViewerInfo;
-import magic.ui.duel.PlayerViewerInfo;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
 import magic.ui.widget.FontsAndBorders;
 
+@SuppressWarnings("serial")
 class CombatViewer extends PermanentsViewer {
-
-    private static final long serialVersionUID = 1L;
 
     CombatViewer(final SwingGameController controller) {
         super(controller);
@@ -21,7 +20,7 @@ class CombatViewer extends PermanentsViewer {
 
     @Override
     public String getTitle() {
-        return "Combat : " + controller.getViewerInfo().getAttackingPlayerInfo().name;
+        return "Combat : " + controller.getViewerInfo().getAttackingPlayerInfo().getName();
     }
 
     @Override

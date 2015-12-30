@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -9,7 +9,7 @@
                     MagicDestroyTargetPicker.DestroyNoRegen,
                     this,
                     "PN may\$ sacrifice SN. " +
-                    "If you do, destroy target creature\$. It can't be regenerated."
+                    "If PN does, destroy target creature\$. It can't be regenerated."
                 ):
                 MagicEvent.NONE;
         }

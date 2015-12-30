@@ -1,7 +1,7 @@
 def choice = new MagicTargetChoice("an Island to sacrifice");
 
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -21,7 +21,7 @@ def choice = new MagicTargetChoice("an Island to sacrifice");
             }
         }
     },
-    new MagicAtBeginOfCombatTrigger() {
+    new AtBeginOfCombatTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPlayer attackingPlayer) {
             return permanent.isController(attackingPlayer) ? 

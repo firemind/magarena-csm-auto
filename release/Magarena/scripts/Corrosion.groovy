@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer eotPlayer) {
             return new MagicEvent(
@@ -7,7 +7,7 @@
                     TARGET_OPPONENT,
                     this,
                     "PN puts a rust counter on each artifact target opponent\$ controls. "+
-                    "Then destroy each artifact with converted mana cost less than or equal to the number of rust counters on it. "+
+                    "Then destroys each artifact with converted mana cost less than or equal to the number of rust counters on it. "+
                     "Artifacts destroyed this way can't be regenerated."
                 );
         }
@@ -27,7 +27,7 @@
         }
     },
     
-    new MagicWhenSelfLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final RemoveFromPlayAction act) {
             return new MagicEvent(

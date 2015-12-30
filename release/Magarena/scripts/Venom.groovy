@@ -1,5 +1,5 @@
 [
-    new MagicWhenBlocksTrigger() {
+    new BlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             final MagicPermanent enchantedCreature = permanent.getEnchantedPermanent();
@@ -20,7 +20,7 @@
             event.processRefPermanent(game, {
                 game.doAction(new AddTurnTriggerAction(
                     it,
-                    MagicAtEndOfCombatTrigger.Destroy
+                    AtEndOfCombatTrigger.Destroy
                 ))
             });
         }

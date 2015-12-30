@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             final MagicPermanent enchanted = permanent.getEnchantedPermanent();
@@ -8,7 +8,7 @@
                     permanent,
                     enchanted.getCard(),
                     this,
-                    "Return RN to the battlefield under your control."
+                    "PN returns RN to the battlefield under his or her control."
                 ):
                 MagicEvent.NONE;
         }

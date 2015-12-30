@@ -1,0 +1,11 @@
+name=Alabaster Leech
+image=http://magiccards.info/scans/en/in/1.jpg
+value=0.943
+rarity=R
+type=Creature
+subtype=Leech
+cost={W}
+pt=1/3
+requires_groovy_code
+timing=main
+oracle=White spells you cast cost {W} more to cast.

@@ -1,12 +1,12 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(            
                 permanent,
                 new MagicMayChoice("Sacrifice SN?"),
                 this,
-                "PN may\$ sacrifice SN. If you do, return each card exiled with SN to the battlefield under its owner's control"
+                "PN may\$ sacrifice SN. If PN does, return each card exiled with SN to the battlefield under its owner's control"
             );
         }
         @Override
@@ -15,7 +15,7 @@
                 game.doAction(new SacrificeAction(event.getPermanent()));
                 game.doAction(new ReturnLinkedExileAction(
                     event.getPermanent(),
-                    MagicLocationType.Play,
+                    MagicLocationType.Battlefield,
                     event.getPlayer()
                 ));
             }

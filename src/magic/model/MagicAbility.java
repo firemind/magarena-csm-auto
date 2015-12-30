@@ -7,7 +7,6 @@ import magic.model.mstatic.MagicStatic;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetFilterFactory;
 import magic.model.trigger.*;
-import magic.model.target.MagicTarget;
 import magic.model.condition.MagicCondition;
 import magic.model.condition.MagicConditionFactory;
 import magic.model.condition.MagicConditionParser;
@@ -22,7 +21,7 @@ import java.util.regex.Pattern;
 public enum MagicAbility {
 
     // intrinsic abilities (implemented directly in the game engine)
-    AttacksEachTurnIfAble("(SN )?attack(s)? each (turn|combat) if able(\\.)?",-10),
+    AttacksEachTurnIfAble("(SN )?attack(s)? (each|this) (turn|combat) if able(\\.)?",-10),
     CannotBlock("(SN )?can't block(\\.)?",-50),
     CannotAttack("(SN )?can't attack(\\.)?",-50),
     CannotAttackOrBlock("(SN )?can't attack or block(\\.)?",-200),
@@ -80,21 +79,21 @@ public enum MagicAbility {
     // generalize intrinsic abilities (store a filter inside a trigger)
     ProtectionFromPermanent("protection from " + ARG.WORDRUN + "(\\.)?", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicProtectionTrigger.create(
+            card.add(ProtectionTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
     },
     CannotBeBlockedByPermanent("(SN )?can't be blocked by " + ARG.WORDRUN + "(\\.)?", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCannotBeBlockedTrigger.create(
+            card.add(CantBeBlockedTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
     },
     CannotBeBlockedExceptByPermanent("(SN )?can't be blocked except by " + ARG.WORDRUN + "(\\.)?", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCannotBeBlockedTrigger.createExcept(
+            card.add(CantBeBlockedTrigger.createExcept(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
@@ -103,24 +102,24 @@ public enum MagicAbility {
     // keyword abilities
     Undying("undying",60) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicUndyingTrigger.create());
+            card.add(UndyingTrigger.create());
         }
     },
     Persist("persist",60) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPersistTrigger.create());
+            card.add(PersistTrigger.create());
         }
     },
     Modular("modular " + ARG.NUMBER, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.PlusOne,n));
-            card.add(MagicModularTrigger.create());
+            card.add(new EntersWithCounterTrigger(MagicCounterType.PlusOne,n));
+            card.add(ModularTrigger.create());
         }
     },
     Flanking("flanking(\\.)?",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicFlankingTrigger.create());
+            card.add(FlankingTrigger.create());
         }
     },
     Changeling("changeling",10) {
@@ -135,57 +134,57 @@ public enum MagicAbility {
     },
     Ingest("ingest",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfCombatDamagePlayerTrigger.Ingest);
+            card.add(ThisCombatDamagePlayerTrigger.Ingest);
         }
     },
     Exalted("exalted",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicExaltedTrigger.create());
+            card.add(ExaltedTrigger.create());
         }
     },
     BattleCry("battle cry",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicBattleCryTrigger.create());
+            card.add(BattleCryTrigger.create());
         }
     },
     LivingWeapon("living weapon", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicLivingWeaponTrigger.create());
+            card.add(LivingWeaponTrigger.create());
         }
     },
     Bushido("bushido " + ARG.NUMBER,20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicBecomesBlockedPumpTrigger(n,n));
-            card.add(new MagicWhenBlocksPumpTrigger(n,n));
+            card.add(new BecomesBlockedPumpTrigger(n,n));
+            card.add(new BlocksPumpTrigger(n,n));
         }
     },
     Soulshift("soulshift " + ARG.NUMBER,20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicSoulshiftTrigger(n));
+            card.add(new SoulshiftTrigger(n));
         }
     },
     Fading("fading " + ARG.NUMBER,-20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.Fade,n));
-            card.add(MagicFadeVanishCounterTrigger.Fade);
+            card.add(new EntersWithCounterTrigger(MagicCounterType.Fade,n));
+            card.add(FadeVanishCounterTrigger.Fade);
         }
     },
     Vanishing("vanishing " + ARG.NUMBER,-20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
             if (n > 0) {
-                card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.Time,n));
+                card.add(new EntersWithCounterTrigger(MagicCounterType.Time,n));
             }
-            card.add(MagicFadeVanishCounterTrigger.Time);
+            card.add(FadeVanishCounterTrigger.Time);
         }
     },
     CumulativeUpkeep("cumulative upkeep " + ARG.MANACOST,-30) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicCumulativeUpkeepTrigger(manaCost));
+            card.add(new CumulativeUpkeepTrigger(manaCost));
         }
     },
     LevelUp("level up " + ARG.MANACOST + " " + ARG.NUMBER, 10) {
@@ -198,47 +197,47 @@ public enum MagicAbility {
     Devour("devour " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicDevourTrigger(n));
+            card.add(new DevourTrigger(n));
         }
     },
     Rampage("rampage " + ARG.NUMBER,20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicRampageTrigger(n));
+            card.add(new RampageTrigger(n));
         }
     },
     Champion("champion (a |an )?" + ARG.ANY,-10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicChampionTrigger(ARG.any(arg)));
-            card.add(MagicLeavesReturnExileTrigger.create());
+            card.add(new ChampionTrigger(ARG.any(arg)));
+            card.add(LeavesReturnExiledTrigger.create());
         }
     },
     Echo("echo( |—)" + ARG.COST,-20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicEchoTrigger(new MagicRegularCostEvent(ARG.cost(arg))));
+            card.add(new EchoTrigger(new MagicRegularCostEvent(ARG.cost(arg))));
         }
     },
     Bloodthirst("bloodthirst " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicBloodthirstTrigger(n));
+            card.add(new BloodthirstTrigger(n));
         }
     },
     Storm("storm", 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicStormTrigger.create());
+            card.add(StormTrigger.create());
         }
     },
     Annihilator("annihilator " + ARG.NUMBER + "(\\.)?", 80) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicAnnihilatorTrigger(n));
+            card.add(new AnnihilatorTrigger(n));
         }
     },
     Miracle("miracle " + ARG.MANACOST, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicMiracleTrigger(manaCost));
+            card.add(new MiracleTrigger(manaCost));
         }
     },
     Kicker("kicker( |—)" + ARG.COST, 0) {
@@ -266,14 +265,14 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
             card.add(MagicMultikickerCost.Replicate(cost));
-            card.add(MagicReplicateTrigger.create());
+            card.add(ReplicateTrigger.create());
         }
     },
     Evoke("evoke " + ARG.MANACOST, 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
             card.add(new MagicEvokeActivation(manaCost));
-            card.add(MagicWhenComesIntoPlayTrigger.Evoke);
+            card.add(EntersBattlefieldTrigger.Evoke);
         }
     },
     Transmute("transmute " + ARG.MANACOST, 20) {
@@ -284,12 +283,12 @@ public enum MagicAbility {
     },
     Evolve("evolve", 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.Evolve);
+            card.add(OtherEntersBattlefieldTrigger.Evolve);
         }
     },
     Extort("extort", 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicExtortTrigger.create());
+            card.add(ExtortTrigger.create());
         }
     },
     Cycling("cycling( |—)" + ARG.COST, 20) {
@@ -313,7 +312,7 @@ public enum MagicAbility {
     },
     Unleash("unleash", 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicUnleashTrigger.create());
+            card.add(UnleashTrigger.create());
             card.add(MagicStatic.Unleash);
         }
     },
@@ -331,14 +330,14 @@ public enum MagicAbility {
     },
     Cascade("cascade", 50) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCascadeTrigger.create());
+            card.add(CascadeTrigger.create());
         }
     },
     Graft("graft " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.PlusOne,n));
-            card.add(MagicWhenOtherComesIntoPlayTrigger.Graft);
+            card.add(new EntersWithCounterTrigger(MagicCounterType.PlusOne,n));
+            card.add(OtherEntersBattlefieldTrigger.Graft);
         }
     },
     Retrace("retrace",10) {
@@ -394,25 +393,25 @@ public enum MagicAbility {
     },
     Prowess("prowess",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicProwessTrigger.create());
+            card.add(ProwessTrigger.create());
         }
     },
     Exploit("exploit", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.Exploit);
+            card.add(EntersBattlefieldTrigger.Exploit);
         }
     },
     Poisonous("poisonous " + ARG.NUMBER + "(\\.)?", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(MagicWhenDamageIsDealtTrigger.Poisonous(n));
+            card.add(DamageIsDealtTrigger.Poisonous(n));
         }
     },
     Tribute("tribute " + ARG.NUMBER + " " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
             final String effect  = ARG.effect(arg).replaceFirst("^effect ", "");
-            card.add(MagicTributeTrigger.create(n, MagicRuleEventAction.create(effect)));
+            card.add(TributeTrigger.create(n, MagicRuleEventAction.create(effect)));
         }
     },
     Bestow("bestow " + ARG.MANACOST, 10) {
@@ -423,12 +422,12 @@ public enum MagicAbility {
     },
     Dethrone("dethrone(\\.)?",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicDethroneTrigger.create());
+            card.add(DethroneTrigger.create());
         }
     },
     Madness("madness " + ARG.MANACOST,0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicMadnessTrigger(MagicManaCost.create(ARG.manacost(arg))));
+            card.add(new MadnessTrigger(MagicManaCost.create(ARG.manacost(arg))));
         }
     },
     Morph("morph( |—)" + ARG.COST, 10) {
@@ -447,20 +446,20 @@ public enum MagicAbility {
     // abilities that involve SN
     ShockLand("As SN enters the battlefield, you may pay 2 life\\. If you don't, SN enters the battlefield tapped\\.", -10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicRavnicaLandTrigger.create());
+            card.add(RavnicaLandTrigger.create());
         }
     },
     BlocksOrBlockedByEffect("Whenever SN blocks or becomes blocked by " + ARG.WORDRUN + ", " + ARG.EFFECT, 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
-            card.add(MagicWhenSelfBlocksTrigger.create(filter, sourceEvent));
-            card.add(MagicWhenSelfBecomesBlockedByTrigger.create(filter, sourceEvent));
+            card.add(ThisBlocksTrigger.create(filter, sourceEvent));
+            card.add(ThisBecomesBlockedByTrigger.create(filter, sourceEvent));
         }
     },
     BecomesBlockedByEffect("Whenever SN becomes blocked by " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfBecomesBlockedByTrigger.create(
+            card.add(ThisBecomesBlockedByTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -468,69 +467,68 @@ public enum MagicAbility {
     },
     EntersKickedEffect("When SN enters the battlefield, if it was kicked, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.createKicked(
+            card.add(EntersBattlefieldTrigger.createKicked(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     EntersEffect("When SN enters the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.create(
+            card.add(EntersBattlefieldTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     EntersAttackEffect("Whenever SN enters the battlefield or attacks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.create(
+            card.add(EntersBattlefieldTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
-            card.add(MagicWhenAttacksTrigger.create(
-                MagicTargetFilterFactory.SN,
+            card.add(ThisAttacksTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     BattalionEffect("Whenever SN and at least two other creatures attack, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicBattalionTrigger.create(
+            card.add(BattalionTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     LeavesReturnExile("When SN leaves the battlefield, (each player returns|return) (the exiled card(s)? |all cards exiled with it )?to the battlefield (under (its|their) owner('s|s') control|all cards he or she owns exiled with SN).", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicLeavesReturnExileTrigger.create());
+            card.add(LeavesReturnExiledTrigger.create());
         }
     },
     OpponentDiscardOntoBattlefield("If a spell or ability an opponent controls causes you to discard SN, put it onto the battlefield instead of putting it into your graveyard\\.",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenPutIntoGraveyardTrigger.OpponentDiscardOntoBattlefield);
+            card.add(ThisPutIntoGraveyardTrigger.OpponentDiscardOntoBattlefield);
         }
     },
     RecoverGraveyard("When SN is put into a graveyard from anywhere, its owner shuffles his or her graveyard into his or her library\\.",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenPutIntoGraveyardTrigger.RecoverGraveyard);
+            card.add(ThisPutIntoGraveyardTrigger.RecoverGraveyard);
         }
     },
     GraveyardToLibrary("When SN is put into a graveyard from anywhere, shuffle it into its owner's library\\.",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicFromGraveyardToLibraryTrigger.create());
+            card.add(FromGraveyardIntoLibraryTrigger.create());
         }
     },
     LibraryInteadOfGraveyard("If SN would be put into a graveyard from anywhere, reveal SN and shuffle it into its owner's library instead\\.",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenPutIntoGraveyardTrigger.LibraryInsteadOfGraveyard);
+            card.add(ThisPutIntoGraveyardTrigger.LibraryInsteadOfGraveyard);
         }
     },
     EntersChooseOpponent("As SN enters the battlefield, choose an opponent\\.", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.ChooseOpponent);
+            card.add(EntersBattlefieldTrigger.ChooseOpponent);
         }
     },
     EntersTapped("SN enters the battlefield tapped\\.", -10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicTappedIntoPlayTrigger.create());
+            card.add(EntersTappedTrigger.create());
         }
     },
     EntersWithCounter("SN enters the battlefield with " + ARG.WORD1 + " " + ARG.WORD2 + " counter(s)? on it( for each " + ARG.WORDRUN + ")?\\.", 0) {
@@ -539,25 +537,25 @@ public enum MagicAbility {
             final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word2(arg));
             final String each = ARG.wordrun(arg);
             if ("a".equalsIgnoreCase(amount) && "time it was kicked".equalsIgnoreCase(each)) {
-                card.add(MagicComesIntoPlayWithCounterTrigger.MultiKicker(counterType));
+                card.add(EntersWithCounterTrigger.MultiKicker(counterType));
             } else if (amount.equalsIgnoreCase("X")) {
-                card.add(MagicComesIntoPlayWithCounterTrigger.XCounters(counterType));
+                card.add(EntersWithCounterTrigger.XCounters(counterType));
             } else {
                 final int n = EnglishToInt.convert(amount);
                 final MagicAmount count = MagicAmountParser.build(each);
-                card.add(new MagicComesIntoPlayWithCounterTrigger(counterType,n,count));
+                card.add(new EntersWithCounterTrigger(counterType,n,count));
             }
         }
     },
     EntersTappedUnless("SN enters the battlefield tapped unless "+ARG.COND+"\\.", -10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicCondition condition = MagicConditionParser.build(ARG.cond(arg));
-            card.add(new MagicTappedIntoPlayUnlessTrigger(MagicConditionFactory.Unless(condition)));
+            card.add(new EntersTappedUnlessTrigger(MagicConditionFactory.Unless(condition)));
         }
     },
     WhenMonstrous("When SN becomes monstrous, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesStateTrigger.createSelf(
+            card.add(BecomesStateTrigger.createSelf(
                 MagicPermanentState.Monstrous,
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -565,7 +563,7 @@ public enum MagicAbility {
     },
     WhenRenowned("When SN becomes renowned, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesStateTrigger.createSelf(
+            card.add(BecomesStateTrigger.createSelf(
                 MagicPermanentState.Renowned,
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -606,14 +604,14 @@ public enum MagicAbility {
     },
     HeroicEffect("Whenever you cast a spell that targets SN, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicHeroicTrigger.create(
+            card.add(HeroicTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     CycleEffect("When you cycle SN, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenCycleTrigger.create(
+            card.add(ThisCycleTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
@@ -621,7 +619,7 @@ public enum MagicAbility {
     Kinship("At the beginning of your upkeep, you may look at the top card of your library. If it shares a creature type with SN, you may reveal it. If you do, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final String effect = ARG.effect(arg);
-            card.add(MagicAtYourUpkeepTrigger.kinship(effect, MagicRuleEventAction.create(effect).getAction()));
+            card.add(AtYourUpkeepTrigger.kinship(effect, MagicRuleEventAction.create(effect).getAction()));
         }
     },
     CDAPT("SN's power and toughness are each equal to( " + ARG.NUMBER + " plus)? " + ARG.ANY + "\\.", 0) {
@@ -653,7 +651,7 @@ public enum MagicAbility {
     },
     WhenExploit("When SN exploits a creature, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesStateTrigger.createSelf(
+            card.add(BecomesStateTrigger.createSelf(
                 MagicPermanentState.Exploit,
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -662,7 +660,7 @@ public enum MagicAbility {
     ChooseNotUntap("You may choose not to untap SN during your untap step\\.",0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.addAbility(DoesNotUntap);
-            card.add(MagicAtUntapTrigger.createYour(
+            card.add(AtUntapTrigger.createYour(
                 MagicRuleEventAction.create("If SN is tapped, you may untap SN.")
             ));
         }
@@ -686,7 +684,15 @@ public enum MagicAbility {
     // triggered abilities
     AnyAttacksEffect("When(ever)? " + ARG.WORDRUN + " attacks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenAttacksTrigger.create(
+            card.add(AttacksTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AnyAttacksAloneEffect("When(ever)? " + ARG.WORDRUN + " attacks alone, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AttacksTrigger.createAlone(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -694,7 +700,15 @@ public enum MagicAbility {
     },
     AnyAttacksYouEffect("When(ever)? " + ARG.WORDRUN + " attacks you( or a planeswalker you control)?, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenAttacksTrigger.createYou(
+            card.add(AttacksTrigger.createYou(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AnyAttacksNotBlockedEffect("When(ever)? " + ARG.WORDRUN + " attacks and isn't blocked, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AttacksUnblockedTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -704,13 +718,13 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
-            card.add(MagicWhenBlocksTrigger.create(filter, sourceEvent));
-            card.add(MagicWhenBecomesBlockedTrigger.create(filter, sourceEvent));
+            card.add(BlocksTrigger.create(filter, sourceEvent));
+            card.add(BecomesBlockedTrigger.create(filter, sourceEvent));
         }
     },
     BlocksCreatureEffect("When(ever)? SN blocks " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfBlocksTrigger.create(
+            card.add(ThisBlocksTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -720,20 +734,20 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
-            card.add(MagicWhenAttacksTrigger.create(filter, sourceEvent));
-            card.add(MagicWhenBlocksTrigger.create(filter, sourceEvent));
+            card.add(AttacksTrigger.create(filter, sourceEvent));
+            card.add(BlocksTrigger.create(filter, sourceEvent));
         }
     },
     CreatureBlocksEffect("When(ever)? " + ARG.WORDRUN + " blocks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
-            card.add(MagicWhenBlocksTrigger.create(filter, sourceEvent));
+            card.add(BlocksTrigger.create(filter, sourceEvent));
         }
     },
     BecomesBlockedEffect("Whenever " + ARG.WORDRUN + " becomes blocked, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesBlockedTrigger.create(
+            card.add(BecomesBlockedTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -741,7 +755,7 @@ public enum MagicAbility {
     },
     UntappedEffect("When(ever)? " + ARG.WORDRUN + " becomes untapped, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesUntappedTrigger.create(
+            card.add(BecomesUntappedTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -749,7 +763,7 @@ public enum MagicAbility {
     },
     AnyTappedEffect("When(ever)? " + ARG.WORDRUN + " becomes tapped, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesTappedTrigger.create(
+            card.add(BecomesTappedTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -757,7 +771,7 @@ public enum MagicAbility {
     },
     SelfOrAnotherYouControlEntersEffect("Whenever SN or another " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.createSelfOrAnother(
+            card.add(OtherEntersBattlefieldTrigger.createSelfOrAnother(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -765,7 +779,7 @@ public enum MagicAbility {
     },
     OtherYouControlEntersEffect("Whenever " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.create(
+            card.add(OtherEntersBattlefieldTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -773,7 +787,7 @@ public enum MagicAbility {
     },
     SelfOrAnotherEntersEffect("Whenever SN or another " + ARG.WORDRUN + " enters the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.createSelfOrAnother(
+            card.add(OtherEntersBattlefieldTrigger.createSelfOrAnother(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -781,7 +795,7 @@ public enum MagicAbility {
     },
     OtherEntersEffect("When(ever)? " + ARG.WORDRUN + " enters the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.create(
+            card.add(OtherEntersBattlefieldTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -789,7 +803,7 @@ public enum MagicAbility {
     },
     SelfOrAnotherLeavesEffect("Whenever SN or another " + ARG.WORDRUN + " leaves the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLeavesPlayTrigger.createSelfOrAnother(
+            card.add(LeavesBattlefieldTrigger.createSelfOrAnother(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -797,7 +811,7 @@ public enum MagicAbility {
     },
     LeavesEffect("When(ever)? " + ARG.WORDRUN + " leaves the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLeavesPlayTrigger.create(
+            card.add(LeavesBattlefieldTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -805,7 +819,7 @@ public enum MagicAbility {
     },
     DamageCreature("Whenever " + ARG.WORDRUN + " deals damage to a creature, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToCreature(
+            card.add(DamageIsDealtTrigger.DamageToCreature(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
@@ -814,7 +828,7 @@ public enum MagicAbility {
     },
     CombatDamageCreature("Whenever " + ARG.WORDRUN + " deals combat damage to a creature, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToCreature(
+            card.add(DamageIsDealtTrigger.DamageToCreature(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Combat
@@ -823,7 +837,7 @@ public enum MagicAbility {
     },
     DamageToYou("When(ever)? " + ARG.WORDRUN + " deals damage to you, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToYou(
+            card.add(DamageIsDealtTrigger.DamageToYou(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
@@ -832,7 +846,7 @@ public enum MagicAbility {
     },
     CombatDamageToYou("When(ever)? " + ARG.WORDRUN + " deals combat damage to you, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToYou(
+            card.add(DamageIsDealtTrigger.DamageToYou(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Combat
@@ -841,7 +855,7 @@ public enum MagicAbility {
     },
     DamageToOpponent("When(ever)? " + ARG.WORDRUN + " deals damage to an opponent, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToOpponent(
+            card.add(DamageIsDealtTrigger.DamageToOpponent(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
@@ -850,7 +864,7 @@ public enum MagicAbility {
     },
     CombatDamageToOpponent("When(ever)? " + ARG.WORDRUN + " deals combat damage to an opponent, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToOpponent(
+            card.add(DamageIsDealtTrigger.DamageToOpponent(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Combat
@@ -859,7 +873,7 @@ public enum MagicAbility {
     },
     DamageToPlayer("When(ever)? " + ARG.WORDRUN + " deals damage to a player, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToPlayer(
+            card.add(DamageIsDealtTrigger.DamageToPlayer(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
@@ -868,7 +882,7 @@ public enum MagicAbility {
     },
     CombatDamageToPlayer("When(ever)? " + ARG.WORDRUN + " deals combat damage to a player, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToPlayer(
+            card.add(DamageIsDealtTrigger.DamageToPlayer(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Combat
@@ -877,7 +891,7 @@ public enum MagicAbility {
     },
     DamageToAny("When(ever)? " + ARG.WORDRUN + " deals damage, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToAny(
+            card.add(DamageIsDealtTrigger.DamageToAny(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
@@ -886,7 +900,7 @@ public enum MagicAbility {
     },
     CombatDamageToAny("When(ever)? " + ARG.WORDRUN + " deals combat damage, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToAny(
+            card.add(DamageIsDealtTrigger.DamageToAny(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Combat
@@ -895,7 +909,7 @@ public enum MagicAbility {
     },
     DealtDamage("When(ever)? " + ARG.WORDRUN + " is dealt damage, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DealtDamage(
+            card.add(DamageIsDealtTrigger.DealtDamage(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
@@ -904,7 +918,7 @@ public enum MagicAbility {
     },
     SelfOrAnotherDiesEffect("Whenever SN or another " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDiesTrigger.createSelfOrAnother(
+            card.add(OtherDiesTrigger.createSelfOrAnother(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -912,7 +926,7 @@ public enum MagicAbility {
     },
     OtherDiesEffect("When(ever)? " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDiesTrigger.create(
+            card.add(OtherDiesTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -920,63 +934,70 @@ public enum MagicAbility {
     },
     EachUpkeepEffect("At the beginning of each (player's )?upkeep, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtUpkeepTrigger.create(
+            card.add(AtUpkeepTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     YourUpkeepEffect("At the beginning of your upkeep, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtYourUpkeepTrigger.create(
+            card.add(AtYourUpkeepTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    OppUpkeepEffect("At the beginning of each opponent's upkeep, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtUpkeepTrigger.createOpp(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     EachDrawStepEffect("At the beginning of each player's draw step, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtDrawTrigger.create(
+            card.add(AtDrawTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     YourDrawStepEffect("At the beginning of your draw step, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtDrawTrigger.createYour(
+            card.add(AtDrawTrigger.createYour(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     OppDrawStepEffect("At the beginning of each (other player|opponent)'s draw step, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtDrawTrigger.createOpp(
+            card.add(AtDrawTrigger.createOpp(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     BeginCombatEffect("At the beginning of combat on your turn, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtBeginOfCombatTrigger.createYour(
+            card.add(AtBeginOfCombatTrigger.createYour(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    EndStepEffect("At the beginning of (the|each) end step, " + ARG.EFFECT, 0) {
+    EndStepEffect("At the beginning of (the|each|each player's) end step, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtEndOfTurnTrigger.create(
+            card.add(AtEndOfTurnTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     YourEndStepEffect("At the beginning of your end step, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtEndOfTurnTrigger.createYour(
+            card.add(AtEndOfTurnTrigger.createYour(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     PlayerCastSpellEffect("Whenever a player casts a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherSpellIsCastTrigger.create(
+            card.add(OtherSpellIsCastTrigger.create(
                 MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -984,7 +1005,7 @@ public enum MagicAbility {
     },
     YouCastSpellEffect("When(ever)? you cast a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherSpellIsCastTrigger.createYou(
+            card.add(OtherSpellIsCastTrigger.createYou(
                 MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -992,7 +1013,7 @@ public enum MagicAbility {
     },
     OpponentCastSpellEffect("When(ever)? an opponent casts a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherSpellIsCastTrigger.createOpponent(
+            card.add(OtherSpellIsCastTrigger.createOpponent(
                 MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -1000,12 +1021,20 @@ public enum MagicAbility {
     },
     SacWhenTargeted("When SN becomes the target of a spell or ability, sacrifice it\\.",-10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfTargetedTrigger.SacWhenTargeted);
+            card.add(ThisBecomesTargetTrigger.SacWhenTargeted);
+        }
+    },
+    WhenSNTargeted("When(ever)? SN becomes the target of (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesTargetTrigger.createThis(
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
         }
     },
     WhenTargeted("When(ever)? " + ARG.WORDRUN2 + " becomes the target of (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenTargetedTrigger.create(
+            card.add(BecomesTargetTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg)),
                 MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
@@ -1014,35 +1043,35 @@ public enum MagicAbility {
     },
     WhenGainLife("Whenever you gain life, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLifeIsGainedTrigger.createYou(
+            card.add(LifeIsGainedTrigger.createYou(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WhenDrawCard("Whenever you draw a card, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDrawnTrigger.createYou(
+            card.add(OtherDrawnTrigger.createYou(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WhenOppDrawCard("Whenever an opponent draws a card, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDrawnTrigger.createOpp(
+            card.add(OtherDrawnTrigger.createOpp(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WhenPlayerDrawCard("Whenever a player draws a card, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDrawnTrigger.create(
+            card.add(OtherDrawnTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WhenOtherFaceUpEffect("When(ever)? " + ARG.WORDRUN + " is turned face up, " + ARG.EFFECT,0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenTurnedFaceUpTrigger.create(
+            card.add(TurnedFaceUpTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
@@ -1050,28 +1079,28 @@ public enum MagicAbility {
     },
     CycleOtherEffect("Whenever a player cycles a card, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherCycleTrigger.create(
+            card.add(OtherCycleTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WhenYouScry("Whenever you scry, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenYouScryTrigger.create(
+            card.add(YouScryTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WheneverPlayerDiscard("Whenever a player discards a card, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDiscardedTrigger.player(
+            card.add(CardIsDiscardedTrigger.player(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     WheneverOpponentDiscard("Whenever an opponent discards a card, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDiscardedTrigger.opponent(
+            card.add(CardIsDiscardedTrigger.opponent(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
@@ -1157,21 +1186,21 @@ public enum MagicAbility {
     // static ability
     PreventDamageDealtTo("prevent all damage that would be dealt to " + ARG.WORDRUN + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPreventDamageTrigger.PreventDamageDealtTo(
+            card.add(PreventDamageTrigger.PreventDamageDealtTo(
                 MagicTargetFilterFactory.Target(ARG.wordrun(arg))
             ));
         }
     },
     PreventCombatDamageDealtTo("prevent all combat damage that would be dealt to " + ARG.WORDRUN + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPreventDamageTrigger.PreventCombatDamageDealtTo(
+            card.add(PreventDamageTrigger.PreventCombatDamageDealtTo(
                 MagicTargetFilterFactory.Target(ARG.wordrun(arg))
             ));
         }
     },
     PreventNonCombatDamageDealtTo("prevent all noncombat damage that would be dealt to " + ARG.WORDRUN + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPreventDamageTrigger.PreventNonCombatDamageDealtTo(
+            card.add(PreventDamageTrigger.PreventNonCombatDamageDealtTo(
                 MagicTargetFilterFactory.Target(ARG.wordrun(arg))
             ));
         }
@@ -1257,7 +1286,7 @@ public enum MagicAbility {
     },
     CantBlockPermanent("(SN )?can't block " + ARG.WORDRUN + "(\\.)?", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCantBlockTrigger.create(
+            card.add(CantBlockTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
@@ -1303,7 +1332,7 @@ public enum MagicAbility {
     Renown("renown " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(MagicWhenDamageIsDealtTrigger.Renown(n));
+            card.add(DamageIsDealtTrigger.Renown(n));
         }
     },
     /*

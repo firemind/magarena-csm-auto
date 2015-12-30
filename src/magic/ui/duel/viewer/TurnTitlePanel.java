@@ -1,6 +1,6 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.duel.ViewerInfo;
+import magic.ui.duel.viewer.info.GameViewerInfo;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -15,11 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import magic.data.MagicIcon;
-import magic.model.MagicGame;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.translate.StringContext;
 import magic.ui.utility.MagicStyle;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.translate.UiString;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.widget.ActionBarButton;
@@ -70,7 +69,7 @@ public class TurnTitlePanel extends JPanel {
     private JButton getOptionsIconButton() {
 
         final JButton btn = new ActionBarButton(
-                IconImages.getIcon(MagicIcon.MENU_ICON),
+                MagicImages.getIcon(MagicIcon.MENU_ICON),
                 UiString.get(_S1),
                 UiString.get(_S2),
                 new AbstractAction() {
@@ -110,34 +109,23 @@ public class TurnTitlePanel extends JPanel {
         }
     }
 
-    public void refresh(final MagicGame game) {
-        scoreLabel.setText(getScoreString());
-        scoreLabel.setToolTipText(UiString.get(_S3,
-                game.getDuel().getConfiguration().getGamesRequiredToWinDuel())
-        );
+    public void refresh(final GameViewerInfo gameInfo) {
+        scoreLabel.setText(getScoreString(gameInfo));
+        scoreLabel.setToolTipText(UiString.get(_S3, gameInfo.getGamesRequiredToWinDuel()));
         gameLabel.setText(String.format("%s  •  %s  •  %s",
-                UiString.get(_S4, game.getDuel().getGameNr(), game.getDuel().getGamesTotal()),
-                UiString.get(_S5, game.getTurn()),
-                game.getTurnPlayer().getName())
+                UiString.get(_S4, gameInfo.getGameNumber(), gameInfo.getMaxGames()),
+                UiString.get(_S5, gameInfo.getTurn()),
+                gameInfo.getTurnPlayer().getName())
         );
     }
     
-    private String getScoreString() {
-        final MagicGame game = controller.getGame();
-        final ViewerInfo boardInfo = controller.getViewerInfo();
+    private String getScoreString(final GameViewerInfo gameInfo) {
         return String.format("%s %d - %d %s",
-                boardInfo.getPlayerInfo(false).name,
-                game.getDuel().getGamesWon(),
-                game.getDuel().getGamesPlayed() - game.getDuel().getGamesWon(),
-                boardInfo.getPlayerInfo(true).name
+                gameInfo.getPlayerInfo(false).getName(),
+                gameInfo.getPlayerInfo(false).getGamesWon(),
+                gameInfo.getPlayerInfo(true).getGamesWon(),
+                gameInfo.getPlayerInfo(true).getName()
         );
-    }
-
-    private void setButtonTransparent(final JButton btn) {
-        btn.setOpaque(false);
-        btn.setContentAreaFilled(false);
-        btn.setBorderPainted(false);
-        btn.setBorder(null);
     }
 
     private void showDevPopupMenu(final MouseEvent e) {

@@ -1,0 +1,12 @@
+name=Junk Diver
+image=http://magiccards.info/scans/en/c14/244.jpg
+value=2.500
+rarity=R
+type=Artifact,Creature
+subtype=Bird
+cost={3}
+pt=1/1
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Flying\nWhen Junk Diver dies, return another target artifact card from your graveyard to your hand.

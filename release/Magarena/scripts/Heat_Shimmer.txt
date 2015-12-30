@@ -1,0 +1,9 @@
+name=Heat Shimmer
+image=http://magiccards.info/scans/en/lw/175.jpg
+value=3.000
+rarity=R
+type=Sorcery
+cost={2}{R}
+timing=main
+requires_groovy_code
+oracle=Put a token that's a copy of target creature onto the battlefield. That token has haste and "At the beginning of the end step, exile this permanent."

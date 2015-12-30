@@ -13,13 +13,13 @@ import javax.swing.JPanel;
 import magic.utility.MagicSystem;
 import magic.data.CardDefinitions;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.data.MagicSetDefinitions;
 import magic.ui.explorer.ExplorerPanel;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenOptionsOverlay;
 import magic.translate.UiString;
-import magic.ui.dialog.DownloadImagesDialog;
+import magic.ui.MagicLogs;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.interfaces.IStatusBar;
@@ -66,9 +66,8 @@ public class CardExplorerScreen
     @Override
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
-        buttons.add(
-            new ActionBarButton(
-                IconImages.getIcon(MagicIcon.EDIT_ICON),
+        buttons.add(new ActionBarButton(
+                MagicImages.getIcon(MagicIcon.EDIT_ICON),
                 UiString.get(_S3), UiString.get(_S4),
                 new AbstractAction() {
                     @Override
@@ -79,9 +78,8 @@ public class CardExplorerScreen
             )
         );
         if (MagicSystem.isDevMode() || MagicSystem.isDebugMode()) {
-            buttons.add(
-                new ActionBarButton(
-                    IconImages.getIcon(MagicIcon.SAVE_ICON),
+            buttons.add(new ActionBarButton(
+                    MagicImages.getIcon(MagicIcon.SAVE_ICON),
                     "Save Missing Cards [DevMode Only]", "Creates CardsMissingInMagarena.txt which can be used by the Scripts Builder.",
                     new AbstractAction() {
                         @Override
@@ -114,7 +112,7 @@ public class CardExplorerScreen
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         MagicSetDefinitions.clearLoadedSets();
-        DownloadImagesDialog.clearLoadedLogs();
+        MagicLogs.clearLoadedLogs();
         return true;
     }
 

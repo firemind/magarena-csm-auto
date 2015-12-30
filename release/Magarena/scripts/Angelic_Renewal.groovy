@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isNonToken() &&
@@ -10,7 +10,7 @@
                     new MagicMayChoice(),
                     otherPermanent.getCard(),
                     this,
-                    "PN may\$ sacrifice SN. If you do, return RN to the battlefield."
+                    "PN may\$ sacrifice SN. If PN does, return RN to the battlefield."
                 ) :
                 MagicEvent.NONE;
         }

@@ -1,6 +1,6 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.duel.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -10,13 +10,12 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JPanel;
 import magic.data.GeneralConfig;
-import magic.model.MagicCard;
 import magic.ui.utility.GraphicsUtils;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 
+@SuppressWarnings("serial")
 public class ImagePermanentsViewer extends JPanel {
-
-    private static final long serialVersionUID = 1L;
 
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final int POSITION_SPACING = 60;
@@ -221,18 +220,18 @@ public class ImagePermanentsViewer extends JPanel {
         return validChoices.contains(permanentInfo.permanent);
     }
 
-    ImagePermanentViewer getViewer(MagicCard card) {
+    ImagePermanentViewer getViewer(CardViewerInfo cardInfo) {
         for (final ImagePermanentViewer viewer : viewers) {
-            if (viewer.permanentInfo.magicCardId == card.getId()) {
+            if (viewer.permanentInfo.isEqualTo(cardInfo)) {
                 return viewer;
             }
             for (final PermanentViewerInfo info : viewer.permanentInfo.linked) {
-                if (info.permanent.getCard().getId() == card.getId()) {
+                if (info.isEqualTo(cardInfo)) {
                     return viewer;
                 }
             }
             for (final PermanentViewerInfo info : viewer.permanentInfo.blockers) {
-                if (info.permanent.getCard().getId() == card.getId()) {
+                if (info.isEqualTo(cardInfo)) {
                     return viewer;
                 }
             }

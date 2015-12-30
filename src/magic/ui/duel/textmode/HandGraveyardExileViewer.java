@@ -6,13 +6,13 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import magic.model.MagicCardList;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.utility.MagicStyle;
 import magic.ui.widget.TabSelector;
 import magic.ui.widget.TitleBar;
 
+@SuppressWarnings("serial")
 class HandGraveyardExileViewer extends JPanel implements ChangeListener {
-    private static final long serialVersionUID = 1L;
 
     private final CardListViewer[] viewers;
     private final JPanel cardPanel;

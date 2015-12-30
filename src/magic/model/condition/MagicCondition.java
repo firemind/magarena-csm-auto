@@ -13,6 +13,7 @@ import magic.model.MagicPlayerState;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
 import magic.model.MagicType;
+import magic.model.stack.MagicCardOnStack;
 import magic.model.phase.MagicPhaseType;
 import magic.model.target.MagicOtherPermanentTargetFilter;
 import magic.model.target.MagicTargetFilterFactory;
@@ -388,25 +389,25 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
 
     public static MagicCondition TWO_OR_MORE_BLUE_PERMANENTS = new MagicCondition() {
         public boolean accept(final MagicSource source) {
-           return source.getController().getNrOfPermanents(MagicColor.Blue)>=2;
+            return source.getController().getNrOfPermanents(MagicColor.Blue)>=2;
         }
     };
 
     public static MagicCondition TWO_OR_MORE_BLACK_PERMANENTS = new MagicCondition() {
         public boolean accept(final MagicSource source) {
-           return source.getController().getNrOfPermanents(MagicColor.Black)>=2;
+            return source.getController().getNrOfPermanents(MagicColor.Black)>=2;
         }
     };
 
     public static MagicCondition TWO_OR_MORE_RED_PERMANENTS = new MagicCondition() {
         public boolean accept(final MagicSource source) {
-           return source.getController().getNrOfPermanents(MagicColor.Red)>=2;
+            return source.getController().getNrOfPermanents(MagicColor.Red)>=2;
         }
     };
 
     public static MagicCondition TWO_OR_MORE_GREEN_PERMANENTS = new MagicCondition() {
         public boolean accept(final MagicSource source) {
-           return source.getController().getNrOfPermanents(MagicColor.Green)>=2;
+            return source.getController().getNrOfPermanents(MagicColor.Green)>=2;
         }
     };
 
@@ -783,6 +784,13 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
+    public static MagicCondition HAS_CREATURE_IN_HAND = new MagicCondition() {
+        public boolean accept(MagicSource source) {
+            final MagicPlayer player = source.getController();
+            return MagicTargetFilterFactory.CREATURE_CARD_FROM_HAND.filter(player).size() > 0;
+        }
+    };
+
     public static MagicCondition INSTANT_OR_SORCERY_IN_A_GRAVEYARD = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicPlayer player = source.getController();
@@ -820,6 +828,13 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
             final MagicPermanent permanent=(MagicPermanent)source;
             return permanent.getCardDefinition().hasType(MagicType.Artifact) &&
                     permanent.getCardDefinition().hasType(MagicType.Creature)==false;
+        }
+    };
+    
+    public static MagicCondition WAS_KICKED = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            final MagicCardOnStack spell=(MagicCardOnStack)source;
+            return spell.isKicked();
         }
     };
 

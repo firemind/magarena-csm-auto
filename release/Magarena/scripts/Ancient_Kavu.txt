@@ -1,0 +1,11 @@
+name=Ancient Kavu
+image=http://magiccards.info/scans/en/in/136.jpg
+value=2.969
+rarity=C
+type=Creature
+subtype=Kavu
+cost={3}{R}
+pt=3/3
+timing=main
+requires_groovy_code=Raging Spirit
+oracle={2}: Ancient Kavu becomes colorless until end of turn.

@@ -6,18 +6,17 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.IChoiceViewer;
-import magic.ui.duel.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
 import magic.ui.message.TextLabel;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.utility.MagicStyle;
 import magic.ui.widget.PanelButton;
 
+@SuppressWarnings("serial")
 class PermanentButton extends PanelButton implements IChoiceViewer {
-
-    private static final long serialVersionUID = 1L;
 
     private final PermanentViewerInfo permanentInfo;
     private final SwingGameController controller;

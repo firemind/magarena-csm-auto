@@ -1,5 +1,8 @@
 package magic.ui.duel;
 
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.GameViewerInfo;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -12,8 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import magic.data.MagicIcon;
 import magic.ui.IUpdatable;
-import magic.ui.IconImages;
-import magic.ui.SwingGameController;
+import magic.ui.MagicImages;
 
 public class PermanentFilter implements ActionListener {
 
@@ -37,12 +39,12 @@ public class PermanentFilter implements ActionListener {
     };
 
     private static final ImageIcon[] FILTER_ICONS={
-        IconImages.getIcon(MagicIcon.ALL),
-        IconImages.getIcon(MagicIcon.LAND),
-        IconImages.getIcon(MagicIcon.CREATURE),
-        IconImages.getIcon(MagicIcon.ARTIFACT),
-        IconImages.getIcon(MagicIcon.ENCHANTMENT),
-        IconImages.getIcon(MagicIcon.VALID)};
+        MagicImages.getIcon(MagicIcon.ALL),
+        MagicImages.getIcon(MagicIcon.LAND),
+        MagicImages.getIcon(MagicIcon.CREATURE),
+        MagicImages.getIcon(MagicIcon.ARTIFACT),
+        MagicImages.getIcon(MagicIcon.ENCHANTMENT),
+        MagicImages.getIcon(MagicIcon.VALID)};
     
     private static final String[] FILTER_TOOLTIPS={
         "All","Mana","Creatures","Artifacts","Enchantments","Choices"
@@ -115,7 +117,7 @@ public class PermanentFilter implements ActionListener {
         }
     }
 
-    public SortedSet<PermanentViewerInfo> getPermanents(final ViewerInfo viewerInfo,final boolean opponent) {
+    public SortedSet<PermanentViewerInfo> getPermanents(final GameViewerInfo viewerInfo,final boolean opponent) {
 
         final PlayerViewerInfo player=viewerInfo.getPlayerInfo(opponent);
         final SortedSet<PermanentViewerInfo> permanents=new TreeSet<>(PERMANENT_COMPARATOR);

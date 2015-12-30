@@ -1,25 +1,31 @@
 package magic.model;
 
-import magic.model.event.MagicActivation;
-import magic.model.event.MagicEvent;
-import magic.model.event.MagicSourceActivation;
-import magic.model.target.MagicTarget;
-import magic.model.target.MagicTargetFilter;
-import magic.model.target.MagicTargetType;
-import magic.model.stack.MagicItemOnStack;
-import magic.model.stack.MagicCardOnStack;
-import magic.exception.GameException;
-
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import magic.data.MagicIcon;
+import magic.exception.GameException;
+import magic.model.event.MagicActivation;
+import magic.model.event.MagicEvent;
+import magic.model.event.MagicManaActivation;
+import magic.model.event.MagicSourceActivation;
+import magic.model.stack.MagicCardOnStack;
+import magic.model.stack.MagicItemOnStack;
+import magic.model.target.MagicTarget;
+import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetType;
+import magic.ui.cardBuilder.IRenderableCard;
+
 public class MagicCard
     extends MagicObjectImpl
-    implements MagicSource,MagicTarget,Comparable<MagicCard>,MagicMappable<MagicCard> {
+    implements MagicSource,MagicTarget,Comparable<MagicCard>,MagicMappable<MagicCard>,IRenderableCard {
 
     public static final MagicCard NONE = new MagicCard(MagicCardDefinition.UNKNOWN, MagicPlayer.NONE, 0) {
         @Override
@@ -211,7 +217,7 @@ public class MagicCard
     public Iterable<MagicEvent> getCostEvent() {
         return getCardDefinition().getCostEvent(this);
     }
-    
+
     public Iterable<MagicEvent> getAdditionalCostEvent() {
         return getCardDefinition().getAdditionalCostEvent(this);
     }
@@ -236,7 +242,7 @@ public class MagicCard
         switch (loc) {
             case Stack:
                 return isOnStack();
-            case Play:
+            case Battlefield:
                 return isOnBattlefield();
             case OwnersHand:
                 return isInHand();
@@ -310,7 +316,7 @@ public class MagicCard
         } else if (isInExile()) {
             return MagicLocationType.Exile;
         } else if (isOnBattlefield()) {
-            return MagicLocationType.Play;
+            return MagicLocationType.Battlefield;
         } else if (isInLibrary()) {
             return MagicLocationType.OwnersLibrary;
         } else if (isOnStack()) {
@@ -356,6 +362,10 @@ public class MagicCard
         return false;
     }
 
+    public boolean isPermanentCard() {
+        return getCardDefinition().isPermanent();
+    }
+
     @Override
     public boolean isPlayer() {
         return false;
@@ -366,7 +376,7 @@ public class MagicCard
         return true;
     }
 
-    private int getColorFlags() {
+    public int getColorFlags() {
         final int init = getCardDefinition().getColorFlags();
         return getCardDefinition().applyCDAColor(getGame(), getOwner(), init);
     }
@@ -395,8 +405,9 @@ public class MagicCard
         return getCardDefinition().hasSubType(subType);
     }
 
-    public Set<MagicSubType> getSubTypeFlags() {
-        return getCardDefinition().getSubTypeFlags();
+    @Override
+    public Set<MagicSubType> getSubTypes() {
+        return getCardDefinition().getSubTypes();
     }
 
     @Override
@@ -454,11 +465,11 @@ public class MagicCard
 
         return false;
     }
-    
+
     public boolean hasCounters() {
         return counters.size() > 0;
     }
-    
+
     @Override
     public int getCounters(final MagicCounterType counterType) {
         final Integer cnt = counters.get(counterType);
@@ -479,4 +490,107 @@ public class MagicCard
     public Collection<MagicCounterType> getCounterTypes() {
         return counters.keySet();
     }
+
+    @Override
+    public String getText() {
+        //Returns oracle text, no in-game changes
+        return getCardDefinition().getText();
+    }
+
+    @Override
+    public Collection<MagicManaActivation> getManaActivations() {
+        // Returning from CardDefinition - Cards technically don't, also no in-game changes
+        return getCardDefinition().getManaActivations();
+    }
+
+    @Override
+    public int getNumColors() {
+        int numColors = 0;
+        for (final MagicColor color : MagicColor.values()) {
+            if (hasColor(color)) {
+                numColors++;
+            }
+        }
+        return numColors;
+    }
+
+    @Override
+    public String getImageName() {
+        return getCardDefinition().getImageName();
+    }
+
+    @Override
+    public String getPowerToughnessText() {
+        if (isCreature()) {
+            return getPower()+"/"+getToughness();
+        } else {
+            return "";
+        }
+    }
+
+    @Override
+    public String getSubTypeText() {
+        // Returning from CardDefinition, no in-game changes
+        return getCardDefinition().getSubTypeText();
+    }
+
+    @Override
+    public Set<MagicType> getTypes() {
+        Set<MagicType> types = new HashSet<MagicType>();
+        for (MagicType type : MagicType.values()) {
+            if (hasType(type)) {
+                types.add(type);
+            }
+        }
+        return types;
+    }
+
+    @Override
+    public boolean isHybrid() {
+        final List<MagicIcon> list = getCost().getIcons();
+        //If doesn't contain single color mana, and does contain hybrid mana. Checks for absence
+        if (Collections.disjoint(list, MagicIcon.COLOR_MANA)==true && Collections.disjoint(list, MagicIcon.HYBRID_COLOR_MANA)==false) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
+    public boolean isMulti() {
+        return getNumColors() > 1;
+    }
+
+    @Override
+    public boolean hasText() {
+        return cardDefinition.hasText();
+    }
+
+    @Override
+    public int getStartingLoyalty() {
+        return getCardDefinition().getStartingLoyalty();
+    }
+
+    @Override
+    public boolean isCreature() {return hasType(MagicType.Creature);}
+
+    @Override
+    public boolean isArtifact() {return hasType(MagicType.Artifact);}
+
+    @Override
+    public boolean isLand() {return hasType(MagicType.Land);}
+
+    @Override
+    public boolean isEnchantment() {return hasType(MagicType.Enchantment);}
+
+    @Override
+    public boolean isInstant() {return hasType(MagicType.Instant);}
+
+    @Override
+    public boolean isSorcery() {return hasType(MagicType.Sorcery);}
+
+    @Override
+    public boolean isHidden() {return cardDefinition.isHidden();}
+
 }

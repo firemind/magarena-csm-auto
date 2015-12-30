@@ -1,6 +1,6 @@
 def LoseControlTap = {
     final MagicPlayer you ->
-    return new MagicWhenLoseControlTrigger() {
+    return new LoseControlTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPermanent target) {
             if (permanent == target && target.getController().getId() != you.getId()) {
@@ -29,8 +29,8 @@ def LoseControlTap = {
                 TARGET_CREATURE_YOUR_OPPONENT_CONTROLS,
                 MagicExileTargetPicker.create(),
                 this,
-                "Untap target creature\$ an opponent controls and gain control of it until end of turn. " + 
-                "That creature gains haste until end of turn. When you lose control of the creature, tap it."
+                "PN untaps target creature an opponent controls\$ and gains control of it until end of turn. " + 
+                "That creature gains haste until end of turn. When PN loses control of the creature, tap it."
             );
         }
 

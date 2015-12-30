@@ -1,6 +1,6 @@
 def DelayedTrigger = {
     final MagicPermanent staleSource, final MagicPlayer stalePlayer, final MagicCard staleCard ->
-    return new MagicAtEndOfTurnTrigger() {
+    return new AtEndOfTurnTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer eotPlayer) {
             game.addDelayedAction(new RemoveTriggerAction(this));
@@ -29,7 +29,7 @@ def DelayedTrigger = {
 }
 
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isCreature() && permanent.isEnemy(otherPermanent)) ?

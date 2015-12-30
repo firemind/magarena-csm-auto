@@ -1,0 +1,9 @@
+name=Thorn of Amethyst
+image=http://magiccards.info/scans/en/lw/262.jpg
+value=4.372
+rarity=R
+type=Artifact
+cost={2}
+requires_groovy_code=Thalia, Guardian of Thraben
+timing=artifact
+oracle=Noncreature spells cost {1} more to cast.

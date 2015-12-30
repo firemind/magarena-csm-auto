@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -9,7 +9,7 @@
                     MagicExileTargetPicker.create(),
                     this,
                     "PN may\$ sacrifice SN. " +
-                    "If you do, gain control of target creature\$."
+                    "If PN does, he or she gains control of target creature\$."
                 ):
                 MagicEvent.NONE;
         }

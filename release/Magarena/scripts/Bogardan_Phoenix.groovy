@@ -1,12 +1,12 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return permanent.getCounters(MagicCounterType.Death) == 0 ?
                 new MagicEvent(
                     permanent,
                     this,
-                    "Return SN to the battlefield under your control and put a death counter on it."
+                    "Return SN to the battlefield under PN's control and put a death counter on it."
                 ):
                 MagicEvent.NONE;
         }
@@ -19,7 +19,7 @@
             }    
         }
     },
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return permanent.hasCounters(MagicCounterType.Death) ?

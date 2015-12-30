@@ -1,0 +1,9 @@
+name=Squeeze
+image=http://magiccards.info/scans/en/mm/105.jpg
+value=3.308
+rarity=R
+type=Enchantment
+cost={3}{U}
+requires_groovy_code
+timing=enchantment
+oracle=Sorcery spells cost {3} more to cast.

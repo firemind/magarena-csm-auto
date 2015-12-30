@@ -1,0 +1,12 @@
+name=Prison Term
+image=http://magiccards.info/scans/en/cmd/27.jpg
+value=3.789
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={1}{W}{W}
+ability=Enchanted creature can't attack or block, and its activated abilities can't be activated.
+timing=aura
+enchant=can't attack or block,neg creature
+requires_groovy_code
+oracle=Enchant creature\nEnchanted creature can't attack or block, and its activated abilities can't be activated.\nWhenever a creature enters the battlefield under an opponent's control, you may attach Prison Term to that creature.

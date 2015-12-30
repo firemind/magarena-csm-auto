@@ -1,0 +1,9 @@
+name=Tangle
+image=http://magiccards.info/scans/en/vma/237.jpg
+value=4.000
+rarity=C
+type=Instant
+cost={1}{G}
+effect=Prevent all combat damage that would be dealt this turn.~Each attacking creature doesn't untap during its controller's next untap step.
+timing=attack
+oracle=Prevent all combat damage that would be dealt this turn.\nEach attacking creature doesn't untap during its controller's next untap step.

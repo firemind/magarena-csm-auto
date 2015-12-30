@@ -1,12 +1,12 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return upkeepPlayer.controlsPermanent(MagicSubType.Ogre) == false ?
                 new MagicEvent(
                     permanent,
                     this,
-                    "If PN controls no Ogres, lose 2 life."
+                    "If PN controls no Ogres, he or she loses 2 life."
                 ):
                 MagicEvent.NONE;
         }

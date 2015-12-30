@@ -17,7 +17,7 @@ import magic.model.MagicCardList;
 import magic.model.MagicGame;
 import magic.model.MagicPlayer;
 import magic.ui.CardImagesProvider;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.translate.UiString;
 import magic.ui.canvas.cards.CardsCanvas.LayoutMode;
@@ -25,6 +25,7 @@ import magic.ui.canvas.cards.CardsCanvas;
 import magic.ui.duel.choice.MulliganChoicePanel;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IStatusBar;
+import magic.ui.screen.interfaces.IWikiPage;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
 import net.miginfocom.swing.MigLayout;
@@ -32,19 +33,18 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class MulliganScreen
     extends AbstractScreen
-    implements IStatusBar, IActionBar {
+    implements IStatusBar, IActionBar, IWikiPage {
 
     // translatable string
-    private static final String _S1 = "Mulligan?";
+    private static final String _S1 = "Vancouver Mulligan";
     private static final String _S2 = "Close";
     private static final String _S3 = "Play this hand";
-    private static final String _S4 = "Mulligan";
-    private static final String _S5 = "Draw a new hand with one less card.";
+    private static final String _S5 = "Returns this hand to your library then draws a new hand with one less card.<br>You may scry 1 if your opening hand has fewer cards than your starting hand size.";
     private static final String _S6 = "You play %s";
     private static final String _S7 = "first.";
     private static final String _S8 = "second.";
 
-    private final static Dimension cardSize = CardImagesProvider.PREFERRED_CARD_SIZE;
+    private final static Dimension cardSize = CardImagesProvider.HIGH_QUALITY_IMAGE_SIZE;
 
     private volatile static boolean isActive = false;
 
@@ -144,10 +144,9 @@ public class MulliganScreen
     @Override
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.MULLIGAN_ICON),
-                        UiString.get(_S4), UiString.get(_S5),
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.MULLIGAN_ICON),
+                        UiString.get(_S1), UiString.get(_S5),
                         takeMulliganAction)
                 );
         return buttons;
@@ -156,6 +155,11 @@ public class MulliganScreen
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         return true;
+    }
+
+    @Override
+    public String getWikiPageName() {
+        return "Mulligan-Screen";
     }
 
     private final class TakeMulliganAction extends AbstractAction {

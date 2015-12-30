@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -9,7 +9,7 @@
                     new MagicDamageTargetPicker(1),
                     this,
                     "PN may\$ have SN deal 1 damage to target creature\$. " +
-                    "If you do, prevent all combat damage SN would deal this turn."
+                    "If PN does, prevent all combat damage SN would deal this turn."
                 ):
                 MagicEvent.NONE;
         }
