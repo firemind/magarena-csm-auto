@@ -16,8 +16,12 @@ import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import magic.model.MagicColor;
 import magic.model.MagicType;
@@ -35,34 +39,24 @@ public class OracleText {
     private static final Font cardTextFont = ResourceManager.getFont("MPlantin.ttf").deriveFont(Font.PLAIN, 18);//scale down when long string
     private static final int topPadding = 7;
     private static final int leftPadding = 3;
-    private static Rectangle textBoxBounds;
 
     static void drawOracleText(BufferedImage cardImage, IRenderableCard cardDef) {
+        Rectangle textBoxBounds = getTextBoxSize(cardDef);
         if (cardDef.hasText()) {
-            String oracleText = cardDef.getText();
-            textBoxBounds = getTextBoxSize(cardDef);
 
-            AttributedString realOracle = textIconReplace(new AttributedString(oracleText), oracleText);
-
-            BufferedImage textBoxText = drawTextToBox(
-                realOracle,
-                oracleText,
-                cardTextFont,
-                textBoxBounds,
-                leftPadding,
-                topPadding
+            //29,327 = top left textbox position.
+            int xPos = 30;
+            int yPos = getYPosition(cardDef);
+            drawTextToCard(
+                cardImage,
+                xPos,
+                yPos,
+                cardDef.getText(),
+                textBoxBounds
             );
 
-            Graphics2D g2d = cardImage.createGraphics();
-            BufferedImage trimmedTextBox = trimTransparency(textBoxText);
-            int heightPadding = (int) ((textBoxBounds.getHeight() - trimmedTextBox.getHeight()) / 2);
-            int widthPadding = (int) Math.min((textBoxBounds.getWidth() - trimmedTextBox.getWidth()) / 2, 3);
-            int yPos = getYPosition(cardDef);
-            g2d.drawImage(trimmedTextBox, 30 + widthPadding, yPos + heightPadding, null);//29,327 = top left textbox position.
-            g2d.dispose();
-
         } else if (cardDef.hasType(MagicType.Land)) {
-            Set<MagicColor> landColors = Frame.getLandColors(cardDef);
+            List<MagicColor> landColors = Frame.getLandColors(cardDef);
             BufferedImage landImage = null;
             if (landColors.size() == 1) {
                 for (MagicColor color : landColors) {
@@ -82,57 +76,46 @@ public class OracleText {
     }
 
     static void drawPlaneswalkerOracleText(BufferedImage cardImage, IRenderableCard cardDef) {
+        int lines;
+        int yPosOffset;
         if (cardDef.hasText() && getPlaneswalkerAbilityCount(cardDef) == 3) {
-            String[] abilityActivation = getPlaneswalkerActivationText(cardDef);
-            textBoxBounds = new Rectangle(0, 0, 282, 49);
-            for (int i = 0; i < 3; i++) {
-                String oracleText = abilityActivation[i];
-                AttributedString realOracle = textIconReplace(new AttributedString(oracleText), oracleText);
-
-                BufferedImage textBoxText = drawTextToBox(
-                    realOracle,
-                    oracleText,
-                    cardTextFont,
-                    textBoxBounds,
-                    leftPadding,
-                    topPadding
-                );
-
-                Graphics2D g2d = cardImage.createGraphics();
-                BufferedImage trimmedTextBox = trimTransparency(textBoxText);
-                int heightPadding = (int) ((textBoxBounds.getHeight() - trimmedTextBox.getHeight()) / 2);
-                int widthPadding = (int) Math.min((textBoxBounds.getWidth() - trimmedTextBox.getWidth()) / 2, 3);
-                int yPos = (int) (330 + i * textBoxBounds.getHeight());
-                g2d.drawImage(trimmedTextBox, 63 + widthPadding, yPos + heightPadding, null);
-                g2d.dispose();
-            }
-
+            lines = 3;
+            yPosOffset = 330;
         } else {
-            {
-                String[] abilityActivation = getPlaneswalkerActivationText(cardDef);
-                textBoxBounds = new Rectangle(0, 0, 282, 49);
-                for (int i = 0; i < 4; i++) {
-                    String oracleText = abilityActivation[i];
-                    AttributedString realOracle = textIconReplace(new AttributedString(oracleText), oracleText);
+            lines = 4;
+            yPosOffset = 289;
+        }
 
-                    BufferedImage textBoxText = drawTextToBox(
-                        realOracle,
-                        oracleText,
-                        cardTextFont,
-                        textBoxBounds,
-                        leftPadding,
-                        topPadding
-                    );
+        String[] abilityActivation = getPlaneswalkerActivationText(cardDef);
+        Rectangle textBoxBounds = new Rectangle(0, 0, 282, 49);
+        for (int i = 0; i < lines; i++) {
+            int xPos = 63;
+            int yPos = (int) (yPosOffset + i * textBoxBounds.getHeight());
+            drawTextToCard(
+                cardImage,
+                xPos,
+                yPos,
+                abilityActivation[i],
+                textBoxBounds
+            );
+        }
+    }
 
-                    Graphics2D g2d = cardImage.createGraphics();
-                    BufferedImage trimmedTextBox = trimTransparency(textBoxText);
-                    int heightPadding = (int) ((textBoxBounds.getHeight() - trimmedTextBox.getHeight()) / 2);
-                    int widthPadding = (int) Math.min((textBoxBounds.getWidth() - trimmedTextBox.getWidth()) / 2, 3);
-                    int yPos = (int) (289 + i * textBoxBounds.getHeight());
-                    g2d.drawImage(trimmedTextBox, 63 + widthPadding, yPos + heightPadding, null);
-                    g2d.dispose();
-                }
-
+    static void drawLevellerOracleText(BufferedImage cardImage, IRenderableCard cardDef) {
+        String[] abilities = getLevellerText(cardDef);
+        Rectangle textBoxBounds = new Rectangle(0, 0, 185, 49);
+        for (int i = 0; i < 3; i++) {
+            String oracleText = abilities[i];
+            if (!oracleText.isEmpty()) { //Not all levels have text
+                int xPos = i == 0 ? 30 : 104; // xpos 104 for level arrows, normal for first line
+                int yPos = (int) (330 + i * textBoxBounds.getHeight());
+                drawTextToCard(
+                    cardImage,
+                    xPos,
+                    yPos,
+                    oracleText,
+                    textBoxBounds
+                );
             }
         }
     }
@@ -150,7 +133,8 @@ public class OracleText {
     private static Rectangle getTextBoxSize(IRenderableCard cardDef) {
         if (cardDef.isToken()) {
             return new Rectangle(0, 0, 314, 94);
-        } else if (cardDef.isPlaneswalker()) {
+        }
+        if (cardDef.isPlaneswalker()) {
             return new Rectangle(0, 0, 282, 148);
         }
         return new Rectangle(0, 0, 314, 154);
@@ -168,9 +152,8 @@ public class OracleText {
                 return ResourceManager.redLandImage;
             case White:
                 return ResourceManager.whiteLandImage;
-            default:
-                return null;
         }
+        return null;
     }
 
     private static BufferedImage getHybridLandImage(Collection<MagicColor> colors) {
@@ -222,19 +205,143 @@ public class OracleText {
         String[] text = new String[abilities.length];
         for (int i = 0; i < abilities.length; i++) {
             String[] fulltext;
-            fulltext = abilities[i].split(": ",2);
+            fulltext = abilities[i].split(": ", 2);
             text[i] = fulltext[fulltext.length - 1];
         }
         return text;
     }
 
+    static String[] getLevellerText(IRenderableCard cardDef) {
+        //Some levels contain /n as well
+        String[] abilities = getOracleAsLines(cardDef);
+        ArrayList<String> text = new ArrayList<>(3);
+        for (int i = 0; i < abilities.length; i++) {
+            if (i == 0) {
+                text.add(abilities[0]);
+            } else {
+                if (abilities[i].contains("LEVEL") && abilities[i + 2].contains("LEVEL")) { //Catch empty level text
+                    text.add("");
+                } else {
+                    if (!abilities[i].contains("LEVEL") && !abilities[i].matches("\\d+/\\d+")) {
+                        if (i + 1 <= abilities.length - 1 && !abilities[i + 1].contains("LEVEL") && !abilities[i + 1].matches("\\d+/\\d+")) { //Catch multi-line level text
+                            text.add(abilities[i] + NEWLINE + abilities[i + 1]);
+
+                        } else {
+                            text.add(abilities[i]);
+                        }
+                    }
+                }
+            }
+        }
+        return text.toArray(new String[3]);
+    }
+
+    public static void drawTextToCard(
+        BufferedImage cardImage,
+        int xPos,
+        int yPos,
+        String oracleText,
+        Rectangle textBoxBounds) {
+
+        AttributedString realOracle = textIconReplace(oracleText);
+
+        BufferedImage textBoxText = drawTextToBox(
+            realOracle,
+            cardTextFont,
+            textBoxBounds,
+            leftPadding,
+            topPadding
+        );
+
+        Graphics2D g2d = cardImage.createGraphics();
+        BufferedImage trimmedTextBox = trimTransparency(textBoxText);
+        int heightPadding = (int) ((textBoxBounds.getHeight() - trimmedTextBox.getHeight()) / 2);
+        int widthPadding = (int) Math.min((textBoxBounds.getWidth() - trimmedTextBox.getWidth()) / 2, 3);
+        g2d.drawImage(trimmedTextBox, xPos + widthPadding, yPos + heightPadding, null);
+        g2d.dispose();
+    }
+
+
+    private static SortedMap<Float, TextLayout> tryTextLayout(
+        AttributedString attrString,
+        FontRenderContext frc,
+        Rectangle box,
+        int leftPadding,
+        int topPadding
+    ) {
+        final SortedMap<Float, TextLayout> lines = new TreeMap<>();
+        AttributedCharacterIterator text = attrString.getIterator();
+        int paragraphStart = text.getBeginIndex();
+        int paragraphEnd = text.getEndIndex();
+        LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(text, frc);
+        float boxWidth = (float)box.getWidth();
+        float boxHeight = (float)box.getHeight();
+        float posY = topPadding;
+        lineMeasurer.setPosition(paragraphStart);
+
+        //Measure length of string to fit in box
+        final AttributedCharacterIterator iter = attrString.getIterator();
+        while (lineMeasurer.getPosition() < paragraphEnd) {
+            //Check for ptPanel overlap
+            int next = posY >= 123 ?
+                lineMeasurer.nextOffset(boxWidth - (leftPadding << 1) - 100) :
+                lineMeasurer.nextOffset(boxWidth - (leftPadding << 1));
+            int limit = next;
+            //Check for newlines
+            for (int i = lineMeasurer.getPosition(); i < next; ++i) {
+                char c = iter.setIndex(i);
+                if (c == NEWLINE && i > lineMeasurer.getPosition()) {
+                    limit = i;
+                    break;
+                }
+            }
+
+            //get+draw measured length
+            TextLayout layout = lineMeasurer.nextLayout(boxWidth, limit, false);
+            posY += layout.getAscent();
+            lines.put(posY, layout);
+
+            //add extra space between paragraphs
+            if (limit < next) {
+                posY += layout.getLeading() + layout.getDescent();
+            }
+
+            //move to next line
+            posY += layout.getDescent();
+
+            //check if out of room
+            if (posY > boxHeight) {
+                lines.clear();
+                break;
+            }
+        }
+        return lines;
+    }
+
+    private static SortedMap<Float, TextLayout> fitTextLayout(
+        AttributedString attrString,
+        Font font,
+        FontRenderContext frc,
+        Rectangle box,
+        int leftPadding,
+        int topPadding
+    ) {
+        // decrease font by 0.5 points each time until lines can fit
+        SortedMap<Float, TextLayout> lines = new TreeMap<>();
+        for (Font f = font; lines.isEmpty(); f = f.deriveFont(f.getSize2D() - 0.5f)) {
+            attrString.addAttribute(TextAttribute.FONT, f);
+            lines = tryTextLayout(attrString, frc, box, leftPadding, topPadding);
+        }
+        return lines;
+    }
+
     private static BufferedImage drawTextToBox(
         AttributedString attrString,
-        String string,
         Font font,
         Rectangle box,
         int leftPadding,
-        int topPadding) {
+        int topPadding
+    ) {
 
         //setUp baseImage and Graphics2D
         BufferedImage baseImage = GraphicsUtils.getCompatibleBufferedImage(
@@ -249,66 +356,18 @@ public class OracleText {
 
         FontRenderContext frc = g2d.getFontRenderContext();
 
-        //get String and Font
-        attrString.addAttribute(TextAttribute.FONT, font);
-        AttributedCharacterIterator text = attrString.getIterator();
-        int paragraphStart = text.getBeginIndex();
-        int paragraphEnd = text.getEndIndex();
-        LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(text, frc);
-        float boxWidth = baseImage.getWidth();
-        float boxHeight = baseImage.getHeight();
-        float posY = topPadding;
-        lineMeasurer.setPosition(paragraphStart);
-        Boolean newParagraph = false;
+        // find largest font that can fit text to box
+        final SortedMap<Float, TextLayout> lines = fitTextLayout(attrString, font, frc, box, leftPadding, topPadding);
 
-        //Measure length of string to fit in box
-        boolean retry = false;
-        while (lineMeasurer.getPosition() < paragraphEnd) {
-            //Check for ptPanel overlap
-            int next;
-            next = posY >= 123 ? lineMeasurer.nextOffset(boxWidth - (leftPadding << 1) - 100) : lineMeasurer.nextOffset(boxWidth - (leftPadding << 1));
-            int limit = next;
-            //Check for newlines
-            for (int i = lineMeasurer.getPosition(); i < next; ++i) {
-                char c = string.charAt(i);
-                if (c == NEWLINE && i > lineMeasurer.getPosition()) {
-                    limit = i;
-                    newParagraph = true;
-                    break;
-                }
-            }
-
-            //get+draw measured length
-            TextLayout layout = lineMeasurer.nextLayout(boxWidth, limit, false);
-            posY += layout.getAscent();
+        // draw the text
+        for (final Map.Entry<Float, TextLayout> entry : lines.entrySet()) {
+            final TextLayout layout = entry.getValue();
+            final float posY = entry.getKey();
             layout.draw(g2d, leftPadding, posY);
-
-            //add extra space between paragraphs
-            if (newParagraph) {
-                posY += layout.getLeading() + layout.getDescent();
-                newParagraph = false;
-            }
-
-            //check if out of room
-            if (posY + layout.getDescent() > boxHeight) {
-                //try again with smaller font
-                retry = true;
-                break;
-            }
-
-            //move to next line
-            posY += layout.getDescent();
-
         }
 
-        //cleanup + return
+        // cleanup + return
         g2d.dispose();
-
-        if (retry) {
-            //font size 12.5 should be minimum
-            Font resize = font.deriveFont((float) (font.getSize2D() - 0.5));
-            return drawTextToBox(attrString, string, resize, box, leftPadding, topPadding);
-        }
 
         return baseImage;
     }
@@ -348,32 +407,31 @@ public class OracleText {
         return tmp;
     }
 
-    public static AttributedString textIconReplace(AttributedString string, String originalString) {
-        AttributedCharacterIterator text = string.getIterator();
-        for (int i = 0; i < text.getEndIndex(); ++i) {
-            if (i < originalString.length()){
-                char c = originalString.charAt(i);
-                if (c == '{') {
-                    final int endMana = originalString.indexOf('}', i);
-                    String iconString = originalString.substring(i, endMana + 1); //get mana-string //substring returns at -1 value
-                    Image iconImage = MagicImages.getIcon(iconString).getImage(); //get related Icon as Image
-                    ImageGraphicAttribute icon = new ImageGraphicAttribute(iconImage, GraphicAttribute.BOTTOM_ALIGNMENT); //define replacement icon
-                    BufferedImage nullImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB); //create null image
-                    ImageGraphicAttribute nulled = new ImageGraphicAttribute(nullImage,GraphicAttribute.BOTTOM_ALIGNMENT); //define null image
-                    string.addAttribute(TextAttribute.CHAR_REPLACEMENT,nulled, i, i +1); //replace first bracket
-                    if (endMana- i >3){
-                        //for hybrid + phyrexian
-                        string.addAttribute(TextAttribute.CHAR_REPLACEMENT,nulled, i +1, i +2); //replace first Mana Character
-                        string.addAttribute(TextAttribute.CHAR_REPLACEMENT,icon, i +2, i +3); //replace divider with icon
-                        string.addAttribute(TextAttribute.CHAR_REPLACEMENT,nulled,endMana-1,endMana); //replace second Mana Character
-                    } else {
-                        string.addAttribute(TextAttribute.CHAR_REPLACEMENT,icon, i +1, i +2); //replace Mana Character
-                    }
-                    string.addAttribute(TextAttribute.CHAR_REPLACEMENT,nulled,endMana,endMana+1); //replace end bracket
-                }
+    public static AttributedString textIconReplace(final String text) {
+        final String compacted = text.replaceAll("\\{[^\\}]+\\}", "M");
+        final AttributedString attrString = new AttributedString(compacted);
+        for (int i = 0, j = 0; i < text.length(); i++, j++) {
+            char c = text.charAt(i);
+            if (c == '{') {
+                final int endSymbol = text.indexOf('}', i);
+                // get mana-string, substring returns at -1 value
+                String iconString = text.substring(i, endSymbol + 1);
+                // get related Icon as Image
+                Image iconImage = MagicImages.getIcon(iconString).getImage();
+                // define replacement icon
+                ImageGraphicAttribute icon = new ImageGraphicAttribute(iconImage, GraphicAttribute.BOTTOM_ALIGNMENT);
+                // replace M with icon
+                attrString.addAttribute(
+                    TextAttribute.CHAR_REPLACEMENT,
+                    icon,
+                    j,
+                    j + 1
+                );
+                // advance i to the end of symbol
+                i = endSymbol;
             }
         }
-        return string;
+        return attrString;
     }
 
     public static boolean isWithinTolerance(int baseColor, int sourceColor, double tol) {

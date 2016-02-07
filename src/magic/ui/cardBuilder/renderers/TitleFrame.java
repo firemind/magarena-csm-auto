@@ -8,8 +8,11 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.text.AttributedString;
 import java.util.List;
 import javax.swing.ImageIcon;
 
@@ -21,7 +24,7 @@ import magic.ui.cardBuilder.ResourceManager;
 
 public class TitleFrame {
 
-    private static final Font cardNameFont = ResourceManager.getFont("Beleren-Bold.ttf").deriveFont(Font.PLAIN, 20);
+    private static final Font cardNameFont = ResourceManager.getFont("JaceBeleren-Bold.ttf").deriveFont(Font.PLAIN, 20);
     private static final Font cardNameTokenFont = ResourceManager.getFont("Beleren Small Caps.ttf").deriveFont(Font.PLAIN, 20);
 
     static void drawManaCost(BufferedImage cardImage, IRenderableCard cardDef) {
@@ -58,27 +61,29 @@ public class TitleFrame {
     }
 
     static void drawCardName(BufferedImage cardImage, IRenderableCard cardDef) {
-        String cardName = cardDef.getName();
-        if (!cardName.isEmpty()) {
+        String plainName = cardDef.getName();
+        if (!plainName.isEmpty()) {
+            //Add space to end of name to enable .end character ligatures
+            AttributedString cardName = new AttributedString(plainName+" ");
             Graphics2D g2d = cardImage.createGraphics();
             g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
             if (cardDef.isToken()) {
                 g2d.setColor(Color.getHSBColor(54, 45, 100));
-                g2d.setFont(cardNameTokenFont);
+                cardName.addAttribute(TextAttribute.FONT, cardNameTokenFont);
             } else {
                 g2d.setColor(Color.BLACK);
-                g2d.setFont(cardNameFont);
+                cardName.addAttribute(TextAttribute.FONT, cardNameFont);
             }
-            FontMetrics metrics = g2d.getFontMetrics(); //to allow calculation of Ascent + length
+            TextLayout metrics = new TextLayout(cardName.getIterator(), g2d.getFontRenderContext()); //to allow calculation of Ascent + length
             int xPos = 30;
-            int yPos = 28;
+            int yPos = 32;
             if (cardDef.isToken()) {
-                xPos = cardImage.getWidth() / 2 - metrics.stringWidth(cardName) / 2;
+                xPos = (int) (cardImage.getWidth() / 2 - metrics.getBounds().getWidth() / 2);
             } else if (cardDef.isPlaneswalker()) {
-                yPos = 20;
+                yPos = 24;
             }
-            g2d.drawString(cardName, xPos, yPos + metrics.getAscent());
+            g2d.drawString(cardName.getIterator(), xPos, yPos + metrics.getAscent());
             g2d.dispose();
         }
     }
@@ -91,16 +96,15 @@ public class TitleFrame {
             g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
             if (cardDef.isHidden()) {
                 g2d.setColor(Color.WHITE);
-                g2d.setFont(cardNameFont);
             } else {
                 g2d.setColor(Color.BLACK);
-                g2d.setFont(cardNameFont);
             }
+            g2d.setFont(cardNameFont);
             FontMetrics metrics = g2d.getFontMetrics(); //to allow calculation of Ascent + length
             int xPos = 56;
-            int yPos = 28;
+            int yPos = 32;
             if (cardDef.isPlaneswalker()) {
-                yPos = 20;
+                yPos = 24;
             }
             g2d.drawString(cardName, xPos, yPos + metrics.getAscent());
             g2d.dispose();

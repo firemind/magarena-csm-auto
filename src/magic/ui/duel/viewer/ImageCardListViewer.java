@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import magic.ui.CachedImagesProvider;
-import magic.ui.CardImagesProvider;
 import magic.data.GeneralConfig;
 import magic.model.MagicType;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCardList;
+import magic.ui.MagicImages;
 import magic.ui.utility.GraphicsUtils;
 import magic.ui.duel.SwingGameController;
 import magic.ui.duel.viewer.info.CardViewerInfo;
@@ -61,7 +60,7 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
     private int cardStep = 0;
 
     public ImageCardListViewer(final SwingGameController controller) {
-        
+
         setOpaque(false);
 
         this.controller=controller;
@@ -171,7 +170,7 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
         final Point point=cardPoints.get(index);
         final Rectangle rect=
                 new Rectangle(pointOnScreen.x+point.x,pointOnScreen.y+point.y,CARD_WIDTH,CARD_HEIGHT);
-        controller.viewCardPopup(card, 0, rect, true);
+        controller.viewCardPopup(card, rect, true);
     }
 
     private int getCardIndexAt(final int x,final int y) {
@@ -225,12 +224,10 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         final Stroke defaultStroke = g2d.getStroke();
 
-        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
         final Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(mousePoint, this);
         Rectangle mouseOverRect = new Rectangle();
-        final CardImagesProvider imageCache = CachedImagesProvider.getInstance();
-        
+
         for (int index=0; index < cardList.size(); index++) {
             final MagicCard card=cardList.get(index);
             final MagicCardDefinition cardDefinition=card.getCardDefinition();
@@ -239,9 +236,9 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
             final int y1=point.y;
             final int x2=point.x+CARD_WIDTH;
             final int y2=point.y+CARD_HEIGHT;
-                        
+
             final BufferedImage image = GraphicsUtils.scale(
-                imageCache.getImage(cardDefinition, card.getImageIndex(), true),
+                MagicImages.geCardImageUseCache(cardDefinition),
                 CARD_WIDTH,
                 CARD_HEIGHT
             );
@@ -261,13 +258,13 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
                         y2-17
                     );
                 } else {
-                    ImageDrawingUtils.drawCostInfo(g,this,card.getCost(),x1,x2-1,y1+2);
+                    ImageDrawingUtils.drawCostInfo(g,this,card.getGameCost(),x1,x2-1,y1+2);
                 }
                 if (cardDefinition.isCreature()) {
                     ImageDrawingUtils.drawAbilityInfo(g,this,cardDefinition.genAbilityFlags(),x1+2,y2-18);
                     final String pt = card.genPowerToughness().toString();
                     final int ptWidth=metrics.stringWidth(pt);
-                    ImageDrawingUtils.drawCreatureInfo(g,metrics,pt,ptWidth,"",x2-ptWidth-4,y2-18,false);
+                    ImageDrawingUtils.drawCreatureInfo(g,metrics,pt,ptWidth,"","",x2-ptWidth-4,y2-18,false);
                 }
             }
 

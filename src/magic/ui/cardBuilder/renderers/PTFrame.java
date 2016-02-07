@@ -10,6 +10,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import magic.model.MagicAbility;
 import magic.model.MagicColor;
@@ -57,62 +58,62 @@ public class PTFrame {
     }
 
     static void drawLoyaltyPanels(BufferedImage cardImage, IRenderableCard cardDef) {
-        int xPos = 32;
-        int width = 12;
-        int height = 34;
         String loyaltyText = getLoyaltyText(cardDef);
         Graphics2D g2d = cardImage.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         g2d.setColor(Color.WHITE);
-        String panelText;
 
         // Draw main Loyalty Panel
+        int width = 12;
+        int height = 34;
         if (!loyaltyText.isEmpty()) {
             BufferedImage loyaltyImage = ResourceManager.loyaltyPanel;
             g2d.drawImage(loyaltyImage, 302, 460, null);
-            drawLoyaltyPanelText(g2d, new Rectangle(326, 462, width, height), loyaltyText);
+            drawPanelText(g2d, new Rectangle(326, 462, width, height), loyaltyText, cardLoyaltyFont);
         }
         // Draw activation panels
+        String panelText;
+        int xPos = 32;
         if (OracleText.getPlaneswalkerAbilityCount(cardDef) == 3) {
             String[] activations = getPlaneswalkerActivationCosts(cardDef);
             panelText = activations[0];
-            if (panelText != "") {
+            if (!panelText.isEmpty()) {
                 //Panel 1
                 g2d.drawImage(getLoyaltyPanel(activations[0]), 18, 333, null);
-                drawLoyaltyPanelText(g2d, new Rectangle(xPos, 335, width, height), panelText);
+                drawPanelText(g2d, new Rectangle(xPos, 335, width, height), panelText, cardLoyaltyFont);
             }
             //Panel 2
             g2d.drawImage(getLoyaltyPanel(activations[1]), 18, 383, null);
-            drawLoyaltyPanelText(g2d, new Rectangle(xPos, 386, width, height), activations[1]);
+            drawPanelText(g2d, new Rectangle(xPos, 386, width, height), activations[1], cardLoyaltyFont);
             //Panel 3
             g2d.drawImage(getLoyaltyPanel(activations[2]), 18, 432, null);
-            drawLoyaltyPanelText(g2d, new Rectangle(xPos, 435, width, height), activations[2]);
+            drawPanelText(g2d, new Rectangle(xPos, 435, width, height), activations[2], cardLoyaltyFont);
         } else {
             String[] activations = getPlaneswalkerActivationCosts(cardDef);
             panelText = activations[0];
-            if (panelText != "") {
+            if (!panelText.isEmpty()) {
                 //Panel 1
                 g2d.drawImage(getLoyaltyPanel(activations[0]), 18, 294, null);
-                drawLoyaltyPanelText(g2d, new Rectangle(xPos, 297, width, height), panelText);
+                drawPanelText(g2d, new Rectangle(xPos, 297, width, height), panelText, cardLoyaltyFont);
             }
             //Panel 2
             g2d.drawImage(getLoyaltyPanel(activations[1]), 18, 341, null);
-            drawLoyaltyPanelText(g2d, new Rectangle(xPos, 344, width, height), activations[1]);
+            drawPanelText(g2d, new Rectangle(xPos, 344, width, height), activations[1], cardLoyaltyFont);
             //Panel 3
             g2d.drawImage(getLoyaltyPanel(activations[2]), 18, 388, null);
-            drawLoyaltyPanelText(g2d, new Rectangle(xPos, 391, width, height), activations[2]);
+            drawPanelText(g2d, new Rectangle(xPos, 391, width, height), activations[2], cardLoyaltyFont);
             //Panel 4
             if (!activations[3].isEmpty()) {
                 g2d.drawImage(getLoyaltyPanel(activations[3]), 18, 435, null);
-                drawLoyaltyPanelText(g2d, new Rectangle(xPos, 438, width, height), activations[3]);
+                drawPanelText(g2d, new Rectangle(xPos, 438, width, height), activations[3], cardLoyaltyFont);
             }
         }
         g2d.dispose();
     }
 
-    private static void drawLoyaltyPanelText(Graphics2D g2d, Rectangle box, String text) {
-        TextLayout layout = new TextLayout(text, cardLoyaltyFont, g2d.getFontRenderContext());
+    private static void drawPanelText(Graphics2D g2d, Rectangle box, String text, Font font) {
+        TextLayout layout = new TextLayout(text, font, g2d.getFontRenderContext());
         layout.draw(g2d, (float) box.getCenterX() - (float) layout.getBounds().getCenterX(), (float) box.getCenterY() - (float) layout.getBounds().getCenterY());
     }
 
@@ -124,6 +125,72 @@ public class PTFrame {
         } else {
             return ResourceManager.loyaltyDown;
         }
+    }
+
+    static void drawLevellerPTPanels(BufferedImage cardImage, IRenderableCard cardDef) {
+        int xPosImage = 284;
+        int xPosText = xPosImage + 13;
+        int width = 60;
+        int height = 28;
+        String[] ptText = getLevellerPTText(cardDef);
+        BufferedImage ptImage = getPTPanelImage(cardDef);
+        Graphics2D g2d = cardImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setColor(Color.BLACK);
+
+        //Panel 1
+        g2d.drawImage(ptImage, xPosImage, 339, null);
+        drawPanelText(g2d, new Rectangle(xPosText, 342, width, height), ptText[0], cardPTFont);
+        //Panel 2
+        g2d.drawImage(ptImage, xPosImage, 390, null);
+        drawPanelText(g2d, new Rectangle(xPosText, 393, width, height), ptText[1], cardPTFont);
+        //Panel 3
+        g2d.drawImage(ptImage, xPosImage, 441, null);
+        drawPanelText(g2d, new Rectangle(xPosText, 444, width, height), ptText[2], cardPTFont);
+
+        g2d.dispose();
+    }
+
+    static void drawLevellerArrowText(BufferedImage cardImage, IRenderableCard cardDef) {
+        int xPosText = 35;
+        int width = 39;
+        int height = 39;
+        String[] levelText = getLevellerArrowText(cardDef);
+        Graphics2D g2d = cardImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setColor(Color.BLACK);
+
+        //Arrow 1
+        OracleText.drawTextToCard(cardImage, xPosText, 386, levelText[0], new Rectangle(0, 0, width, height));
+        //Arrow 2
+        OracleText.drawTextToCard(cardImage, xPosText, 437, levelText[1], new Rectangle(0, 0, width, height));
+
+        g2d.dispose();
+    }
+
+    private static String[] getLevellerPTText(IRenderableCard cardDef) {
+        String[] abilities = OracleText.getOracleAsLines(cardDef);
+        ArrayList<String> text = new ArrayList<>(3);
+        text.add(getPTText(cardDef));
+        for (String ability : abilities) {
+            if (ability.matches("\\d+/\\d+")) {
+                text.add(ability);
+            }
+        }
+        return text.toArray(new String[3]);
+    }
+
+    private static String[] getLevellerArrowText(IRenderableCard cardDef) {
+        String[] abilities = OracleText.getOracleAsLines(cardDef);
+        ArrayList<String> text = new ArrayList<>(2);
+        for (String ability : abilities) {
+            if (ability.contains("LEVEL")) {
+                text.add(ability.replace("LEVEL ", "LEVEL\n"));
+            }
+        }
+        return text.toArray(new String[2]);
     }
 
     private static BufferedImage getPTPanel(MagicColor color) {
@@ -233,13 +300,8 @@ public class PTFrame {
             Rectangle2D box = new Rectangle(286, 469, 60, 28); //ptText dimensions (Can't use ptPanel due to shadow distorting size)
             Point centre = new Point((int) box.getCenterX(), (int) box.getCenterY()); //Centre of box
 
-
             TextLayout layout;
-            if (ptText.length() >= 6) { //power or toughness of 100+
-                layout = new TextLayout(ptText, cardPTFontSmall, frc2);
-            } else {
-                layout = new TextLayout(ptText, cardPTFont, frc2);
-            }
+            layout = ptText.length() >= 6 ? new TextLayout(ptText, cardPTFontSmall, frc2) : new TextLayout(ptText, cardPTFont, frc2); //Power or Toughness over 99
             Point textCentre = new Point((int) layout.getBounds().getWidth() / 2, (int) layout.getBounds().getHeight() / 2); //Centre of text
 
             layout.draw(g2d, (float) centre.getX() - (float) textCentre.getX(), (float) centre.getY() + (float) textCentre.getY());
@@ -250,14 +312,13 @@ public class PTFrame {
 
     static void drawTransformSymbol(BufferedImage cardImage, IRenderableCard cardDef) {
         Graphics2D g2d = cardImage.createGraphics();
+        BufferedImage typeSymbol = ResourceManager.sunSymbol;
         if (cardDef.isHidden()) {
-            BufferedImage typeSymbol = ResourceManager.moonSymbol;
-            g2d.drawImage(typeSymbol, 19, 25, null);
-        } else {
-            BufferedImage typeSymbol = ResourceManager.sunSymbol;
-            g2d.drawImage(typeSymbol, 19, 25, null);
+            typeSymbol = cardDef.isPlaneswalker() && cardDef.getTransformedDefinition().isPlaneswalker() ? ResourceManager.planeswalkerTypeSymbol : ResourceManager.moonSymbol;
+        } else if (cardDef.isCreature() && cardDef.getTransformedDefinition().isPlaneswalker()) {
+            typeSymbol = ResourceManager.sparkSymbol;
         }
-
+        g2d.drawImage(typeSymbol, 19, 25, null);
         g2d.dispose();
     }
 }

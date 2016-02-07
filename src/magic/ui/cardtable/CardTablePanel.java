@@ -33,15 +33,15 @@ import net.miginfocom.swing.MigLayout;
 public class CardTablePanel extends TexturedPanel {
 
     // fired when selection changes.
-    public static final String CP_CARD_SELECTED = "cardTableSelection";
+    public static final String CP_CARD_SELECTED = "7f9bfa20-a363-4ce4-8491-8bfb219a808d";
     // fired on mouse event.
-    public static final String CP_CARD_LCLICKED = "cardLeftClicked";
-    public static final String CP_CARD_RCLICKED = "cardRightClicked";
-    public static final String CP_CARD_DCLICKED = "cardDoubleClicked";
-    
+    public static final String CP_CARD_LCLICKED = "fb5f3d15-c764-4436-a790-4aa349c24b73";
+    public static final String CP_CARD_RCLICKED = "575ebbc6-c67b-45b5-9f3e-e03ae1d879be";
+    public static final String CP_CARD_DCLICKED = "d3a081c1-a66c-402a-814e-819678257d3b";
+
     // renderer that centers the contents of a column.
     static final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    static { centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); }    
+    static { centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); }
 
     private static final Color GRID_COLOR = new Color(194, 197, 203);
     private static final int ROW_HEIGHT = 20; //pixels
@@ -90,7 +90,7 @@ public class CardTablePanel extends TexturedPanel {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // otherwise horizontal scrollbar won't work
         table.setRowHeight(ROW_HEIGHT);
         table.setGridColor(GRID_COLOR);
-        
+
         final TableColumnModel model = table.getColumnModel();
         setColumnWidths(model);
 
@@ -125,10 +125,10 @@ public class CardTablePanel extends TexturedPanel {
         if (!GeneralConfig.getInstance().isPreviewCardOnSelect()) {
             table.addMouseMotionListener(new RowMouseOverListener());
         }
-        
+
         setLayout(migLayout);
         refreshLayout();
-        
+
     }
 
     private ListSelectionListener getTableListSelectionListener() {
@@ -350,11 +350,11 @@ public class CardTablePanel extends TexturedPanel {
             table.getSelectionModel().addSelectionInterval(0, 0);
         }
     }
-    
+
     public TitleBar getTitleBar() {
         return titleBar;
     }
-    
+
     public void showCardCount(final boolean b) {
         tableModel.showCardCount(b);
     }

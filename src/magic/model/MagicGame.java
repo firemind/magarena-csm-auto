@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import magic.ui.MagicSound;
 
 public class MagicGame {
 
@@ -545,12 +546,6 @@ public class MagicGame {
     public void addDelayedAction(final MagicAction action) {
         delayedActions.add(action);
     }
-    
-    public void doValidAction(final MagicPermanent perm, final MagicAction action) {
-        if (perm.isValid()) {
-            doAction(action);
-        }
-    }
 
     public void doAction(final MagicAction action) {
         actions.add(action);
@@ -581,6 +576,17 @@ public class MagicGame {
         MagicPlayer.update(this);
         MagicGame.update(this);
         doDelayedActions();
+    }
+
+    public MagicManaCost modCost(final MagicCard card, final MagicManaCost cost) {
+        MagicManaCost currCost = cost;
+        for (final MagicPermanentStatic mps : getStatics(MagicLayer.CostIncrease)) {
+            currCost = mps.getStatic().increaseCost(mps.getPermanent(), card, currCost);
+        }
+        for (final MagicPermanentStatic mps : getStatics(MagicLayer.CostReduction)) {
+            currCost = mps.getStatic().reduceCost(mps.getPermanent(), card, currCost);
+        }
+        return currCost;
     }
 
     public void apply(final MagicLayer layer) {
@@ -1379,5 +1385,11 @@ public class MagicGame {
     }
     public boolean isConceded() {
         return isConceded;
+    }
+
+    public void playSound(MagicSound aSound) {
+        if (isReal()) {
+            aSound.play();
+        }
     }
 }

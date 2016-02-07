@@ -44,6 +44,11 @@ public enum MagicConditionParser {
             );
         }
     },
+    DefenderPoisoned("defending player is poisoned") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.DEFENDING_POISONED;
+        }
+    },
     YouControlAnother("you control another " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.YouControlAnother(
@@ -165,7 +170,7 @@ public enum MagicConditionParser {
             return MagicConditionFactory.CounterEqual(counterType, amount);
         }
     },
-    CountersNone("SN has no " + ARG.WORD1 + " counters on it") {
+    CountersNone("(SN|it) (has|had) no " + ARG.WORD1 + " counters on it") {
         public MagicCondition toCondition(final Matcher arg) {
             final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(arg));
             return MagicConditionFactory.CounterEqual(counterType, 0);
@@ -513,6 +518,16 @@ public enum MagicConditionParser {
     WasKicked("SN was kicked") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.WAS_KICKED;
+        }
+    },
+    SurgePaid("SN's surge cost was paid") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.WAS_KICKED;
+        }
+    },
+    ControlledSinceLastTurn("you've controlled SN continuously since the beginning of your most recent turn") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.CONTROL_SINCE_LAST_TURN;
         }
     },
     ;

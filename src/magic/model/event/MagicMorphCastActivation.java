@@ -39,14 +39,19 @@ public class MagicMorphCastActivation extends MagicHandCastActivation {
 
     @Override
     public Iterable<? extends MagicEvent> getCostEvent(final MagicCard source) {
+        final MagicCardOnStack morphSpell = genMorphSpell(source);
+        final MagicManaCost modCost = source.getGame().modCost(
+            MagicCard.createTokenCard(morphSpell, morphSpell.getController()),
+            MagicManaCost.create("{3}")
+        );
         return Arrays.asList(
             new MagicPayManaCostEvent(
-                genMorphSpell(source),
-                MagicManaCost.create("{3}")
+                morphSpell,
+                modCost
             )
         );
     }
-    
+
     @Override
     public MagicEvent getEvent(final MagicSource source) {
         return new MagicEvent(
@@ -101,16 +106,13 @@ public class MagicMorphCastActivation extends MagicHandCastActivation {
             }
         };
     }
-    
-    private final MagicEventAction EVENT_ACTION = new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicCard card = event.getCard();
-            game.doAction(new RemoveCardAction(card,MagicLocationType.OwnersHand));
-            game.doAction(new PutItemOnStackAction(genMorphSpell(card)));
-        }
+
+    private final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        final MagicCard card = event.getCard();
+        game.doAction(new RemoveCardAction(card,MagicLocationType.OwnersHand));
+        game.doAction(new PutItemOnStackAction(genMorphSpell(card)));
     };
-    
+
     @Override
     public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
         return new MagicEvent(
@@ -119,7 +121,7 @@ public class MagicMorphCastActivation extends MagicHandCastActivation {
             "Put " + MagicMessage.getCardToken("face-down creature", cardOnStack.getCard()) + " onto the battlefield."
         );
     }
-    
+
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
         final MagicCardOnStack spell = event.getCardOnStack();

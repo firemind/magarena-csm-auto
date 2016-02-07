@@ -70,8 +70,131 @@ Thanks to
 
 Thank you for your support and have fun!
 
-Release 1.70 (January ??, 2016)
+Release 1.70 (February 7, 2016)
 ============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- card images selected based on location: custom -> crops -> cards/tokens -> missing proxy
+
+- new option to download cropped art for use with proxy images
+
+- choose preferred image size from preferences General tab
+
+- eliminate UI freeze when showing proxy images for the first time
+
+- improve layout of deck statistics panel and duel decks screen for a more consistent UI
+
+- remove text mode
+
+- display split cards as '<first half> // <second half> (card name)' in explorer
+
+- show damage prevent shield as blue number above pt
+
+- allow groovy code to add effects that reduce/increase mana cost, it does not
+  reduce additional costs
+
+- added the following to the card script:
+  * ability: Surge <mana cost>
+  * ability: When <name> enters the battlefield, if its surge cost was paid, <effect>
+  * ability: When you cast <name>, <effect>
+  * effect: You may <cost>. If you don't, <effect>
+  * effect: Return <permanent> to its owner's hand at the beginning of the next end step.
+  * effect: Shuffle your library.
+  * effect: <permanent> gain <ability>.
+  * effect: <permament> lose <ability>.
+
+- fixed the following bugs:
+  * unable to download card images
+  * poor quality image scaling in CardsCanvas for sample hand, deck tiled screen, etc
+  * Firemind decks not shown if name contains invalid filename character (issue #607)
+  * clicking on empty area of deck table increases count for selected card (issue #658)
+  * crash when activating ability that discards specific cards as cost (issue #384)
+  * crash in MCTS AI when the manifest effect
+  * "target creature and each other creature that shares a color with it" does
+    not include target creature when it is colorless
+  * three color lands appears in random two color decks (issue #646)
+  * no choice of which mana ability to use when mana permanents equal to mana cost (issue #639)
+  * Man lands missing missing mana_or_combat property
+  * Giant Caterpillar and Transluminant causes the AI to crash (issue #362)
+  * Knight of the Mists crashes when you select "No" for its trigger (issue #610)
+  * Raving Oni Slave triggering when other permanents leave the battlefield (issue #647)
+  * Sheltered Valley trigger should occur before other ETB triggers
+  * Tunneler Wurm should not have trample
+  * Cateran Enforcer missing fear
+  * Drill Skimmer missing flying
+  * Thousand Winds missing flying
+  * Glimmering Angel missing flying
+  * Harrier Griffin missing flying
+  * Felidar Umbra missing totem armor
+  * Piety giving +0/+2 instead of +0/+3
+  * Stone Idol Trap missing cost reduction
+  * Elixir of Vitality missing enters tapped
+  * Stasis Snare missing AI casting restriction
+  * Eater of Hope's first ability missing {B} cost
+  * Defiant Falcon's second ability missing {4} cost
+
+- added the following cards:
+Absolver Thrull, Abstruse Interference, Affa Protector, Alabaster Leech,
+Allied Reinforcements, Amrou Seekers, Ancient Crab, Andradite Leech,
+Animar, Soul of Elements, Arcane Melee, Aura of Silence,
+Ballyrush Banneret, Baloth Pup, Bearer of Silence, Belfry Spirit,
+Benediction of Moons, Birthing Hulk, Blade of Selves, Blind Hunter,
+Blinding Drone, Bonds of Mortality, Bosk Banneret, Boulder Salvo,
+Brace for Impact, Breaking Wave, Brighthearth Banneret, Brute Strength,
+Butcher's Glee, Call the Gatewatch, Canopy Gorger, Captain's Claws,
+Celestial Sword, Centaur Omenreader, Chained Throatseeker, Chill,
+Chill of Foreboding, Cinder Barrens, Cinder Hellion, Cliffhaven Vampire,
+Comparative Analysis, Consuming Sinkhole, Containment Membrane,
+Coral Net, Crush of Tentacles, Cry of Contrition, Cursed Monstrosity,
+Daru Warchief, Deepfathom Skulker, Defense Grid, Derelor, Desolation Twin,
+Devour in Flames, Dragonlord's Servant, Dragonspeaker Shaman,
+Drake Familiar, Drana's Chosen, Dread Charge, Dread Return, Dream Chisel,
+Eldrazi Aggressor, Embodiment of Fury, Embodiment of Insight,
+Emerald Medallion, Essence Depleter, Etherium Sculptor, Exalted Dragon,
+Exhumer Thrull, Expedite, Eye of Ugin, Fallow Wurm, Fencer's Magemark,
+Feroz's Ban, Firefright Mage, Flayer Drone, Floodtide Serpent,
+Frogtosser Banneret, Genesis Wave, Ghitu Fire, Gift of Tusks, Glowrider,
+Goblin Electromancer, Goblin Warchief, Grand Arbiter Augustin IV,
+Gravebane Zombie, Gravity Negator, Grip of the Roil, Guardian's Magemark,
+Harbinger of the Tides, Havoc Sower, Heartless Summoning,
+Hedron Crawler, Helm of Awakening, Herald of Kozilek,
+Herald of the Pantheon, Herald of War, Hero of Iroas, High Seas,
+Hissing Quagmire, Hum of the Radix, Immolating Glare, Immortal Coil,
+Impromptu Raid, Infiltrator's Magemark, Irini Sengir, Jace's Sanctum,
+Jade Leech, Jet Medallion, Joven's Tools, Jwar Isle Avenger,
+Kataki, War's Wage, Kinscaer Harpoonist, Kor Scythemaster,
+Kor Sky Climber, Kozilek's Translator, Krosan Drover, Krosan Warchief,
+Lashknife Barrier, Loam Larva, Lodestone Golem, Long-Forgotten Gohei,
+Lowland Oaf, Madblind Mountain, Make a Stand, Makindi Aeronaut,
+Malakir Soothsayer, Mana Matrix, Maw of Kozilek, Meandering River,
+Melancholy, Mercenary Knight, Munda's Vanguard, Myr Mindservant,
+Natural State, Necromancer's Magemark, Needle Spires, Nightscape Familiar,
+Null Caller, Oblivion Strike, Obscuring Æther, Ondu War Cleric,
+Orzhov Euthanist, Orzhov Pontiff, Overwhelming Denial, Pearl Medallion,
+Phyrexian Hydra, Planar Gate, Possessed Skaab, Prophet of Distortion,
+Pyric Salamander, Quickling, Reality Hemorrhage, Reckless Bushwhacker,
+Relentless Hunter, Rending Volley, Rime Transfusion, Rotting Giant,
+Ruby Leech, Ruby Medallion, Sapphire Leech, Sapphire Medallion,
+Scale Blessing, Scion Summoner, Scourglass, Sea Gate Wreckage,
+Searing Light, Seeker, Seer's Lantern, Seize the Soul, Sifter of Skulls,
+Skirk Shaman, Sky Scourer, Slaughter Drone, Slip Through Space,
+Soul Snare, Spatial Contortion, Spawnbinder Mage, Sphere of Resistance,
+Spinal Graft, Squeeze, Stalking Drone, Steppe Glider,
+Stinkdrinker Daredevil, Stone Calendar, Stone Haven Outfitter,
+Stonybrook Banneret, Stormchaser Mage, Stormscape Familiar,
+Submerged Boneyard, Sunscape Familiar, Tajuru Pathwarden, Tar Snare,
+Tears of Valakut, Thalia, Guardian of Thraben, Thing from the Deep,
+Thorn of Amethyst, Thornscape Familiar, Thundercloud Elemental,
+Thundering Wurm, Thunderscape Familiar, Timber Gorge, Tranquil Expanse,
+Treacherous Vampire, Twilight's Call, Tyrant of Valakut, Umara Entangler,
+Undead Warchief, Unnatural Endurance, Urza's Filter, Vampire Envoy,
+Vapor Snare, Veiled Apparition, Vines of the Recluse, Void Grafter,
+Void Shatter, Vryn Wingmare, Wandering Fumarole, Warden of Evos Isle,
+Warden of Geometries, Warping Wail, Wastes, Weapons Trainer,
+World Breaker, Zada's Commando, Zulaport Chainmage, Zulaport Enforcer
 
 Release 1.69 (December 27, 2015)
 ============

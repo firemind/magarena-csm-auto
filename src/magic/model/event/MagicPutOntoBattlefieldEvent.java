@@ -16,15 +16,15 @@ import java.util.List;
 import magic.model.MagicMessage;
 
 public class MagicPutOntoBattlefieldEvent extends MagicEvent {
-    
+
     public MagicPutOntoBattlefieldEvent(final MagicEvent event, final MagicChoice choice, final List<? extends MagicPermanentAction> mods) {
         this(event.getSource(), event.getPlayer(), choice, mods);
     }
-    
+
     public MagicPutOntoBattlefieldEvent(final MagicEvent event, final MagicChoice choice, final MagicPermanentAction... mods) {
         this(event.getSource(), event.getPlayer(), choice, Arrays.asList(mods));
     }
-    
+
     public MagicPutOntoBattlefieldEvent(final MagicSource source, final MagicPlayer player, final MagicChoice choice, final List<? extends MagicPermanentAction> mods) {
         super(
             source,
@@ -37,21 +37,16 @@ public class MagicPutOntoBattlefieldEvent extends MagicEvent {
     }
 
     private static final MagicEventAction EventAction(final List<? extends MagicPermanentAction> mods) {
-        return new MagicEventAction() {
-            @Override
-            public void executeEvent(final MagicGame game, final MagicEvent event) {
-                // choice could be MagicMayChoice or MagicTargetChoice, the condition below takes care of both cases
-                if (event.isNo() == false) {
-                    event.processTargetCard(game, new MagicCardAction() {
-                        public void doAction(final MagicCard card) {
-                            game.logAppendMessage(
-                                event.getPlayer(),
-                                String.format("Chosen (%s).", MagicMessage.getCardToken(card))
-                            );
-                            game.doAction(new ReturnCardAction(MagicLocationType.OwnersHand,card,event.getPlayer(),mods));
-                        }
-                    });
-                }
+        return (final MagicGame game, final MagicEvent event) -> {
+            // choice could be MagicMayChoice or MagicTargetChoice, the condition below takes care of both cases
+            if (event.isNo() == false) {
+                event.processTargetCard(game, (final MagicCard card) -> {
+                    game.logAppendMessage(
+                        event.getPlayer(),
+                        MagicMessage.format("Chosen (%s).", card)
+                    );
+                    game.doAction(new ReturnCardAction(MagicLocationType.OwnersHand,card,event.getPlayer(),mods));
+                });
             }
         };
     }

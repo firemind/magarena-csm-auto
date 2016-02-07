@@ -1,0 +1,12 @@
+name=Daru Warchief
+image=http://magiccards.info/scans/en/sc/6.jpg
+value=4.428
+rarity=U
+type=Creature
+subtype=Human,Soldier
+cost={2}{W}{W}
+pt=1/1
+ability=Soldier creatures you control get +1/+2.
+requires_groovy_code
+timing=main
+oracle=Soldier spells you cast cost {1} less to cast.\nSoldier creatures you control get +1/+2.

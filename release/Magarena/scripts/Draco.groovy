@@ -15,7 +15,7 @@
             return [
                 new MagicPayManaCostEvent(
                     source,
-                    source.getCost().reduce(MagicCostManaType.Colorless, n)
+                    source.getGameCost().reduce(n)
                 )
             ];
         }
@@ -28,7 +28,7 @@
                 permanent,
                 new MagicMayChoice(
                     "Pay SN's upkeep cost?",
-                    new MagicPayManaCostChoice(MagicManaCost.create("{10}").reduce(MagicCostManaType.Colorless, n))
+                    new MagicPayManaCostChoice(MagicManaCost.create("{10}").reduce(n))
                 ),
                 this,
                 "PN may\$ pay SN's upkeep cost. If PN doesn't, sacrifice SN."

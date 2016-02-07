@@ -45,26 +45,21 @@ public class MagicAwakenEvent extends MagicEvent {
             tchoice,
             n,
             EVENT_ACTION,
-            "PN puts RN +1/+1 counters on target land$ you control and " + 
+            "PN puts RN +1/+1 counters on target land$ you control and " +
             "it becomes a 0/0 Elemental creature with haste. It's still a land."
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.processTargetPermanent(game,new MagicPermanentAction() {
-                public void doAction(final MagicPermanent it) {
-                    game.doAction(new ChangeCountersAction(
-                        it,
-                        MagicCounterType.PlusOne,
-                        event.getRefInt()
-                    ));
-                    game.doAction(new AddStaticAction(it, PT));
-                    game.doAction(new AddStaticAction(it, Type));
-                    game.doAction(new GainAbilityAction(it, MagicAbility.Haste, MagicStatic.Forever));
-                }
-            });
-        }
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        event.processTargetPermanent(game, (final MagicPermanent it) -> {
+            game.doAction(new ChangeCountersAction(
+                it,
+                MagicCounterType.PlusOne,
+                event.getRefInt()
+            ));
+            game.doAction(new AddStaticAction(it, PT));
+            game.doAction(new AddStaticAction(it, Type));
+            game.doAction(new GainAbilityAction(it, MagicAbility.Haste, MagicStatic.Forever));
+        });
     };
 }

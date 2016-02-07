@@ -1,11 +1,12 @@
 name=Basalt Monolith
-image=http://magiccards.info/scans/en/c13/237.jpg
+image=http://magiccards.info/scans/en/c15/244.jpg
+image_updated=2016-01-19
 value=4.426
 rarity=U
 type=Artifact
 cost={3}
 ability=SN doesn't untap during your untap step.;\
-        {T}: Add {3} to your mana pool.;\
+        {T}: Add {C}{C}{C} to your mana pool.;\
         {3}: Untap SN.
 timing=artifact
-oracle=Basalt Monolith doesn't untap during your untap step.\n{T}: Add {3} to your mana pool.\n{3}: Untap Basalt Monolith.
+oracle=Basalt Monolith doesn't untap during your untap step.\n{T}: Add {C}{C}{C} to your mana pool.\n{3}: Untap Basalt Monolith.

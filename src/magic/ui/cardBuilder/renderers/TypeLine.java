@@ -8,18 +8,15 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import magic.ui.cardBuilder.IRenderableCard;
 import magic.model.MagicType;
+import magic.ui.cardBuilder.IRenderableCard;
 import magic.ui.cardBuilder.ResourceManager;
 
 public class TypeLine {
-    private TypeLine() {
-    }
-
-    private static final Font cardTypeFont = ResourceManager.getFont("Beleren-Bold.ttf").deriveFont(Font.PLAIN, 16);
-    private static final Font cardTypeFontSmall = ResourceManager.getFont("Beleren-Bold.ttf").deriveFont(Font.PLAIN, 15);
-    private static final Font cardTypeFontVerySmall = ResourceManager.getFont("Beleren-Bold.ttf").deriveFont(Font.PLAIN, 14);
-    private static final Font cardTypeFontSmallest = ResourceManager.getFont("Beleren-Bold.ttf").deriveFont(Font.PLAIN, 13);
+    private static final Font cardTypeFont = ResourceManager.getFont("JaceBeleren-Bold.ttf").deriveFont(Font.PLAIN, 16);
+    private static final Font cardTypeFontSmall = ResourceManager.getFont("JaceBeleren-Bold.ttf").deriveFont(Font.PLAIN, 15);
+    private static final Font cardTypeFontVerySmall = ResourceManager.getFont("JaceBeleren-Bold.ttf").deriveFont(Font.PLAIN, 14);
+    private static final Font cardTypeFontSmallest = ResourceManager.getFont("JaceBeleren-Bold.ttf").deriveFont(Font.PLAIN, 13);
     private static int padding;
 
     static void drawCardTypeLine(BufferedImage cardImage, IRenderableCard cardDef) {
@@ -33,13 +30,13 @@ public class TypeLine {
             FontMetrics metrics = g2d.getFontMetrics();
             int yPos;
             if (cardDef.isToken()) {
-                yPos = cardDef.hasText() ? 356 : 431;
+                yPos = cardDef.hasText() ? 359 : 434;
             } else if (cardDef.isPlaneswalker() && OracleText.getPlaneswalkerAbilityCount(cardDef) == 4){
-                yPos = 263;
+                yPos = 266;
             } else {
-                yPos = 298;
+                yPos = 301;
             }
-            g2d.drawString(cardType, 32, yPos + metrics.getAscent() + padding);// 298+Plus height of text
+            g2d.drawString(cardType+" ", 32, yPos + metrics.getAscent() + padding);
             g2d.dispose();
         }
     }
@@ -68,17 +65,10 @@ public class TypeLine {
         MagicType.SUPERTYPES.stream().filter(cardDef::hasType).forEach(aSuperType -> {
             typeLine.append(aSuperType).append(" ");
         });
-        if (cardDef.hasType(MagicType.Tribal)){
-            typeLine.append("Tribal ");
-        }
         if (cardDef.isToken()) {
             typeLine.append("Token ");
         }
-        MagicType.ALL_CARD_TYPES.stream().filter(cardDef::hasType).forEach(aType -> {
-            if (aType != MagicType.Tribal) {
-                typeLine.append(aType).append(" ");
-            }
-        });
+        MagicType.TYPE_ORDER.stream().filter(cardDef::hasType).forEach(aType -> typeLine.append(aType).append(' '));
         if (!subtype.isEmpty()) {
             typeLine.append("— ");
             typeLine.append(subtype.replaceAll(",", ""));
@@ -106,4 +96,28 @@ public class TypeLine {
             g2d.dispose();
         }
     }
+
+    public static void drawRarity(BufferedImage cardImage, IRenderableCard cardDef) {
+        BufferedImage rarity=ResourceManager.common;
+        if (cardDef.getRarityChar()=='U'){
+            rarity=ResourceManager.uncommon;
+        }
+        if (cardDef.getRarityChar()=='R'){
+            rarity=ResourceManager.rare;
+        }
+        if (cardDef.getRarityChar()=='M'){
+            rarity=ResourceManager.mythic;
+        }
+        Graphics2D g2d = cardImage.createGraphics();
+        int ypos = 297;
+        if (cardDef.isPlaneswalker() && OracleText.getPlaneswalkerAbilityCount(cardDef)>3){
+            ypos = 263;
+        }
+        if (cardDef.isToken()){
+            ypos = cardDef.hasText() ? 356 : 431;
+        }
+        int xpos = 322;
+        g2d.drawImage(rarity,xpos,ypos,null);
+    }
+
 }

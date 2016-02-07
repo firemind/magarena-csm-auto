@@ -8,7 +8,7 @@ import java.util.List;
 import magic.model.MagicMessage;
 
 public class MagicMegamorphActivation extends MagicMorphActivation {
-    
+
     public MagicMegamorphActivation(final List<MagicMatchedCostEvent> aMatchedCostEvents) {
         super(aMatchedCostEvents, "Megamorph");
     }
@@ -19,10 +19,7 @@ public class MagicMegamorphActivation extends MagicMorphActivation {
         game.doAction(new ChangeCountersAction(event.getPermanent(), MagicCounterType.PlusOne, 1));
         game.logAppendMessage(
             event.getPlayer(),
-            String.format("%s turns %s face up and puts a +1/+1 counter on it.",
-                event.getPlayer(),
-                MagicMessage.getCardToken(event.getPermanent())
-            )
+            MagicMessage.format("%s turns %s face up and puts a +1/+1 counter on it.", event.getPlayer(), event.getPermanent())
         );
     }
 }

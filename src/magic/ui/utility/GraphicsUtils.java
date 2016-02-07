@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
@@ -29,8 +28,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import magic.data.GeneralConfig;
-import magic.ui.CardImagesProvider;
 import magic.ui.ScreenController;
 import magic.ui.image.filter.GrayScaleImageFilter;
 import magic.ui.image.filter.WhiteColorSwapImageFilter;
@@ -60,7 +57,7 @@ final public class GraphicsUtils {
                 targetWidth,
                 targetHeight,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR,
-                true
+                targetWidth < img.getWidth()
             );
         }
     }
@@ -210,7 +207,7 @@ final public class GraphicsUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-                
+
         return (image != null) ?
             GraphicsUtils.getOptimizedImage(image) :
             MagicStyle.getTheme().getTexture(Theme.TEXTURE_BACKGROUND);
@@ -234,16 +231,8 @@ final public class GraphicsUtils {
         component.setBorder(BorderFactory.createDashedBorder(debugBorderPaint));
     }
 
-    public static Dimension getMaxCardImageSize() {
-        if (GeneralConfig.getInstance().isHighQuality()) {
-            return CardImagesProvider.HIGH_QUALITY_IMAGE_SIZE;
-        } else {
-            return CardImagesProvider.SMALL_SCREEN_IMAGE_SIZE;
-        }
-    }
-
     public static BufferedImage getConvertedIcon(final ImageIcon icon) {
-        final BufferedImage bi = 
+        final BufferedImage bi =
                 GraphicsUtils.getCompatibleBufferedImage(
                         icon.getIconWidth(), icon.getIconHeight(), Transparency.TRANSLUCENT);
         final Graphics g = bi.createGraphics();
@@ -284,6 +273,17 @@ final public class GraphicsUtils {
                 new WhiteColorSwapImageFilter(newColor)
         );
         return new ImageIcon(Toolkit.getDefaultToolkit().createImage(fis));
+    }
+
+    /**
+     * Given a WHITE image, converts to given color.
+     */
+    public static Image getColoredImage(final Image aImage, final Color newColor) {
+        final FilteredImageSource fis = new FilteredImageSource(
+                aImage.getSource(),
+                new WhiteColorSwapImageFilter(newColor)
+        );
+        return Toolkit.getDefaultToolkit().createImage(fis);
     }
 
     public static Image getGreyScaleImage(final Image colorImage) {

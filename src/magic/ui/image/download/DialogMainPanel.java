@@ -22,29 +22,33 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 class DialogMainPanel extends JPanel implements PropertyChangeListener {
 
-    static final String CP_CLOSE = "b0fbb0a7";
-    static final String CP_RUN_BACKGROUND = "a88997e6";
+    static final String CP_CLOSE = "9dbf20f7-f239-4cdf-95e6-85cfe1969ea7";
+    static final String CP_RUN_BACKGROUND = "56a6f389-6238-48ba-a3d3-bc9538d1d4c7";
 
     // translatable strings
     private static final String _S1 = "Closes screen but continues to download images in the background.";
     private static final String _S2 = "Wiki help page";
     private static final String _S3 = "Run in background...";
     private static final String _S4 = "Opens a page containing more information on this screen in your internet browser.";
-
+    private static final String _S6 = "Downloads card images that are missing or out-of-date in the 'cards' and 'tokens' folders.";
+    private static final String _S7 = "Downloads cropped images that are missing or out-of-date in the 'crops' folder. <b>Not 100% coverage</b>, currently there is not a downloadable cropped image for every card.";
+    private static final String _S8 = "Magarena will display the first image it finds using the folder order:- 'custom', 'crops', 'cards' or 'tokens'. If a cropped image is found or the image is missing then a proxy card image will be generated.";
 
     private final JButton backgroundButton;
     private final OptionsPanel optionsPanel;
     private final List<DownloadPanel> downloadPanels = new ArrayList<>();
     private final ErrorPanel errorPanel = new ErrorPanel();
     private final ButtonsPanel buttonsPanel;
-    private final HintPanel hintPanel = new HintPanel();
+    private final HintPanel hintPanel;
 
     DialogMainPanel() {
+
+        hintPanel = new HintPanel(getDefaultHint());
 
         optionsPanel = new OptionsPanel();
         optionsPanel.addHintSources(hintPanel);
         optionsPanel.setEnabled(false);
-        optionsPanel.addPropertyChangeListener(OptionsPanel.CP_OPTIONS_CHANGED, 
+        optionsPanel.addPropertyChangeListener(OptionsPanel.CP_OPTIONS_CHANGED,
             (e) -> { refreshDownloadList(); }
         );
 
@@ -61,9 +65,18 @@ class DialogMainPanel extends JPanel implements PropertyChangeListener {
         setDownloadPanels();
         setLookAndFeel();
         refreshLayout();
-        
+
     }
-    
+
+    private String getDefaultHint() {
+        return String.format(
+            "<b>%s</b><br>%s<br><br><b>%s</b><br>%s<br><br>%s",
+            DownloadMode.CARDS.toString(), UiString.get(_S6),
+            DownloadMode.CROPS.toString(), UiString.get(_S7),
+            UiString.get(_S8)
+        );
+    }
+
     private void doRunInBackground() {
         firePropertyChange(CP_RUN_BACKGROUND, true, false);
     }

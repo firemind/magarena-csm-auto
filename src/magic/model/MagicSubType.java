@@ -1,18 +1,17 @@
 package magic.model;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
-import java.util.EnumSet;
 
 public enum MagicSubType {
     //basic land subtypes
-    Forest,
-    Island,
-    Mountain,
     Plains,
+    Island,
     Swamp,
+    Mountain,
+    Forest,
 
     //other land subtypes
     Desert,
@@ -45,7 +44,7 @@ public enum MagicSubType {
 
     //planeswalker subtypes
     Ajani, Ashiok, Bolas, Chandra, Dack, Daretti, Domri, Elspeth, Freyalise, Garruk, Gideon, Jace, Karn, Kiora, Koth, Liliana,
-    Nahiri, Nissa, Nixilis, Ral, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Vraska, Xenagos,
+    Nahiri, Narset, Nissa, Nixilis, Ral, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Ugin, Vraska, Xenagos,
 
     //special handling for Assembly_Worker
     Assembly_Worker() {
@@ -90,9 +89,9 @@ public enum MagicSubType {
 
     ;
 
-    public static final Set<MagicSubType> ALL_BASIC_LANDS = EnumSet.range(Forest, Swamp);
+    public static final Set<MagicSubType> ALL_BASIC_LANDS = EnumSet.range(Plains, Forest);
 
-    public static final Set<MagicSubType> ALL_LANDS = EnumSet.range(Forest, Gate);
+    public static final Set<MagicSubType> ALL_LANDS = EnumSet.range(Plains, Gate);
 
     public static final Set<MagicSubType> ALL_ARTIFACTS = EnumSet.range(Contraption, Fortification);
 

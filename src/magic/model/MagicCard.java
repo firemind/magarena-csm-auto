@@ -1,16 +1,12 @@
 package magic.model;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import magic.data.MagicIcon;
 import magic.exception.GameException;
 import magic.model.event.MagicActivation;
 import magic.model.event.MagicEvent;
@@ -83,7 +79,6 @@ public class MagicCard
     private final MagicCardDefinition cardDefinition;
     private final MagicPlayer owner;
     private final long id;
-    private final int imageIndex;
     private final Map<MagicCounterType, Integer> counters;
     private final boolean token;
     private boolean aiKnown = true;
@@ -107,7 +102,6 @@ public class MagicCard
         counters = new EnumMap<MagicCounterType, Integer>(MagicCounterType.class);
         owner = aOwner;
         id = aId;
-        imageIndex = (int)Math.abs(id % 1000);
         token = aToken;
     }
 
@@ -118,7 +112,6 @@ public class MagicCard
         counters = new EnumMap<MagicCounterType,Integer>(sourceCard.counters);
         owner = copyMap.copy(sourceCard.owner);
         id = sourceCard.id;
-        imageIndex = sourceCard.imageIndex;
         token = sourceCard.token;
         aiKnown = sourceCard.aiKnown;
         gameKnown = sourceCard.gameKnown;
@@ -159,10 +152,6 @@ public class MagicCard
         return (getCardDefinition().getIndex() * 10L + (aiKnown ? 1 : 0) + (gameKnown ? 2 : 0) + (token ? 4 : 0)) ^ counters.hashCode();
     }
 
-    public int getImageIndex() {
-        return imageIndex;
-    }
-
     public MagicCardDefinition getCardDefinition() {
         return isKnown() ? cardDefinition : MagicCardDefinition.UNKNOWN;
     }
@@ -181,6 +170,14 @@ public class MagicCard
 
     public boolean isFlipCard() {
         return getCardDefinition().isFlipCard();
+    }
+
+    public boolean isSplitCard() {
+        return getCardDefinition().isSplitCard();
+    }
+
+    public boolean isNameless() {
+        return getName().isEmpty();
     }
 
     public int getPower() {
@@ -210,8 +207,8 @@ public class MagicCard
         return getCost().getConvertedCost();
     }
 
-    public MagicManaCost getCost() {
-        return getCardDefinition().getCost();
+    public MagicManaCost getGameCost() {
+        return getGame().modCost(this, getCost());
     }
 
     public Iterable<MagicEvent> getCostEvent() {
@@ -492,31 +489,9 @@ public class MagicCard
     }
 
     @Override
-    public String getText() {
-        //Returns oracle text, no in-game changes
-        return getCardDefinition().getText();
-    }
-
-    @Override
     public Collection<MagicManaActivation> getManaActivations() {
         // Returning from CardDefinition - Cards technically don't, also no in-game changes
         return getCardDefinition().getManaActivations();
-    }
-
-    @Override
-    public int getNumColors() {
-        int numColors = 0;
-        for (final MagicColor color : MagicColor.values()) {
-            if (hasColor(color)) {
-                numColors++;
-            }
-        }
-        return numColors;
-    }
-
-    @Override
-    public String getImageName() {
-        return getCardDefinition().getImageName();
     }
 
     @Override
@@ -527,70 +502,4 @@ public class MagicCard
             return "";
         }
     }
-
-    @Override
-    public String getSubTypeText() {
-        // Returning from CardDefinition, no in-game changes
-        return getCardDefinition().getSubTypeText();
-    }
-
-    @Override
-    public Set<MagicType> getTypes() {
-        Set<MagicType> types = new HashSet<MagicType>();
-        for (MagicType type : MagicType.values()) {
-            if (hasType(type)) {
-                types.add(type);
-            }
-        }
-        return types;
-    }
-
-    @Override
-    public boolean isHybrid() {
-        final List<MagicIcon> list = getCost().getIcons();
-        //If doesn't contain single color mana, and does contain hybrid mana. Checks for absence
-        if (Collections.disjoint(list, MagicIcon.COLOR_MANA)==true && Collections.disjoint(list, MagicIcon.HYBRID_COLOR_MANA)==false) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    @Override
-    public boolean isMulti() {
-        return getNumColors() > 1;
-    }
-
-    @Override
-    public boolean hasText() {
-        return cardDefinition.hasText();
-    }
-
-    @Override
-    public int getStartingLoyalty() {
-        return getCardDefinition().getStartingLoyalty();
-    }
-
-    @Override
-    public boolean isCreature() {return hasType(MagicType.Creature);}
-
-    @Override
-    public boolean isArtifact() {return hasType(MagicType.Artifact);}
-
-    @Override
-    public boolean isLand() {return hasType(MagicType.Land);}
-
-    @Override
-    public boolean isEnchantment() {return hasType(MagicType.Enchantment);}
-
-    @Override
-    public boolean isInstant() {return hasType(MagicType.Instant);}
-
-    @Override
-    public boolean isSorcery() {return hasType(MagicType.Sorcery);}
-
-    @Override
-    public boolean isHidden() {return cardDefinition.isHidden();}
-
 }

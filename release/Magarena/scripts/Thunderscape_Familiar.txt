@@ -1,0 +1,12 @@
+name=Thunderscape Familiar
+image=http://magiccards.info/scans/en/ps/76.jpg
+value=4.300
+rarity=C
+type=Creature
+subtype=Kavu
+cost={1}{R}
+pt=1/1
+ability=First strike
+requires_groovy_code
+timing=main
+oracle=First strike\nBlack spells and green spells you cast cost {1} less to cast.

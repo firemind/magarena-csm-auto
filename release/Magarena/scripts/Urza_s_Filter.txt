@@ -1,0 +1,9 @@
+name=Urza's Filter
+image=http://magiccards.info/scans/en/in/318.jpg
+value=3.632
+rarity=R
+type=Artifact
+cost={4}
+requires_groovy_code
+timing=artifact
+oracle=Multicolored spells cost up to {2} less to cast.

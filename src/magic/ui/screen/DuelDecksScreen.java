@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import javax.swing.AbstractAction;
@@ -13,6 +14,7 @@ import magic.data.DuelConfig;
 import magic.data.MagicIcon;
 import magic.exception.InvalidDeckException;
 import magic.model.DuelPlayerConfig;
+import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.model.MagicDeckProfile;
@@ -24,6 +26,7 @@ import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.ui.ScreenOptionsOverlay;
 import magic.translate.UiString;
+import magic.ui.cardBuilder.renderers.CardBuilder;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.interfaces.IStatusBar;
@@ -56,7 +59,9 @@ public class DuelDecksScreen
     private static final String _S12 = "Deck View";
     private static final String _S13 = "Shows complete deck using tiled card images.";
     private static final String _S14 = "%s's deck is illegal.\n\n%s";
-
+    private static final String _S15 = "Generate another deck";
+    private static final String _S16 = "Based on the duel settings, randomly selects an existing prebuilt deck or<br>generates a random deck for the selected player.";
+    
     private final DuelDecksPanel screenContent;
     private MagicGame nextGame = null;
     private final StartGameButton nextGameButton;
@@ -70,9 +75,11 @@ public class DuelDecksScreen
         if (duel.getGamesPlayed() > 0 && MagicSystem.isAiVersusAi() == false) {
             saveDuel();
         }
-        
+
+        MagicImages.clearCache();
+
         setContent(screenContent);
-        
+
         if (MagicSystem.isAiVersusAi() == false) {
             doGameSetupInBackground(duel);
             screenContent.addPropertyChangeListener(
@@ -174,9 +181,21 @@ public class DuelDecksScreen
                             ScreenController.showWarningMessage(ex.getMessage());
                         }
                     }
+                }, false)
+            );
+            buttons.add(new ActionBarButton(
+                MagicImages.getIcon(MagicIcon.REFRESH2_ICON),
+                UiString.get(_S15),
+                UiString.get(_S16),
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        screenContent.generateDeck();
+                    }
                 })
             );
             buttons.add(SampleHandActionButton.createInstance(getActiveDeck()));
+
         } else {
             if (screenContent.getDuel().isFinished()) {
                 final MagicDuel duel = screenContent.getDuel();
@@ -311,8 +330,29 @@ public class DuelDecksScreen
             this.duel = aDuel;
         }
 
+        private Optional<MagicCardDefinition> findFirstProxyCard(MagicDeck aDeck) {
+            return aDeck.stream()
+                .filter(card -> MagicImages.isProxyImage(card.getCardDefinition()))
+                .findFirst();
+        }
+
+        private Optional<MagicCardDefinition> findFirstProxyCardInDecks() {
+            Optional<MagicCardDefinition> proxy = findFirstProxyCard(duel.getPlayer(0).getDeck());
+            return proxy.isPresent() ? proxy : findFirstProxyCard(duel.getPlayer(1).getDeck());
+        }
+
+        private void loadCardBuilderIfRequired() {
+            if (!CardBuilder.IS_LOADED) {
+                Optional<MagicCardDefinition> proxy = findFirstProxyCardInDecks();
+                if (proxy.isPresent()) {
+                    CardBuilder.getCardBuilderImage(proxy.get());
+                }
+            }
+        }
+
         @Override
         protected MagicGame doInBackground() throws Exception {
+            loadCardBuilderIfRequired();
             return duel.nextGame();
         }
 

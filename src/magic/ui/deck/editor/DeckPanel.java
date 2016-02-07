@@ -16,7 +16,6 @@ import magic.model.MagicDeck;
 import magic.ui.MagicSound;
 import magic.ui.ScreenController;
 import magic.translate.UiString;
-import magic.ui.cardtable.CardTablePanel;
 import magic.ui.cardtable.DeckTablePanel;
 import magic.ui.screen.widget.ActionBarButton;
 import net.miginfocom.swing.MigLayout;
@@ -34,12 +33,12 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     private static final String _S7 = "No";
 
     // fired when card selection changes
-    public static final String CP_CARD_SELECTED = CardTablePanel.CP_CARD_SELECTED;
+    public static final String CP_CARD_SELECTED = "99aa7f10-b4ca-4917-9f1f-fa8de1f7ee80";
     // fired on add card to deck action.
-    public static final String CP_ADD_TO_DECK = "addCardToDeck";
+    public static final String CP_ADD_TO_DECK = "8f5d8209-b274-4384-b7da-0c239bf7d92b";
     // fired on remove card from deck action.
-    public static final String CP_REMOVE_FROM_DECK = "removeCardFromDeck";
-   
+    public static final String CP_REMOVE_FROM_DECK = "33e31608-cf6b-45a2-9fde-bafaaf66f2d2";
+
     // UI components
     private final CardQuantityActionPanel quantityPanel;
     private final DeckTablePanel deckTablePanel;
@@ -50,7 +49,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     private final List<ActionBarButton> actionButtons = new ArrayList<>();
 
     DeckPanel(final MagicDeck originalDeck, final IDeckEditorListener aListener, final CardQuantityActionPanel aPanel) {
-        
+
         this.quantityPanel = aPanel;
         this.listener = aListener;
         this.originalDeck = originalDeck;
@@ -82,7 +81,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
         }
         return deckCopy;
     }
-   
+
     private ActionBarButton getClearDeckActionButton() {
         return new ActionBarButton(
                 MagicImages.getIcon(MagicIcon.CLEAR_ICON),
@@ -98,7 +97,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
 
     private void setDeckTablePropChangeListeners() {
         deckTablePanel.addPropertyChangeListener(
-                CardTablePanel.CP_CARD_SELECTED,
+                DeckTablePanel.CP_CARD_SELECTED,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -106,7 +105,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
                     }
                 });
         deckTablePanel.addPropertyChangeListener(
-                CardTablePanel.CP_CARD_LCLICKED,
+                DeckTablePanel.CP_CARD_LCLICKED,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -114,7 +113,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
                     }
                 });
         deckTablePanel.addPropertyChangeListener(
-                CardTablePanel.CP_CARD_RCLICKED,
+                DeckTablePanel.CP_CARD_RCLICKED,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -165,8 +164,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
             deck = getDeckCopy(newDeck);
         }
         deckTablePanel.setTitle(getDeckTitle(deck));
-        deckTablePanel.setCards(deck);
-        deckTablePanel.selectFirstRow();
+        deckTablePanel.setDeck(deck);
         listener.deckUpdated(getDeck());
     }
 
@@ -224,7 +222,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     }
 
     void updateOriginalDeck() {
-        originalDeck.setContent(deck);        
+        originalDeck.setContent(deck);
     }
 
     boolean isUpdatingExistingDeck() {
@@ -250,7 +248,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
 
     @Override
     public void doMinusButtonAction() {
-        removeSelectedCardFromDeck(false);        
+        removeSelectedCardFromDeck(false);
     }
 
     @Override

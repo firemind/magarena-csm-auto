@@ -1,0 +1,9 @@
+name=Helm of Awakening
+image=http://magiccards.info/scans/en/vi/145.jpg
+value=4.411
+rarity=U
+type=Artifact
+cost={2}
+requires_groovy_code
+timing=artifact
+oracle=Spells cost {1} less to cast.

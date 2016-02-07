@@ -32,7 +32,6 @@ import magic.ai.MagicAI;
 import magic.data.DuelConfig;
 import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
-import magic.data.SoundEffects;
 import magic.exception.InvalidDeckException;
 import magic.exception.UndoClickedException;
 import magic.game.state.GameState;
@@ -61,6 +60,7 @@ import magic.ui.IChoiceViewer;
 import magic.ui.IPlayerZoneListener;
 import magic.ui.MagicImages;
 import magic.ui.MagicFileChoosers;
+import magic.ui.MagicSound;
 import magic.ui.ScreenController;
 import magic.ui.card.AnnotatedCardPanel;
 import magic.ui.duel.animation.DrawCardAnimation;
@@ -114,7 +114,7 @@ public class SwingGameController implements IUIGameController {
     private PlayerZoneViewer playerZoneViewer;
     private final List<IPlayerZoneListener> playerZoneListeners = new ArrayList<>();
     private MagicAnimation animation = null;
-    
+
     private static boolean isControlKeyDown = false;
     private static final KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
         @Override
@@ -127,7 +127,7 @@ public class SwingGameController implements IUIGameController {
     public SwingGameController(final DuelLayeredPane aDuelPane, final MagicGame aGame) {
         this.duelPane = aDuelPane;
         this.game = aGame;
-        gameViewerInfo = new GameViewerInfo(game);        
+        gameViewerInfo = new GameViewerInfo(game);
         gamePanel = duelPane.getDuelPanel();
         duelPane.getDuelPanel().setController(this);
         duelPane.getCardViewer().setController(this);
@@ -222,7 +222,7 @@ public class SwingGameController implements IUIGameController {
             throw new UndoClickedException();
         }
     }
-    
+
     private <E extends JComponent> E waitForInput(final Callable<E> func) throws UndoClickedException {
         final AtomicReference<E> ref = new AtomicReference<>();
         final AtomicReference<Exception> except = new AtomicReference<>();
@@ -249,7 +249,7 @@ public class SwingGameController implements IUIGameController {
     private void resume(final boolean undoClicked) {
         input.offer(undoClicked);
     }
-    
+
     public void switchKeyPressed() {
         playerZoneViewer.switchPlayerZone();
     }
@@ -356,7 +356,7 @@ public class SwingGameController implements IUIGameController {
         final int x = containerZone.x + (int)((containerZone.getWidth() / 2) - (cardPopup.getWidth() / 2));
         final int y = containerZone.y + (int)((containerZone.getHeight() / 2) - (cardPopup.getHeight() / 2));
         cardPopup.setLocation(x,y);
-        
+
         cardPopup.showDelayed(popupDelay);
     }
 
@@ -369,7 +369,6 @@ public class SwingGameController implements IUIGameController {
      */
     public void viewCardPopup(
         final MagicObject cardObject,
-        final int index,
         final Rectangle cardRect,
         final boolean popupAboveBelowOnly,
         final int popupDelay) {
@@ -385,7 +384,7 @@ public class SwingGameController implements IUIGameController {
         if (isControlKeyDown && cardPopup.isVisible()) {
             return;
         }
-        
+
         final boolean isAutoPopup = !CONFIG.isMouseWheelPopup();
         final int VERTICAL_INSET = 4; // pixels
         final int PAD2 = 0;
@@ -455,8 +454,8 @@ public class SwingGameController implements IUIGameController {
         cardPopup.showDelayed(popupDelay);
     }
 
-    public void viewCardPopup(final MagicObject cardObject, final int index, final Rectangle cardRect, final boolean popupAboveBelowOnly) {
-        viewCardPopup(cardObject, index, cardRect, popupAboveBelowOnly, getPopupDelay());
+    public void viewCardPopup(final MagicObject cardObject, final Rectangle cardRect, final boolean popupAboveBelowOnly) {
+        viewCardPopup(cardObject, cardRect, popupAboveBelowOnly, getPopupDelay());
     }
 
     public boolean isPopupVisible() {
@@ -466,11 +465,10 @@ public class SwingGameController implements IUIGameController {
     /**
      *
      * @param cardObject
-     * @param index
      * @param cardRect : screen position & size of selected card on battlefield.
      */
-    public void viewCardPopup(final MagicObject cardObject, final int index, final Rectangle cardRect) {
-        viewCardPopup(cardObject, index, cardRect, false);
+    public void viewCardPopup(final MagicObject cardObject, final Rectangle cardRect) {
+        viewCardPopup(cardObject, cardRect, false);
     }
 
     public void viewInfoRight(final MagicCardDefinition cardDefinition,final int index,final Rectangle rect) {
@@ -568,7 +566,7 @@ public class SwingGameController implements IUIGameController {
         });
         showMessage(MagicSource.NONE, "");
     }
-    
+
     private void clearDisplayedValidChoices() {
         assert SwingUtilities.isEventDispatchThread();
         if (!validChoices.isEmpty()) {
@@ -648,11 +646,11 @@ public class SwingGameController implements IUIGameController {
         gameViewerInfo = new GameViewerInfo(game);
 
         doPlayAnimationAndWait(oldGameInfo, gameViewerInfo);
-       
+
         SwingUtilities.invokeLater(() -> {
             gamePanel.update(gameViewerInfo);
         });
-        
+
         waitForUIUpdates();
     }
 
@@ -837,7 +835,7 @@ public class SwingGameController implements IUIGameController {
             });
         }
         showMessage(MagicSource.NONE,
-                String.format("{L} %s", 
+                String.format("{L} %s",
                         UiString.get(_S3,
                                 game.getLosingPlayer(),
                                 gameConceded.get() ? UiString.get(_S1) : UiString.get(_S2))));
@@ -845,15 +843,15 @@ public class SwingGameController implements IUIGameController {
 
     private void playEndGameSoundEffect() {
         if (game.getLosingPlayer().getIndex() == 0) {
-            SoundEffects.playGameSound(game, SoundEffects.LOSE_SOUND);
+            game.playSound(MagicSound.LOSE);
         } else {
-            SoundEffects.playGameSound(game, SoundEffects.WIN_SOUND);
+            game.playSound(MagicSound.WIN);
         }
     }
 
     public void showChoiceCardPopup() {
         final MagicCardDefinition cardDefinition = getSourceCardDefinition();
-        if (cardDefinition != MagicCardDefinition.UNKNOWN && !GeneralConfig.getInstance().getTextView()) {
+        if (cardDefinition != MagicCardDefinition.UNKNOWN) {
             final Point point = userActionPanel.getLocationOnScreen();
             viewInfoRight(cardDefinition, 0, new Rectangle(point.x, point.y-20, userActionPanel.getWidth(), userActionPanel.getHeight()));
         }
@@ -902,7 +900,7 @@ public class SwingGameController implements IUIGameController {
         final boolean isHumanTurn = game.getTurnPlayer().isHuman();
         final boolean isHumanPriority = game.getPriorityPlayer().isHuman();
         final boolean isStackEmpty = game.getStack().isEmpty();
-        final boolean isFirstMain = game.isPhase(MagicPhaseType.FirstMain); 
+        final boolean isFirstMain = game.isPhase(MagicPhaseType.FirstMain);
         return isHumanTurn && isHumanPriority && isFirstMain && isStackEmpty;
     }
 

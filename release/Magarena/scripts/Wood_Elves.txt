@@ -1,11 +1,12 @@
 name=Wood Elves
-image=http://magiccards.info/scans/en/c14/226.jpg
+image=http://magiccards.info/scans/en/c15/212.jpg
+image_updated=2016-01-19
 value=4.137
 rarity=C
 type=Creature
 subtype=Elf,Scout
 cost={2}{G}
 pt=1/1
-ability=When SN enters the battlefield, search your library for a Forest card and put it onto the battlefield. Then shuffle your library.
+ability=When SN enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.
 timing=main
 oracle=When Wood Elves enters the battlefield, search your library for a Forest card and put that card onto the battlefield. Then shuffle your library.

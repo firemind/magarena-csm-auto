@@ -8,7 +8,7 @@ import magic.model.condition.MagicCondition;
 public class MagicPlayAbilityEvent extends MagicEvent {
 
     private final MagicCondition cond;
-    
+
     public MagicPlayAbilityEvent(final MagicPermanent source) {
         this(source, MagicCondition.ABILITY_ONCE_CONDITION);
     }
@@ -21,12 +21,9 @@ public class MagicPlayAbilityEvent extends MagicEvent {
         );
         cond = condition;
     }
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new PlayAbilityAction(event.getPermanent()));
-        }
-    };
+
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) ->
+        game.doAction(new PlayAbilityAction(event.getPermanent()));
 
     @Override
     public boolean isSatisfied() {

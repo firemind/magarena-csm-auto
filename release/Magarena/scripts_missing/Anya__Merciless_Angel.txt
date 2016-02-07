@@ -1,5 +1,6 @@
 name=Anya, Merciless Angel
 image=http://magiccards.info/scans/en/c15/41.jpg
+image_updated=2016-01-19
 value=2.500
 rarity=M
 type=Legendary,Creature
@@ -7,7 +8,7 @@ subtype=Angel
 cost={3}{R}{W}
 pt=4/4
 ability=Flying;\
-        SN gets +3/+3 for each opponent whose life total is less than half his or her starting life total.:\
+        SN gets +3/+3 for each opponent whose life total is less than half his or her starting life total.;\
         As long as an opponent's life total is less than half his or her starting life total, SN has indestructible.
 timing=main
 oracle=Flying\nAnya, Merciless Angel gets +3/+3 for each opponent whose life total is less than half his or her starting life total.\nAs long as an opponent's life total is less than half his or her starting life total, Anya has indestructible.

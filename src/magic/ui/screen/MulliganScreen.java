@@ -1,7 +1,6 @@
 package magic.ui.screen;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import magic.data.MagicIcon;
 import magic.model.MagicCardList;
 import magic.model.MagicGame;
 import magic.model.MagicPlayer;
-import magic.ui.CardImagesProvider;
 import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.translate.UiString;
@@ -43,8 +41,6 @@ public class MulliganScreen
     private static final String _S6 = "You play %s";
     private static final String _S7 = "first.";
     private static final String _S8 = "second.";
-
-    private final static Dimension cardSize = CardImagesProvider.HIGH_QUALITY_IMAGE_SIZE;
 
     private volatile static boolean isActive = false;
 
@@ -86,7 +82,7 @@ public class MulliganScreen
     }
 
     private JPanel getScreenContent(final MagicCardList hand) {
-        cardsCanvas = new CardsCanvas(cardSize);
+        cardsCanvas = new CardsCanvas();
         cardsCanvas.setAnimationEnabled(true);
         cardsCanvas.setAnimationDelay(50, 20);
         cardsCanvas.setLayoutMode(LayoutMode.SCALE_TO_FIT);
@@ -104,7 +100,7 @@ public class MulliganScreen
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                cardsCanvas.refresh(hand, cardSize);
+                cardsCanvas.refresh(hand);
             }
         });
     }

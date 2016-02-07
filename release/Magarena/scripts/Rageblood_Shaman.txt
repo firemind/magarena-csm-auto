@@ -6,9 +6,8 @@ type=Creature
 subtype=Minotaur,Shaman
 cost={1}{R}{R}
 pt=2/3
-ability=trample;\
-        other minotaur creatures you control get +1/+1;\
-        other minotaur creatures you control have trample
+ability=Trample;\
+        Other Minotaur creatures you control get +1/+1 and have trample.
 static=player
 timing=main
 oracle=Trample\nOther Minotaur creatures you control get +1/+1 and have trample.

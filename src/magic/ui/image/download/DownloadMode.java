@@ -4,13 +4,13 @@ import magic.translate.UiString;
 
 enum DownloadMode {
 
-    MISSING(UiString.get(EnumStrings._S1)),
-    ALL(UiString.get(EnumStrings._S2));
+    CARDS(EnumStrings._S1),
+    CROPS(EnumStrings._S2);
 
     private final String desc;
 
     private DownloadMode(String aDesc) {
-        this.desc = aDesc;
+        this.desc = UiString.get(aDesc);
     }
 
     @Override

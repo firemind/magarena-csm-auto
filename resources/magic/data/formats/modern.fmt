@@ -48,6 +48,7 @@ FRF
 DTK
 ORI
 BFZ
+OGW
 
 # banned: prefix with !
 !Ancestral Vision
@@ -77,6 +78,8 @@ BFZ
 !Sensei's Divining Top
 !Stoneforge Mystic
 !Skullclamp
+!Splinter Twin
+!Summer Bloom
 !Sword of the Meek
 !Treasure Cruise
 !Tree of Tales

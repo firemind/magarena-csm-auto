@@ -1,5 +1,7 @@
 package magic.model.event;
 
+import java.util.Arrays;
+
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCounterType;
@@ -8,16 +10,10 @@ import magic.model.MagicLocationType;
 import magic.model.MagicManaCost;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPermanent;
-import magic.model.MagicSource;
 import magic.model.action.ChangeCountersAction;
-import magic.model.action.MagicPermanentAction;
-import magic.model.choice.MagicChoice;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.condition.MagicCondition;
-import magic.model.stack.MagicAbilityOnStack;
 import magic.model.target.MagicPumpTargetPicker;
-
-import java.util.Arrays;
 
 public class MagicScavengeActivation extends MagicCardAbilityActivation {
 
@@ -35,7 +31,7 @@ public class MagicScavengeActivation extends MagicCardAbilityActivation {
         cost = aCost;
         power = aCdef.getCardPower();
     }
-            
+
     @Override
     public void change(final MagicCardDefinition cdef) {
         cdef.addGraveyardAct(this);
@@ -60,17 +56,15 @@ public class MagicScavengeActivation extends MagicCardAbilityActivation {
             "Put RN +1/+1 counters on target creature$."
         );
     }
-    
+
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
-        event.processTargetPermanent(game, new MagicPermanentAction() {
-            public void doAction(final MagicPermanent perm) {
-                game.doAction(new ChangeCountersAction(
-                    perm,
-                    MagicCounterType.PlusOne,
-                    event.getRefInt()
-                ));
-            }
-        });
+        event.processTargetPermanent(game, (final MagicPermanent perm) ->
+            game.doAction(new ChangeCountersAction(
+                perm,
+                MagicCounterType.PlusOne,
+                event.getRefInt()
+            ))
+        );
     }
 }
