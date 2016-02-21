@@ -1,0 +1,9 @@
+name=Distress
+image=http://magiccards.info/scans/en/m12/94.jpg
+value=3.788
+rarity=C
+type=Sorcery
+cost={B}{B}
+effect=Target player reveals his or her hand. You choose a nonland card from it. That player discards that card.
+timing=main
+oracle=Target player reveals his or her hand. You choose a nonland card from it. That player discards that card.
