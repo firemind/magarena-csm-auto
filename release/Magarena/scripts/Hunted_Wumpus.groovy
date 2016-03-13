@@ -1,7 +1,7 @@
 def choice = new MagicTargetChoice("a creature card from your hand");
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -11,7 +11,7 @@ def choice = new MagicTargetChoice("a creature card from your hand");
                 "PN may put a creature card from his or her hand onto the battlefield."
             );
         }
-        
+
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.addEvent(new MagicPutOntoBattlefieldEvent(

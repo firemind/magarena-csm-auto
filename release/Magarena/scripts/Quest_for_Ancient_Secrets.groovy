@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherPutIntoGraveyardTrigger() {
+    new OtherPutIntoGraveyardTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MoveCardAction act) {
             final MagicCard card = act.card;
@@ -19,7 +19,7 @@
             }
         }
     },
-    
+
     new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Removal),
         "Shuffle"
@@ -46,9 +46,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
                 final MagicCardList graveyard = new MagicCardList(it.getGraveyard());
-                for (final MagicCard card : graveyard) {
-                    game.doAction(new ShiftCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
-                }
+                game.doAction(new ShuffleCardsIntoLibraryAction(graveyard, MagicLocationType.Graveyard))
             });
         }
     }

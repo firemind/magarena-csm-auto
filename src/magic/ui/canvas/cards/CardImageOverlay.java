@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
-import magic.ui.CachedImagesProvider;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.utility.GraphicsUtils;
 import magic.ui.utility.MagicStyle;
@@ -56,14 +56,14 @@ public class CardImageOverlay extends TexturedPanel {
         setFocusTraversalKeysEnabled(false);
 
         setBackground(MagicStyle.getTranslucentColor(Color.DARK_GRAY, 200));
-      
+
         ScreenController.getMainFrame().setGlassPane(this);
         setVisible(true);
 
     }
 
     private void drawCardImage(final MagicCardDefinition aCard) {
-        final BufferedImage baseImage = CachedImagesProvider.getInstance().getImage(aCard, 0, true);
+        final BufferedImage baseImage = MagicImages.geCardImageUseCache(aCard);
         final int baseWidth = baseImage.getWidth();
         final int baseHeight = baseImage.getHeight();
         final double scale = Math.min(

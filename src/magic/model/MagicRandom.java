@@ -2,11 +2,11 @@ package magic.model;
 
 import java.util.Random;
 
+@SuppressWarnings("serial")
 public class MagicRandom extends Random {
 
     private long state;
     private static MagicRandom RNG = new MagicRandom();
-    private static final long serialVersionUID = 1L;
 
     static {
         final String seedStr = System.getProperty("rndSeed");
@@ -17,7 +17,7 @@ public class MagicRandom extends Random {
         }
         System.err.println("Using random seed " + RNG.getState());
     }
-    
+
     private MagicRandom() {
         this(System.nanoTime());
     }
@@ -41,7 +41,7 @@ public class MagicRandom extends Random {
         x &= ((1L << nbits) - 1);
         return (int) x;
     }
-    
+
     public long getState() {
         return state;
     }
@@ -49,11 +49,11 @@ public class MagicRandom extends Random {
     public static void setRNGState(final long state) {
         RNG.setState(state);
     }
-    
+
     public static int nextRNGInt(final int n) {
         return RNG.nextInt(n);
     }
-    
+
     public static int nextRNGInt() {
         return RNG.nextInt(Integer.MAX_VALUE);
     }

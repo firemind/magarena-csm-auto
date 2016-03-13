@@ -15,29 +15,29 @@ public class ScryComplAction extends MagicAction {
     public ScryComplAction(final MagicPlayer aPlayer, final MagicCard aCard, final boolean aDown) {
         player = aPlayer;
         card = aCard;
-        down = aDown; 
+        down = aDown;
     }
 
     @Override
     public void doAction(final MagicGame game) {
-       index = player.getLibrary().indexOf(card);
-       if (index < 0) {
-           throw new RuntimeException(card + " not in " + player + "'s library");
-       }
-       player.getLibrary().removeCard(card);
-       if (down) { 
-           player.getLibrary().addToBottom(card); 
-       } else { 
-           player.getLibrary().addToTop(card); 
-       }
+        index = player.getLibrary().indexOf(card);
+        if (index < 0) {
+            throw new RuntimeException(card + " not in " + player + "'s library");
+        }
+        player.getLibrary().removeCard(card);
+        if (down) {
+            player.getLibrary().addToBottom(card);
+        } else {
+            player.getLibrary().addToTop(card);
+        }
     }
 
     @Override
     public void undoAction(final MagicGame game) {
-        if (down) { 
-            player.getLibrary().removeCardAtBottom(); 
-        } else { 
-            player.getLibrary().removeCardAtTop(); 
+        if (down) {
+            player.getLibrary().removeCardAtBottom();
+        } else {
+            player.getLibrary().removeCardAtTop();
         }
         player.getLibrary().add(index, card);
     }

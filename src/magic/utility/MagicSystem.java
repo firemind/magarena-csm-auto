@@ -24,10 +24,18 @@ import magic.utility.MagicFileSystem.DataPath;
 final public class MagicSystem {
     private MagicSystem() {}
 
+    public static final String VERSION = "1.71";
+
+    public static final String SOFTWARE_TITLE;
+    private static final boolean DEV_MODE;
+    static {
+        DEV_MODE = Boolean.getBoolean("devMode") || Boolean.getBoolean("debug");
+        SOFTWARE_TITLE = "Magarena " + VERSION + (DEV_MODE ? " [DEV MODE]" : "");
+        System.setProperty("http.agent", SOFTWARE_TITLE);
+    }
+
     public static final boolean IS_WINDOWS_OS = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private static final ProgressReporter reporter = new ProgressReporter();
-
-    private static final boolean IS_DEV_MODE = Boolean.getBoolean("devMode") || Boolean.getBoolean("debug");
 
     // Load card definitions in the background so that it does not delay the
     // loading of the UI. Override done() to ensure exceptions not suppressed.
@@ -52,18 +60,22 @@ final public class MagicSystem {
         }
     };
 
+    public static void setIsTestGame(boolean b) {
+        System.setProperty("testGame", b ? "Y" : "");
+    }
+
     public static boolean isTestGame() {
-        return (System.getProperty("testGame") != null);
+        return (System.getProperty("testGame") != null && !System.getProperty("testGame").isEmpty());
     }
 
     public static boolean isDevMode() {
-        return IS_DEV_MODE;
+        return DEV_MODE;
     }
 
     public static boolean isDebugMode() {
         return Boolean.getBoolean("debug");
     }
-    
+
     /**
      * add "-DparseMissing=true" VM argument for parsing scripts_missing folder.
      */
@@ -122,7 +134,7 @@ final public class MagicSystem {
             }
         }
     }
-    
+
     private static void initializeEngine(final ProgressReporter reporter) {
         if (isParseMissing()) {
             UnimplementedParser.parseScriptsMissing(reporter);
@@ -139,7 +151,7 @@ final public class MagicSystem {
         // icons are not loaded before the AbilityIcon class is initialized
         // and you end up with the default icons instead.
         GeneralConfig.getInstance().load();
-        
+
         final File gamePathFile = MagicFileSystem.getDataPath().toFile();
         if (!gamePathFile.exists() && !gamePathFile.mkdir()) {
             System.err.println("Unable to create directory " + gamePathFile.toString());
@@ -155,7 +167,7 @@ final public class MagicSystem {
         // setup the game log
         reporter.setMessage("Initializing log...");
         MagicGameLog.initialize();
-       
+
         // start a separate thread to load cards
         final ExecutorService background = Executors.newSingleThreadExecutor();
         background.execute(loadCards);
@@ -171,7 +183,7 @@ final public class MagicSystem {
         if (isParseMissing() || isDebugMode()) {
             waitForAllCards();
         }
-        
+
         if (isDebugMode()) {
             reporter.setMessage("Loading card abilities...");
             CardDefinitions.loadCardAbilities();
@@ -185,7 +197,7 @@ final public class MagicSystem {
     }
 
     public static File getJarFile() throws URISyntaxException {
-        
+
         CodeSource codeSource = MagicSystem.class.getProtectionDomain().getCodeSource();
         File jarFile = new File(codeSource.getLocation().toURI());
 
@@ -210,7 +222,7 @@ final public class MagicSystem {
 
         final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
         command.add(javaBin);
-        
+
         // vm arguments
         final List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
         for (final String arg : vmArguments) {
@@ -226,8 +238,8 @@ final public class MagicSystem {
             command.add("-jar");
             command.add(jarFile.getPath());
         } else {
-             // Sun property pointing to the main class and its arguments.
-             // Might not be defined on non Hotspot VM implementations.
+            // Sun property pointing to the main class and its arguments.
+            // Might not be defined on non Hotspot VM implementations.
             command.add("-cp \"");
             command.add(System.getProperty("java.class.path"));
             command.add("\" ");
@@ -249,7 +261,7 @@ final public class MagicSystem {
         });
 
         System.exit(0);
-        
+
     }
 
     public static boolean isNewInstall() {

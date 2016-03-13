@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{2}{U}")
+                MagicPayManaCostEvent.Cast(source,"{2}{U}")
             ];
         }
         @Override
@@ -11,7 +11,7 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Each creature you don't control gets -4/-0 until end of turn."
+                "Each creature PN doesn't control gets -4/-0 until end of turn."
             );
         }
         @Override

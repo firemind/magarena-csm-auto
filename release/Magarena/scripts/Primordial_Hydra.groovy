@@ -1,12 +1,12 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 permanent.getCounters(MagicCounterType.PlusOne),
                 this,
-                "Put RN +1/+1 counters on SN."
+                "PN puts RN +1/+1 counters on SN."
             );
         }
         @Override

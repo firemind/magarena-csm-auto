@@ -15,7 +15,7 @@
             return [
                 new MagicPayManaCostEvent(
                     source,
-                    source.getCost().reduce(MagicCostManaType.Colorless, n)
+                    source.getCost().reduce(n)
                 )
             ];
         }
@@ -31,11 +31,11 @@
             return [
                 new MagicPayManaCostEvent(
                     source,
-                    MagicManaCost.create("{7}{G}{G}").reduce(MagicCostManaType.Colorless, n)
+                    MagicManaCost.create("{7}{G}{G}").reduce(n)
                 )
             ];
         }
-        
+
         @Override
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(

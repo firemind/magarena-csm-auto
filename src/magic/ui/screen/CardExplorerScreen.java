@@ -10,16 +10,16 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
-import magic.utility.MagicSystem;
+
 import magic.data.CardDefinitions;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
 import magic.data.MagicSetDefinitions;
-import magic.ui.explorer.ExplorerPanel;
-import magic.ui.MagicFrame;
-import magic.ui.ScreenOptionsOverlay;
 import magic.translate.UiString;
-import magic.ui.dialog.DownloadImagesDialog;
+import magic.ui.MagicFrame;
+import magic.ui.MagicImages;
+import magic.ui.MagicLogs;
+import magic.ui.ScreenOptionsOverlay;
+import magic.ui.explorer.ExplorerPanel;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IOptionsMenu;
 import magic.ui.screen.interfaces.IStatusBar;
@@ -29,6 +29,7 @@ import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.MenuPanel;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
+import magic.utility.MagicSystem;
 
 @SuppressWarnings("serial")
 public class CardExplorerScreen
@@ -66,9 +67,8 @@ public class CardExplorerScreen
     @Override
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
-        buttons.add(
-            new ActionBarButton(
-                IconImages.getIcon(MagicIcon.EDIT_ICON),
+        buttons.add(new ActionBarButton(
+                MagicImages.getIcon(MagicIcon.EDIT_ICON),
                 UiString.get(_S3), UiString.get(_S4),
                 new AbstractAction() {
                     @Override
@@ -79,15 +79,29 @@ public class CardExplorerScreen
             )
         );
         if (MagicSystem.isDevMode() || MagicSystem.isDebugMode()) {
-            buttons.add(
-                new ActionBarButton(
-                    IconImages.getIcon(MagicIcon.SAVE_ICON),
+            buttons.add(new ActionBarButton(
+                    MagicImages.getIcon(MagicIcon.SAVE_ICON),
                     "Save Missing Cards [DevMode Only]", "Creates CardsMissingInMagarena.txt which can be used by the Scripts Builder.",
                     new AbstractAction() {
                         @Override
                         public void actionPerformed(final ActionEvent e) {
                             try {
                                 saveMissingCardsList();
+                            } catch (IOException e1) {
+                                throw new RuntimeException(e1);
+                            }
+                        }
+                    }
+                )
+            );
+            buttons.add(new ActionBarButton(
+                    MagicImages.getIcon(MagicIcon.STATS_ICON),
+                    "Save Statistics [DevMode Only]", "Creates CardStatistics.txt to view current card completion.",
+                    new AbstractAction() {
+                        @Override
+                        public void actionPerformed(final ActionEvent e) {
+                            try {
+                                saveCardStatistics();
                             } catch (IOException e1) {
                                 throw new RuntimeException(e1);
                             }
@@ -104,17 +118,34 @@ public class CardExplorerScreen
         Collections.sort(missingCards);
         final Path savePath = MagicFileSystem.getDataPath(DataPath.LOGS).resolve("CardsMissingInMagarena.txt");
         try (final PrintWriter writer = new PrintWriter(savePath.toFile())) {
-            for (final String cardName : missingCards) {
-                writer.println(cardName);
-            }
+            missingCards.forEach(writer::println);
         }
         Desktop.getDesktop().open(MagicFileSystem.getDataPath(DataPath.LOGS).toFile());
+    }
+
+    private void saveCardStatistics() throws IOException {
+        ArrayList<String> allSetInfo = new ArrayList<String>();
+        allSetInfo.add("Set,Cards,Playable,Unimplemented");
+        for (int i = 0; i < content.filterPanel.setsCheckBoxes.length; i++) {
+            content.filterPanel.resetFilters();
+            content.filterPanel.setsCheckBoxes[i].setSelected(true);
+            content.updateCardPool();
+            String setText = content.filterPanel.setsCheckBoxes[i].getText() + "      " + content.generatePoolTitle();
+            allSetInfo.add(setText.replaceAll("      ",",").replaceAll(" \\(\\d*\\.\\d%\\)","").replaceAll("Cards: ","").replaceAll("Playable: ","").replaceAll("Unimplemented: ",""));
+        }
+        final Path savePath = MagicFileSystem.getDataPath(DataPath.LOGS).resolve("CardStatistics.csv");
+        try (final PrintWriter writer = new PrintWriter(savePath.toFile())) {
+            allSetInfo.forEach(writer::println);
+        }
+        Desktop.getDesktop().open(MagicFileSystem.getDataPath(DataPath.LOGS).toFile());
+        content.filterPanel.resetFilters();
+        content.updateCardPool();
     }
 
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         MagicSetDefinitions.clearLoadedSets();
-        DownloadImagesDialog.clearLoadedLogs();
+        MagicLogs.clearLoadedLogs();
         return true;
     }
 

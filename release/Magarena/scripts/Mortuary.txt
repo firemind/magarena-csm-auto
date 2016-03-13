@@ -1,0 +1,9 @@
+name=Mortuary
+image=http://magiccards.info/scans/en/sh/16.jpg
+value=3.438
+rarity=R
+type=Enchantment
+cost={3}{B}
+timing=enchantment
+requires_groovy_code
+oracle=Whenever a creature is put into your graveyard from the battlefield, put that card on top of your library.

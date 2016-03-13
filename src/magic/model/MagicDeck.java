@@ -79,4 +79,8 @@ public class MagicDeck extends ArrayList<MagicCardDefinition> {
         }
         return count;
     }
+
+    public boolean contains(final MagicType type) {
+        return this.stream().anyMatch(card -> card.hasType(type));
+    }
 }

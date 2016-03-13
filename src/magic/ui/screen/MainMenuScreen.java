@@ -39,6 +39,7 @@ public class MainMenuScreen extends AbstractScreen implements IWikiPage {
     private static final AlertPanel alertPanel = new AlertPanel();
 
     public MainMenuScreen() {
+        MagicSystem.setIsTestGame(false);
         setContent(getScreenContent());
         alertPanel.refreshAlerts();
     }
@@ -134,11 +135,12 @@ public class MainMenuScreen extends AbstractScreen implements IWikiPage {
 
         private void refreshLayout() {
             miglayout.setLayoutConstraints("insets 4 0 0 0");
-            final ActionBarButton btn = new ActionBarButton(                    
+            final ActionBarButton btn = new ActionBarButton(
                     "Game file", "Select a saved public or private game file.",
                     new AbstractAction() {
                         @Override
                         public void actionPerformed(final ActionEvent e) {
+                            MagicSystem.setIsTestGame(true);
                             loadSavedGame();
                         }
                     }
@@ -150,6 +152,7 @@ public class MainMenuScreen extends AbstractScreen implements IWikiPage {
                     new AbstractAction() {
                         @Override
                         public void actionPerformed(final ActionEvent e) {
+                            MagicSystem.setIsTestGame(true);
                             new GameStateRunner(getFrame());
                         }
                     }

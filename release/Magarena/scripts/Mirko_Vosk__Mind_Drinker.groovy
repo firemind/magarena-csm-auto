@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return (damage.getSource() == permanent &&
@@ -20,6 +20,7 @@
             final MagicCardList library = player.getLibrary();
             int landCards = 0;
             while (landCards < amount && library.size() > 0) {
+                game.doAction(new RevealAction(library.getCardAtTop()));
                 if (library.getCardAtTop().hasType(MagicType.Land)) {
                     landCards++;
                 }

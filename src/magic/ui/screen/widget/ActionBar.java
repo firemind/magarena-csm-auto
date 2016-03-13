@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.ui.screen.interfaces.IActionBar;
 import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.Theme;
@@ -49,7 +49,7 @@ public class ActionBar extends TexturedPanel implements IThemeStyle {
         if (action != null) {
             action.setEnabled(action.isRunnable());
             if (action.getIcon() == null) {
-                action.setIcon(IconImages.getIcon(MagicIcon.NEXT_ICON));
+                action.setIcon(MagicImages.getIcon(MagicIcon.NEXT_ICON));
             }
             action.setHorizontalTextPosition(SwingConstants.LEFT);
             add(action);
@@ -66,7 +66,7 @@ public class ActionBar extends TexturedPanel implements IThemeStyle {
                 panel.add(btn, "w 60, h 40");
                 btn.setEnabled(btn.isRunnable());
                 btn.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, isFirstButton ? 1 : 0, 0, btn.showSeparator() ? 1 : 0, Color.LIGHT_GRAY),
+                        BorderFactory.createMatteBorder(0, isFirstButton ? 1 : 0, 0, btn.hasSeparator() ? 1 : 0, Color.LIGHT_GRAY),
                         BorderFactory.createEmptyBorder(0, 10, 0, 10)));
                 btn.setBorderPainted(true);
                 isFirstButton = false;
@@ -79,7 +79,7 @@ public class ActionBar extends TexturedPanel implements IThemeStyle {
         MenuButton action = actionProvider.getLeftAction();
         if (action != null) {
             action.setEnabled(action.isRunnable());
-            action.setIcon(IconImages.getIcon(MagicIcon.BACK_ICON));
+            action.setIcon(MagicImages.getIcon(MagicIcon.BACK_ICON));
             action.setHorizontalTextPosition(SwingConstants.RIGHT);
             add(action);
         } else {

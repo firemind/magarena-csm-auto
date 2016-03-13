@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payed) {
             return new MagicEvent(
@@ -13,8 +13,9 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int amount = event.getPlayer().getDevotion(MagicColor.Black);
             final MagicPlayer player=event.getPlayer();
-            game.doAction(new ChangeLifeAction(player.getOpponent(),-1*amount));
-            game.doAction(new ChangeLifeAction(player, amount));
+            final ChangeLifeAction act = new ChangeLifeAction(player.getOpponent(),-amount);
+            game.doAction(act);
+            game.doAction(new ChangeLifeAction(player,-act.getLifeChange()));
         }
     }
 ]

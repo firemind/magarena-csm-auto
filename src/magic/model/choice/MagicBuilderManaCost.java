@@ -35,21 +35,26 @@ public class MagicBuilderManaCost {
     }
 
     public void compress() {
-        compressedTypes=new MagicCostManaType[typeCount];
-        compressedAmounts=new int[typeCount];
-        int compressedIndex=0;
-
-        // Ordered from most restrictive to least restrictive.
-        for (int index = MagicCostManaType.NR_OF_TYPES - 1; index >= 0; index--) {
-            final int amount=amounts[index];
-            if (amount>0) {
-                compressedTypes[compressedIndex]=MagicCostManaType.values()[index];
-                compressedAmounts[compressedIndex]=amount;
-                compressedIndex++;
+        typeCount = 0;
+        for (final int amt : amounts) {
+            if (amt != 0) {
+                typeCount++;
             }
         }
 
-        assert compressedIndex == typeCount : "typeCount is inconsistent: typeCount = " + typeCount + ", compressedIndex = " + compressedIndex;
+        compressedTypes=new MagicCostManaType[typeCount];
+        compressedAmounts=new int[typeCount];
+        int j=0;
+
+        // Ordered from most restrictive to least restrictive.
+        for (int i = MagicCostManaType.NR_OF_TYPES - 1; i >= 0; i--) {
+            final int amt = amounts[i];
+            if (amt != 0) {
+                compressedTypes[j]=MagicCostManaType.values()[i];
+                compressedAmounts[j]=amt;
+                j++;
+            }
+        }
     }
 
     public MagicCostManaType[] getTypes() {
@@ -69,37 +74,35 @@ public class MagicBuilderManaCost {
     }
 
     public void setXCount(final int amount) {
-        addType(MagicCostManaType.Colorless,amount);
+        addType(MagicCostManaType.Generic,amount);
         XCount = amount;
     }
 
     int getX(final int amount) {
-        return hasX() ? (amount-minimumAmount)/XCount + 1 : 0;
+        return hasX() ? (amount - minimumAmount) / XCount + 1 : 0;
+    }
+
+    boolean validX(final int amount) {
+        return ((amount - compressedAmounts[typeCount - 1]) % XCount) == 0;
     }
 
     public boolean isEmpty() {
-        return typeCount==0;
+        return typeCount == 0;
     }
 
     public void addType(final MagicCostManaType type,final int amount) {
-        assert amount >= 0 : "amount of mana to add is negative: amount = " + amount;
-        final int index=type.ordinal();
-        amounts[index]+=amount;
-        minimumAmount+=amount;
-        if (amount > 0 && amounts[index] == amount) {
-            typeCount++;
-        }
+        assert type == MagicCostManaType.Generic || amount >= 0 : "amount of mana to add is negative: " + type + ", " + amount;
+        final int i = type.ordinal();
+        amounts[i] += amount;
+        minimumAmount += amount;
     }
 
     public void removeType(final MagicCostManaType type,final int amount) {
-        assert amount >= 0 : "amount of mana to remove is negative: amount = " + amount;
-        final int index=type.ordinal();
-        amounts[index]-=amount;
-        minimumAmount-=amount;
-        assert amounts[index] >= 0 : "amounts[index] is negative: amounts[index] = " + amounts[index];
-        if (amount > 0 && amounts[index] == 0) {
-            typeCount--;
-        }
+        assert amount >= 0 : "amount of mana to add is negative: " + type + ", " + amount;
+        final int i = type.ordinal();
+        amounts[i] -= amount;
+        minimumAmount -= amount;
+        assert amounts[i] >= 0 : "amounts[i] is negative: amounts[i] = " + amounts[i];
     }
 
     void addTypes(final List<MagicCostManaType> types) {
@@ -111,11 +114,17 @@ public class MagicBuilderManaCost {
 
     @Override
     public String toString() {
-        final StringBuilder builder=new StringBuilder();
-        for (int index=0;index<compressedTypes.length;index++) {
-            builder.append(compressedTypes[index]).append('=').append(compressedAmounts[index]).append(' ');
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < compressedTypes.length; i++) {
+            builder
+                .append(compressedTypes[i])
+                .append('=')
+                .append(compressedAmounts[i])
+                .append(' ');
         }
-        builder.append("Total=").append(minimumAmount);
+        builder
+            .append("Total=")
+            .append(minimumAmount);
         return builder.toString();
     }
 }

@@ -1,15 +1,5 @@
 package magic.model;
 
-import magic.model.event.MagicActivation;
-import magic.model.event.MagicEvent;
-import magic.model.event.MagicSourceActivation;
-import magic.model.target.MagicTarget;
-import magic.model.target.MagicTargetFilter;
-import magic.model.target.MagicTargetType;
-import magic.model.stack.MagicItemOnStack;
-import magic.model.stack.MagicCardOnStack;
-import magic.exception.GameException;
-
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.LinkedList;
@@ -17,9 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import magic.exception.GameException;
+import magic.model.event.MagicActivation;
+import magic.model.event.MagicEvent;
+import magic.model.event.MagicManaActivation;
+import magic.model.event.MagicSourceActivation;
+import magic.model.stack.MagicCardOnStack;
+import magic.model.stack.MagicItemOnStack;
+import magic.model.target.MagicTarget;
+import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetType;
+import magic.ui.cardBuilder.IRenderableCard;
+
 public class MagicCard
     extends MagicObjectImpl
-    implements MagicSource,MagicTarget,Comparable<MagicCard>,MagicMappable<MagicCard> {
+    implements MagicSource,MagicTarget,Comparable<MagicCard>,MagicMappable<MagicCard>,IRenderableCard {
 
     public static final MagicCard NONE = new MagicCard(MagicCardDefinition.UNKNOWN, MagicPlayer.NONE, 0) {
         @Override
@@ -77,7 +79,6 @@ public class MagicCard
     private final MagicCardDefinition cardDefinition;
     private final MagicPlayer owner;
     private final long id;
-    private final int imageIndex;
     private final Map<MagicCounterType, Integer> counters;
     private final boolean token;
     private boolean aiKnown = true;
@@ -101,7 +102,6 @@ public class MagicCard
         counters = new EnumMap<MagicCounterType, Integer>(MagicCounterType.class);
         owner = aOwner;
         id = aId;
-        imageIndex = (int)Math.abs(id % 1000);
         token = aToken;
     }
 
@@ -112,7 +112,6 @@ public class MagicCard
         counters = new EnumMap<MagicCounterType,Integer>(sourceCard.counters);
         owner = copyMap.copy(sourceCard.owner);
         id = sourceCard.id;
-        imageIndex = sourceCard.imageIndex;
         token = sourceCard.token;
         aiKnown = sourceCard.aiKnown;
         gameKnown = sourceCard.gameKnown;
@@ -153,10 +152,6 @@ public class MagicCard
         return (getCardDefinition().getIndex() * 10L + (aiKnown ? 1 : 0) + (gameKnown ? 2 : 0) + (token ? 4 : 0)) ^ counters.hashCode();
     }
 
-    public int getImageIndex() {
-        return imageIndex;
-    }
-
     public MagicCardDefinition getCardDefinition() {
         return isKnown() ? cardDefinition : MagicCardDefinition.UNKNOWN;
     }
@@ -175,6 +170,14 @@ public class MagicCard
 
     public boolean isFlipCard() {
         return getCardDefinition().isFlipCard();
+    }
+
+    public boolean isSplitCard() {
+        return getCardDefinition().isSplitCard();
+    }
+
+    public boolean isNameless() {
+        return getName().isEmpty();
     }
 
     public int getPower() {
@@ -204,14 +207,14 @@ public class MagicCard
         return getCost().getConvertedCost();
     }
 
-    public MagicManaCost getCost() {
-        return getCardDefinition().getCost();
+    public MagicManaCost getGameCost() {
+        return getGame().modCost(this, getCost());
     }
 
     public Iterable<MagicEvent> getCostEvent() {
         return getCardDefinition().getCostEvent(this);
     }
-    
+
     public Iterable<MagicEvent> getAdditionalCostEvent() {
         return getCardDefinition().getAdditionalCostEvent(this);
     }
@@ -236,7 +239,7 @@ public class MagicCard
         switch (loc) {
             case Stack:
                 return isOnStack();
-            case Play:
+            case Battlefield:
                 return isOnBattlefield();
             case OwnersHand:
                 return isInHand();
@@ -310,7 +313,7 @@ public class MagicCard
         } else if (isInExile()) {
             return MagicLocationType.Exile;
         } else if (isOnBattlefield()) {
-            return MagicLocationType.Play;
+            return MagicLocationType.Battlefield;
         } else if (isInLibrary()) {
             return MagicLocationType.OwnersLibrary;
         } else if (isOnStack()) {
@@ -356,6 +359,10 @@ public class MagicCard
         return false;
     }
 
+    public boolean isPermanentCard() {
+        return getCardDefinition().isPermanent();
+    }
+
     @Override
     public boolean isPlayer() {
         return false;
@@ -366,13 +373,16 @@ public class MagicCard
         return true;
     }
 
-    private int getColorFlags() {
+    public int getColorFlags() {
         final int init = getCardDefinition().getColorFlags();
         return getCardDefinition().applyCDAColor(getGame(), getOwner(), init);
     }
 
     @Override
     public boolean hasColor(final MagicColor color) {
+        if (isSplitCard()) {
+            return color.hasColor(getColorFlags()) || getCardDefinition().getSplitDefinition().hasColor(color);
+        }
         return color.hasColor(getColorFlags());
     }
 
@@ -395,8 +405,9 @@ public class MagicCard
         return getCardDefinition().hasSubType(subType);
     }
 
-    public Set<MagicSubType> getSubTypeFlags() {
-        return getCardDefinition().getSubTypeFlags();
+    @Override
+    public Set<MagicSubType> getSubTypes() {
+        return getCardDefinition().getSubTypes();
     }
 
     @Override
@@ -454,11 +465,11 @@ public class MagicCard
 
         return false;
     }
-    
+
     public boolean hasCounters() {
         return counters.size() > 0;
     }
-    
+
     @Override
     public int getCounters(final MagicCounterType counterType) {
         final Integer cnt = counters.get(counterType);
@@ -478,5 +489,20 @@ public class MagicCard
 
     public Collection<MagicCounterType> getCounterTypes() {
         return counters.keySet();
+    }
+
+    @Override
+    public Collection<MagicManaActivation> getManaActivations() {
+        // Returning from CardDefinition - Cards technically don't, also no in-game changes
+        return getCardDefinition().getManaActivations();
+    }
+
+    @Override
+    public String getPowerToughnessText() {
+        if (isCreature()) {
+            return getPower()+"/"+getToughness();
+        } else {
+            return "";
+        }
     }
 }

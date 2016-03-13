@@ -1,0 +1,9 @@
+name=Scrapheap
+image=http://magiccards.info/scans/en/ul/132.jpg
+value=2.864
+rarity=R
+type=Artifact
+cost={3}
+timing=artifact
+requires_groovy_code
+oracle=Whenever an artifact or enchantment is put into your graveyard from the battlefield, you gain 1 life.

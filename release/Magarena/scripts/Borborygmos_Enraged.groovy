@@ -1,11 +1,11 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
                 permanent,
                 this,
-                "PN reveals the top three cards of his or her library. " + 
+                "PN reveals the top three cards of his or her library. " +
                 "Put all land cards revealed this way into PN's hand and the rest into PN's graveyard."
             );
         }
@@ -18,8 +18,8 @@
                     top,
                     MagicLocationType.OwnersLibrary,
                     top.hasType(MagicType.Land) ?
-                      MagicLocationType.OwnersHand :
-                      MagicLocationType.Graveyard
+                        MagicLocationType.OwnersHand :
+                        MagicLocationType.Graveyard
                 ));
             }
         }

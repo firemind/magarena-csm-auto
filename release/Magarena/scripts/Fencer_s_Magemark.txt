@@ -1,0 +1,12 @@
+name=Fencer's Magemark
+image=http://magiccards.info/scans/en/gp/65.jpg
+value=3.207
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={2}{R}
+ability=Enchant creature
+timing=aura
+enchant=first strike,pos creature
+requires_groovy_code
+oracle=Enchant creature\nCreatures you control that are enchanted get +1/+1 and have first strike.

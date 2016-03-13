@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicCardOnStack cardOnStack) {
             return (permanent.isFriend(cardOnStack) && cardOnStack.isInstantOrSorcerySpell()) ?
@@ -10,7 +10,7 @@
                     ),
                     cardOnStack,
                     this,
-                    "You may\$ pay {U}{R}. If you do, copy RN. You may choose new targets for the copy."
+                    "PN may\$ pay {U}{R}. If PN does, copy RN. PN may choose new targets for the copy."
                 ):
                 MagicEvent.NONE;
         }
@@ -21,7 +21,7 @@
             }
         }
     },
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return (otherPermanent != permanent &&
@@ -35,7 +35,7 @@
                     ),
                     otherPermanent,
                     this,
-                    "You may\$ pay {G}{U}. If you do, put a token that's a copy of RN onto the battlefield."
+                    "PN may\$ pay {G}{U}. If PN does, he or she puts a token that's a copy of RN onto the battlefield."
                 ):
                 MagicEvent.NONE;
         }

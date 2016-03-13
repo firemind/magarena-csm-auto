@@ -29,7 +29,7 @@ public final class UiString {
     private UiString() { }
 
     private static final String UTF_CHAR_SET = "UTF-8";
-    
+
     private static final CRC32 crc = new CRC32();
     private static final Map<Long, String> translationsMap = new HashMap<>();
     private static final Map<Long, String> annotations = new HashMap<>();
@@ -76,6 +76,15 @@ public final class UiString {
             }
         }
         return aString;
+    }
+
+    /**
+     * Returns translated string enclosed in {@literal <html>...</html>} tags.
+     *
+     * This is useful for automatically wrapping long strings.
+     */
+    public static final String asHtml(final String aString) {
+        return "<html>" + get(aString) + "</html>";
     }
 
     private static Map<Long, String> getStringsMapFromFile(final File txtFile, final boolean unescape) throws FileNotFoundException {
@@ -155,7 +164,7 @@ public final class UiString {
 
         final Map<Long, String> stringsMap = new LinkedHashMap<>();
         annotations.clear();
-        
+
         for (final String c : getClassNamesInPackage(MagicSystem.getJarFile(), "magic")) {
             final String className = c.substring(0, c.length() - ".class".length());
             try {

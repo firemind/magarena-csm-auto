@@ -1,0 +1,11 @@
+name=Kithkin Mourncaller
+image=http://magiccards.info/scans/en/lw/224.jpg
+value=2.970
+rarity=U
+type=Creature
+subtype=Kithkin,Scout
+cost={2}{G}
+pt=2/2
+timing=main
+requires_groovy_code
+oracle=Whenever an attacking Kithkin or Elf is put into your graveyard from the battlefield, you may draw a card.

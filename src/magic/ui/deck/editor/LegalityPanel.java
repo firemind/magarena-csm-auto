@@ -12,9 +12,8 @@ import javax.swing.JPanel;
 import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.translate.UiString;
-import magic.ui.cardtable.CardTablePanel;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
@@ -32,22 +31,23 @@ class LegalityPanel extends JPanel implements IDeckEditorView {
     private static final String _S7 = "Too many copies of a card in deck.";
     private static final String _S8 = "Does not apply to basic lands,";
     private static final String _S9 = "or";
-    
+
     // fired when card selection changes
-    public static final String CP_CARD_SELECTED = CardTablePanel.CP_CARD_SELECTED;
+    public static final String CP_CARD_SELECTED = "c5f420c3-dc1c-4d1b-a07b-0d055716207d";
+    public static final String CP_CARD_DCLICKED = "0dda4041-f44d-4980-8c87-c11cf7b1dc06";
 
     private static final JPanel HELP_PANEL = new LegalityLegendPanel();
 
     private final CardsLegalityPanel cardsLegalityPanel;
     private final FormatsLegalityPanel formatsLegalityPanel;
-    private final MigLayout miglayout = new MigLayout();    
+    private final MigLayout miglayout = new MigLayout();
     private MagicDeck deck = new MagicDeck();
 
     LegalityPanel() {
 
         formatsLegalityPanel = new FormatsLegalityPanel();
         cardsLegalityPanel = new CardsLegalityPanel();
-        
+
         setPropertyChangeListeners();
 
         setLookAndFeel();
@@ -56,28 +56,30 @@ class LegalityPanel extends JPanel implements IDeckEditorView {
     }
 
     private void setPropertyChangeListeners() {
-        cardsLegalityPanel.addPropertyChangeListener(CardsLegalityPanel.CP_CARD_SELECTED,
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        firePropertyChange(CP_CARD_SELECTED, false, true);
-                    }
-                });
         cardsLegalityPanel.addPropertyChangeListener(
-                CardsLegalityPanel.CP_CARD_DCLICKED,
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        firePropertyChange(CardsLegalityPanel.CP_CARD_DCLICKED, false, true);
-                    }
-                });
-        formatsLegalityPanel.addPropertyChangeListener(FormatsLegalityPanel.CP_FORMAT_SELECTED,
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        cardsLegalityPanel.setDeck(deck, formatsLegalityPanel.getSelectedFormat());
-                    }
-                });
+            CardsLegalityPanel.CP_CARD_SELECTED,
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    firePropertyChange(CP_CARD_SELECTED, false, true);
+                }
+            });
+        cardsLegalityPanel.addPropertyChangeListener(
+            CardsLegalityPanel.CP_CARD_DCLICKED,
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    firePropertyChange(CP_CARD_DCLICKED, false, true);
+                }
+            });
+        formatsLegalityPanel.addPropertyChangeListener(
+            FormatsLegalityPanel.CP_FORMAT_SELECTED,
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    cardsLegalityPanel.setDeck(deck, formatsLegalityPanel.getSelectedFormat());
+                }
+            });
     }
 
     private void setLookAndFeel() {
@@ -91,7 +93,7 @@ class LegalityPanel extends JPanel implements IDeckEditorView {
         miglayout.setLayoutConstraints("insets 0, gap 0, wrap 2");
         add(HELP_PANEL, "w 100%, spanx 2");
         add(formatsLegalityPanel, "w 280!, h 100%");
-        add(cardsLegalityPanel, "w 100%, h 100%");       
+        add(cardsLegalityPanel, "w 100%, h 100%");
         revalidate();
     }
 
@@ -133,7 +135,7 @@ class LegalityPanel extends JPanel implements IDeckEditorView {
             add(getIconLabel(MagicIcon.ILLEGAL_ICON, UiString.get(_S2)));
             add(getIconLabel(MagicIcon.BANNED_ICON, UiString.get(_S3)));
             add(getIconLabel(MagicIcon.RESTRICTED_ICON, UiString.get(_S4), UiString.get(_S5)));
-            add(getIconLabel(MagicIcon.RESTRICTED_ICON, UiString.get(_S6), 
+            add(getIconLabel(MagicIcon.RESTRICTED_ICON, UiString.get(_S6),
                     String.format("<html><b>%s</b><br>%s<br><i>Relentless Rats</i> %s <i>Shadowborn Apostle</i>.</html>",
                             UiString.get(_S7),
                             UiString.get(_S8),
@@ -143,7 +145,7 @@ class LegalityPanel extends JPanel implements IDeckEditorView {
 
         private JLabel getIconLabel(MagicIcon magicIcon, String text, String tooltip) {
             final JLabel lbl = new JLabel(text);
-            lbl.setIcon(IconImages.getIcon(magicIcon));
+            lbl.setIcon(MagicImages.getIcon(magicIcon));
             lbl.setToolTipText(tooltip);
             return lbl;
         }

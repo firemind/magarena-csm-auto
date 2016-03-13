@@ -1,11 +1,11 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Put SN on the top of your library."
+                "PN puts SN on the top of his or her library."
             );
         }
 

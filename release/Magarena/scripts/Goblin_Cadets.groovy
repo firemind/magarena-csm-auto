@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfBlocksTrigger() {
+    new ThisBlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             return new MagicEvent(
@@ -16,8 +16,8 @@
             });
         }
     },
-    
-    new MagicWhenSelfBecomesBlockedTrigger() {
+
+    new ThisBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocked) {
             return new MagicEvent(

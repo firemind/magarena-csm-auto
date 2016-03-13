@@ -1,14 +1,12 @@
 package magic.model;
 
-import java.awt.Component;
-import java.awt.Rectangle;
 import java.util.List;
 import java.util.Set;
 import magic.exception.UndoClickedException;
 import magic.model.choice.MagicPlayChoiceResult;
 
 public interface IUIGameController extends IGameController {
-    
+
     <T> T getChoiceClicked();
     boolean isActionClicked();
     void clearCards();
@@ -24,9 +22,7 @@ public interface IUIGameController extends IGameController {
     void updateGameView();
     void waitForInput() throws UndoClickedException;
     void refreshSidebarLayout();
-    Rectangle getPlayerZoneButtonRectangle(MagicPlayer player, MagicPlayerZone zone, Component canvas);
-    Rectangle getStackViewerRectangle(Component canvas);
-    
+
     // Choices
     MagicSubType getLandSubTypeChoice(final MagicSource source) throws UndoClickedException;
     boolean getPayBuyBackCostChoice(final MagicSource source, final String costText) throws UndoClickedException;

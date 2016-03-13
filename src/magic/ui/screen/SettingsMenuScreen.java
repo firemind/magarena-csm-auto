@@ -8,7 +8,6 @@ import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
 import magic.translate.UiString;
 import magic.ui.ScreenController;
-import magic.ui.dialog.DownloadImagesDialog;
 import magic.ui.dialog.FiremindWorkerDialog;
 import magic.ui.screen.widget.MenuPanel;
 import magic.ui.theme.ThemeFactory;
@@ -33,7 +32,6 @@ public class SettingsMenuScreen extends AbstractScreen {
     private static final String _S14 = "Yes";
     private static final String _S15 = "No";
 
-    private static DownloadImagesDialog downloadDialog;
     private static FiremindWorkerDialog firemindWorkerDialog;
 
     public SettingsMenuScreen() {
@@ -54,14 +52,10 @@ public class SettingsMenuScreen extends AbstractScreen {
         menuPanel.addMenuItem(UiString.get(_S5), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                if (downloadDialog == null || !downloadDialog.isDisplayable()) {
-                    downloadDialog = new DownloadImagesDialog(getFrame());
-                } else {
-                    downloadDialog.setVisible(true);
-                }
+                ScreenController.showDownloadImagesScreen();
             }
         });
-        
+
         menuPanel.addMenuItem(UiString.get(_S6), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -72,7 +66,7 @@ public class SettingsMenuScreen extends AbstractScreen {
                 }
             }
         });
-        
+
         menuPanel.addMenuItem(UiString.get(_S7), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -96,7 +90,7 @@ public class SettingsMenuScreen extends AbstractScreen {
         });
 
         menuPanel.refreshLayout();
-        
+
         final MigLayout layout = new MigLayout();
         layout.setLayoutConstraints("insets 0, gap 0, flowy");
         layout.setRowConstraints("[30!][100%, center][30!, bottom]");
@@ -109,7 +103,7 @@ public class SettingsMenuScreen extends AbstractScreen {
         content.add(new KeysStripPanel(), "w 100%, cell 0 2");
 
         return content;
-        
+
     }
 
     private void doReset() {

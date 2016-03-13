@@ -1,9 +1,11 @@
 name=Blustersquall
-image=http://magiccards.info/scans/en/rtr/30.jpg
+image=http://magiccards.info/scans/en/c15/89.jpg
+image_updated=2016-02-29
 value=3.303
 rarity=U
 type=Instant
 cost={U}
+ability=Cast SN with AI only if an opponent controls a creature.
 effect=Tap target creature you don't control.
 timing=tapping
 requires_groovy_code

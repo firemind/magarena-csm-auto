@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -12,6 +12,9 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
+                final MagicPlayer player = event.getPlayer();
+                final int amount = card.getConvertedCost();
+                game.logAppendValue(player,amount);
                 game.doAction(new RevealAction(card));
                 game.doAction(new ShiftCardAction(
                     card,
@@ -19,8 +22,8 @@
                     MagicLocationType.OwnersHand
                 ));
                 game.doAction(new ChangeLifeAction(
-                    event.getPlayer(), 
-                    -card.getConvertedCost()
+                    player,
+                    -amount
                 ));
             }
         }

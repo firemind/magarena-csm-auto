@@ -1,11 +1,13 @@
 name=Fallen Ideal
-image=http://magiccards.info/scans/en/ts/109.jpg
+image=http://magiccards.info/scans/en/c15/125.jpg
+image_updated=2016-02-29
 value=3.735
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={2}{B}
-ability=Enchanted creature has flying and "Sacrifice a creature: SN gets +2/+1 until end of turn.";\
+ability=Enchant creature;\
+        Enchanted creature has flying and "Sacrifice a creature: SN gets +2/+1 until end of turn.";\
         When SN is put into a graveyard from the battlefield, return SN from the graveyard to its owner's hand.
 timing=aura
 enchant=pump,pos creature

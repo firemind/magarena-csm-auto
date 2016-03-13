@@ -1,0 +1,9 @@
+name=Righteous Indignation
+image=http://magiccards.info/scans/en/mm/46.jpg
+value=1.804
+rarity=U
+type=Enchantment
+cost={2}{W}
+timing=enchantment
+requires_groovy_code
+oracle=Whenever a creature blocks a black or red creature, the blocking creature gets +1/+1 until end of turn.

@@ -1,0 +1,11 @@
+name=Fallow Wurm
+image=http://magiccards.info/scans/en/wl/68.jpg
+value=3.155
+rarity=U
+type=Creature
+subtype=Wurm
+cost={2}{G}
+pt=4/4
+ability=When SN enters the battlefield, you may discard a land card. If you don't, sacrifice SN.
+timing=main
+oracle=When Fallow Wurm enters the battlefield, sacrifice it unless you discard a land card.

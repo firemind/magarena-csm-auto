@@ -3,7 +3,6 @@ package magic.ui;
 import magic.translate.UiString;
 import magic.ui.utility.MagicStyle;
 import java.util.Stack;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
@@ -28,7 +27,8 @@ import magic.ui.screen.DeckEditorSplitScreen;
 import magic.ui.screen.DeckEditorScreen;
 import magic.ui.screen.DeckTiledCardsScreen;
 import magic.ui.screen.DeckViewScreen;
-import magic.ui.screen.DecksScreen;
+import magic.ui.deck.selector.DecksScreen;
+import magic.ui.screen.DownloadImagesScreen;
 import magic.ui.screen.DuelDecksScreen;
 import magic.ui.screen.DuelGameScreen;
 import magic.ui.screen.GameLogScreen;
@@ -46,6 +46,7 @@ import magic.ui.screen.SettingsMenuScreen;
 import magic.ui.screen.StartScreen;
 import magic.ui.screen.interfaces.IAvatarImageConsumer;
 import magic.ui.screen.interfaces.IDeckConsumer;
+import magic.utility.MagicSystem;
 
 public final class ScreenController {
 
@@ -55,10 +56,11 @@ public final class ScreenController {
 
     private static MagicFrame mainFrame = null;
     private static final Stack<AbstractScreen> screens = new Stack<>();
+    private static AbstractScreen hiddenScreen;
 
     public static MagicFrame getMainFrame() {
         if (mainFrame == null && java.awt.GraphicsEnvironment.isHeadless() == false) {
-            mainFrame = new MagicFrame(GeneralConfig.SOFTWARE_TITLE);
+            mainFrame = new MagicFrame(MagicSystem.SOFTWARE_TITLE);
         }
         return mainFrame;
     }
@@ -185,9 +187,13 @@ public final class ScreenController {
         screens.clear();
         showScreen(new ImportScreen());
     }
-    
+
     public static void showAboutDialog() {
         new AboutDialog(getMainFrame());
+    }
+
+    public static void showDownloadImagesScreen() {
+        showScreen(new DownloadImagesScreen());
     }
 
     public static void showPreferencesDialog() {
@@ -225,18 +231,19 @@ public final class ScreenController {
         }
     }
 
-    private static void showScreen(final AbstractScreen screen) {
+    private static void showScreen(AbstractScreen screen) {
+        if (hiddenScreen != null && hiddenScreen.getClass().getName().equals(screen.getClass().getName())) {
+            screen = hiddenScreen;
+            hiddenScreen = null;
+        }
         setMainFrameScreen(screen);
         screens.push(screen);
+        screen.setVisible(true);
         screen.requestFocus();
     }
 
     private static void setMainFrameScreen(final AbstractScreen screen) {
-        final JComponent contentPane = (JComponent) getMainFrame().getContentPane();
-        contentPane.removeAll();
-        contentPane.add(screen, "w 100%, h 100%");
-        contentPane.revalidate();
-        contentPane.repaint();
+        getMainFrame().setContentPanel(screen);
     }
 
     public static int getScreensStackSize() {
@@ -272,6 +279,16 @@ public final class ScreenController {
             }
         }
         return false;
+    }
+
+    public static void hideActiveScreen() {
+        if (hiddenScreen == null) {
+            hiddenScreen = screens.pop();
+            hiddenScreen.setVisible(false);
+            showScreen(screens.pop());
+        } else {
+            throw new RuntimeException("A screen is already hidden - only one allowed at a time!");
+        }
     }
 
 }

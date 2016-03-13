@@ -17,8 +17,8 @@
                 MagicLocationType.Exile
             ));
             game.doAction(new AddTriggerAction(
-                MagicAtUpkeepTrigger.YouDraw(
-                    event.getSource(), 
+                AtUpkeepTrigger.YouDraw(
+                    event.getSource(),
                     event.getPlayer()
                 )
             ));

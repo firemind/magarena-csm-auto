@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Collections;
 
 public class MagicHandCastActivation extends MagicActivation<MagicCard> implements MagicChangeCardDefinition, MagicCardEvent {
-    
+
     public static final MagicCondition[] CARD_CONDITION = new MagicCondition[]{
-        MagicCondition.CARD_CONDITION,  
+        MagicCondition.CARD_CONDITION,
     };
-    
+
     final boolean usesStack;
 
     public MagicHandCastActivation(final MagicCardDefinition cdef) {
@@ -67,30 +67,27 @@ public class MagicHandCastActivation extends MagicActivation<MagicCard> implemen
         );
     }
 
-    private final MagicEventAction EVENT_ACTION = genPlayEventAction(MagicLocationType.OwnersHand);   
-        
+    private final MagicEventAction EVENT_ACTION = genPlayEventAction(MagicLocationType.OwnersHand);
+
     protected MagicEventAction genPlayEventAction(final MagicLocationType fromLocation) {
-        return new MagicEventAction() {
-            @Override
-            public void executeEvent(final MagicGame game, final MagicEvent event) {
-                final MagicCard card = event.getCard();
-                if (card.getCardDefinition().isLand()) {
-                    game.incLandsPlayed();
-                }
-                
-                game.doAction(new RemoveCardAction(card, fromLocation)); 
-                
-                if (usesStack) {
-                    final MagicCardOnStack cardOnStack=new MagicCardOnStack(
-                        card,
-                        MagicHandCastActivation.this,
-                        game.getPayedCost()
-                    );
-                    cardOnStack.setFromLocation(fromLocation);
-                    game.doAction(new PutItemOnStackAction(cardOnStack));
-                } else {
-                    game.doAction(new PlayCardAction(card,card.getController()));
-                }
+        return (final MagicGame game, final MagicEvent event) -> {
+            final MagicCard card = event.getCard();
+            if (card.getCardDefinition().isLand()) {
+                game.incLandsPlayed();
+            }
+
+            game.doAction(new RemoveCardAction(card, fromLocation));
+
+            if (usesStack) {
+                final MagicCardOnStack cardOnStack=new MagicCardOnStack(
+                    card,
+                    MagicHandCastActivation.this,
+                    game.getPayedCost()
+                );
+                cardOnStack.setFromLocation(fromLocation);
+                game.doAction(new PutItemOnStackAction(cardOnStack));
+            } else {
+                game.doAction(new PlayCardAction(card,card.getController()));
             }
         };
     }
@@ -115,9 +112,9 @@ public class MagicHandCastActivation extends MagicActivation<MagicCard> implemen
     public void change(final MagicCardDefinition cdef) {
         cdef.addHandAct(this);
     }
-    
+
     public static final MagicHandCastActivation create(final MagicCardDefinition cardDef, final String costs, final String name) {
-        final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(costs);
+        final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.buildCast(costs);
         assert matchedCostEvents.size() > 0;
 
         return new MagicHandCastActivation(CARD_CONDITION, cardDef.getActivationHints(), name) {
@@ -138,9 +135,8 @@ public class MagicHandCastActivation extends MagicActivation<MagicCard> implemen
             public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
                 return Collections.<MagicEvent>singletonList(
                     new MagicPayManaCostEvent(
-                        source, 
-                        source.getCost().reduce(
-                            MagicCostManaType.Colorless, 
+                        source,
+                        source.getGameCost().reduce(
                             source.getController().getNrOfPermanents(filter)
                         )
                     )
@@ -152,9 +148,9 @@ public class MagicHandCastActivation extends MagicActivation<MagicCard> implemen
             }
         };
     }
-    
+
     public static final MagicHandCastActivation awaken(final MagicCardDefinition cardDef, final int n, final String costs) {
-        final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(costs);
+        final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.buildCast(costs);
         assert matchedCostEvents.size() > 0;
 
         return new MagicHandCastActivation(CARD_CONDITION, cardDef.getActivationHints(), "Awaken") {
@@ -171,12 +167,9 @@ public class MagicHandCastActivation extends MagicActivation<MagicCard> implemen
                 final MagicEvent ev = cardDef.getCardEvent().getEvent(cardOnStack, payedCost);
                 final MagicEventAction effect = ev.getEventAction();
 
-                final MagicEventAction awaken = new MagicEventAction() {
-                    @Override
-                    public void executeEvent(final MagicGame game, final MagicEvent event) {
-                        ev.getEventAction().executeEvent(game, event);
-                        game.addEvent(new MagicAwakenEvent(event.getSource(), event.getPlayer(), n));
-                    }
+                final MagicEventAction awaken = (final MagicGame game, final MagicEvent event) -> {
+                    ev.getEventAction().executeEvent(game, event);
+                    game.addEvent(new MagicAwakenEvent(event.getSource(), event.getPlayer(), n));
                 };
                 return new MagicEvent(
                     ev.getSource(),

@@ -8,9 +8,8 @@ import magic.model.event.MagicActivation;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+@SuppressWarnings("serial")
 public class MagicStack extends LinkedList<MagicItemOnStack> {
-
-    private static final long serialVersionUID = 1L;
 
     private final int[] spells;
     private final int[] counts;
@@ -79,7 +78,7 @@ public class MagicStack extends LinkedList<MagicItemOnStack> {
         }
         throw new RuntimeException("No corresponding MagicItemOnStack with id " + id);
     }
-    
+
     public boolean hasItem() {
         return isEmpty() == false;
     }

@@ -1,6 +1,6 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.duel.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -10,21 +10,20 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JPanel;
 import magic.data.GeneralConfig;
-import magic.model.MagicCard;
-import magic.ui.utility.GraphicsUtils;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.CardViewerInfo;
+import magic.ui.prefs.ImageSizePresets;
 
+@SuppressWarnings("serial")
 public class ImagePermanentsViewer extends JPanel {
-
-    private static final long serialVersionUID = 1L;
 
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final int POSITION_SPACING = 60;
     private static final int HORIZONTAL_SPACING = 40;
     private static final int VERTICAL_SPACING = 30;
 
-    private static final float CARD_WIDTH = (float) GraphicsUtils.getMaxCardImageSize().width;
-    private static final float CARD_HEIGHT = (float) GraphicsUtils.getMaxCardImageSize().height;
+    private static final float CARD_WIDTH = (float) ImageSizePresets.getDefaultSize().width;
+    private static final float CARD_HEIGHT = (float) ImageSizePresets.getDefaultSize().height;
     private static final float CARD_ASPECT_RATIO = CARD_WIDTH / CARD_HEIGHT;
 
     private final SwingGameController controller;
@@ -221,18 +220,18 @@ public class ImagePermanentsViewer extends JPanel {
         return validChoices.contains(permanentInfo.permanent);
     }
 
-    ImagePermanentViewer getViewer(MagicCard card) {
+    ImagePermanentViewer getViewer(CardViewerInfo cardInfo) {
         for (final ImagePermanentViewer viewer : viewers) {
-            if (viewer.permanentInfo.magicCardId == card.getId()) {
+            if (viewer.permanentInfo.isEqualTo(cardInfo)) {
                 return viewer;
             }
             for (final PermanentViewerInfo info : viewer.permanentInfo.linked) {
-                if (info.permanent.getCard().getId() == card.getId()) {
+                if (info.isEqualTo(cardInfo)) {
                     return viewer;
                 }
             }
             for (final PermanentViewerInfo info : viewer.permanentInfo.blockers) {
-                if (info.permanent.getCard().getId() == card.getId()) {
+                if (info.isEqualTo(cardInfo)) {
                     return viewer;
                 }
             }

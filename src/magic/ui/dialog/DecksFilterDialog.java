@@ -24,8 +24,8 @@ import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.translate.UiString;
 import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.deck.DeckFilter;
-import magic.ui.widget.deck.DeckFilter.NumericFilter;
+import magic.ui.deck.widget.DeckFilter;
+import magic.ui.deck.widget.DeckFilter.NumericFilter;
 import magic.ui.dialog.button.CancelButton;
 import magic.ui.dialog.button.SaveButton;
 import net.miginfocom.swing.MigLayout;
@@ -62,12 +62,12 @@ public class DecksFilterDialog extends MagicDialog {
         if (filterHistory.size() > 0) {
             deckFilter = filterHistory.get(historyIndex-1);
         }
-        
+
         deckSizeFilterPanel = new DeckSizeFilterPanel(deckFilter);
         deckNameFilterText.setText(deckFilter != null ? deckFilter.getDeckNameFilterText() : "");
         deckDescFilterText.setText(deckFilter != null ? deckFilter.getDeckDescFilterText() : "");
         cardNameFilterText.setText(deckFilter != null ? deckFilter.getCardNameFilterText() : "");
-               
+
         refreshLayout();
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 

@@ -1,8 +1,8 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
-            return (otherPermanent.isCreature() && 
+            return (otherPermanent.isCreature() &&
                     otherPermanent.isFriend(permanent) &&
                     otherPermanent.getPower() == 1 &&
                     otherPermanent.getToughness() == 1) ?

@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import magic.data.MagicIcon;
 import magic.model.IGameController;
 import magic.model.MagicSource;
-import magic.ui.IconImages;
-import magic.ui.SwingGameController;
+import magic.ui.MagicImages;
+import magic.ui.duel.SwingGameController;
 import magic.translate.UiString;
 import magic.ui.duel.viewer.UserActionPanel;
 import magic.ui.widget.FontsAndBorders;
@@ -49,7 +49,7 @@ public class ManaCostXChoicePanel extends JPanel implements ActionListener {
         buttonPanel.setBorder(FontsAndBorders.EMPTY_BORDER);
         add(buttonPanel,BorderLayout.SOUTH);
 
-        leftButton=new JButton("",IconImages.getIcon(MagicIcon.LEFT));
+        leftButton=new JButton("",MagicImages.getIcon(MagicIcon.LEFT));
         leftButton.setPreferredSize(BUTTON_DIMENSION);
         leftButton.addActionListener(this);
         leftButton.setFocusable(false);
@@ -61,7 +61,7 @@ public class ManaCostXChoicePanel extends JPanel implements ActionListener {
         numberButton.setFocusable(false);
         buttonPanel.add(numberButton);
 
-        rightButton=new JButton(IconImages.getIcon(MagicIcon.RIGHT));
+        rightButton=new JButton(MagicImages.getIcon(MagicIcon.RIGHT));
         rightButton.setPreferredSize(BUTTON_DIMENSION);
         rightButton.addActionListener(this);
         rightButton.setFocusable(false);

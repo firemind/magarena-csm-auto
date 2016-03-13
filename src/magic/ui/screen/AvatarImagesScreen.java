@@ -36,7 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.ui.URLUtils;
 import magic.ui.ScreenController;
 import magic.ui.avatar.AvatarImageSet;
@@ -114,7 +114,7 @@ public class AvatarImagesScreen extends AbstractScreen implements IStatusBar, IA
         for (Path imagePath : imageSet.getImagePaths()) {
             final String filePath = imagePath.toAbsolutePath().toString();
             try (final InputStream ins = new FileInputStream(new File(filePath))) {
-                final BufferedImage image = ImageFileIO.toImg(ins, IconImages.MISSING);
+                final BufferedImage image = ImageFileIO.toImg(ins, MagicImages.MISSING_BIG);
                 final ImageIcon icon = new ImageIcon(GraphicsUtils.scale(image, PlayerAvatar.LARGE_SIZE, PlayerAvatar.LARGE_SIZE));
                 final JLabel iconLabel = new JLabel(icon);
                 imagePathMap.put(iconLabel, imagePath);
@@ -187,7 +187,7 @@ public class AvatarImagesScreen extends AbstractScreen implements IStatusBar, IA
     }
 
     private class AvatarImageSetsPanel extends TexturedPanel implements IThemeStyle {
-        
+
         public AvatarImageSetsPanel() {
 
             // List of avatar image sets.
@@ -285,10 +285,10 @@ public class AvatarImagesScreen extends AbstractScreen implements IStatusBar, IA
 
         @Override
         public Component getListCellRendererComponent(
-            JList<? extends AvatarImageSet> list, 
-            AvatarImageSet value, 
+            JList<? extends AvatarImageSet> list,
+            AvatarImageSet value,
             int index,
-            boolean isSelected, 
+            boolean isSelected,
             boolean cellHasFocus
         ) {
 

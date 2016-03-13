@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.EnumSet;
+import magic.translate.UiString;
 
 public enum MagicColor {
 
-    White("white",'w'),
-    Blue("blue",'u'),
-    Black("black",'b'),
-    Green("green",'g'),
-    Red("red",'r')
+    White(MagicColorStrings._S1, 'w'),
+    Blue(MagicColorStrings._S2, 'u'),
+    Black(MagicColorStrings._S3, 'b'),
+    Red(MagicColorStrings._S4, 'r'),
+    Green(MagicColorStrings._S5, 'g')
     ;
 
     public static final int NR_COLORS=values().length;
@@ -20,11 +21,20 @@ public enum MagicColor {
     private final String name;
     private final char symbol;
     private final int mask;
+    private final String displayName;
 
-    private MagicColor(final String name,final char symbol) {
-        this.name=name;
-        this.symbol=symbol;
-        this.mask=1<<ordinal();
+    private MagicColor(final String name, final char symbol) {
+        this.name = name;
+        this.symbol = symbol;
+        this.mask = 1 << ordinal();
+        this.displayName = UiString.get(name);
+    }
+
+    /**
+     * Translatable color name.
+     */
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getName() {
@@ -53,8 +63,8 @@ public enum MagicColor {
             case White: return MagicAbility.ProtectionFromWhite;
             case Blue: return MagicAbility.ProtectionFromBlue;
             case Black: return MagicAbility.ProtectionFromBlack;
-            case Green: return MagicAbility.ProtectionFromGreen;
             case Red: return MagicAbility.ProtectionFromRed;
+            case Green: return MagicAbility.ProtectionFromGreen;
         }
         throw new RuntimeException("No protection ability for MagicColor " + this);
     }
@@ -64,8 +74,8 @@ public enum MagicColor {
             case White: return MagicSubType.Plains;
             case Blue: return MagicSubType.Island;
             case Black: return MagicSubType.Swamp;
-            case Green: return MagicSubType.Forest;
             case Red: return MagicSubType.Mountain;
+            case Green: return MagicSubType.Forest;
         }
         throw new RuntimeException("No land subtype for MagicColor " + this);
     }
@@ -75,8 +85,8 @@ public enum MagicColor {
             case White: return MagicManaType.White;
             case Blue: return MagicManaType.Blue;
             case Black: return MagicManaType.Black;
-            case Green: return MagicManaType.Green;
             case Red: return MagicManaType.Red;
+            case Green: return MagicManaType.Green;
         }
         return MagicManaType.Colorless;
     }
@@ -158,5 +168,11 @@ public enum MagicColor {
 
     public static boolean isMulti(final MagicSource source) {
         return numColors(source) > 1;
+    }
+
+    // returns clockwise distance from c1 to c2
+    // eg. distance(Black, White) = 3
+    public static int distance(final MagicColor c1, final MagicColor c2) {
+        return (c2.ordinal() - c1.ordinal() + NR_COLORS) % NR_COLORS;
     }
 }

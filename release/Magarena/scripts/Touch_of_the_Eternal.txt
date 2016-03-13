@@ -1,0 +1,9 @@
+name=Touch of the Eternal
+image=http://magiccards.info/scans/en/m13/37.jpg
+value=1.983
+rarity=R
+type=Enchantment
+cost={5}{W}{W}
+timing=enchantment
+requires_groovy_code
+oracle=At the beginning of your upkeep, count the number of permanents you control. Your life total becomes that number.

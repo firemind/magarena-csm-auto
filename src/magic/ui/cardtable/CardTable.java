@@ -19,6 +19,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
@@ -31,10 +32,10 @@ import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class CardTable extends TexturedPanel implements ListSelectionListener {
-    
+
     // renderer that centers the contents of a column.
     static final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    static { centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); }    
+    static { centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); }
 
     private static final Color GRID_COLOR = new Color(194, 197, 203);
     private static final int ROW_HEIGHT = 20; //pixels
@@ -93,15 +94,15 @@ public class CardTable extends TexturedPanel implements ListSelectionListener {
         setColumnWidths(model);
 
         // center contents of columns.
-        table.getColumn("#").setCellRenderer(centerRenderer);
-        table.getColumn("P").setCellRenderer(centerRenderer);
-        table.getColumn("T").setCellRenderer(centerRenderer);
+        getColumn(CardTableColumn.Rating).setCellRenderer(centerRenderer);
+        getColumn(CardTableColumn.Power).setCellRenderer(centerRenderer);
+        getColumn(CardTableColumn.Toughness).setCellRenderer(centerRenderer);
 
         // center the column header captions.
         ((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
         // special renderer for mana symbols
-        model.getColumn(CardTableModel.COST_COLUMN_INDEX).setCellRenderer(new ManaCostCellRenderer());
+        model.getColumn(CardTableColumn.Cost.ordinal()).setCellRenderer(new ManaCostCellRenderer());
 
         // listener to change card image on selection
         table.getSelectionModel().addListSelectionListener(this);
@@ -128,6 +129,10 @@ public class CardTable extends TexturedPanel implements ListSelectionListener {
 
     }
 
+    private TableColumn getColumn(CardTableColumn col) {
+        return table.getColumnModel().getColumn(col.ordinal());
+    }
+
     private void refreshLayout() {
         removeAll();
         migLayout.setLayoutConstraints("flowy, insets 0, gap 0");
@@ -139,8 +144,8 @@ public class CardTable extends TexturedPanel implements ListSelectionListener {
 
     private void setColumnWidths(final TableColumnModel model) {
         for (int i = 0; i < model.getColumnCount(); i++) {
-            model.getColumn(i).setMinWidth(CardTableModel.COLUMN_MIN_WIDTHS[i]);
-            model.getColumn(i).setPreferredWidth(CardTableModel.COLUMN_MIN_WIDTHS[i]);
+            model.getColumn(i).setMinWidth(CardTableColumn.getMinWidth(i));
+            model.getColumn(i).setPreferredWidth(CardTableColumn.getMinWidth(i));
         }
     }
 
@@ -259,14 +264,18 @@ public class CardTable extends TexturedPanel implements ListSelectionListener {
         }
     }
 
+    @SuppressWarnings("serial")
     private static class ManaCostCellRenderer extends DefaultTableCellRenderer {
-        private static final long serialVersionUID = 113245L;
+
+        private MagicManaCost getManaCost(MagicCardDefinition card, Object value) {
+            return card.hasCost() ? (MagicManaCost)value : null;
+        }
 
         @Override
         public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int col) {
 
             final MagicCardDefinition card = ((CardTableModel)table.getModel()).getCardDef(row);
-            final CostPanel myRender = new CostPanel(card.isLand() || !card.isValid() ? null : (MagicManaCost)value);
+            final CostPanel myRender = new CostPanel(getManaCost(card, value));
 
             // match border and background formatting with default
             final JComponent defaultRender = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);

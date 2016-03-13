@@ -13,11 +13,12 @@ import java.awt.Stroke;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import javax.swing.JToggleButton;
-import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.model.MagicPlayerZone;
 import magic.ui.utility.GraphicsUtils;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
+import magic.ui.duel.animation.AnimationFx;
+import magic.ui.duel.animation.MagicAnimations;
 import magic.ui.utility.MagicStyle;
 import org.pushingpixels.trident.Timeline;
 
@@ -54,7 +55,7 @@ public class ZoneToggleButton extends JToggleButton {
         this.imageOffset = value * 2;
         repaint();
     }
-    
+
     // CTR
     private ZoneToggleButton(final MagicPlayerZone zone, final int cardCount, final ValueStyle valueStyle, final boolean isActive) {
 
@@ -71,7 +72,7 @@ public class ZoneToggleButton extends JToggleButton {
         setNumberOfCardsInZone(cardCount);
         setMinimumSize(new Dimension(40, 60));
     }
-    
+
     // CTR
     ZoneToggleButton(final MagicPlayerZone playerZone, final int cardCount, final boolean isActive) {
         this(playerZone, cardCount, ValueStyle.NORMAL, isActive);
@@ -91,7 +92,7 @@ public class ZoneToggleButton extends JToggleButton {
         if (isHighlighted) {
             drawSelectedFill(g);
         }
-        
+
         if (animateOnChange) {
             g.drawImage(image, x, 4, x+32, 4+32, 0+imageOffset, 0+imageOffset, 32-imageOffset, 32-imageOffset, null);
         } else {
@@ -131,7 +132,7 @@ public class ZoneToggleButton extends JToggleButton {
             zoneIconImage = GraphicsUtils.getCompatibleBufferedImage(32, 32, Transparency.TRANSLUCENT);
             Graphics2D g2d = (Graphics2D) zoneIconImage.getGraphics();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            final Image iconImage = GraphicsUtils.getConvertedIcon(IconImages.getIcon(magicIcon));
+            final Image iconImage = GraphicsUtils.getConvertedIcon(MagicImages.getIcon(magicIcon));
             g2d.drawImage(iconImage, 0, 0, this);
             g2d.dispose();
         }
@@ -162,7 +163,7 @@ public class ZoneToggleButton extends JToggleButton {
     }
 
     private void doAlertAnimation(int loopCount) {
-        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+        if (MagicAnimations.isOn(AnimationFx.ZBUTTON_PULSE)) {
             timeline1 = new Timeline();
             timeline1.setDuration(200);
             timeline1.addPropertyToInterpolate(
@@ -172,7 +173,7 @@ public class ZoneToggleButton extends JToggleButton {
     }
 
     public void doAlertAnimation() {
-        doAlertAnimation(4);
+        doAlertAnimation(6);
     }
 
     public boolean isActive() {

@@ -100,6 +100,9 @@ cards/existing_%.txt: cards/existing_scripts_%.txt cards/existing_tokens_%.txt
 cards/groovy.txt: $(wildcard release/Magarena/scripts/*.txt)
 	grep -ho "name=.*" `grep requires_groovy_code -lr release/Magarena/scripts` | sed 's/name=//' | sort > $@
 
+cards/non-groovy.txt: $(wildcard release/Magarena/scripts/*.txt)
+	grep -ho "name=.*" `grep requires_groovy_code -L release/Magarena/scripts/*.txt` | sed 's/name=//' | sort > $@
+
 %_full.txt: scripts/extract_candidates.awk %.txt cards/groovy.txt cards/mtg-data.txt
 	awk -f $^ | sed 's/\t/\n/g'  > $@
 
@@ -137,15 +140,17 @@ M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 	cp -r \
 			release/Magarena/avatars \
 			release/Magarena/decks \
-			release/Magarena/sounds \
 			release/Magarena/scripts \
 			release/Magarena/scripts_missing \
 			release/Magarena/translations \
 			Magarena-1.$*/Magarena
 	cp \
-			release/Magarena/mods/felt_theme.zip \
 			release/Magarena/mods/*.txt \
 			Magarena-1.$*/Magarena/mods
+	mkdir -p Magarena-1.$*/Magarena/themes
+	cp \
+			release/Magarena/mods/felt_theme.zip \
+			Magarena-1.$*/Magarena/themes
 	-zip -r Magarena-1.$*.zip Magarena-1.$*
 	echo "preparing Mac dist"
 	cp -r Magarena.app Magarena-1.$*.app
@@ -187,7 +192,7 @@ inf: $(MAG)
 
 circleci:
 	$(eval MAG_ID := $(shell date +%s))
-	make clean games=100 ai1=MMABC ai2=MCTS ${MAG_ID}.t || (cat ${MAG_ID}.out && false)
+	make clean games=100 ai1=MMABC ai2=MCTS ${MAG_ID}.t || (cat ${MAG_ID}.out && tail -20 ${MAG_ID}.log && false)
 	touch cards/standard_all.out cards/modern_all.out
 	touch cards/standard_all.txt cards/modern_all.txt
 	make zips
@@ -203,7 +208,7 @@ life ?= 10
 ai1 ?= MMABFast
 ai2 ?= MMABFast
 debug ?= false
-devMode ?= true
+devMode ?= false
 selfMode ?= false
 flags ?= 
 
@@ -230,7 +235,13 @@ debug: $(MAG)
 	make 101.t debug=true games=0 flags=-ea || (cat 101.out && false)
 
 %.d: $(MAG)
-	$(DEBUG) -DrndSeed=$* -DselfMode=$(selfMode) -Ddebug=${debug} -DdevMode=${devMode} -Dmagarena.dir=`pwd`/release -jar $^ |& tee $*.log
+	$(DEBUG) \
+	-DrndSeed=$* \
+	-DselfMode=$(selfMode) \
+	-Ddebug=${debug} \
+	-DdevMode=${devMode} \
+	-Dmagarena.dir=`pwd`/release \
+	-jar $^ |& tee $*.log
 
 # Z = 4.4172 (99.999%)
 # E = 0.01
@@ -489,9 +500,10 @@ checks: \
 	check_groovy_escape \
 	check_empty_return \
 	check_image \
-	check_meta \
-	check_rarity \
-	check_decks
+	check_decks \
+	check_mana_or_combat \
+	check_color_or_cost \
+	check_tap_tap
 
 remove_extra_missing:
 	git rm `join <(ls -1 release/Magarena/scripts | sort) <(ls -1 release/Magarena/scripts_missing | sort) | sed 's/^/release\/Magarena\/scripts_missing\//'`
@@ -513,10 +525,12 @@ check_image:
 
 # every card that requires groovy code has a corresponding groovy script file
 # every groovy script file has a corresponding card script that requires groovy code
+# every groovy script file has a txt file with the same name that requires groovy code
 check_requires_groovy_code:
 	diff \
 	<(ls -1 release/Magarena/scripts/*.groovy | cut -d'/' -f 4 | sed 's/.groovy//' | sort) \
 	<(grep requires_groovy_code -r release/Magarena/scripts/ | sed 's/.*=//' | sed 's/;/\n/g' | sed 's/.*scripts\///;s/.txt.*//' | sed -f scripts/normalize_name.sed | sort | uniq)
+	grep -L requires_groovy `ls -1 release/Magarena/scripts/*.groovy | sed 's/groovy/txt/'` | ${NO_OUTPUT}
 
 # $ must be escaped as \$ in groovy script
 check_groovy_escape:
@@ -580,6 +594,20 @@ check_all_cards:
 	diff \
 	<(grep "name=" `grep "token=\|^overlay" -Lr release/Magarena/scripts release/Magarena/scripts_missing` -h | sed 's/name=//' | sort | uniq) \
 	<(sort resources/magic/data/AllCardNames.txt)
+
+check_mana_or_combat:
+	diff \
+	<(grep mana_or_combat -lr release/Magarena/scripts) \
+	<(grep "mana pool.*becomes a" -r release/Magarena/scripts -l)
+
+# all cards except lands should have either color, or cost, or both
+check_color_or_cost:
+	diff \
+	<(grep "^\(cost=\|color=\|type.*Land\)" -r release/Magarena/scripts/*.txt -l) \
+	<(ls release/Magarena/scripts/*.txt | sort)
+
+check_tap_tap:
+	grep "{T}, Tap" -ir release/Magarena/scripts | grep -v oracle | grep -iv "{T}, Tap another" | ${NO_OUTPUT}
 
 crash.txt: $(wildcard *.log)
 	for i in `grep "^Excep" -l $^`; do \
@@ -649,6 +677,9 @@ ai/benchmark.rnd:
 	
 exp/zermelo.tsv: $(wildcard exp/136*.log)
 	awk -f exp/extract_games.awk $^ | ./exp/whr.rb | tac > $@
+
+bytes_per_card.txt:
+	for i in `seq 39 68`; do echo -n "1.$$i "; make bytes_per_card.1.$$i -s ; done > bytes_per_card.txt
 
 bytes_per_card.%:
 	echo `git show $*:release/Magarena/scripts | tail -n+3 | sed 's/^/$*:release\/Magarena\/scripts\//' | git cat-file --batch | grep -v " blob " | sed 's/^[[:space:]]*//;/^$$/d' | wc -c` \
@@ -760,6 +791,18 @@ parse_new.txt:
 	join -v2 -t'_' cards/existing_master.txt parse_ok.txt > $@
 	diff parse_new.ignore $@
 
+parse_groovy.txt:
+	patch -p1 < parse_missing.patch
+	cp scripts-builder/OUTPUT/scripts_missing/* release/Magarena/scripts
+	-rm 101.out
+	make debug
+	grep "ERROR " 101.out | sed 's/java.lang.RuntimeException: //' | sed 's/\(ERROR.*\) \(cause: .*\)/\2 \1/' | sort > parse_missing.txt
+	grep OK 101.out | sed 's/OK card: //' | sort > parse_ok.txt
+	git checkout -- release/Magarena/scripts
+	patch -p1 -R < parse_missing.patch
+	join -t'_' <(sort cards/groovy.txt) <(sort parse_ok.txt) > $@
+	diff parse_groovy.ignore $@
+
 # extract name<tab>image url from gallery page
 %.tsv: %.html
 	grep "alt.*src.*media" $^ | sed 's/.*alt="\([^"]*\)".*src="\([^"]*\)".*/\1\t\2/' > $@
@@ -770,9 +813,11 @@ parse_new.txt:
   | pandoc --from html --to markdown --no-wrap \
   > $@
 
-%.add: %
+%.add: release/Magarena/scripts_missing/%.txt
 	git mv $^ release/Magarena/scripts
+	vim release/Magarena/scripts/$*.txt
 	$(eval NAME := $(shell grep "name=" $^ | sed 's/name=//'))
+	git add release/Magarena/scripts/$*.*
 	git commit -m "add ${NAME}"
 
 images.url: missing_images
@@ -784,6 +829,10 @@ model_usage:
 fix_indentation:
 	grep "^[ ]*" -r release/Magarena/scripts/*.groovy -o | awk -F':' 'length($$2) < 15 {print $$1 "\t" length($$2) % 4}' | grep -v 0 | cut -f1 | uniq | vim -
 
+fix_trailing_space:
+	find release/Magarena/scripts -type f -exec sed --in-place 's/[[:space:]]\+$$//' {} +
+	find src -type f -exec sed --in-place 's/[[:space:]]\+$$//' {} +
+
 update_card_property:
 	ls -1 replace/* | parallel -q sed -i 's/\([^=]*\)=\(.*\)/s|\1=.*|\1=\2|/;s/\\/\\\\/g'
 	ls -1 release/Magarena/scripts/*.txt | parallel -q sed -i -f replace/{/} {}
@@ -791,6 +840,14 @@ update_card_property:
 sims_count:
 	grep "sims=[0-9]*" -r 14* -o -h | sed 's/sims=//' | sort -n | histogram.py -x 800 > $@
 
+groovy-by-size:
+	ls -1Sr `grep executeEvent release/Magarena/scripts/*.groovy -l` > $@
+
+normalize_scripts.diff:
+	diff -d -ru -I rarity= -I removal= -I image -I enchant= -I effect= -I value= -I static= -I timing= -I mana= \
+	release/Magarena/scripts scripts-builder/OUTPUT/scripts_missing | grep -v Only > $@
+
+# export GITHUB_TOKEN=`cat token`
 create-draft-release:
 	github-release release \
     --user magarena \

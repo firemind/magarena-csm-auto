@@ -1,5 +1,5 @@
 [
-    new MagicLandfallTrigger() {
+    new LandfallTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent played) {
             return new MagicEvent(
@@ -19,7 +19,7 @@
                     game.doAction(new AddStaticAction(
                         event.getPermanent(),
                         MagicStatic.ControlAsLongAsYouControlSource(
-                            event.getPlayer(),  
+                            event.getPlayer(),
                             it
                         )
                     ));

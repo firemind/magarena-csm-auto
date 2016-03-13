@@ -1,6 +1,7 @@
 package magic.model.event;
 
 import java.util.List;
+import java.util.Collections;
 
 import magic.ai.ArtificialScoringSystem;
 import magic.model.MagicCard;
@@ -10,6 +11,7 @@ import magic.model.MagicCopyMap;
 import magic.model.MagicCopyable;
 import magic.model.MagicGame;
 import magic.model.MagicMessage;
+import magic.model.MagicObject;
 import magic.model.MagicObjectImpl;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPermanent;
@@ -37,6 +39,7 @@ import magic.model.target.MagicDefaultTargetPicker;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetNone;
 import magic.model.target.MagicTargetPicker;
+import magic.exception.GameException;
 
 public class MagicEvent implements MagicCopyable {
 
@@ -88,7 +91,9 @@ public class MagicEvent implements MagicCopyable {
     private final MagicEventAction action;
     private final String description;
     private final MagicCopyable ref;
+
     private Object[] chosen;
+    private MagicTarget chosenTarget;
 
     public MagicEvent(
         final MagicSource source,
@@ -308,7 +313,7 @@ public class MagicEvent implements MagicCopyable {
     public boolean isValid() {
         return true;
     }
-    
+
     public final MagicSource getSource() {
         return source;
     }
@@ -320,13 +325,17 @@ public class MagicEvent implements MagicCopyable {
     public final boolean hasRef() {
         return ref != NO_REF;
     }
-    
+
     public final MagicPermanent getPermanent() {
         return (MagicPermanent)source;
     }
 
     public final MagicCopyable getRef() {
         return ref;
+    }
+
+    public final MagicObject getRefObject() {
+        return (MagicObject)ref;
     }
 
     public final MagicPermanent getRefPermanent() {
@@ -336,7 +345,7 @@ public class MagicEvent implements MagicCopyable {
     public final MagicPermanentList getRefPermanentList() {
         return (MagicPermanentList)ref;
     }
-    
+
     public final MagicCardList getRefCardList() {
         return (MagicCardList)ref;
     }
@@ -356,11 +365,11 @@ public class MagicEvent implements MagicCopyable {
     public final MagicCard getRefCard() {
         return (MagicCard)ref;
     }
-    
+
     public final MagicSource getRefSource() {
         return (MagicSource)ref;
     }
-    
+
     public final MagicTarget getRefTarget() {
         return (MagicTarget)ref;
     }
@@ -372,7 +381,7 @@ public class MagicEvent implements MagicCopyable {
     public final int getRefInt() {
         return ((MagicInteger)ref).value;
     }
-    
+
     public final MagicPayedCost getRefPayedCost() {
         return (MagicPayedCost)ref;
     }
@@ -385,6 +394,19 @@ public class MagicEvent implements MagicCopyable {
         return (MagicCardOnStack)source;
     }
 
+    public final MagicItemOnStack getItemOnStack() {
+        return (MagicItemOnStack)source;
+    }
+
+    public final int getX() {
+        if (ref instanceof MagicPayedCost) {
+            return getRefPayedCost().getX();
+        } else {
+            // occurs when event is MagicStackGetChoicesEvent
+            return getRefItemOnStack().getEvent().getX();
+        }
+    }
+
     public final boolean hasChoice() {
         return choice.isValid();
     }
@@ -392,7 +414,7 @@ public class MagicEvent implements MagicCopyable {
     public final MagicChoice getChoice() {
         return choice;
     }
-   
+
     public final MagicTargetPicker<?> getTargetPicker() {
         return targetPicker;
     }
@@ -403,6 +425,11 @@ public class MagicEvent implements MagicCopyable {
         final long time = System.currentTimeMillis() - start;
         if (time > 1000) {
             System.err.println("WARNING. ACR:  " + choice.getDescription() + description + " time: " + time);
+            /*
+            if (getClass().desiredAssertionStatus()) {
+                throw new GameException("ACR:  " + choice.getDescription() + description + " time: " + time, game);
+            }
+            */
         }
         return choices;
     }
@@ -413,6 +440,11 @@ public class MagicEvent implements MagicCopyable {
         final long time = System.currentTimeMillis() - start;
         if (time > 1000) {
             System.err.println("WARNING. RCR:  " + choice.getDescription() + description + " time: " + time);
+            /*
+            if (getClass().desiredAssertionStatus()) {
+                throw new GameException("RCR:  " + choice.getDescription() + description + " time: " + time, game);
+            }
+            */
         }
         return res;
     }
@@ -450,7 +482,7 @@ public class MagicEvent implements MagicCopyable {
     }
 
     public final MagicTarget getTarget() {
-        for (Object obj : chosen) {
+        for (final Object obj : chosen) {
             if (obj instanceof MagicTarget) {
                 return (MagicTarget)obj;
             }
@@ -510,7 +542,7 @@ public class MagicEvent implements MagicCopyable {
         }
         throw new RuntimeException("Unable to find chosen color");
     }
-    
+
     public MagicSubType getChosenSubType() {
         for (Object obj : chosen) {
             if (obj instanceof MagicSubType) {
@@ -533,9 +565,17 @@ public class MagicEvent implements MagicCopyable {
         return chosen;
     }
 
-    private final MagicTarget getLegalTarget(final MagicGame game) {
+    private MagicTarget getLegalTarget(final MagicGame game) {
+        for (final Object obj : chosen) {
+            if (obj instanceof MagicTarget) {
+                return getLegalTarget(game, (MagicTarget)obj);
+            }
+        }
+        return null;
+    }
+
+    private final MagicTarget getLegalTarget(final MagicGame game, final MagicTarget target) {
         final MagicTargetChoice targetChoice = getTargetChoice();
-        final MagicTarget target = getTarget();
         if (game.isLegalTarget(player,source,targetChoice,target)) {
             return target;
         } else {
@@ -543,12 +583,24 @@ public class MagicEvent implements MagicCopyable {
         }
     }
 
-    public final boolean hasLegalTarget(final MagicGame game) {
-        return getLegalTarget(game) != MagicTargetNone.getInstance();
+    public final boolean hasLegalTarget() {
+        return chosenTarget != MagicTargetNone.getInstance();
+    }
+
+    public final boolean isValid(final MagicGame game, final Object[] choiceResults) {
+        chosen = choiceResults;
+        chosenTarget = getLegalTarget(game);
+        final boolean countered =
+            getTargetChoice().isValid() &&
+            getTargetChoice().isTargeted() &&
+            chosenTarget == MagicTargetNone.getInstance();
+        chosen = null;
+        chosenTarget = null;
+        return countered == false;
     }
 
     public final boolean processTarget(final MagicGame game, final MagicTargetAction effect) {
-        final MagicTarget target = getLegalTarget(game);
+        final MagicTarget target = chosenTarget;
         if (target != MagicTargetNone.getInstance()) {
             effect.doAction(target);
             return true;
@@ -556,7 +608,12 @@ public class MagicEvent implements MagicCopyable {
             return false;
         }
     }
-    
+
+    public final List<MagicTarget> listTarget() {
+        final MagicTarget target = chosenTarget;
+        return target != MagicTargetNone.getInstance() ? Collections.singletonList(target) : Collections.emptyList();
+    }
+
     public final boolean processPermanent(final MagicGame game, final MagicPermanentAction effect) {
         final MagicPermanent target = getPermanent();
         if (target.isValid()) {
@@ -566,7 +623,7 @@ public class MagicEvent implements MagicCopyable {
             return false;
         }
     }
-    
+
     public final boolean processRefPermanent(final MagicGame game, final MagicPermanentAction effect) {
         final MagicPermanent target = getRefPermanent();
         if (target.isValid()) {
@@ -578,7 +635,7 @@ public class MagicEvent implements MagicCopyable {
     }
 
     public final boolean processTargetPermanent(final MagicGame game, final MagicPermanentAction effect) {
-        final MagicTarget target = getLegalTarget(game);
+        final MagicTarget target = chosenTarget;
         if (target.isPermanent()) {
             effect.doAction((MagicPermanent)target);
             return true;
@@ -587,8 +644,18 @@ public class MagicEvent implements MagicCopyable {
         }
     }
 
+    public final List<MagicPermanent> listTargetPermanent() {
+        final MagicTarget target = chosenTarget;
+        return target.isPermanent() ? Collections.singletonList((MagicPermanent)target) : Collections.emptyList();
+    }
+
+    public final List<MagicPlayer> listTargetController() {
+        final MagicTarget target = chosenTarget;
+        return target != MagicTargetNone.getInstance() ? Collections.singletonList(target.getController()) : Collections.emptyList();
+    }
+
     public final boolean processTargetCardOnStack(final MagicGame game, final MagicCardOnStackAction effect) {
-        final MagicTarget target = getLegalTarget(game);
+        final MagicTarget target = chosenTarget;
         if (target.isSpell()) {
             effect.doAction((MagicCardOnStack)target);
             return true;
@@ -596,9 +663,9 @@ public class MagicEvent implements MagicCopyable {
             return false;
         }
     }
-    
+
     public final boolean processTargetItemOnStack(final MagicGame game, final MagicItemOnStackAction effect) {
-        final MagicTarget target = getLegalTarget(game);
+        final MagicTarget target = chosenTarget;
         if (target instanceof MagicItemOnStack) {
             effect.doAction((MagicItemOnStack)target);
             return true;
@@ -606,7 +673,12 @@ public class MagicEvent implements MagicCopyable {
             return false;
         }
     }
-    
+
+    public final List<MagicItemOnStack> listTargetItem() {
+        final MagicTarget target = chosenTarget;
+        return target instanceof MagicItemOnStack ? Collections.singletonList((MagicItemOnStack)target) : Collections.emptyList();
+    }
+
     public final void processChosenCards(final MagicGame game, final MagicCardAction effect) {
         for (final MagicCard card : getCardChoice()) {
             effect.doAction(card);
@@ -614,7 +686,7 @@ public class MagicEvent implements MagicCopyable {
     }
 
     public final boolean processTargetCard(final MagicGame game, final MagicCardAction effect) {
-        final MagicTarget target = getLegalTarget(game);
+        final MagicTarget target = chosenTarget;
         if (target.isSpell()) {
             effect.doAction((MagicCard)target);
             return true;
@@ -623,14 +695,24 @@ public class MagicEvent implements MagicCopyable {
         }
     }
 
+    public final List<MagicCard> listTargetCard() {
+        final MagicTarget target = chosenTarget;
+        return target.isSpell() ? Collections.singletonList((MagicCard)target) : Collections.emptyList();
+    }
+
     public final boolean processTargetPlayer(final MagicGame game, final MagicPlayerAction effect) {
-        final MagicTarget target = getLegalTarget(game);
+        final MagicTarget target = chosenTarget;
         if (target.isPlayer()) {
             effect.doAction((MagicPlayer)target);
             return true;
         } else {
             return false;
         }
+    }
+
+    public final List<MagicPlayer> listTargetPlayer() {
+        final MagicTarget target = chosenTarget;
+        return target.isPlayer() ? Collections.singletonList((MagicPlayer)target) : Collections.emptyList();
     }
 
     private static final void payManaCost(final MagicGame game, final MagicPlayer player, final MagicPayManaCostResult result) {
@@ -655,11 +737,13 @@ public class MagicEvent implements MagicCopyable {
 
     public final void executeEvent(final MagicGame game,final Object[] choiceResults) {
         chosen = choiceResults;
+        chosenTarget = getLegalTarget(game);
         payManaCost(game);
         action.executeEvent(game,this);
         chosen = null;
+        chosenTarget = null;
     }
-    
+
     public final void executeAllEvents(final MagicGame game, final MagicSourceEvent... sourceEvents) {
         for (int i = 0; i < sourceEvents.length; i++) {
             sourceEvents[i].getAction().executeEvent(game, this);
@@ -699,7 +783,7 @@ public class MagicEvent implements MagicCopyable {
     public MagicEventAction getEventAction() {
         return action;
     }
-    
+
     public String getDescription() {
         return description;
     }

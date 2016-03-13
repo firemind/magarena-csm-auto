@@ -8,7 +8,7 @@ def TEXT2 = "Each player draws seven cards."
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                payedCost.isKicked() ? 
+                payedCost.isKicked() ?
                     MagicChoice.NONE :
                     new MagicOrChoice(
                         MagicChoice.NONE,
@@ -26,18 +26,27 @@ def TEXT2 = "Each player draws seven cards."
                 for (final MagicPlayer player : game.getAPNAP()) {
                     final MagicCardList graveyard = new MagicCardList(player.getGraveyard());
                     for (final MagicCard card : graveyard) {
-                        game.doAction(new ShiftCardAction(card,MagicLocationType.Graveyard,MagicLocationType.OwnersLibrary));
+                        game.doAction(new ShiftCardAction(
+                            card,
+                            MagicLocationType.Graveyard,
+                            MagicLocationType.TopOfOwnersLibrary
+                        ));
                     }
                     final MagicCardList hand = new MagicCardList(player.getHand());
                     for (final MagicCard card : hand) {
-                        game.doAction(new ShiftCardAction(card,MagicLocationType.OwnersHand,MagicLocationType.OwnersLibrary));
+                        game.doAction(new ShiftCardAction(
+                            card,
+                            MagicLocationType.OwnersHand,
+                            MagicLocationType.TopOfOwnersLibrary
+                        ));
                     }
+                    game.doAction(new ShuffleLibraryAction(player));
                 }
             }
             if (event.isKicked() || event.isMode(2)) {
-                for (final MagicPlayer player : game.getAPNAP()) { 
+                for (final MagicPlayer player : game.getAPNAP()) {
                     game.doAction(new DrawAction(player,7));
-                } 
+                }
             }
         }
     }

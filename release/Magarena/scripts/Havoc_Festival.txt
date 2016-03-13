@@ -1,0 +1,9 @@
+name=Havoc Festival
+image=http://magiccards.info/scans/en/rtr/166.jpg
+value=3.362
+rarity=R
+type=Enchantment
+cost={4}{B}{R}
+timing=enchantment
+requires_groovy_code=Forsaken Wastes;Havoc Festival
+oracle=Players can't gain life.\nAt the beginning of each player's upkeep, that player loses half his or her life, rounded up.

@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return new MagicEvent(
@@ -12,7 +12,7 @@
         public void executeEvent(final MagicGame game,final MagicEvent event) {
             game.doAction(new ReturnLinkedExileAction(
                 event.getPermanent(),
-                MagicLocationType.Play,
+                MagicLocationType.Battlefield,
                 MagicPlayMod.TAPPED
             ));
         }

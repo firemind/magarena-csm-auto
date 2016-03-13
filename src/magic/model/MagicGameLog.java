@@ -4,17 +4,17 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import magic.data.GeneralConfig;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
+import magic.utility.MagicSystem;
 
 public class MagicGameLog {
     private MagicGameLog() {}
 
     public static final String LOG_FILE = "game.log";
-    
+
     private static final String gameLog = (System.getProperty("game.log") != null) ?
-        System.getProperty("game.log") :       
+        System.getProperty("game.log") :
         MagicFileSystem.getDataPath(DataPath.LOGS).resolve(LOG_FILE).toString();
 
     private static PrintWriter writer;
@@ -22,7 +22,7 @@ public class MagicGameLog {
     public static String getLogFileName(){
         return gameLog;
     }
-    
+
     public static void initialize() {
         try {
             writer = new PrintWriter(gameLog);
@@ -31,7 +31,7 @@ public class MagicGameLog {
             sb.append('\n');
             sb.append("CREATED ON ").append(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
             sb.append('\n');
-            sb.append("MAGARENA VERSION ").append(GeneralConfig.VERSION);
+            sb.append("MAGARENA VERSION ").append(MagicSystem.VERSION);
             sb.append(", JRE ").append(System.getProperty("java.version"));
             sb.append(", OS ").append(System.getProperty("os.name"));
             sb.append("_").append(System.getProperty("os.version"));

@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{6}{U}")
+                MagicPayManaCostEvent.Cast(source,"{6}{U}")
             ];
         }
         @Override
@@ -11,7 +11,7 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Return each nonland permanent you don't control to its owner's hand."
+                "Return each nonland permanent PN doesn't control to its owner's hand."
             );
         }
         @Override

@@ -1,10 +1,10 @@
 def INSTANT_OR_AURA_TARGETS_YOUR_PERM = new MagicStackFilterImpl() {
     public boolean accept(final MagicSource source,final MagicPlayer player,final MagicItemOnStack target) {
-        return (target.hasType(MagicType.Instant) || target.hasSubType(MagicSubType.Aura)) && 
-            target.isSpell() && 
-            target.getTarget().isPermanent() && 
+        return (target.hasType(MagicType.Instant) || target.hasSubType(MagicSubType.Aura)) &&
+            target.isSpell() &&
+            target.getTarget().isPermanent() &&
             target.getTarget().isFriend(player);
-    } 
+    }
 };
 
 def TARGET_INSTANT_OR_AURA_TARGETS_YOUR_PERM = new MagicTargetChoice(
@@ -21,7 +21,7 @@ def TARGET_INSTANT_OR_AURA_TARGETS_YOUR_PERM = new MagicTargetChoice(
                 cardOnStack,
                 TARGET_INSTANT_OR_AURA_TARGETS_YOUR_PERM,
                 this,
-                "Counter target instant or Aura spell\$ that targets a permanent you control."
+                "Counter target instant or Aura spell\$ that targets a permanent PN controls."
             );
         }
         @Override

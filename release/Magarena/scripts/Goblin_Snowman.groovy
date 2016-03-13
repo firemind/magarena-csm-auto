@@ -14,24 +14,6 @@ def TARGET_CREATURE_BLOCKED_BY_SOURCE = {
 }
 
 [
-    new MagicWhenSelfBlocksTrigger() {
-        @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
-            return new MagicEvent(
-                permanent,
-                this,
-                "Prevent all combat damage that would be dealt to and dealt by SN this turn."
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new AddTurnTriggerAction(
-                event.getPermanent(),
-                MagicPreventDamageTrigger.PreventCombatDamageDealtToDealtBy
-        ));
-        }
-    },
-    
     new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Block),
         "Damage"

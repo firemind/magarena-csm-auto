@@ -12,8 +12,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import magic.model.MagicPlayerZone;
-import magic.ui.SwingGameController;
-import magic.ui.duel.PlayerViewerInfo;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -108,6 +108,10 @@ public class PlayerZoneButtonsPanel extends JPanel {
 
     void doFlashPlayerHandZoneButton() {
         zoneButtons.get(MagicPlayerZone.HAND).doAlertAnimation();
+    }
+
+    void doFlashLibraryZoneButton() {
+        zoneButtons.get(MagicPlayerZone.LIBRARY).doAlertAnimation();
     }
 
     void doHighlightPlayerZone(MagicPlayerZone zone, boolean b) {

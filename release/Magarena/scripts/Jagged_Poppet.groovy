@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
             return damage.getTarget() == permanent ?
@@ -16,8 +16,8 @@
             game.addEvent(new MagicDiscardEvent(event.getPermanent(), event.getPlayer(), event.getRefInt()));
         }
     },
-    
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return MagicCondition.HELLBENT.accept(permanent) ?

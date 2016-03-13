@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
             return (permanent.isFriend(cardOnStack) && permanent.isOpponent(game.getTurnPlayer())) ?
@@ -7,7 +7,7 @@
                     permanent,
                     new MagicMayChoice(),
                     this,
-                    "You may\$ have each opponent loses 1 life."
+                    "PN may\$ have each opponent lose 1 life."
                 ): MagicEvent.NONE;
         }
         @Override

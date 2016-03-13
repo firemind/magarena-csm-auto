@@ -1,0 +1,12 @@
+name=Goblin Warchief
+image=http://magiccards.info/scans/en/ddn/9.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Goblin,Warrior
+cost={1}{R}{R}
+pt=2/2
+ability=Goblin creatures you control have haste.
+requires_groovy_code
+timing=main
+oracle=Goblin spells you cast cost {1} less to cast.\nGoblin creatures you control have haste.

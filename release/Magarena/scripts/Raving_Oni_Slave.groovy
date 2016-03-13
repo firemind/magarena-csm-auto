@@ -15,15 +15,15 @@ def event = {
 }
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPayedCost payedcost) {
             return permanent.getController().controlsPermanent(MagicSubType.Demon) == false ?
                 event(permanent):
                 MagicEvent.NONE;
         }
-    },    
-    new MagicWhenLeavesPlayTrigger() {
+    },
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final RemoveFromPlayAction act) {
             return permanent.getController().controlsPermanent(MagicSubType.Demon) == false ?

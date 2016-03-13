@@ -20,15 +20,15 @@ import magic.ui.widget.FontsAndBorders;
 public class MenuButton extends JButton {
 
     private final static Color COLOR_NORMAL = Color.WHITE;
-    private final static Color COLOR_DISABLED = Color.GRAY;
+    private final static Color COLOR_DISABLED = Color.DARK_GRAY;
 
-    private final boolean isRunnable;
-    private final boolean showSeparator;
+    private boolean isRunnable;
+    private boolean hasSeparator;
 
     public MenuButton(final String caption, final AbstractAction action, final String tooltip, final boolean showSeparator) {
         super(caption);
         this.isRunnable = (action != null);
-        this.showSeparator = showSeparator;
+        this.hasSeparator = showSeparator;
         setFont(FontsAndBorders.FONT_MENU_BUTTON);
         setHorizontalAlignment(SwingConstants.CENTER);
         setForeground(COLOR_NORMAL);
@@ -49,7 +49,7 @@ public class MenuButton extends JButton {
     }
     protected MenuButton() {
         isRunnable = false;
-        showSeparator = false;
+        hasSeparator = false;
     }
 
     public boolean isRunnable() {
@@ -69,15 +69,19 @@ public class MenuButton extends JButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                setForeground(MagicStyle.getRolloverColor());
+                if (isEnabled()) {
+                    setForeground(MagicStyle.getRolloverColor());
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                setForeground(Color.WHITE);
+                if (isEnabled()) {
+                    setForeground(Color.WHITE);
+                }
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
+                if (isEnabled() && SwingUtilities.isLeftMouseButton(e)) {
                     setForeground(MagicStyle.getPressedColor());
                     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 }
@@ -85,8 +89,10 @@ public class MenuButton extends JButton {
             }
             @Override
             public void mouseReleased(MouseEvent e) {
-                setForeground(Color.WHITE);
-                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                if (isEnabled()) {
+                    setForeground(Color.WHITE);
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                }
             }
         });
     }
@@ -94,11 +100,16 @@ public class MenuButton extends JButton {
     @Override
     public void setEnabled(boolean b) {
         super.setEnabled(b);
+        isRunnable = b;
         setForeground(b ? COLOR_NORMAL : COLOR_DISABLED);
     }
 
-    public boolean showSeparator() {
-        return showSeparator;
+    public boolean hasSeparator() {
+        return hasSeparator;
+    }
+
+    public void setSeparator(boolean b) {
+        hasSeparator = b;
     }
 
 
@@ -127,6 +138,10 @@ public class MenuButton extends JButton {
         setPressedIcon(GraphicsUtils.getRecoloredIcon(
                 (ImageIcon) defaultIcon,
                 MagicStyle.getPressedColor())
+        );
+        setDisabledIcon(GraphicsUtils.getRecoloredIcon(
+                (ImageIcon) defaultIcon,
+                COLOR_DISABLED)
         );
     }
 

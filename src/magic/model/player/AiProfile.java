@@ -4,6 +4,7 @@ import java.util.Properties;
 import magic.ai.MagicAIImpl;
 import magic.translate.StringContext;
 import magic.translate.UiString;
+import magic.utility.SortedProperties;
 
 public class AiProfile extends PlayerProfile {
 
@@ -27,20 +28,20 @@ public class AiProfile extends PlayerProfile {
     private int extraLife = DEFAULT_EXTRA_LIFE;
     private int aiLevel = DEFAULT_AI_LEVEL;
     private MagicAIImpl aiType = DEFAULT_AI_TYPE;
-    
+
     public AiProfile(final String profileId) {
         super(profileId);
         loadProperties();
     }
-    
+
     public AiProfile() {
         loadProperties();
     }
-    
+
     public static AiProfile create(final MagicAIImpl aiImpl, final int level) {
         return create(aiImpl.name(), aiImpl, level);
     }
-    
+
     public static AiProfile create(final String name, final MagicAIImpl aiImpl, final int level) {
         final AiProfile ap = new AiProfile();
         ap.setPlayerName(name);
@@ -72,7 +73,7 @@ public class AiProfile extends PlayerProfile {
 
     @Override
     public void save() {
-        final Properties properties = new Properties();
+        final Properties properties = new SortedProperties();
         properties.setProperty(KEY_EXTRA_LIFE, String.valueOf(getExtraLife()));
         properties.setProperty(KEY_AI_LEVEL, String.valueOf(getAiLevel()));
         properties.setProperty(KEY_AI_TYPE, getAiType().name());
@@ -86,7 +87,7 @@ public class AiProfile extends PlayerProfile {
         aiLevel = Integer.parseInt(properties.getProperty(KEY_AI_LEVEL, Integer.toString(DEFAULT_AI_LEVEL)));
         aiType = MagicAIImpl.valueOf(properties.getProperty(KEY_AI_TYPE, DEFAULT_AI_TYPE.name()));
     }
-    
+
     @Override
     protected String getPlayerType() {
         return PLAYER_TYPE;
@@ -96,12 +97,12 @@ public class AiProfile extends PlayerProfile {
     public String getPlayerTypeLabel() {
         return UiString.get(_S1, getAiType());
     }
-    
+
     @Override
     public String getPlayerAttributeLabel() {
         return UiString.get(_S2, getAiLevel(), getExtraLife());
     }
-    
+
     @Override
     public String getPlayerLabel() {
         return UiString.get(_S3, getPlayerName(), getAiLevel(), getAiType().name());

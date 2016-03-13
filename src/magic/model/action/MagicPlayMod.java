@@ -2,7 +2,6 @@ package magic.model.action;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import magic.model.MagicGame;
@@ -15,9 +14,9 @@ import magic.model.MagicCounterType;
 import magic.model.MagicManaCost;
 import magic.model.MagicSource;
 import magic.model.mstatic.MagicStatic;
-import magic.model.trigger.MagicAtEndOfCombatTrigger;
-import magic.model.trigger.MagicAtEndOfTurnTrigger;
-import magic.model.trigger.MagicWhenLeavesPlayTrigger;
+import magic.model.trigger.AtEndOfCombatTrigger;
+import magic.model.trigger.AtEndOfTurnTrigger;
+import magic.model.trigger.LeavesBattlefieldTrigger;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicMorphActivation;
 import magic.model.event.MagicMatchedCostEvent;
@@ -26,18 +25,18 @@ import magic.model.event.MagicPayManaCostEvent;
 public enum MagicPlayMod implements MagicPermanentAction {
     EXILE_AT_END_OF_COMBAT("Exile that token at end of combat") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            game.doAction(new AddTriggerAction(perm, MagicAtEndOfCombatTrigger.Exile));
+            game.doAction(new AddTriggerAction(perm, AtEndOfCombatTrigger.Exile));
         }
     },
-    EXILE_AT_END_OF_TURN("Exile (it|them) at the beginning of the next end step") {
+    EXILE_AT_END_OF_TURN("Exile (it|them|that token) at the beginning of the next end step") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            game.doAction(new AddTriggerAction(perm, MagicAtEndOfTurnTrigger.ExileAtEnd));
+            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.ExileAtEnd));
         }
     },
     EXILE_AT_END_OF_YOUR_TURN("Exile it at the beginning of your next end step") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             final MagicPlayer controller = perm.getController();
-            game.doAction(new AddTriggerAction(perm, MagicAtEndOfTurnTrigger.ExileAtYourEnd(controller)));
+            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.ExileAtYourEnd(controller)));
         }
     },
     EXILE_AT_END_OF_YOUR_TURN2("At the beginning of your next end step, exile it") {
@@ -47,17 +46,17 @@ public enum MagicPlayMod implements MagicPermanentAction {
     },
     EXILE_WHEN_LEAVES("If it would leave the battlefield, exile it instead of putting it anywhere else") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            game.doAction(new AddTriggerAction(perm, MagicWhenLeavesPlayTrigger.Exile));
+            game.doAction(new AddTriggerAction(perm, LeavesBattlefieldTrigger.Exile));
         }
     },
     SACRIFICE_AT_END_OF_TURN("Sacrifice (it|those tokens) at the beginning of the next end step") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            game.doAction(new AddTriggerAction(perm, MagicAtEndOfTurnTrigger.Sacrifice));
+            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.Sacrifice));
         }
     },
     RETURN_AT_END_OF_TURN() {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            game.doAction(new AddTriggerAction(perm, MagicAtEndOfTurnTrigger.Return));
+            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.Return));
         }
     },
     ATTACKING("attacking") {
@@ -76,7 +75,7 @@ public enum MagicPlayMod implements MagicPermanentAction {
             ATTACKING.doAction(game, perm);
         }
     },
-    HASTE_UEOT("it gains haste until end of turn") {
+    HASTE_UEOT("(it|that creature) gains haste until end of turn") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             game.doAction(new GainAbilityAction(perm, MagicAbility.Haste));
         }
@@ -99,6 +98,11 @@ public enum MagicPlayMod implements MagicPermanentAction {
     DEATH_COUNTER() {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             perm.changeCounters(MagicCounterType.Death,1);
+        }
+    },
+    ARTIFACT() {
+        protected void doAction(final MagicGame game, final MagicPermanent perm) {
+            game.doAction(new AddStaticAction(perm, MagicStatic.Artifact));
         }
     },
     ZOMBIE() {
@@ -125,19 +129,9 @@ public enum MagicPlayMod implements MagicPermanentAction {
     },
     MANIFEST() {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            if (perm.isCreature()) {
-                final MagicManaCost manaCost = perm.getCardDefinition().getCost();
+            if (perm.isCreature() && perm.getCardDefinition().hasCost()) {
                 final MagicAbilityList morphAct = new MagicAbilityList();
-                final List<MagicMatchedCostEvent> cost = new LinkedList<>();
-                cost.add(new MagicMatchedCostEvent() {
-                    public MagicEvent getEvent(final MagicSource source) {
-                        return new MagicPayManaCostEvent(source, manaCost);
-                    }
-                    public boolean isIndependent() {
-                        return true;
-                    }
-                });
-                morphAct.add(new MagicMorphActivation(cost));
+                morphAct.add(MagicMorphActivation.Manifest);
                 game.doAction(new GainAbilityAction(perm, morphAct, MagicStatic.Forever));
             }
             perm.setState(MagicPermanentState.FaceDown);

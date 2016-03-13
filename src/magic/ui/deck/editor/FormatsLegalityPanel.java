@@ -20,7 +20,7 @@ import magic.data.MagicFormat;
 import magic.data.MagicPredefinedFormat;
 import magic.data.MagicIcon;
 import magic.model.MagicDeck;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.translate.UiString;
 import net.miginfocom.swing.MigLayout;
 
@@ -31,8 +31,8 @@ public class FormatsLegalityPanel extends JPanel {
     private static final String _S1 = "Formats";
 
     // fired when selection changes.
-    public static final String CP_FORMAT_SELECTED = "FormatSelected";
-         
+    public static final String CP_FORMAT_SELECTED = "c8d61cfc-568a-488d-a0fb-f37ef1a39192";
+
     private final MigLayout migLayout = new MigLayout();
     private final JScrollPane scrollpane = new JScrollPane();
     private final JList<DeckLegalityInfo> formatsJList = new JList<>();
@@ -110,8 +110,8 @@ public class FormatsLegalityPanel extends JPanel {
 
     private class FormatsListCellRenderer extends DefaultListCellRenderer {
 
-        private final ImageIcon LEGAL_ICON = IconImages.getIcon(MagicIcon.LEGAL_ICON);
-        private final ImageIcon ILLEGAL_ICON = IconImages.getIcon(MagicIcon.ILLEGAL_ICON);
+        private final ImageIcon LEGAL_ICON = MagicImages.getIcon(MagicIcon.LEGAL_ICON);
+        private final ImageIcon ILLEGAL_ICON = MagicImages.getIcon(MagicIcon.ILLEGAL_ICON);
         private final Color ALT_BCOLOR = new Color(242, 242, 242);
 
         @Override
@@ -135,9 +135,9 @@ public class FormatsLegalityPanel extends JPanel {
                             ? list.getBackground()
                             : ALT_BCOLOR
             );
-          
+
             setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY), 
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY),
                     BorderFactory.createEmptyBorder(0, 6, 0, 4))
             );
 

@@ -1,5 +1,5 @@
 
-def LymphPrevent = new MagicPreventDamageTrigger() {
+def LymphPrevent = new PreventDamageTrigger() {
     @Override
     public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
         if (damage.getTarget() == permanent) {
@@ -10,7 +10,7 @@ def LymphPrevent = new MagicPreventDamageTrigger() {
     }
 };
 
-[    
+[
     new MagicStatic(MagicLayer.Ability, SLIVER) {
         @Override
         public void modAbilityFlags(final MagicPermanent source,final MagicPermanent permanent,final Set<MagicAbility> flags) {

@@ -1,11 +1,11 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Exile all creatures you control. Then put that many 5/5 " +
+                "PN exiles all creatures he or she controls. Then puts that many 5/5 " +
                 "red Dragon creature tokens with flying onto the battlefield."
             );
         }
@@ -25,13 +25,13 @@
             ));
         }
     },
-    new MagicWhenSelfLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Sacrifice all Dragons PN controls. Return exiled cards to the battlefield under your control."
+                "PN sacrifices all Dragons he or she controls. Then returns the exiled cards to the battlefield under his or her control."
             );
         }
         @Override
@@ -41,7 +41,7 @@
             }
             game.doAction(new ReturnLinkedExileAction(
                 event.getPermanent(),
-                MagicLocationType.Play,
+                MagicLocationType.Battlefield,
                 event.getPlayer()
             ));
         }

@@ -1,12 +1,10 @@
 package magic.ui.duel;
 
 import javax.swing.JPanel;
-import magic.model.MagicCard;
 import magic.model.MagicCardList;
-import magic.model.event.MagicEvent;
-import magic.ui.duel.animation.PlayCardAnimation;
 import magic.ui.duel.resolution.ResolutionProfileResult;
 import magic.ui.duel.sidebar.StackViewer;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 
 @SuppressWarnings("serial")
 public abstract class BattlefieldPanel extends JPanel {
@@ -19,14 +17,8 @@ public abstract class BattlefieldPanel extends JPanel {
 
     public abstract void resizeComponents(final ResolutionProfileResult result);
 
-    public abstract void setAnimationEvent(final MagicEvent event, final DuelPanel gamePanel);
-
-    public abstract PlayCardAnimation getPlayCardFromHandAnimation();
-
-    public abstract void setPlayCardFromHandAnimation(final PlayCardAnimation event);
-    
     public abstract StackViewer getStackViewer();
 
-    public abstract void highlightCard(MagicCard card, boolean b);
+    public abstract void highlightCard(CardViewerInfo cardInfo, boolean b);
 
 }

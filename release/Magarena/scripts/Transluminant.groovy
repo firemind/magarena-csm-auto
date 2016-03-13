@@ -1,20 +1,24 @@
-def trigger = new MagicAtEndOfTurnTrigger() {
+def DelayedTrigger = {
+    final MagicSource staleSource, final MagicPlayer stalePlayer ->
+    return new AtEndOfTurnTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer eotPlayer) {
+            game.addDelayedAction(new RemoveTriggerAction(this));
             return new MagicEvent(
-                permanent,
+                game.createDelayedSource(staleSource, stalePlayer),
                 this,
-                "PN puts 1/1 white Spirit creature token with flying onto the battlefield."
+                "PN puts a 1/1 white Spirit creature token with flying onto the battlefield."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.doAction(new PlayTokenAction(
-                event.getSource().getController(),
+                event.getPlayer(),
                 CardDefinitions.getToken("1/1 white Spirit creature token with flying")
             ))
         }
     }
+}
 
 [
     new MagicPermanentActivation(
@@ -42,7 +46,9 @@ def trigger = new MagicAtEndOfTurnTrigger() {
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new AddTurnTriggerAction(event.getPermanent(),trigger));
+            game.doAction(new AddTriggerAction(
+                DelayedTrigger(event.getSource(), event.getPlayer())
+            ));
         }
     }
 ]

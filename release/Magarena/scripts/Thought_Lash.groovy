@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             game.doAction(new ChangeCountersAction(
@@ -17,7 +17,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            if (event.isYes()) {  
+            if (event.isYes()) {
                 final MagicCardList topN = event.getPlayer().getLibrary().getCardsFromTop(event.getPermanent().getCounters(MagicCounterType.Age));
                 for (final MagicCard card : topN) {
                     game.doAction(new ShiftCardAction(

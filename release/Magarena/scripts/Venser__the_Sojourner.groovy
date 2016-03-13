@@ -1,4 +1,3 @@
-
 [
     new MagicPlaneswalkerActivation(2) {
         @Override
@@ -7,7 +6,8 @@
                 source,
                 TARGET_PERMANENT_YOU_OWN,
                 this,
-                "Exile target permanent you own. Return it to the battlefield under your control at the beginning of the next end step."
+                "PN exiles target permanent he or she owns\$. PN returns it to the battlefield "+
+                "under his or her control at the beginning of the next end step."
             );
         }
         @Override
@@ -49,12 +49,12 @@
         }
         @Override
         public void executeEvent(final MagicGame outerGame, final MagicEvent outerEvent) {
-            final MagicPlayer you = outerEvent.getPlayer();
+            final long pId = outerEvent.getPlayer().getId();
             outerGame.doAction(new AddTriggerAction(
-                new MagicWhenOtherSpellIsCastTrigger() {
+                new OtherSpellIsCastTrigger() {
                     @Override
                     public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
-                        return cardOnStack.getController().getId() == you.getId() ?
+                        return cardOnStack.getController().getId() == pId ?
                             new MagicEvent(
                                 cardOnStack,
                                 NEG_TARGET_PERMANENT,

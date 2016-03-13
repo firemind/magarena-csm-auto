@@ -5,7 +5,7 @@ def ATTACKING_KITHKIN = new MagicPermanentFilterImpl() {
         }
 }
 [
-    new MagicWhenSelfAttacksTrigger() {
+    new ThisAttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent attacker) {
             return new MagicEvent(
@@ -21,7 +21,6 @@ def ATTACKING_KITHKIN = new MagicPermanentFilterImpl() {
             final MagicPermanent permanent = event.getPermanent();
             final int amount = ATTACKING_KITHKIN.except(event.getPermanent()).filter(player).size()
             game.doAction(new ChangeTurnPTAction(event.getPermanent(), amount, amount));
-            
         }
     }
 ]

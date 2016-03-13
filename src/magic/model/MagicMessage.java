@@ -3,8 +3,11 @@ package magic.model;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 import magic.model.phase.MagicPhaseType;
 import magic.model.stack.MagicCardOnStack;
+import magic.model.choice.MagicCardChoiceResult;
+import magic.model.ARG;
 
 public class MagicMessage {
 
@@ -68,7 +71,9 @@ public class MagicMessage {
         return sourceText
             .replaceAll("PN", player.toString())
             .replaceAll("SN", getCardToken(source))
-            .replaceAll("RN", getCardToken(ref));
+            .replaceAll("RN", getCardToken(ref))
+            .replaceAll("\\bX\\b" + ARG.EVENQUOTES, getXCost(ref))
+            ;
     }
 
     public static String replaceChoices(final String sourceText, final Object[] choices) {
@@ -77,7 +82,7 @@ public class MagicMessage {
 
         for (int idx = 0; result.indexOf('$') >= 0; idx++) {
 
-            final String choice = (idx < choices.length && choices[idx] != null) 
+            final String choice = (idx < choices.length && choices[idx] != null)
                 ? getCardToken(choices[idx])
                 : "";
 
@@ -88,6 +93,19 @@ public class MagicMessage {
     }
 
     private static final String CARD_TOKEN = "<%s" + CARD_ID_DELIMITER + "%d>";
+
+    public static String getXCost(final Object obj) {
+        if (obj != null && obj instanceof MagicPayedCost) {
+            return "X (" + ((MagicPayedCost)obj).getX() + ")";
+        } else {
+            return "X";
+        }
+    }
+
+    public static String format(final String template, final Object... args) {
+        final Object[] strings = Arrays.stream(args).map(o -> getCardToken(o)).toArray();
+        return String.format(template, strings);
+    }
 
     public static String getCardToken(final Object obj) {
 
@@ -110,11 +128,20 @@ public class MagicMessage {
             return String.format(CARD_TOKEN, card.getName(), card.getCard().getId());
         }
 
+        if (obj instanceof MagicCardChoiceResult) {
+            final MagicCardChoiceResult cards = (MagicCardChoiceResult) obj;
+            return getTokenizedCardNames(cards);
+        }
+
         // Please do not remove, thanks ~ lodici.
         // System.err.printf("getCardToken() : %s (%s)\n", obj.toString(), obj.getClass());
 
         return obj.toString();
 
+    }
+
+    public static String getCardToken(final String name, final MagicCard card) {
+        return String.format(CARD_TOKEN, name, card.getId());
     }
 
     public static String getTokenizedCardNames(final Collection<MagicCard> cards) {

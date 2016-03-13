@@ -1,20 +1,11 @@
 package magic.test;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
 import magic.ai.MagicAIImpl;
 import magic.data.CardDefinitions;
-import magic.model.MagicCard;
-import magic.model.MagicCardDefinition;
-import magic.model.MagicDeckProfile;
-import magic.model.MagicDuel;
-import magic.model.MagicGame;
-import magic.model.MagicPayedCost;
-import magic.model.MagicPermanent;
-import magic.model.MagicPermanentState;
-import magic.model.MagicPlayer;
-import magic.model.DuelPlayerConfig;
+import magic.model.*;
 import magic.model.action.PlayCardFromStackAction;
-import magic.model.action.PlayTokenAction;
 import magic.model.player.AiProfile;
 import magic.model.player.HumanProfile;
 import magic.model.stack.MagicCardOnStack;
@@ -30,11 +21,19 @@ public abstract class TestGameBuilder {
         }
     }
 
+    public static void addToLibrary(final MagicPlayer player, final String name) {
+        addToLibrary(player, name, 1);
+    }
+
     public static void addToGraveyard(final MagicPlayer player, final String name, final int count) {
         final MagicCardDefinition cardDefinition=CardDefinitions.getCard(name);
         for (int c=count;c>0;c--) {
             player.getGraveyard().addToTop(new MagicCard(cardDefinition,player,currentId.incrementAndGet()));
         }
+    }
+
+    public static void addToGraveyard(final MagicPlayer player, final String name) {
+        addToGraveyard(player, name, 1);
     }
 
     public static void addToExile(final MagicPlayer player,final String name,final int count) {
@@ -49,6 +48,10 @@ public abstract class TestGameBuilder {
         for (int c=count;c>0;c--) {
             player.addCardToHand(new MagicCard(cardDefinition,player,currentId.incrementAndGet()));
         }
+    }
+
+    public static void addToHand(final MagicPlayer player, final String name) {
+        addToHand(player, name, 1);
     }
 
     public static MagicPermanent createPermanent(final MagicPlayer player, final String name, final boolean tapped, final int count) {
@@ -79,11 +82,11 @@ public abstract class TestGameBuilder {
         }
         return lastPermanent;
     }
-    
+
     public static MagicPermanent createPermanent(final MagicPlayer player,final String name,final int amount){
         return createPermanent(player,name,false,amount);
     }
-    
+
     public static MagicPermanent createPermanent(final MagicPlayer player,final String name){
         return createPermanent(player,name,false,1);
     }

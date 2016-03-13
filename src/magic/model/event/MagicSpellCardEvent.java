@@ -1,19 +1,20 @@
 package magic.model.event;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import magic.model.MagicAbility;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicChangeCardDefinition;
 import magic.model.MagicGame;
-import magic.model.MagicPayedCost;
-import magic.model.MagicAbility;
 import magic.model.MagicLocationType;
 import magic.model.MagicMessage;
-import magic.model.stack.MagicCardOnStack;
+import magic.model.MagicPayedCost;
+import magic.model.action.ChangeCardDestinationAction;
+import magic.model.action.EnqueueTriggerAction;
 import magic.model.choice.MagicChoice;
 import magic.model.choice.MagicOrChoice;
-import magic.model.action.ChangeCardDestinationAction;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import magic.model.stack.MagicCardOnStack;
 
 public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAction,MagicChangeCardDefinition {
 
@@ -21,7 +22,7 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
     public void change(final MagicCardDefinition cdef) {
         cdef.setEvent(this);
     }
-    
+
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
         throw new RuntimeException(getClass() + " did not override executeEvent");
@@ -34,15 +35,18 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
         if (cdef.hasAbility(MagicAbility.Buyback)) {
             return Buyback(rule);
         }
+        if (cdef.hasAbility(MagicAbility.HauntSpell)) {
+            return Haunt(rule);
+        }
         final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(rule);
         return new MagicSpellCardEvent() {
             @Override
             public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
-                return sourceEvent.getEvent(cardOnStack);
+                return sourceEvent.getEvent(cardOnStack, payedCost);
             }
         };
     }
-   
+
     private static MagicSpellCardEvent Buyback(final String rule) {
         final MagicSourceEvent effect = MagicRuleEventAction.create(rule);
         return new MagicSpellCardEvent() {
@@ -52,6 +56,7 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
                 return new MagicEvent(
                     event.getSource(),
                     event.getChoice(),
+                    payedCost,
                     this,
                     event.getDescription()
                 );
@@ -64,16 +69,38 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
                     game.doAction(new ChangeCardDestinationAction(spell, MagicLocationType.OwnersHand));
                     game.logAppendMessage(
                         event.getPlayer(),
-                        String.format("%s is put into %s's hand as it resolves.",
-                            MagicMessage.getCardToken(spell),
-                            event.getPlayer()
-                        )
+                        MagicMessage.format("%s is put into %s's hand as it resolves.", spell, event.getPlayer())
                     );
                 }
             }
         };
     }
-    
+
+    private static MagicSpellCardEvent Haunt(final String rule) {
+        final MagicSourceEvent effect = MagicRuleEventAction.create(rule);
+        return new MagicSpellCardEvent() {
+            @Override
+            public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
+                final MagicEvent event = effect.getEvent(cardOnStack);
+                return new MagicEvent(
+                    event.getSource(),
+                    event.getChoice(),
+                    payedCost,
+                    this,
+                    event.getDescription()
+                );
+            }
+
+            @Override
+            public void executeEvent(final MagicGame game, final MagicEvent event) {
+                effect.getAction().executeEvent(game, event);
+                game.doAction(new EnqueueTriggerAction(
+                    new MagicHauntEvent(event.getCardOnStack(), effect)
+                ));
+            }
+        };
+    }
+
     private static MagicSpellCardEvent Entwine(final String rule) {
         final Pattern pattern = Pattern.compile("choose one — \\(1\\) (?<effect1>.*) \\(2\\) (?<effect2>.*)", Pattern.CASE_INSENSITIVE);
         final Matcher matcher = pattern.matcher(rule);
@@ -89,20 +116,21 @@ public abstract class MagicSpellCardEvent implements MagicCardEvent,MagicEventAc
         if (choice1.isValid() && choice2.isValid()) {
             throw new RuntimeException("effect cannot have two valid choices: \"" + rule + "\"");
         }
-        final String desc1 = MagicRuleEventAction.personalize(text1) + (choice1.isValid() ? "$" : "");
-        final String desc2 = MagicRuleEventAction.personalize(text2) + (choice2.isValid() ? "$" : "");
+        final String desc1 = MagicRuleEventAction.personalize(choice1, text1);
+        final String desc2 = MagicRuleEventAction.personalize(choice2, text2);
 
         return new MagicSpellCardEvent() {
             @Override
             public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
                 return new MagicEvent(
                     cardOnStack,
-                    payedCost.isKicked() ? 
+                    payedCost.isKicked() ?
                         (choice1.isValid() ? choice1 : choice2):
                         new MagicOrChoice(
-                            choice1, 
+                            choice1,
                             choice2
                         ),
+                    payedCost,
                     this,
                     payedCost.isKicked() ?
                         desc1 + " " + desc2 :

@@ -21,7 +21,6 @@ import javax.swing.ToolTipManager;
 import magic.data.CardDefinitions;
 import magic.data.DuelConfig;
 import magic.data.GeneralConfig;
-import magic.data.MagicIcon;
 import magic.data.OSXAdapter;
 import magic.exception.DesktopNotSupportedException;
 import magic.model.MagicDeck;
@@ -35,7 +34,6 @@ import magic.ui.utility.GraphicsUtils;
 import magic.utility.MagicFileSystem.DataPath;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicSystem;
-import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
 
 @SuppressWarnings("serial")
@@ -58,25 +56,25 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     public static final boolean MAC_OS_X = System.getProperty("os.name").toLowerCase().startsWith("mac os x");
 
     private final GeneralConfig config;
-    private final JPanel contentPanel;
+    private final MagicFramePanel contentPanel;
     private MagicDuel duel;
 
     public MagicFrame(final String frameTitle) {
 
         ToolTipManager.sharedInstance().setInitialDelay(400);
-        
+
         config = GeneralConfig.getInstance();
 
         // Setup frame.
         this.setTitle(String.format("%s [%s]", frameTitle, UiString.get(_S1)));
-        this.setIconImage(IconImages.getIcon(MagicIcon.ARENA).getImage());
+        this.setIconImage(MagicImages.APP_LOGO);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListeners();
         registerForMacOSXEvents();
         setSizeAndPosition();
 
         // Setup content container with a painted background based on theme.
-        contentPanel = new BackgroundPanel(new MigLayout("insets 0, gap 0"));
+        contentPanel = new MagicFramePanel();
         contentPanel.setOpaque(true);
         setContentPane(contentPanel);
         setF10KeyInputMap();
@@ -219,6 +217,7 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         }
 
         MagicGameLog.close();
+        MagicSound.shutdown();
 
         /*
         if (gamePanel != null) {
@@ -348,13 +347,13 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
             ScreenController.showWarningMessage(
                     String.format("%s\n\n%s", UiString.get(_S6), ex.getMessage()));
         }
-        refreshBackground();
         config.setCustomBackground(true);
         config.save();
+        refreshLookAndFeel();
     }
 
     private void refreshBackground() {
-        ((BackgroundPanel)contentPanel).refreshBackground();
+        contentPanel.refreshBackground();
     }
 
 
@@ -368,6 +367,10 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         CardDefinitions.checkForMissingFiles();
         ThemeFactory.getInstance().loadThemes();
         refreshLookAndFeel();
+    }
+
+    public void setContentPanel(JPanel aPanel) {
+        contentPanel.setContentPanel(aPanel);
     }
 
 }

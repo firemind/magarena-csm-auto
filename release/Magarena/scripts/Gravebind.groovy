@@ -19,8 +19,8 @@
                     MagicPermanentState.CannotBeRegenerated
                 ));
                 game.doAction(new AddTriggerAction(
-                    MagicAtUpkeepTrigger.YouDraw(
-                        event.getSource(), 
+                    AtUpkeepTrigger.YouDraw(
+                        event.getSource(),
                         event.getPlayer()
                     )
                 ));

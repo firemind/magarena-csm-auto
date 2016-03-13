@@ -1,5 +1,5 @@
 [
-    new MagicWhenYouCastSpiritOrArcaneTrigger() {
+    new YouCastSpiritOrArcaneTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack spell) {
             return new MagicEvent(
@@ -13,8 +13,8 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             game.doAction(new DestroyAction(
                 new MagicCMCPermanentFilter(
-                    PERMANENT, 
-                    Operator.EQUAL, 
+                    PERMANENT,
+                    Operator.EQUAL,
                     event.getRefInt()
                 ).filter(event)
             ));

@@ -1,5 +1,5 @@
 [
-    new MagicWhenClashTrigger() {
+    new ClashTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer winner) {
             return new MagicEvent(
@@ -7,11 +7,11 @@
                 new MagicMayChoice(new MagicPayManaCostChoice(MagicManaCost.create("{1}"))),
                 winner,
                 this,
-                "PN may\$ pay {1}. If he or she does, PN puts a 3/1 red Elemental Shaman creature token onto the battlefield. " + 
+                "PN may\$ pay {1}. If he or she does, PN puts a 3/1 red Elemental Shaman creature token onto the battlefield. " +
                 "If PN won the clash, that token gains haste until end of turn. "
             );
         }
-        
+
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {

@@ -5,7 +5,6 @@ import magic.model.MagicGame;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.action.DiscardCardAction;
-import magic.model.action.MagicCardAction;
 import magic.model.choice.MagicTargetChoice;
 
 public class MagicDiscardChosenEvent extends MagicEvent {
@@ -24,16 +23,11 @@ public class MagicDiscardChosenEvent extends MagicEvent {
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION = new MagicEventAction() {
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.processTargetCard(game,new MagicCardAction() {
-                public void doAction(final MagicCard card) {
-                    game.doAction(new DiscardCardAction(
-                        event.getPlayer(),
-                        card
-                    ));
-                }
-            });
-        }
-    };
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) ->
+        event.processTargetCard(game, (final MagicCard card) ->
+            game.doAction(new DiscardCardAction(
+                event.getPlayer(),
+                card
+            ))
+        );
 }

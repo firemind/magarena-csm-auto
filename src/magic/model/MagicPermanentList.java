@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@SuppressWarnings("serial")
 public class MagicPermanentList extends ArrayList<MagicPermanent> implements MagicCopyable {
-
-    private static final long serialVersionUID = 1L;
 
     public MagicPermanentList() {}
 
@@ -28,7 +27,7 @@ public class MagicPermanentList extends ArrayList<MagicPermanent> implements Mag
     public MagicPermanentList copy(final MagicCopyMap copyMap) {
         return new MagicPermanentList(copyMap, this);
     }
-    
+
     public long getStateId() {
         final long[] keys = new long[size()];
         int idx = 0;

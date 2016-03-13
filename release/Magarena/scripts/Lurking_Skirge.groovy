@@ -21,10 +21,10 @@ def AB = new MagicStatic(MagicLayer.Ability) {
     }
 };
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
-            return (otherPermanent.isCreature() && 
+            return (otherPermanent.isCreature() &&
                     otherPermanent.isOwner(permanent.getOpponent()) &&
                     permanent.isEnchantment()) ?
                 new MagicEvent(

@@ -11,8 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import magic.data.GeneralConfig;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.ui.URLUtils;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
@@ -38,11 +37,11 @@ public class AboutDialog extends MagicDialog implements ActionListener {
     public AboutDialog(final MagicFrame frame) {
 
         super(ScreenController.getMainFrame(), UiString.get("About..."), new Dimension(600, 320));
-      
+
         final JPanel aboutPanel = new JPanel();
         aboutPanel.setLayout(null);
 
-        final ImageIcon logoIcon = new ImageIcon(IconImages.WIZARD);
+        final ImageIcon logoIcon = new ImageIcon(MagicImages.LOGO);
         final JLabel logoLabel = new JLabel(logoIcon);
         logoLabel.setSize(logoIcon.getIconWidth(), logoIcon.getIconHeight());
         aboutPanel.add(logoLabel);
@@ -58,7 +57,7 @@ public class AboutDialog extends MagicDialog implements ActionListener {
         descriptionLabel.setFont(FONT_BOLD12);
         aboutPanel.add(descriptionLabel);
 
-        final JLabel versionLabel = new JLabel("Version: " + GeneralConfig.VERSION);
+        final JLabel versionLabel = new JLabel("Version: " + MagicSystem.VERSION);
         versionLabel.setBounds(250, 105, 320, 25);
         versionLabel.setFont(FONT_PLAIN12);
         aboutPanel.add(versionLabel);

@@ -1,0 +1,11 @@
+name=Grixis Illusionist
+image=http://magiccards.info/scans/en/cns/99.jpg
+value=2.500
+rarity=C
+type=Creature
+subtype=Human,Wizard
+cost={U}
+pt=1/1
+timing=main
+requires_groovy_code=Unstable Frontier
+oracle={T}: Target land you control becomes the basic land type of your choice until end of turn.

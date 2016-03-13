@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.translate.UiString;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.message.MessageStyle;
 import magic.ui.screen.widget.ActionBarButton;
@@ -46,7 +46,7 @@ class LogStackViewer extends JPanel {
     private MessageStyle messageStyle = GeneralConfig.getInstance().getLogMessageStyle();
 
     LogStackViewer(LogViewer aLogBookViewer, StackViewer aStackViewer) {
-        
+
         this.logViewer = aLogBookViewer;
         this.stackViewer = aStackViewer;
 
@@ -62,7 +62,7 @@ class LogStackViewer extends JPanel {
 
     private JButton getLogFileActionButton() {
         return new ActionBarButton(
-            IconImages.getIcon(MagicIcon.LOG_FILE),
+            MagicImages.getIcon(MagicIcon.LOG_FILE),
             UiString.get(_S1),
             UiString.get(_S2),
             new AbstractAction() {
@@ -76,7 +76,7 @@ class LogStackViewer extends JPanel {
 
     private JButton getLogViewActionButton(MagicIcon aIcon) {
         return new ActionBarButton(
-            IconImages.getIcon(aIcon),
+            MagicImages.getIcon(aIcon),
             null, null,
             new AbstractAction() {
                 @Override
@@ -164,7 +164,7 @@ class LogStackViewer extends JPanel {
         final boolean isLogVisible = !isLogVisible();
         GeneralConfig.getInstance().setLogMessagesVisible(isLogVisible);
         setLogVisible(isLogVisible);
-        GeneralConfig.getInstance().save();        
+        GeneralConfig.getInstance().save();
     }
 
 }

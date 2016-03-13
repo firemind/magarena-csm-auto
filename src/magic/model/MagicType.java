@@ -1,5 +1,6 @@
 package magic.model;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +10,6 @@ public enum MagicType {
 
     // these are supertypes
     Basic,
-    Elite,
     Legendary,
     Ongoing,
     Snow,
@@ -17,10 +17,12 @@ public enum MagicType {
 
     // these are card types
     Artifact,
+    Conspiracy,
     Creature,
     Enchantment,
     Instant,
     Land,
+    Phenomenon,
     Plane,
     Planeswalker,
     Scheme,
@@ -44,6 +46,19 @@ public enum MagicType {
         Planeswalker,
         Sorcery,
         Tribal
+    );
+    public static final List<MagicType> TYPE_ORDER = Arrays.asList(
+        // Tribal first
+        Tribal,
+        // Priority order for combinations of Type
+        Enchantment,
+        Artifact,
+        Land,
+        Creature,
+        // All others in use
+        Instant,
+        Planeswalker,
+        Sorcery
     );
 
     private final int mask;

@@ -5,12 +5,9 @@ import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicSource;
 import magic.model.action.ChangeCountersAction;
-import magic.model.action.MagicPermanentAction;
 import magic.model.choice.MagicTargetChoice;
-import magic.model.condition.MagicCondition;
-import magic.model.condition.MagicConditionFactory;
-import magic.model.target.MagicTargetFilterFactory.Control;
 import magic.model.target.MagicTargetFilterFactory;
+import magic.model.target.MagicTargetFilterFactory.Control;
 
 public class MagicRemoveCounterChosenEvent extends MagicEvent {
 
@@ -21,19 +18,14 @@ public class MagicRemoveCounterChosenEvent extends MagicEvent {
                 MagicTargetFilterFactory.creature(counterType, Control.You),
                 "a creature you control with a " + counterType.getName() + " counter on it"
             ),
-            new MagicEventAction() {
-                @Override
-                public void executeEvent(final MagicGame game, final MagicEvent event) {
-                    event.processTargetPermanent(game, new MagicPermanentAction() {
-                        public void doAction(final MagicPermanent perm) {
-                            game.doAction(new ChangeCountersAction(
-                                perm,
-                                counterType,
-                                -1
-                            ));
-                        }
-                    });
-                }
+            (final MagicGame game, final MagicEvent event) -> {
+                event.processTargetPermanent(game, (final MagicPermanent perm) ->
+                    game.doAction(new ChangeCountersAction(
+                        perm,
+                        counterType,
+                        -1
+                    ))
+                );
             },
             "Remove a " + counterType.getName() + " counter from a creature$ you control."
         );

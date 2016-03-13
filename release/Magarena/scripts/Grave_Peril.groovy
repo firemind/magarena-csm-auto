@@ -1,14 +1,14 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
-            return (otherPermanent.hasColor(MagicColor.Black) == false && 
+            return (otherPermanent.hasColor(MagicColor.Black) == false &&
                     otherPermanent.isCreature()) ?
                 new MagicEvent(
                     permanent,
                     otherPermanent,
                     this,
-                    "Sacrifice SN. If you do, destroy RN."
+                    "Sacrifice SN. If PN does, destroy RN."
                 ):
                 MagicEvent.NONE;
         }

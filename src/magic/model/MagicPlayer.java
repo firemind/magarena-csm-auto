@@ -62,6 +62,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     private int preventDamage;
     private int extraTurns;
     private int drawnCards;
+    private int startingHandSize;
     private int maxHandSize;
     private int spellsCast;
     private int spellsCastLastTurn;
@@ -279,7 +280,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     public int getPoison() {
         return poison;
     }
-    
+
     public void setExperience(final int e) {
         experience = e;
     }
@@ -298,6 +299,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     public int getHandSize() {
         return hand.size();
+    }
+
+    public int getStartingHandSize() {
+        return startingHandSize;
     }
 
     public int getNumExcessCards() {
@@ -407,8 +412,14 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         }
     }
 
+    // creating the MagicCard is potentially slow due to card ability loading,
+    // check for thread.isInterrupted to terminate early when interrupted
     void createHandAndLibrary(final int handSize) {
-        for (final MagicCardDefinition cardDefinition : playerDefinition.getDeck()) {
+        startingHandSize = handSize;
+        final MagicDeck deck = playerDefinition.getDeck();
+        Thread thread = Thread.currentThread();
+        for (int i = 0; i < deck.size() && thread.isInterrupted() == false; i++) {
+            final MagicCardDefinition cardDefinition = deck.get(i);
             final long id = currGame.getUniqueId();
             library.add(new MagicCard(cardDefinition,this,id));
         }
@@ -539,6 +550,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         return getNrOfPermanents(MagicPermanentState.Blocking);
     }
 
+    public int getNrOfPermanents() {
+        return permanents.size();
+    }
+
     public int getNrOfPermanents(final MagicPermanentState state) {
         int count=0;
         for (final MagicPermanent permanent : permanents) {
@@ -573,6 +588,16 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         int count=0;
         for (final MagicPermanent permanent : permanents) {
             if (permanent.hasColor(color)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getNrOfPermanents(final MagicType type, final MagicColor color) {
+        int count = 0;
+        for (final MagicPermanent permanent : permanents) {
+            if (permanent.hasColor(color) && permanent.hasType(type)){
                 count++;
             }
         }
@@ -814,7 +839,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
             final MagicPermanent source = mpstatic.getPermanent();
             for (final MagicPlayer player : game.getPlayers()) {
                 if (mstatic.accept(game, source, source)) {
-                   player.apply(source, mstatic);
+                    player.apply(source, mstatic);
                 }
             }
         }

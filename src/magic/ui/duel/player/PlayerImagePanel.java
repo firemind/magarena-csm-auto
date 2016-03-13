@@ -9,12 +9,13 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import magic.data.GeneralConfig;
-import magic.model.MagicGame;
 import magic.ui.utility.GraphicsUtils;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.ui.utility.MagicStyle;
 import magic.ui.duel.CounterOverlay;
-import magic.ui.duel.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
+import magic.ui.duel.animation.AnimationFx;
+import magic.ui.duel.animation.MagicAnimations;
 import magic.ui.theme.ThemeFactory;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.ease.Spline;
@@ -24,9 +25,8 @@ public class PlayerImagePanel extends AnimationPanel {
 
     private static final Font HEALTH_FONT = new Font("Dialog", Font.BOLD, 20);
 
-    private final MagicGame game;
     private final CounterOverlay poisonCounter;
-    private final CounterOverlay damageCounter;    
+    private final CounterOverlay damageCounter;
     private final BufferedImage activeImage;
     private final Image inactiveImage;
     private PlayerViewerInfo playerInfo;
@@ -35,9 +35,8 @@ public class PlayerImagePanel extends AnimationPanel {
     private int healColorOpacity = 0;
     private boolean isValidChoiceVisible = false;
 
-    public PlayerImagePanel(final PlayerViewerInfo player, final MagicGame game) {
+    public PlayerImagePanel(final PlayerViewerInfo player) {
         this.playerInfo = player;
-        this.game = game;
         activeImage = getPlayerAvatarImage();
         inactiveImage = GraphicsUtils.getGreyScaleImage(activeImage);
         poisonCounter = new CounterOverlay(20, 20, Color.GREEN);
@@ -45,21 +44,17 @@ public class PlayerImagePanel extends AnimationPanel {
     }
 
     private BufferedImage getPlayerAvatarImage() {
-        final ImageIcon icon = IconImages.getIconSize3(this.playerInfo.player.getPlayerDefinition());
+        final ImageIcon icon = MagicImages.getIconSize3(this.playerInfo.player.getPlayerDefinition());
         return GraphicsUtils.scale(GraphicsUtils.getConvertedIcon(icon), 74, 74);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         final Graphics2D g2d = (Graphics2D) g;
 
-        if (playerInfo.player == game.getTurnPlayer()) {
-            g2d.drawImage(activeImage, 0, 0, this);
-        } else {
-            g2d.drawImage(inactiveImage, 0, 0, this);
-        }
+        g2d.drawImage(playerInfo.isPlayerTurn() ? activeImage : inactiveImage, 0, 0, this);
 
         // counters
         drawPoisonCountersOverlay(g2d);
@@ -77,11 +72,11 @@ public class PlayerImagePanel extends AnimationPanel {
     }
 
     private void drawValidChoiceIndicator(Graphics2D g2d) {
-        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+        if (MagicAnimations.isOn(AnimationFx.AVATAR_PULSE)) {
             drawPulsingBorder(g2d);
         } else {
             drawValidChoiceOverlay(g2d);
-        }        
+        }
     }
 
     private void drawValidChoiceOverlay(Graphics2D g2d) {
@@ -111,7 +106,7 @@ public class PlayerImagePanel extends AnimationPanel {
         final int textX = x + 4;
         final int textY = y + image.getHeight(null) - 6;
         GraphicsUtils.drawStringWithOutline(g2d, text, textX, textY);
-    }    
+    }
 
     public void updateDisplay(final PlayerViewerInfo playerInfo) {
         this.playerInfo = playerInfo;
@@ -162,7 +157,7 @@ public class PlayerImagePanel extends AnimationPanel {
     }
 
     private void doDamageAnimation() {
-        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+        if (GeneralConfig.getInstance().showGameplayAnimations()) {
             final Timeline timeline = new Timeline();
             timeline.setDuration(100);
             timeline.addPropertyToInterpolate(
@@ -181,7 +176,7 @@ public class PlayerImagePanel extends AnimationPanel {
     }
 
     private void doHealAnimation() {
-        if (GeneralConfig.getInstance().isAnimateGameplay()) {
+        if (GeneralConfig.getInstance().showGameplayAnimations()) {
             final Timeline timeline = new Timeline();
             timeline.setDuration(1000);
             timeline.setEase(new Spline(0.8f));

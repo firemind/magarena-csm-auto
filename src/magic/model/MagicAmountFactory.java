@@ -1,5 +1,6 @@
 package magic.model;
 
+import magic.model.event.MagicEvent;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetHint;
@@ -14,7 +15,7 @@ public class MagicAmountFactory {
             }
         };
     }
-    
+
     public static MagicAmount CounterOnSource(final MagicCounterType type) {
         return new MagicAmount() {
             @Override
@@ -24,7 +25,7 @@ public class MagicAmountFactory {
             }
         };
     }
-    
+
     public static MagicAmount AllCountersOnSource =
         new MagicAmount() {
             @Override
@@ -38,15 +39,32 @@ public class MagicAmountFactory {
             }
         };
 
-    public static MagicAmount One = 
+    public static MagicAmount One =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 return 1;
             }
+            @Override
+            public boolean isConstant() {
+                return true;
+            }
         };
-    
-    public static MagicAmount Equipment = 
+
+    public static MagicAmount Constant(final int n) {
+        return new MagicAmount() {
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                return n;
+            }
+            @Override
+            public boolean isConstant() {
+                return true;
+            }
+        };
+    }
+
+    public static MagicAmount Equipment =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
@@ -54,8 +72,8 @@ public class MagicAmountFactory {
                 return perm.getEquipmentPermanents().size();
             }
         };
-    
-    public static MagicAmount Aura = 
+
+    public static MagicAmount Aura =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
@@ -63,16 +81,16 @@ public class MagicAmountFactory {
                 return perm.getAuraPermanents().size();
             }
         };
-    
-    public static MagicAmount Domain = 
+
+    public static MagicAmount Domain =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 return player.getDomain();
             }
         };
-    
-    public static MagicAmount SN_Power = 
+
+    public static MagicAmount SN_Power =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
@@ -81,15 +99,15 @@ public class MagicAmountFactory {
             }
         };
 
-    public static MagicAmount LifeTotal = 
+    public static MagicAmount LifeTotal =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 return player.getLife();
             }
         };
-    
-    public static MagicAmount ColorsOnPerms = 
+
+    public static MagicAmount ColorsOnPerms =
         new MagicAmount() {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
@@ -100,6 +118,30 @@ public class MagicAmountFactory {
                     }
                 }
                 return amount;
+            }
+        };
+
+    public static MagicAmount XCost =
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicEvent event) {
+                return event.getX();
+            }
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                throw new RuntimeException("getAmount(source, player) called on XCost");
+            }
+        };
+
+    public static MagicAmount NegXCost =
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicEvent event) {
+                return -event.getX();
+            }
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                throw new RuntimeException("getAmount(source, player) called on NegXCost");
             }
         };
 }

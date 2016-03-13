@@ -2,14 +2,16 @@ def SAC_ACTION = {
     final MagicGame game, final MagicEvent event ->
     event.processTargetPermanent(game, {
         game.doAction(new SacrificeAction(it));
-        if (it.hasType(MagicType.Snow)) { 
+        if (it.hasType(MagicType.Snow)) {
             game.doAction(new GainAbilityAction(event.getPermanent(),MagicAbility.Trample));
         }
     })
 }
 
+def choice = MagicTargetChoice.Negative("another target creature");
+
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -17,8 +19,8 @@ def SAC_ACTION = {
                 new MagicMayChoice("Sacrifice a Forest?"),
                 this,
                 "PN may\$ sacrifice a Forest. " +
-                "If PN sacrifices a snow Forest this way, SN gains trample until end of turn. " + 
-                "If PN doesn't sacrifice a Forest, sacrifice SN and it deals 7 damage to you."
+                "If PN sacrifices a snow Forest this way, SN gains trample until end of turn. " +
+                "If PN doesn't sacrifice a Forest, he or she sacrifices SN and it deals 7 damage to him or her."
             );
         }
 
@@ -58,7 +60,7 @@ def SAC_ACTION = {
         public MagicEvent getPermanentEvent(final MagicPermanent source, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                NegOther("target creature", source),
+                choice,
                 new MagicDamageTargetPicker(source.getPower()),
                 this,
                 "SN deals damage equal to its power to another target creature. " +

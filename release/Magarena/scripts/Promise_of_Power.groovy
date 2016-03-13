@@ -1,7 +1,7 @@
-def TEXT1 = "You draw five cards and you lose 5 life."
+def TEXT1 = "PN draws five cards and loses 5 life."
 
-def TEXT2 = "Put an X/X black Demon creature token with flying onto the battlefield, "+ 
-            "where X is the number of cards in your hand as the token enters the battlefield."
+def TEXT2 = "PN puts an X/X black Demon creature token with flying onto the battlefield, "+
+            "where X is the number of cards in his or her hand as the token enters the battlefield."
 
 [
     new MagicSpellCardEvent() {
@@ -9,7 +9,7 @@ def TEXT2 = "Put an X/X black Demon creature token with flying onto the battlefi
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                payedCost.isKicked() ? 
+                payedCost.isKicked() ?
                     MagicChoice.NONE :
                     new MagicOrChoice(
                         MagicChoice.NONE,

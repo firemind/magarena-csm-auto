@@ -1,7 +1,7 @@
 def choice = new MagicTargetChoice("target red or green creature an opponent controls");
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -19,10 +19,10 @@ def choice = new MagicTargetChoice("target red or green creature an opponent con
                 final MagicPermanent source = event.getPermanent();
                 game.doAction(new TapAction(it));
                 game.doAction(new AddStaticAction(
-                    source, 
+                    source,
                     MagicStatic.AsLongAsCond(
-                        it, 
-                        MagicAbility.DoesNotUntap, 
+                        it,
+                        MagicAbility.DoesNotUntap,
                         MagicConditionFactory.PlayerControlsSource(event.getPlayer()
                     ))
                 ));

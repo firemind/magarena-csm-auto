@@ -1,8 +1,8 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.duel.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
 import magic.model.MagicCardList;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.theme.Theme;
 import magic.ui.widget.TabSelector;
 
@@ -30,7 +30,7 @@ public class PlayerZoneViewer extends JPanel implements ChangeListener {
     private static final String _S5 = "%s Exile";
 
     // fired when contents of player zone is changed
-    public static final String CP_PLAYER_ZONE = "activeZoneName";
+    public static final String CP_PLAYER_ZONE = "ece91afb-3290-463e-ad03-8a24731f2aa0";
 
     private final SwingGameController controller;
     private final TabSelector tabSelector;
@@ -42,7 +42,7 @@ public class PlayerZoneViewer extends JPanel implements ChangeListener {
 
         this.controller = controller;
         this.imageCardsListViewer = new ImageCardListViewer(controller);
- 
+
         setOpaque(false);
         setLayout(new BorderLayout(6, 0));
 
@@ -53,7 +53,7 @@ public class PlayerZoneViewer extends JPanel implements ChangeListener {
         tabSelector.addTab(theme.getIcon(Theme.ICON_SMALL_GRAVEYARD), getGraveyardZoneName(getAiPlayer()));
         tabSelector.addTab(theme.getIcon(Theme.ICON_SMALL_EXILE), getExileZoneName(getUserPlayer()));
         tabSelector.addTab(theme.getIcon(Theme.ICON_SMALL_EXILE), getExileZoneName(getAiPlayer()));
-        tabSelector.addTab(theme.getIcon(Theme.ICON_SMALL_HAND), UiString.get(_S2, getUserPlayer().name));
+        tabSelector.addTab(theme.getIcon(Theme.ICON_SMALL_HAND), UiString.get(_S2, getUserPlayer().getName()));
         tabSelector.addTab(theme.getIcon(Theme.ICON_SMALL_HAND), getHandZoneName(getAiPlayer()));
         add(tabSelector, BorderLayout.WEST);
 
@@ -93,7 +93,7 @@ public class PlayerZoneViewer extends JPanel implements ChangeListener {
             case 0:
                 showCards(
                         getUserPlayer().hand,
-                        showFullScreen, getHandZoneName(getUserPlayer(), !showFullScreen && !getUserPlayer().isAi), true);
+                        showFullScreen, getHandZoneName(getUserPlayer(), !showFullScreen && !getUserPlayer().isAi()), true);
                 break;
             case 1:
                 showCards(
@@ -130,18 +130,18 @@ public class PlayerZoneViewer extends JPanel implements ChangeListener {
     }
 
     private String getHandZoneName(final PlayerViewerInfo player, final boolean hideName) {
-        return hideName ? "" : UiString.get(_S3, player.name);
+        return hideName ? "" : UiString.get(_S3, player.getName());
     }
     private String getHandZoneName(final PlayerViewerInfo player) {
         return getHandZoneName(player, false);
     }
 
     private String getGraveyardZoneName(final PlayerViewerInfo player) {
-        return UiString.get(_S4, player.name);
+        return UiString.get(_S4, player.getName());
     }
 
     private String getExileZoneName(final PlayerViewerInfo player) {
-        return UiString.get(_S5, player.name);
+        return UiString.get(_S5, player.getName());
     }
 
     private void showFullScreenZone(final MagicCardList aCardList, final String zoneName) {

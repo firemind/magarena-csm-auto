@@ -1,10 +1,10 @@
 name=Rogue's Passage
-image=http://magiccards.info/scans/en/ori/250.jpg
-image_updated=2015-11-05
+image=http://magiccards.info/scans/en/c15/302.jpg
+image_updated=2016-02-29
 value=2.500
 rarity=U
 type=Land
-ability={T}: Add {1} to your mana pool.;\
+ability={T}: Add {C} to your mana pool.;\
         {4}, {T}: Target creature can't be blocked this turn.
 timing=land
-oracle={T}: Add {1} to your mana pool.\n{4}, {T}: Target creature can't be blocked this turn.
+oracle={T}: Add {C} to your mana pool.\n{4}, {T}: Target creature can't be blocked this turn.

@@ -1,8 +1,8 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
-            return MagicConditionFactory.HandAtLeast(1) ? 
+            return MagicConditionFactory.HandAtLeast(1) ?
                 new MagicEvent(
                     permanent,
                     new MagicMayChoice("Exile a card from your hand?"),

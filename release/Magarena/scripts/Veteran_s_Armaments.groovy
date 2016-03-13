@@ -14,19 +14,19 @@ def evt = {
 }
 
 [
-    new MagicWhenBlocksTrigger() {
+    new BlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             return (permanent.getEquippedCreature() == blocker) ? evt(blocker) : MagicEvent.NONE;
         }
     },
-    new MagicWhenAttacksTrigger() {
+    new AttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent attacker) {
             return (permanent.getEquippedCreature() == attacker) ? evt(attacker) : MagicEvent.NONE;
         }
     },
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isCreature() &&
@@ -36,7 +36,7 @@ def evt = {
                     new MagicMayChoice(),
                     otherPermanent,
                     this,
-                    "You may\$ attach SN to RN."
+                    "PN may\$ attach SN to RN."
                 ) :
                 MagicEvent.NONE;
         }

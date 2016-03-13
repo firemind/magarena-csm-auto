@@ -1,0 +1,9 @@
+name=Murderous Spoils
+image=http://magiccards.info/scans/en/ds/48.jpg
+value=2.089
+rarity=U
+type=Instant
+cost={5}{B}
+timing=removal
+requires_groovy_code
+oracle=Destroy target nonblack creature. It can't be regenerated. You gain control of all Equipment that was attached to it.

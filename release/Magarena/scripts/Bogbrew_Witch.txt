@@ -1,0 +1,11 @@
+name=Bogbrew Witch
+image=http://magiccards.info/scans/en/m14/88.jpg
+value=3.148
+rarity=R
+type=Creature
+subtype=Human,Wizard
+cost={3}{B}
+pt=1/3
+timing=main
+requires_groovy_code
+oracle={2}, {T}: Search your library for a card named Festering Newt or Bubbling Cauldron, put it onto the battlefield tapped, then shuffle your library.

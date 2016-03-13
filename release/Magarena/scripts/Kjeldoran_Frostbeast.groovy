@@ -1,5 +1,5 @@
 [
-    new MagicWhenBlocksOrBecomesBlockedByTrigger() {
+    new ThisBlocksOrBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             final MagicPermanent target = permanent == blocker ? blocker.getBlockedCreature() : blocker;
@@ -15,7 +15,7 @@
             event.processRefPermanent(game, {
                 game.doAction(new AddTurnTriggerAction(
                     it,
-                    MagicAtEndOfCombatTrigger.Destroy
+                    AtEndOfCombatTrigger.Destroy
                 ))
             });
         }

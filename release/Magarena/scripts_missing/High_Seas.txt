@@ -1,9 +1,0 @@
-name=High Seas
-image=http://magiccards.info/scans/en/mm/83.jpg
-value=3.020
-rarity=U
-type=Enchantment
-cost={2}{U}
-ability=Red creature spells and green creature spells cost {1} more to cast.
-timing=enchantment
-oracle=Red creature spells and green creature spells cost {1} more to cast.

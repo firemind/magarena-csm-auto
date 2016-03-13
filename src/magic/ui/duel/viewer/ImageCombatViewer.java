@@ -1,10 +1,10 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.duel.ViewerInfo;
-import magic.ui.duel.PlayerViewerInfo;
-import magic.ui.duel.PermanentViewerInfo;
+import magic.ui.duel.viewer.info.GameViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
 import magic.ui.IChoiceViewer;
-import magic.ui.SwingGameController;
+import magic.ui.duel.SwingGameController;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 
@@ -16,12 +16,11 @@ import java.awt.Dimension;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import magic.model.MagicCard;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 import magic.ui.utility.MagicStyle;
 
+@SuppressWarnings("serial")
 public class ImageCombatViewer extends JPanel implements IChoiceViewer {
-
-    private static final long serialVersionUID = 1L;
 
     private final SwingGameController controller;
     private final ImagePermanentsViewer permanentsViewer;
@@ -52,7 +51,7 @@ public class ImageCombatViewer extends JPanel implements IChoiceViewer {
         final SortedSet<PermanentViewerInfo> creatures =
             new TreeSet<>(PermanentViewerInfo.BLOCKED_NAME_COMPARATOR);
 
-        final ViewerInfo viewerInfo = controller.getViewerInfo();
+        final GameViewerInfo viewerInfo = controller.getViewerInfo();
 
         final PlayerViewerInfo attackingPlayerInfo=viewerInfo.getAttackingPlayerInfo();
         for (final PermanentViewerInfo permanentInfo : attackingPlayerInfo.permanents) {
@@ -77,9 +76,9 @@ public class ImageCombatViewer extends JPanel implements IChoiceViewer {
         permanentsViewer.showValidChoices(validChoices);
     }
 
-    public boolean highlightCard(MagicCard card, boolean b) {
-        final ImagePermanentViewer viewer = permanentsViewer.getViewer(card);
-        permanentsViewer.highlightCard(viewer, b ? card.getId() : 0);
+    public boolean highlightCard(CardViewerInfo cardInfo, boolean b) {
+        final ImagePermanentViewer viewer = permanentsViewer.getViewer(cardInfo);
+        permanentsViewer.highlightCard(viewer, b ? cardInfo.getId() : 0);
         return viewer != null;
     }
 }

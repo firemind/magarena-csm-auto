@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -19,8 +19,8 @@
                 game.doAction(new AddStaticAction(
                     event.getPermanent(),
                     MagicStatic.AsLongAsCond(
-                        it, 
-                        MagicAbility.DoesNotUntap, 
+                        it,
+                        MagicAbility.DoesNotUntap,
                         MagicConditionFactory.PlayerControlsSource(event.getPlayer())
                     )
                 ));

@@ -1,0 +1,12 @@
+name=Venarian Gold
+image=http://magiccards.info/scans/en/lg/83.jpg
+value=2.500
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={X}{U}{U}
+ability=Enchant creature
+timing=aura
+enchant=can't attack or block,neg creature
+requires_groovy_code
+oracle=Enchant creature\nWhen Venarian Gold enters the battlefield, tap enchanted creature and put a number of sleep counters on it equal to the value of X as you cast Venarian Gold.\nEnchanted creature doesn't untap during its controller's untap step if it has a sleep counter on it.\nAt the beginning of the upkeep of enchanted creature's controller, remove a sleep counter from that creature.

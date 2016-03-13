@@ -5,7 +5,7 @@ def exceptBasicLands = new MagicPermanentFilterImpl() {
 }
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -15,7 +15,7 @@ def exceptBasicLands = new MagicPermanentFilterImpl() {
                 "They can't be regenerated."
             );
         }
-        
+
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicPermanent permanent : exceptBasicLands.filter(event)) {
@@ -28,8 +28,8 @@ def exceptBasicLands = new MagicPermanentFilterImpl() {
             }
         }
     },
-    
-    new MagicWhenOtherComesIntoPlayTrigger() {
+
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return otherPermanent.isBasic() == false ?

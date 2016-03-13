@@ -20,10 +20,10 @@ import magic.translate.UiString;
 import magic.ui.dialog.button.CancelButton;
 import magic.ui.dialog.button.SaveButton;
 import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.deck.CustomDecksComboxBox;
-import magic.ui.widget.deck.FiremindDecksComboxBox;
-import magic.ui.widget.deck.PrebuiltDecksComboxBox;
-import magic.ui.widget.deck.RandomDecksComboBox;
+import magic.ui.deck.widget.CustomDecksComboxBox;
+import magic.ui.deck.widget.FiremindDecksComboxBox;
+import magic.ui.deck.widget.PrebuiltDecksComboxBox;
+import magic.ui.deck.widget.RandomDecksComboBox;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -41,7 +41,7 @@ public class DeckChooserDialog extends MagicDialog {
     public DeckChooserDialog(final DeckType aDeckType, final String aDeckName) {
 
         super(ScreenController.getMainFrame(), UiString.get(_S2), new Dimension(300, 180));
-        
+
         deckTypeCombo = getDeckTypeComboBox();
         deckTypeCombo.setSelectedItem(aDeckType);
         addDeckTypeComboBoxListener();

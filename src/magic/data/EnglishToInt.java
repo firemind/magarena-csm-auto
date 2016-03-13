@@ -6,6 +6,11 @@ public class EnglishToInt {
         if (num == null) {
             return 1;
         }
+        try {
+            return Integer.parseInt(num);
+        } catch (final NumberFormatException nfe) {
+            //do nothing
+        }
         switch (num) {
             case "no": return 0;
             case "a": return 1;

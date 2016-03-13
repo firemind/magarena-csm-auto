@@ -19,7 +19,7 @@
                 payedCost.getTarget(),
                 this,
                 "Remove a -2/-2 counter from SN. " +
-                "If the sacrificed creature was a Thrull, put a +1/+0 counter on SN."
+                "If the sacrificed creature was a Thrull, PN puts a +1/+0 counter on SN."
             );
         }
 
@@ -30,7 +30,7 @@
                 MagicCounterType.MinusTwo,
                 -1
             ));
-            if (event.getRefPermanent().hasSubType(MagicSubType.Thrull)) { 
+            if (event.getRefPermanent().hasSubType(MagicSubType.Thrull)) {
                 game.doAction(new ChangeCountersAction(
                     event.getPermanent(),
                     MagicCounterType.PlusOnePlusZero,

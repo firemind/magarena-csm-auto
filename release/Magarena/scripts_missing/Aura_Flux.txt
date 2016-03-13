@@ -1,9 +1,0 @@
-name=Aura Flux
-image=http://magiccards.info/scans/en/ul/27.jpg
-value=3.946
-rarity=C
-type=Enchantment
-cost={2}{U}
-ability=Other enchantments have "At the beginning of your upkeep, sacrifice this enchantment unless you pay {2}."
-timing=enchantment
-oracle=Other enchantments have "At the beginning of your upkeep, sacrifice this enchantment unless you pay {2}."

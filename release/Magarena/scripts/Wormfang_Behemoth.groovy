@@ -1,11 +1,11 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Exile all cards from your hand."
+                "PN exiles all cards from his or her hand."
             );
         }
         @Override
@@ -20,7 +20,7 @@
             }
         }
     },
-    new MagicWhenSelfLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
             return new MagicEvent(

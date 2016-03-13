@@ -9,6 +9,7 @@ import magic.model.MagicRandom;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
 import magic.exception.UndoClickedException;
+import magic.exception.GameException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,8 +48,9 @@ public class MagicPayManaCostChoice extends MagicChoice {
     private Collection<Object> buildDelayedPayManaCostResults(final MagicGame game,final MagicPlayer player) {
         if (cost.hasX()) {
             final int maxX=player.getMaximumX(game,cost);
-            assert maxX > 0 : "Unable to pay for {X} in " + cost + " as maxX = " + maxX;
-            if (maxX == 1) {
+            if (maxX <= 0) {
+                throw new GameException("Unable to pay for {X} in " + cost + " as maxX = " + maxX, game);
+            } else if (maxX == 1) {
                 return Collections.<Object>singletonList(new MagicDelayedPayManaCostResult(cost,1));
             } else {
                 final List<Object> choices=new ArrayList<Object>();
@@ -103,11 +105,26 @@ public class MagicPayManaCostChoice extends MagicChoice {
             x = 0;
         }
 
-        final List<MagicCostManaType> costManaTypes=cost.getCostManaTypes(x * cost.getXCount());
+        final List<MagicCostManaType> costManaTypes=cost.getCostManaTypes(x);
         final MagicBuilderManaCost builderCost=new MagicBuilderManaCost();
         builderCost.addTypes(costManaTypes);
         final MagicPayManaCostResultBuilder builder=new MagicPayManaCostResultBuilder(game,player,builderCost);
         final boolean canSkip = MagicGame.canSkipSingleManaChoice();
+        final int costMinAmount = builderCost.getMinimumAmount();
+
+        // if number of mana permanents equal to min amount &&
+        //    number of mana abilities  equal to min amount
+        // then the only way to pay is to use each mana ability
+        boolean useAll = false;
+        if (builder.getActivationsSize() == costMinAmount) {
+            int totalManaActivations = 0;
+            for (final MagicPermanent perm : player.getPermanents()) {
+                totalManaActivations += perm.countManaActivations();
+            }
+            if (totalManaActivations == costMinAmount) {
+                useAll = true;
+            }
+        }
 
         for (final MagicCostManaType costManaType : costManaTypes) {
             if (canSkip&&builder.useAllManaSources(costManaType)) {
@@ -115,28 +132,12 @@ public class MagicPayManaCostChoice extends MagicChoice {
                 break;
             }
 
-            final int costMinAmount = builderCost.getMinimumAmount();
             final Set<MagicPermanent> validSources=builder.getManaSources(costManaType,!canSkip);
-
             MagicPermanent sourcePermanent = MagicPermanent.NONE;
-            if (validSources.size() == 1) {
-                // only one valid choice
-                sourcePermanent = validSources.iterator().next();
-            } else if (builder.getActivationsSize() == costMinAmount) {
-                // number of sources = costMinAmount
-                // check that total mana activations = costMinAmount
-                // which means each permanent has one activation
-                int totalManaActivations = 0;
-                for (final MagicPermanent perm : validSources) {
-                    totalManaActivations += perm.countManaActivations();
-                }
-                if (totalManaActivations == costMinAmount) {
-                    sourcePermanent = validSources.iterator().next();
-                }
-            }
 
-            if (canSkip && sourcePermanent.isValid()) {
-                // skip choice
+            if (canSkip && (validSources.size() == 1 || useAll)) {
+                // only one valid choice or must use all
+                sourcePermanent = validSources.iterator().next();
             } else {
                 controller.setValidChoices(validSources,false);
                 controller.showMessage(source,"Choose a mana source to pay "+costManaType.getText()+".");

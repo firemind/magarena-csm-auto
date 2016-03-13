@@ -6,7 +6,7 @@ def PT = new MagicStatic(MagicLayer.SetPT, MagicStatic.UntilEOT) {
 };
 def LC = new MagicStatic(MagicLayer.Color, MagicStatic.UntilEOT) {
     @Override
-    public int getColorFlags(final MagicPermanent permanent, final int flags) {    
+    public int getColorFlags(final MagicPermanent permanent, final int flags) {
         return MagicColor.Green.getMask();
     }
 };
@@ -47,7 +47,7 @@ def ST = new MagicStatic(MagicLayer.Type, MagicStatic.UntilEOT) {
             game.doAction(new BecomesCreatureAction(event.getRefPermanent(),PT,ST,LC));
         }
     },
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return (permanent.getEnchantedPermanent() == died) ?

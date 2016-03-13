@@ -5,9 +5,9 @@ def CARD_NAMED_BARU = new MagicCardFilterImpl() {
     public boolean acceptType(final MagicTargetType targetType) {
         return targetType == MagicTargetType.Hand;
     }
-}; 
+};
 def A_CARD_NAMED_BARU = new MagicTargetChoice(
-    CARD_NAMED_BARU,  
+    CARD_NAMED_BARU,
     MagicTargetHint.None,
     "a card named Baru, Fist of Krosa from your hand"
 );
@@ -26,7 +26,7 @@ def A_CARD_NAMED_BARU = new MagicTargetChoice(
             return new MagicEvent(
                 source,
                 this,
-                "Put an X/X green Wurm creature token onto the battlefield, where X is the number of lands you control."
+                "PN puts an X/X green Wurm creature token onto the battlefield, where X is the number of lands he or she controls."
             );
         }
         @Override

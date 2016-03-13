@@ -1,9 +1,9 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             final String cardName = permanent.getExiledCard().getName();
-            return (otherPermanent.isLand() && 
+            return (otherPermanent.isLand() &&
                     otherPermanent.getName().equals(cardName) &&
                     otherPermanent.isEnemy(permanent)) ?
                 new MagicEvent(

@@ -1,15 +1,13 @@
 package magic.ui.theme;
 
-import magic.ui.IconImages;
-import magic.ui.widget.FontsAndBorders;
-
-import javax.swing.ImageIcon;
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.ImageIcon;
 import magic.data.MagicIcon;
+import magic.ui.MagicImages;
+import magic.ui.widget.FontsAndBorders;
 
 public abstract class AbstractTheme implements Theme {
 
@@ -25,20 +23,11 @@ public abstract class AbstractTheme implements Theme {
         this.name=name;
         themeMap=new HashMap<>();
 
-        addToTheme(ICON_LIFE,IconImages.getIcon(MagicIcon.LIFE));
-        addToTheme(ICON_PREVENT,IconImages.getIcon(MagicIcon.PREVENT2));
-        addToTheme(ICON_POISON,IconImages.getIcon(MagicIcon.POISON));
-        addToTheme(ICON_LAND,IconImages.getIcon(MagicIcon.LAND2));
-        addToTheme(ICON_HAND,IconImages.getIcon(MagicIcon.HAND2));
-        addToTheme(ICON_LIBRARY,IconImages.getIcon(MagicIcon.LIBRARY2));
-        addToTheme(ICON_GRAVEYARD,IconImages.getIcon(MagicIcon.GRAVEYARD2));
-        addToTheme(ICON_MESSAGE,IconImages.getIcon(MagicIcon.LOG));
-        addToTheme(ICON_SMALL_BATTLEFIELD,IconImages.getIcon(MagicIcon.ALL));
-        addToTheme(ICON_SMALL_COMBAT,IconImages.getIcon(MagicIcon.COMBAT));
-        addToTheme(ICON_SMALL_STACK,IconImages.getIcon(MagicIcon.SPELL));
-        addToTheme(ICON_SMALL_HAND,IconImages.getIcon(MagicIcon.HAND));
-        addToTheme(ICON_SMALL_GRAVEYARD,IconImages.getIcon(MagicIcon.GRAVEYARD));
-        addToTheme(ICON_SMALL_EXILE,IconImages.getIcon(MagicIcon.EXILE));
+        addToTheme(ICON_SMALL_BATTLEFIELD,MagicImages.getIcon(MagicIcon.ALL));
+        addToTheme(ICON_SMALL_COMBAT,MagicImages.getIcon(MagicIcon.COMBAT));
+        addToTheme(ICON_SMALL_HAND,MagicImages.getIcon(MagicIcon.HAND));
+        addToTheme(ICON_SMALL_GRAVEYARD,MagicImages.getIcon(MagicIcon.GRAVEYARD));
+        addToTheme(ICON_SMALL_EXILE,MagicImages.getIcon(MagicIcon.EXILE));
 
         addToTheme(COLOR_TITLE_FOREGROUND,Color.WHITE);
         addToTheme(COLOR_TITLE_BACKGROUND,new Color(0x23,0x6B,0x8E));
@@ -52,10 +41,7 @@ public abstract class AbstractTheme implements Theme {
         addToTheme(COLOR_COMBAT_CHOICE,new Color(250,100,0,90));
         addToTheme(COLOR_CHOICE_BORDER,new Color(0,250,0,70));
         addToTheme(COLOR_COMBAT_CHOICE_BORDER,new Color(250,0,0,125));
-        addToTheme(COLOR_SELECTED_PLAYER,Color.RED);
         addToTheme(COLOR_GAME_BORDER,Color.BLACK);
-        addToTheme(COLOR_VIEWER_BACKGROUND,Color.WHITE);
-        addToTheme(COLOR_SEPARATOR_BACKGROUND,Color.LIGHT_GRAY);
 
         addToTheme(VALUE_SPACING, MIN_VALUE_SPACING);
         addToTheme(VALUE_BACKGROUND_STRETCH,0);
@@ -86,7 +72,7 @@ public abstract class AbstractTheme implements Theme {
     @Override
     public BufferedImage getTexture(final String aName) {
         final Object value=themeMap.get(aName);
-        return value==null?IconImages.MISSING:(BufferedImage)value;
+        return value==null?MagicImages.MISSING_BIG:(BufferedImage)value;
     }
 
     @Override
@@ -98,7 +84,7 @@ public abstract class AbstractTheme implements Theme {
     @Override
     public ImageIcon getIcon(final String aName) {
         final Object value=themeMap.get(aName);
-        return value==null?IconImages.getIcon(MagicIcon.MISSING_ICON):(ImageIcon)value;
+        return value==null?MagicImages.getIcon(MagicIcon.MISSING_ICON):(ImageIcon)value;
     }
 
     @Override
@@ -110,11 +96,6 @@ public abstract class AbstractTheme implements Theme {
     @Override
     public Color getTextColor() {
         return getColor(COLOR_TEXT_FOREGROUND);
-    }
-
-    @Override
-    public Color getNameColor() {
-        return getColor(COLOR_NAME_FOREGROUND);
     }
 
     @Override
@@ -132,12 +113,17 @@ public abstract class AbstractTheme implements Theme {
     public ImageIcon getAvatarIcon(final int index,final int size) {
         return AvatarImages.getInstance().getAvatarIcon(index,size);
     }
-    
+
     @Override
     public ImageIcon getAbilityIcon(AbilityIcon ability) {
         final String key = "icon_" + ability.name().toLowerCase();
         final Object value = themeMap.get(key);
         return value == null ? null : (ImageIcon)value;
+    }
+
+    @Override
+    public BufferedImage getBackgroundImage() {
+        return getTexture(Theme.TEXTURE_BACKGROUND);
     }
 
 }

@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             game.doAction(new ChangeCountersAction(
@@ -19,7 +19,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
                 game.doAction(new ChangeLifeAction(
-                    event.getPlayer().getOpponent(), 
+                    event.getPlayer().getOpponent(),
                     event.getPermanent().getCounters(MagicCounterType.Age)
                 ));
             } else {

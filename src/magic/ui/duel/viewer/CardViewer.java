@@ -1,98 +1,93 @@
 package magic.ui.duel.viewer;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import magic.ui.CachedImagesProvider;
-import magic.ui.CardImagesProvider;
 import magic.data.GeneralConfig;
-import magic.ui.IconImages;
 import magic.model.MagicCardDefinition;
-import magic.ui.utility.GraphicsUtils;
+import magic.ui.MagicImages;
 import magic.ui.cardtable.ICardSelectionListener;
-import magic.ui.widget.TransparentImagePanel;
+import magic.ui.prefs.ImageSizePresets;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.utility.MagicStyle;
+import magic.ui.widget.FontsAndBorders;
+import magic.ui.widget.throbber.AbstractThrobber;
+import magic.ui.widget.throbber.ImageThrobber;
+import net.miginfocom.swing.MigLayout;
 
-/**
- * Class responsible for showing the card pic popup
- */
 @SuppressWarnings("serial")
 public class CardViewer extends JPanel implements ICardSelectionListener {
 
-    private static CardImagesProvider IMAGE_HELPER = CachedImagesProvider.getInstance();
-    private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
+    private final Dimension IMAGE_SIZE = getImageSize();
 
-    private final TransparentImagePanel cardPanel = new TransparentImagePanel();
-    private MagicCardDefinition currentCardDefinition;
-    private int currentIndex;
-    private final boolean isGameScreenPopup;
-    private Timer timer;
+    private Image thisImage;
+    private MagicCardDefinition thisCard = MagicCardDefinition.UNKNOWN;
     private boolean isSwitchedAspect = false;
+    private CardImageWorker worker;
+    private MagicCardDefinition cardPending = MagicCardDefinition.UNKNOWN;
+    private final Timer aTimer = getCooldownTimer();
+    private long lastTime = System.currentTimeMillis();
+    private boolean isImagePending;
+    private final AbstractThrobber throbber;
+    private final JLabel cardLabel;
 
-    // ctr
     public CardViewer() {
-        this(false);
-    }
-    // ctr
-    public CardViewer(final boolean isGameScreenPopup) {
 
-        this.isGameScreenPopup = isGameScreenPopup;
-        setCard(MagicCardDefinition.UNKNOWN);
+        setPreferredSize(IMAGE_SIZE);
+        setMinimumSize(IMAGE_SIZE);
+        setMaximumSize(IMAGE_SIZE);
 
-        setDelayedVisibilityTimer();
+        setBackground(MagicStyle.getTranslucentColor(Color.DARK_GRAY, 140));
+
+        throbber = new ImageThrobber.Builder(MagicImages.loadImage("round-shield.png")).build();
+        throbber.setVisible(false);
+
+        cardLabel = getLabel("");
+
+        setLayout(new MigLayout("flowy, aligny center"));
+        add(new JLabel());
+        add(throbber, "alignx center");
+        add(cardLabel, "w 100%");
+
+        setDefaultImage();
         setTransformCardListener();
-
-        setOpaque(false);
-        this.setLayout(new BorderLayout());
-        add(cardPanel,BorderLayout.CENTER);
-
-        if (isGameScreenPopup) {
-            addMouseMotionListener(new MouseMotionListener() {
-                @Override
-                public void mouseDragged(MouseEvent e) {}
-                @Override
-                public void mouseMoved(MouseEvent e) {
-                    hideDelayed();
-                }
-            });
-        }
-
     }
-    
-    private void setDelayedVisibilityTimer() {
-        timer = new Timer(0, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                setVisible(true);
-            }
-        });
-        timer.setRepeats(false);        
+
+    private void setDefaultImage() {
+        setImage(getCardImage(MagicCardDefinition.UNKNOWN, getImageSize()));
+    }
+
+    private JLabel getLabel(String text) {
+        JLabel lbl = new JLabel(text);
+        lbl.setForeground(Color.WHITE);
+        lbl.setFont(FontsAndBorders.FONT2);
+        lbl.setHorizontalAlignment(SwingConstants.CENTER);
+        return lbl;
     }
 
     private void setTransformCardListener() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (currentCardDefinition != null && !isGameScreenPopup) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            switchCardAspect();
-                        }
+                if (thisCard != null) {
+                    SwingUtilities.invokeLater(() -> {
+                        switchCardAspect();
                     });
                 }
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (!isGameScreenPopup && currentCardDefinition.hasMultipleAspects() && currentCardDefinition.isValid()) {
+                if (thisCard.hasMultipleAspects() && thisCard.isValid()) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 } else {
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -108,83 +103,119 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
     }
 
     private void switchCardAspect() {
-        if (currentCardDefinition.hasMultipleAspects() && currentCardDefinition.isValid()) {
+        if (thisCard.hasMultipleAspects()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            if (currentCardDefinition.isDoubleFaced()) {
-                setCard(currentCardDefinition.getTransformedDefinition());
-            } else if (currentCardDefinition.isFlipCard()) {
-                setCard(currentCardDefinition.getFlippedDefinition());
+            if (thisCard.isDoubleFaced()) {
+                setCard(thisCard.getTransformedDefinition());
+            } else if (thisCard.isFlipCard()) {
+                setCard(thisCard.getFlippedDefinition());
             }
             isSwitchedAspect = !isSwitchedAspect;
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 
-    public void setCard(final MagicCardDefinition cardDefinition, final int index) {
-        
-        if (cardDefinition == null) {
-            currentCardDefinition = MagicCardDefinition.UNKNOWN;
-            setCardImage(IconImages.getMissingCardImage());
+    public final void setCard(final MagicCardDefinition aCard) {
 
-        } else if (cardDefinition != currentCardDefinition || index != currentIndex) {
-            currentCardDefinition = cardDefinition;
-            currentIndex = index;
-            final BufferedImage cardImage;
-            if (isGameScreenPopup && CONFIG.isHighQuality()) {
-                final BufferedImage sourceImage = IMAGE_HELPER.getImage(cardDefinition,index,true);
-                final int imageWidth=sourceImage.getWidth(this);
-                final int imageHeight=sourceImage.getHeight(this);
-                cardImage = sourceImage;
-                setSize(imageWidth,imageHeight);
-                revalidate();
-            } else {
-                cardImage = IMAGE_HELPER.getImage(cardDefinition,index,false);
-                if (isGameScreenPopup) {
-                    setSize(GraphicsUtils.getMaxCardImageSize());
-                    revalidate();
-                }
-            }
-
-            if (cardDefinition.isInvalid() && cardImage != IconImages.getMissingCardImage()) {
-                setCardImage(GraphicsUtils.getGreyScaleImage(cardImage));
-            } else {
-                setCardImage(cardImage);
-            }
+        if (aCard == thisCard) {
+            return;
         }
-    }
 
-    public final void setCard(final MagicCardDefinition cardDefinition) {
-        setCard(cardDefinition, 0);
-    }
+        cardLabel.setText("..." + aCard.getName() + "...");
 
-    private void setCardImage(final Image newImage) {
-        cardPanel.setImage(newImage);
-        repaint();
-    }
+        boolean isCooldownRequired = System.currentTimeMillis() - lastTime < 120;
+        lastTime = System.currentTimeMillis();
+        if (isCooldownRequired && worker != null) {
+            cardPending = aCard;
+            aTimer.restart();
+            setImage(null);
+            return;
+        }
 
+        if (worker != null && !worker.isDone()) {
+            worker.cancel(true);
+            setImage(null);
+        }
 
-    public void showDelayed(final int delay) {
-        timer.setInitialDelay(delay);
-        timer.restart();
-    }
+        thisCard = aCard;
 
-    public void hideDelayed() {
-        timer.stop();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setVisible(false);
-            }
-        });
+        worker = new CardImageWorker(this, aCard);
+        worker.execute();
     }
 
     @Override
     public void newCardSelected(final MagicCardDefinition card) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setCard(card);
-            }
+        SwingUtilities.invokeLater(() -> {
+            setCard(card);
         });
+    }
+
+    void setImage(final Image aImage) {
+        if (aImage == null) {
+            isImagePending = true;
+            throbber.setVisible(true);
+            cardLabel.setVisible(true);
+        } else {
+            this.thisImage = aImage;
+            isImagePending = false;
+            throbber.setVisible(false);
+            cardLabel.setVisible(false);
+        }
+        repaint();
+    }
+
+    @Override
+    public void paintComponent(final Graphics g) {
+        if (thisImage != null) {
+            g.drawImage(thisImage, 0, 0, null);
+        }
+        if (isImagePending) {
+            super.paintComponent(g);
+        }
+    }
+
+    static Dimension getImageSize() {
+        ImageSizePresets sizePreset = GeneralConfig.getInstance().getPreferredImageSize();
+        if (sizePreset == ImageSizePresets.SIZE_ORIGINAL) {
+            return ImageSizePresets.SIZE_312x445.getSize();
+        } else if (sizePreset.getSize().width < ImageSizePresets.SIZE_312x445.getSize().width) {
+            return ImageSizePresets.SIZE_312x445.getSize();
+        } else {
+            return sizePreset.getSize();
+        }
+    }
+
+    static Image getCardImage(MagicCardDefinition aCard, Dimension prefSize) {
+
+        if (aCard == null) {
+            aCard = MagicCardDefinition.UNKNOWN;
+        }
+
+        BufferedImage image = MagicImages.getOrigSizeCardImage(aCard);
+
+        if (image.getWidth() != prefSize.width || image.getHeight() != prefSize.height) {
+            image = GraphicsUtils.scale(image, prefSize.width, prefSize.height);
+        }
+
+        if (aCard.isInvalid() && image != MagicImages.getMissingCardImage()) {
+            return GraphicsUtils.getGreyScaleImage(image);
+        } else {
+            return image;
+        }
+    }
+
+    private Timer getCooldownTimer() {
+        Timer t = new Timer(150, (e) -> {
+            setCard(cardPending);
+        });
+        t.setRepeats(false);
+        return t;
+    }
+
+    public static Dimension getSidebarImageSize() {
+        Dimension size = ImageSizePresets.getDefaultSize();
+        return size.width < ImageSizePresets.SIZE_312x445.getSize().width
+            ? ImageSizePresets.SIZE_312x445.getSize()
+            : size;
     }
 }

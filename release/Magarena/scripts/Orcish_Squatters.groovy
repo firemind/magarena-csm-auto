@@ -4,14 +4,14 @@ def action = {
     final MagicGame game, final MagicEvent event ->
     event.processTargetPermanent(game, {
         game.doAction(new AddStaticAction(
-            event.getPermanent(), 
+            event.getPermanent(),
             MagicStatic.ControlAsLongAsYouControlSource(event.getPlayer(), it)
         ));
     });
 }
 
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?

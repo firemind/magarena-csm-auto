@@ -5,11 +5,8 @@ import magic.model.MagicLocationType;
 import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
-import magic.model.action.MagicPermanentAction;
 import magic.model.action.RemoveFromPlayAction;
 import magic.model.choice.MagicTargetChoice;
-import magic.model.condition.MagicCondition;
-import magic.model.condition.MagicConditionFactory;
 import magic.model.target.MagicBounceTargetPicker;
 
 public class MagicBounceChosenPermanentEvent extends MagicEvent {
@@ -29,17 +26,11 @@ public class MagicBounceChosenPermanentEvent extends MagicEvent {
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.processTargetPermanent(game,new MagicPermanentAction() {
-                public void doAction(final MagicPermanent permanent) {
-                    game.doAction(new RemoveFromPlayAction(
-                        permanent,
-                        MagicLocationType.OwnersHand
-                    ));
-                }
-            });
-        }
-    };
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) ->
+        event.processTargetPermanent(game, (final MagicPermanent permanent) ->
+            game.doAction(new RemoveFromPlayAction(
+                permanent,
+                MagicLocationType.OwnersHand
+            ))
+        );
 }

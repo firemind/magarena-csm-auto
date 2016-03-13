@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{4}{R}")
+                MagicPayManaCostEvent.Cast(source,"{4}{R}")
             ];
         }
         @Override
@@ -11,7 +11,7 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Destroy each artifact you don't control."
+                "Destroy each artifact PN doesn't control."
             );
         }
         @Override

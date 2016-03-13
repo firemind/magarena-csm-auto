@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             final int amount = damage.getDealtAmount();
@@ -9,7 +9,7 @@
                 new MagicDamageTargetPicker(amount),
                 amount,
                 this,
-                "PN may\$ have SN deal RN damage to target creature\$ your opponent controls."
+                "PN may\$ have SN deal RN damage to target creature an opponent controls.\$"
             );
         }
 

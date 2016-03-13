@@ -2,7 +2,7 @@ def UNTAPPED_ARTIFACT_CREATURE_OR_LAND_YOU_CONTROL = new MagicPermanentFilterImp
     public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
         return target.isUntapped() && target.isController(player) &&
                (target.isArtifact() || target.isCreature() || target.isLand());
-    } 
+    }
 };
 
 def AN_UNTAPPED_ARTIFACT_CREATURE_OR_LAND_YOU_CONTROL = new MagicTargetChoice(
@@ -11,7 +11,7 @@ def AN_UNTAPPED_ARTIFACT_CREATURE_OR_LAND_YOU_CONTROL = new MagicTargetChoice(
 );
 
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return new MagicEvent(

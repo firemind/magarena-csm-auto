@@ -1,7 +1,7 @@
-def T = new MagicWhenDamageIsDealtTrigger() {
+def T = new DamageIsDealtTrigger() {
     @Override
     public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
-        return (damage.getSource().isCreature() &&
+        return (damage.getSource().isCreaturePermanent() &&
                 damage.isCombat() &&
                 damage.getTarget() == permanent) ?
             new MagicEvent(
@@ -31,10 +31,10 @@ def T = new MagicWhenDamageIsDealtTrigger() {
         }
         @Override
         public void executeEvent(final MagicGame outerGame, final MagicEvent outerEvent) {
-            final MagicWhenDamageIsDealtTrigger trigger = T;
+            final DamageIsDealtTrigger trigger = T;
             outerGame.doAction(new AddTriggerAction(outerEvent.getPermanent(), trigger));
             // remove the trigger during player's next upkeep
-            MagicAtUpkeepTrigger cleanup = new MagicAtUpkeepTrigger() {
+            AtUpkeepTrigger cleanup = new AtUpkeepTrigger() {
                 @Override
                 public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
                     if (upkeepPlayer.getId() == outerEvent.getPlayer().getId()) {

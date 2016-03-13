@@ -10,16 +10,16 @@
                     new MagicPayManaCostEvent(source,"{3}"),
                     new MagicSacrificeEvent(source)];
         }
-        
+
         @Override
         public MagicEvent getPermanentEvent(final MagicPermanent source, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
                 this,
-                "Return a creature card at random from your graveyard to your hand."
+                "PN returns a creature card at random from his or her graveyard to his or her hand."
             );
         }
-        
+
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();

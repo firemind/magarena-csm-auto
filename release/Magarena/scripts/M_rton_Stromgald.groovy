@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfAttacksTrigger() {
+    new ThisAttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return new MagicEvent(
@@ -18,8 +18,8 @@
             }
         }
     },
-    
-    new MagicWhenSelfBlocksTrigger() {
+
+    new ThisBlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return new MagicEvent(

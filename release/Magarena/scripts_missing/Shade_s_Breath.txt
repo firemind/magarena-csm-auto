@@ -1,9 +1,0 @@
-name=Shade's Breath
-image=http://magiccards.info/scans/en/on/167.jpg
-value=2.562
-rarity=U
-type=Instant
-cost={1}{B}
-effect=Until end of turn, each creature you control becomes a black Shade and gains "{B}: This creature gets +1/+1 until end of turn."
-timing=removal
-oracle=Until end of turn, each creature you control becomes a black Shade and gains "{B}: This creature gets +1/+1 until end of turn."

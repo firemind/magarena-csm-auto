@@ -1,5 +1,5 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
@@ -15,13 +15,10 @@
                 MagicLocationType.Graveyard,
                 MagicLocationType.Exile
             ));
-            CREATURE_CARD_FROM_GRAVEYARD.filter(event) each {
-                game.doAction(new ShiftCardAction(
-                    it, 
-                    MagicLocationType.Graveyard,
-                    MagicLocationType.OwnersLibrary
-                ));
-            }
+            game.doAction(new ShuffleCardsIntoLibraryAction(
+                CREATURE_CARD_FROM_GRAVEYARD.filter(event),
+                MagicLocationType.Graveyard
+            ));
         }
     }
 ]

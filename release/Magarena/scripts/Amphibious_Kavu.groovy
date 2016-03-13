@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfBecomesBlockedTrigger() {
+    new ThisBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent attacker) {
             final MagicPermanentList plist = permanent.getBlockingCreatures();
@@ -24,12 +24,12 @@
             game.doAction(new ChangeTurnPTAction(event.getPermanent(),3,3));
         }
     },
-    new MagicWhenSelfBlocksTrigger() {
+    new ThisBlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             final MagicPermanent blocked = permanent.getBlockedCreature();
             return (blocked.hasColor(MagicColor.Blue) ||
-                     blocked.hasColor(MagicColor.Black)) ?
+                    blocked.hasColor(MagicColor.Black)) ?
                 new MagicEvent(
                     permanent,
                     this,

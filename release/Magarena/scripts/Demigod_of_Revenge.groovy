@@ -1,11 +1,11 @@
 [
-    new MagicWhenSpellIsCastTrigger() {
+    new ThisSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicCardOnStack cardOnStack) {
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Return all cards named SN from your graveyard to the battlefield."
+                "PN returns all cards named SN from his or her graveyard to the battlefield."
             );
         }
 

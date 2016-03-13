@@ -1,10 +1,12 @@
+def choice = MagicTargetChoice.Positive("another target permanent")
+
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 permanent,
-                PosOther("target permanent",permanent),
+                choice,
                 MagicIndestructibleTargetPicker.create(),
                 this,
                 "Another target permanent\$ gains indestructible for as long as PN controls SN."
@@ -17,8 +19,8 @@
                 game.doAction(new AddStaticAction(
                     event.getPermanent(),
                     MagicStatic.AsLongAsCond(
-                        it, 
-                        MagicAbility.Indestructible, 
+                        it,
+                        MagicAbility.Indestructible,
                         MagicConditionFactory.PlayerControlsSource(event.getPlayer())
                     )
                 ));

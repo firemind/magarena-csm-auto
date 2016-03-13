@@ -19,15 +19,15 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
     public List<MagicCard> filter(final MagicSource source) {
         return filter(source, source.getController(), MagicTargetHint.None);
     }
-    
+
     public List<MagicCard> filter(final MagicPlayer player) {
         return filter(MagicSource.NONE, player, MagicTargetHint.None);
     }
-    
+
     public List<MagicCard> filter(final MagicEvent event) {
         return filter(event.getSource(), event.getPlayer(), MagicTargetHint.None);
     }
-    
+
     public List<MagicCard> filter(final MagicSource source, final MagicPlayer player, final MagicTargetHint targetHint) {
         final List<MagicCard> targets = new ArrayList<MagicCard>();
 
@@ -45,7 +45,7 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
         if (acceptType(MagicTargetType.Hand)) {
             add(source, player, player.getHand(), targets, false);
         }
-        
+
         // Cards in library
         if (acceptType(MagicTargetType.Library)) {
             // only consider unique cards, possible as cards in library will not be counted
@@ -55,19 +55,23 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
         return targets;
     }
 
-    private void add(final MagicSource source, final MagicPlayer player, final List<MagicCard> cards, final List<MagicCard> targets, final boolean unique) {
+    private void add(final MagicSource source, final MagicPlayer player, final List<MagicCard> cards, final List<MagicCard> targets, final boolean library) {
         final Set<Long> added = new HashSet<Long>();
         for (final MagicCard card : cards) {
             final boolean old = card.isGameKnown();
-            card.setGameKnown(true);
-            if (accept(source,player,card) && (unique == false || added.contains(card.getStateId()) == false)) {
+            if (library) {
+                card.setGameKnown(true);
+            }
+            if (card.isKnown() && accept(source,player,card) && (library == false || added.contains(card.getStateId()) == false)) {
                 targets.add(card);
                 added.add(card.getStateId());
             }
-            card.setGameKnown(old);
+            if (library) {
+                card.setGameKnown(old);
+            }
         }
     }
-        
+
     public MagicCardFilterImpl or(final MagicType type) {
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
@@ -160,7 +164,7 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
             public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
-                return curr.accept(source, player, target) && target.getCardDefinition().isPermanent();
+                return curr.accept(source, player, target) && target.isPermanentCard();
             }
             public boolean acceptType(final MagicTargetType targetType) {
                 return false;
@@ -200,7 +204,7 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
             }
         };
     }
-    
+
     public MagicCardFilterImpl except(final MagicCard invalid) {
         return new MagicOtherCardTargetFilter(this, invalid);
     }

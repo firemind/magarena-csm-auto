@@ -17,7 +17,7 @@ def FATESEAL = {
                 source,
                 TARGET_PLAYER,
                 this,
-                "Look at the top card of target player\$'s library. You may put that card on the bottom of that player's library."
+                "Look at the top card of target player\$'s library. PN may put that card on the bottom of that player's library."
             );
         }
         @Override
@@ -43,7 +43,7 @@ def FATESEAL = {
             return new MagicEvent(
                 source,
                 this,
-                "Draw three cards, then put two cards from your hand on top of your library in any order."
+                "PN draws three cards, then puts two cards from his or her hand on top of his or her library in any order."
             );
         }
         @Override
@@ -85,11 +85,16 @@ def FATESEAL = {
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
                 for (final MagicCard card : new MagicCardList(it.getLibrary())) {
-                    game.doAction(new ShiftCardAction(card, MagicLocationType.OwnersLibrary, MagicLocationType.Exile));
+                    game.doAction(new ShiftCardAction(
+                        card,
+                        MagicLocationType.OwnersLibrary,
+                        MagicLocationType.Exile
+                    ));
                 }
-                for (final MagicCard hand : new MagicCardList(it.getHand())) {
-                    game.doAction(new ShiftCardAction(hand, MagicLocationType.OwnersHand, MagicLocationType.OwnersLibrary));
-                }
+                game.doAction(new ShuffleCardsIntoLibraryAction(
+                    new MagicCardList(it.getHand()),
+                    MagicLocationType.OwnersHand,
+                ));
             });
         }
     }

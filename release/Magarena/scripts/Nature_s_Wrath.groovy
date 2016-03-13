@@ -3,7 +3,7 @@ def SWAMP_OR_BLACK_PERMANENT_YOU_CONTROL = new MagicPermanentFilterImpl() {
         return target.isController(player) &&
                (target.hasSubType(MagicSubType.Swamp) ||
                 target.hasColor(MagicColor.Black));
-    } 
+    }
 };
 
 def A_SWAMP_OR_BLACK_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
@@ -16,7 +16,7 @@ def ISLAND_OR_BLUE_PERMANENT_YOU_CONTROL = new MagicPermanentFilterImpl() {
         return target.isController(player) &&
                (target.hasSubType(MagicSubType.Island) ||
                 target.hasColor(MagicColor.Blue));
-    } 
+    }
 };
 
 def AN_ISLAND_OR_BLUE_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
@@ -25,7 +25,7 @@ def AN_ISLAND_OR_BLUE_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
 );
 
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return otherPermanent.hasSubType(MagicSubType.Swamp) || otherPermanent.hasColor(MagicColor.Black) ?
@@ -47,7 +47,7 @@ def AN_ISLAND_OR_BLUE_PERMANENT_YOU_CONTROL = new MagicTargetChoice(
             ));
         }
     },
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             return otherPermanent.hasSubType(MagicSubType.Island) || otherPermanent.hasColor(MagicColor.Blue) ?

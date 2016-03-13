@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -9,8 +9,8 @@
                     MagicColorChoice.MOST_INSTANCE
                 ),
                 this,
-                "PN may\$ pay {2}{W}\$. If you do, choose a color\$. " +
-                "PN gains 1 life for each permanent of that color."
+                "PN may\$ pay {2}{W}\$. If PN does, he or she chooses a color\$, "+
+                "then gains 1 life for each permanent of that color."
             );
         }
         @Override

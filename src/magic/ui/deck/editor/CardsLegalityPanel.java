@@ -26,7 +26,7 @@ import magic.data.MagicFormat;
 import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
-import magic.ui.IconImages;
+import magic.ui.MagicImages;
 import magic.translate.UiString;
 import magic.translate.StringContext;
 import magic.ui.widget.FontsAndBorders;
@@ -44,10 +44,10 @@ public class CardsLegalityPanel extends JPanel {
     private static final String _S4 = "A minimum of %d cards is required.";
 
     // fired when selection changes.
-    public static final String CP_CARD_SELECTED = "cardTableSelection";
+    public static final String CP_CARD_SELECTED = "019f0246-bd63-4efd-a7cf-fefabea053e3";
     // fired on mouse event.
-    public static final String CP_CARD_DCLICKED = "cardDoubleClicked";
-    
+    public static final String CP_CARD_DCLICKED = "02bd98e4-fccf-4152-bcef-c5ea85c5313b";
+
     private static final Color GRID_COLOR = new Color(194, 197, 203);
     private static final int ROW_HEIGHT = 23; //pixels
 
@@ -92,7 +92,7 @@ public class CardsLegalityPanel extends JPanel {
         table.getSelectionModel().addListSelectionListener(getTableListSelectionListener());
         table.addMouseListener(getTableMouseAdapter());
         table.setShowVerticalLines(false);
-        
+
         final TableColumnModel model = table.getColumnModel();
         setColumnWidths(model);
         // special renderer for legality indicator icon.
@@ -200,13 +200,13 @@ public class CardsLegalityPanel extends JPanel {
     private boolean hasDoubleClickListeners() {
         return getPropertyChangeListeners(CP_CARD_DCLICKED).length > 0;
     }
-    
+
     private static class LegalityCellRenderer extends DefaultTableCellRenderer {
-        
-        private static final JLabel BANNED_ICON = new JLabel(IconImages.getIcon(MagicIcon.BANNED_ICON));
-        private static final JLabel RESTRICTED_ICON = new JLabel(IconImages.getIcon(MagicIcon.RESTRICTED_ICON));
-        private static final JLabel LEGAL_ICON = new JLabel(IconImages.getIcon(MagicIcon.LEGAL_ICON));
-        private static final JLabel ILLEGAL_ICON = new JLabel(IconImages.getIcon(MagicIcon.ILLEGAL_ICON));
+
+        private static final JLabel BANNED_ICON = new JLabel(MagicImages.getIcon(MagicIcon.BANNED_ICON));
+        private static final JLabel RESTRICTED_ICON = new JLabel(MagicImages.getIcon(MagicIcon.RESTRICTED_ICON));
+        private static final JLabel LEGAL_ICON = new JLabel(MagicImages.getIcon(MagicIcon.LEGAL_ICON));
+        private static final JLabel ILLEGAL_ICON = new JLabel(MagicImages.getIcon(MagicIcon.ILLEGAL_ICON));
 
         private JLabel getLegalityIcon(final CardLegalityInfo dfl) {
             switch (dfl.getLegality()) {
@@ -224,7 +224,7 @@ public class CardsLegalityPanel extends JPanel {
 
             final CardsLegalityTableModel tableModel = (CardsLegalityTableModel) table.getModel();
             final CardLegalityInfo cardLegality = tableModel.getCardLegality(row);
-            
+
             final JLabel lbl = getLegalityIcon(cardLegality);
 
             lbl.setToolTipText(String.format("<html>%s</html>",

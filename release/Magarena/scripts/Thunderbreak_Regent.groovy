@@ -2,11 +2,11 @@ def TARGET = Permanent("Dragon you control");
 def SPELL = ItemOnStack("spell or ability an opponent controls");
 
 [
-    new MagicWhenTargetedTrigger() {
+    new BecomesTargetTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicItemOnStack itemOnStack) {
             final MagicTarget target = itemOnStack.getTarget();
-            return target.isPermanent() && 
+            return target.isPermanent() &&
                    TARGET.accept(permanent, permanent.getController(), (MagicPermanent)target) &&
                    SPELL.accept(permanent, permanent.getController(), itemOnStack) ?
                 new MagicEvent(

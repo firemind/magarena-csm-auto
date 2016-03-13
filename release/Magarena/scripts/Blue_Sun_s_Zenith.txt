@@ -1,9 +1,10 @@
 name=Blue Sun's Zenith
-image=http://magiccards.info/scans/en/c13/32.jpg
+image=http://magiccards.info/scans/en/c15/88.jpg
+image_updated=2016-02-29
 value=3.781
 rarity=R
 type=Instant
 cost={X}{U}{U}{U}
-timing=pumpFlash
-requires_groovy_code
+effect=Target player draws X cards.~Shuffle SN into its owner's library.
+timing=draw
 oracle=Target player draws X cards. Shuffle Blue Sun's Zenith into its owner's library.

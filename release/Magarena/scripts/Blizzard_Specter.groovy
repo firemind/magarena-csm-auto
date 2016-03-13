@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -22,8 +22,8 @@
                 ));
             } else if (event.isMode(2)) {
                 game.addEvent(new MagicBounceChosenPermanentEvent(
-                    event.getSource(), 
-                    event.getRefPlayer(), 
+                    event.getSource(),
+                    event.getRefPlayer(),
                     A_PERMANENT_YOU_CONTROL
                 ));
             }

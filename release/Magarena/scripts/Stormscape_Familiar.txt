@@ -1,0 +1,12 @@
+name=Stormscape Familiar
+image=http://magiccards.info/scans/en/tsts/32.jpg
+value=4.358
+rarity=C
+type=Creature
+subtype=Bird
+cost={1}{U}
+pt=1/1
+ability=Flying
+requires_groovy_code
+timing=main
+oracle=Flying\nWhite spells and black spells you cast cost {1} less to cast.

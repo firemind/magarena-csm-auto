@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{3}{R}{R}{R}")
+                MagicPayManaCostEvent.Cast(source,"{3}{R}{R}{R}")
             ];
         }
         @Override
@@ -11,7 +11,7 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "SN deals 4 damage to each creature\$ you don't control."
+                "SN deals 4 damage to each creature\$ PN doesn't control."
             );
         }
         @Override

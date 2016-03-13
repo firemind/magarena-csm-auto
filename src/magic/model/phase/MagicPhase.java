@@ -1,9 +1,9 @@
 package magic.model.phase;
 
-import magic.data.SoundEffects;
 import magic.model.MagicGame;
 import magic.model.action.StackResolveAction;
 import magic.model.event.MagicPriorityEvent;
+import magic.ui.MagicSound;
 
 public abstract class MagicPhase {
 
@@ -41,7 +41,7 @@ public abstract class MagicPhase {
                 // Stack can be empty at this point, for instance by a counter unless event.
                 if (!game.getStack().isEmpty()) {
                     game.doAction(new StackResolveAction());
-                    SoundEffects.playGameSound(game,SoundEffects.RESOLVE_SOUND);
+                    game.playSound(MagicSound.RESOLVE);
                 }
                 game.setStep(MagicStep.ActivePlayer);
                 break;

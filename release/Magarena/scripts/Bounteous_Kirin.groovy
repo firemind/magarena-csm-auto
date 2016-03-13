@@ -1,5 +1,5 @@
 [
-    new MagicWhenYouCastSpiritOrArcaneTrigger() {
+    new YouCastSpiritOrArcaneTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicCardOnStack cardOnStack) {
             return new MagicEvent(
@@ -7,7 +7,7 @@
                 new MagicSimpleMayChoice(),
                 cardOnStack.getConvertedCost(),
                 this,
-                "You may gain RN life."
+                "PN may\$ gain RN life."
             );
         }
 

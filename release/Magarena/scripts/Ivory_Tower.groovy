@@ -1,12 +1,12 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 this,
                 "PN gains X life, where X is the number of cards in his or her hand minus 4."
-            ); 
+            );
         }
 
         @Override

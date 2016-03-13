@@ -1,0 +1,13 @@
+name=Wellspring
+image=http://magiccards.info/scans/en/mr/348.jpg
+value=2.212
+rarity=R
+type=Enchantment
+subtype=Aura
+cost={1}{G}{W}
+ability=Enchant land;\
+        When SN enters the battlefield, gain control of enchanted land until end of turn.
+timing=aura
+enchant=gain control,neg land
+requires_groovy_code
+oracle=Enchant land\nWhen Wellspring enters the battlefield, gain control of enchanted land until end of turn.\nAt the beginning of your upkeep, untap enchanted land. You gain control of that land until end of turn.

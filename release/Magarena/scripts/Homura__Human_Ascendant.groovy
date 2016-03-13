@@ -1,5 +1,5 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent source, final MagicPermanent died) {
             return new MagicEvent(
@@ -11,10 +11,12 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicCard card = event.getRefCard();
-            if (card.isInGraveyard()) {
-                game.doAction(new ReturnCardAction(MagicLocationType.Graveyard,card,event.getPlayer(),MagicPlayMod.FLIPPED));
-            }
+            game.doAction(new ReturnCardAction(
+                MagicLocationType.Graveyard,
+                event.getRefCard(),
+                event.getPlayer(),
+                MagicPlayMod.FLIPPED
+            ));
         }
     }
 ]

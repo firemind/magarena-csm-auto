@@ -1,11 +1,11 @@
 def KEEPER_OF_KOOKUS = new MagicPermanentFilterImpl() {
     public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
         return target.isCreature() && target.isName("Keeper of Kookus");
-    } 
+    }
 };
 
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return upkeepPlayer.controlsPermanent(KEEPER_OF_KOOKUS) == false ?

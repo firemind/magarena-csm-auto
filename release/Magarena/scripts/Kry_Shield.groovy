@@ -1,15 +1,3 @@
-def ATTACKING_CREATURE_YOU_CONTROL = new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
-        return target.isController(player) && target.isCreature() && target.isAttacking();
-    }
-};
-
-def TARGET_ATTACKING_CREATURE_YOU_CONTROL = new MagicTargetChoice(
-    ATTACKING_CREATURE_YOU_CONTROL,
-    MagicTargetHint.Positive,
-    "target attacking creature you control"
-);
-
 [
     new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Block),
@@ -41,7 +29,7 @@ def TARGET_ATTACKING_CREATURE_YOU_CONTROL = new MagicTargetChoice(
                 game.logAppendX(event.getPlayer(), amount);
                 game.doAction(new AddTurnTriggerAction(
                     permanent,
-                    MagicPreventDamageTrigger.PreventDamageDealtBy
+                    PreventDamageTrigger.PreventDamageDealtBy
                 ));
                 game.doAction(new ChangeTurnPTAction(permanent, 0, amount));
             });

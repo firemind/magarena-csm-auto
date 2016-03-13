@@ -1,12 +1,12 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return permanent.isOpponent(upkeepPlayer) ?
                 new MagicEvent(
                     permanent,
                     this,
-                    "Exile all cards from your hand."
+                    "Exile all cards from PN's hand."
                 ):
                 MagicEvent.NONE;
         }
@@ -18,13 +18,13 @@
             }
         }
     },
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Return all cards you own exiled with SN to PN's hand, then draw a card."
+                "Return all cards PN owns exiled with SN to his or her hand, then draw a card."
             );
         }
         @Override
