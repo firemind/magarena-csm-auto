@@ -6,8 +6,8 @@
                 permanent,
                 damage.getDealtAmount(),
                 this,
-                "PN puts RN 0/1 colorless Eldrazi Spawn creature tokens onto the battlefield. " + 
-                "They have \"Sacrifice this creature: Add {1} to your mana pool.\""
+                "PN puts RN 0/1 colorless Eldrazi Spawn creature tokens onto the battlefield. " +
+                "They have \"Sacrifice this creature: Add {C} to your mana pool.\""
             );
         }
         @Override

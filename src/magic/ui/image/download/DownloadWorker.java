@@ -1,5 +1,6 @@
 package magic.ui.image.download;
 
+import java.io.File;
 import magic.ui.CardTextLanguage;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,14 +17,17 @@ import magic.data.CardImageFile;
 import magic.data.DownloadableFile;
 import magic.data.GeneralConfig;
 import magic.data.ImagesDownloadList;
+import magic.model.MagicCardDefinition;
+import magic.ui.MagicImages;
 import magic.ui.URLUtils;
 import magic.ui.MagicLogFile;
+import magic.utility.MagicFileSystem;
 import magic.utility.MagicSystem;
 
 class DownloadWorker extends SwingWorker<Void, Integer> {
 
     private static final MagicLogFile missingLog = new MagicLogFile("downloaded-images");
-    
+
     private final Proxy proxy;
     private ImagesDownloadList downloadList;
     private final IDownloadListener listener;
@@ -31,20 +35,16 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
     private final DownloadMode downloadMode;
     private boolean updateDownloadDate = true;
     private boolean isLogging = true;
-   
-    DownloadWorker(
-        IDownloadListener aListener,
-        CardTextLanguage aLanguage,
-        DownloadMode aDownloadMode) {
-        
+
+    DownloadWorker(IDownloadListener aListener, CardTextLanguage aLanguage, DownloadMode aMode) {
         this.listener = aListener;
         this.textLanguage = aLanguage;
-        this.downloadMode = aDownloadMode;
+        this.downloadMode = aMode;
         this.proxy = GeneralConfig.getInstance().getProxy();
     }
 
     @Override
-    protected Void doInBackground() {
+    protected Void doInBackground() throws MalformedURLException {
         this.downloadList = ScanWorker.getImagesDownloadList((IScanListener)listener, downloadMode);
         doDownloadImages(textLanguage);
         return null;
@@ -62,7 +62,7 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         listener.setButtonState(false);
         resetProgressBar();
 
-        magic.ui.CachedImagesProvider.getInstance().clearCache();
+        MagicImages.clearCache();
         listener.buildDownloadImagesList();
     }
 
@@ -75,7 +75,7 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
     }
 
     private boolean isLoggingOn() {
-        return isLogging && MagicSystem.isDevMode() && downloadMode == DownloadMode.MISSING;
+        return isLogging && MagicSystem.isDevMode();
     }
 
     /**
@@ -150,6 +150,16 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         return false;
     }
 
+    private boolean doDeleteLocalImageFile(File aFile) {
+        try {
+            Files.deleteIfExists(aFile.toPath());
+        } catch (IOException ex) {
+            listener.setMessage(String.format("%s [%s]", ex.toString(), aFile.getName()));
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Attempts to download default card image.
      * If it fails displays reason in error log panel.
@@ -158,6 +168,10 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         try {
             aFile.doDownload(proxy);
         } catch (IOException ex) {
+            // if local file exists then download was triggered by the
+            // 'image_updated' script property. But download failed so
+            // remove local image so it becomes 'missing' instead.
+            updateDownloadDate = downloadMode != DownloadMode.CROPS && doDeleteLocalImageFile(aFile.getLocalFile());
             listener.setMessage(String.format("%s [%s]", ex.toString(), aFile.getFilename()));
             return false;
         }
@@ -170,26 +184,47 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         }
     }
 
-    private void doDownloadImages(CardTextLanguage textLang) {
+    private boolean doDownloadCroppedImage(CardImageFile imageFile) throws MalformedURLException {
+        final MagicCardDefinition card = imageFile.getCard();
+        final File local = MagicFileSystem.getCroppedCardImageFile(imageFile.getCard());
+        if (card.getImageURL().contains("magiccards.info/scans/")) {
+            final URL remote = new URL(card.getImageURL().replace("/scans/", "/crop/"));
+            if (URLUtils.isUrlValid(remote)) {
+                if (tryDefaultDownload(new DownloadableFile(local, remote))) {
+                    doLog(card.getCardTextName(), CardTextLanguage.ENGLISH, remote);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void doDownloadCardImage(CardImageFile imageFile, CardTextLanguage textLang) throws MalformedURLException {
+        if (textLang.isEnglish() || !downloadAlternateCardImage(imageFile, textLang)) {
+            downloadDefaultCardImage(imageFile);
+        }
+    }
+
+    private void doDownloadImages(CardTextLanguage textLang) throws MalformedURLException {
 
         initializeLogFiles();
         int fileCount = 0;
+        updateDownloadDate = downloadMode != DownloadMode.CROPS;
 
         for (DownloadableFile dFile : downloadList) {
 
             final CardImageFile imageFile = (CardImageFile) dFile;
 
-            if (deleteLocalImageFileIfMissing(imageFile) == false)
-                continue; // with next DownloadableFile.
-
-            if (textLang.isEnglish() || !downloadAlternateCardImage(imageFile, textLang)) {
-                downloadDefaultCardImage(imageFile);
+            if (downloadMode == DownloadMode.CROPS) {
+                doDownloadCroppedImage(imageFile);
+            } else {
+                doDownloadCardImage(imageFile, textLang);
             }
 
             fileCount++;
 
             if (isCancelled()) {
-                break;
+                return;
             } else {
                 publish(new Integer(fileCount));
             }
@@ -201,27 +236,9 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
 
     }
 
-    /**
-     * If downloading missing images but local image file already exists then download was
-     * triggered by 'image_updated'. If unable to delete image file so that it becomes
-     * "missing" do not update 'imageDownloaderRunDate' so that image update remains pending.
-     */
-    private boolean deleteLocalImageFileIfMissing(DownloadableFile dFile) {
-        if (downloadMode == DownloadMode.MISSING) {
-            try {
-                Files.deleteIfExists(dFile.getLocalFile().toPath());
-            } catch (IOException ex) {
-                updateDownloadDate = false;
-                listener.setMessage(String.format("%s [%s]", ex.toString(), dFile.getFilename()));
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void resetProgressBar() {
         assert SwingUtilities.isEventDispatchThread();
         listener.resetProgress();
     }
-    
+
 }

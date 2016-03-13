@@ -1,0 +1,12 @@
+name=Brighthearth Banneret
+image=http://magiccards.info/scans/en/mt/88.jpg
+value=3.514
+rarity=C
+type=Creature
+subtype=Elemental,Warrior
+cost={1}{R}
+pt=1/1
+ability=Reinforce 1—{1}{R}
+requires_groovy_code
+timing=main
+oracle=Elemental spells and Warrior spells you cast cost {1} less to cast.\nReinforce 1—{1}{R}

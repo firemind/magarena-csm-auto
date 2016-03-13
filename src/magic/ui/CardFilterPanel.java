@@ -1,7 +1,5 @@
 package magic.ui;
 
-import magic.translate.UiString;
-import magic.translate.StringContext;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -21,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+
 import magic.data.CardDefinitions;
 import magic.data.MagicFormat;
 import magic.data.MagicPredefinedFormat;
@@ -32,6 +31,8 @@ import magic.model.MagicManaCost;
 import magic.model.MagicRarity;
 import magic.model.MagicSubType;
 import magic.model.MagicType;
+import magic.translate.StringContext;
+import magic.translate.UiString;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.ButtonControlledPopup;
 import magic.ui.widget.FontsAndBorders;
@@ -68,6 +69,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
     private static final String _S21 = "Transform";
     private static final String _S22 = "Flip";
     private static final String _S23 = "Hidden";
+    private static final String _S24 = "Split";
 
     private static final String[] COST_VALUES = new String[MagicManaCost.MAXIMUM_MANA_COST + 1];
     static {
@@ -100,7 +102,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
     private JRadioButton[] statusFilterChoices;
     // sets
     private ButtonControlledPopup setsPopup;
-    private JCheckBox[] setsCheckBoxes;
+    public JCheckBox[] setsCheckBoxes;
     private JRadioButton[] setsFilterChoices;
     // cube
     private ButtonControlledPopup cubePopup;
@@ -135,9 +137,9 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
     private int totalFilteredCards = 0;
     private int playableCards = 0;
     private int missingCards = 0;
-    
+
     private static List<MagicCardDefinition> cardPool;
-    
+
     private boolean disableUpdate; // so when we change several filters, it doesn't update until the end
 
     public CardFilterPanel(final ICardFilterPanelListener aListener) {
@@ -147,7 +149,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
         cardPool = listener.isDeckEditor()
             ? CardDefinitions.getDefaultPlayableCardDefs()
             : CardDefinitions.getAllCards();
-        
+
         disableUpdate = false;
 
         layout.setLayoutConstraints("flowy, wrap 2, gap 4");
@@ -386,6 +388,8 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
                         return card.isFlipCard();
                     } else if (typeCheckBoxes[i].getText().equals(UiString.get(_S23))) {
                         return card.isHidden();
+                    } else if (typeCheckBoxes[i].getText().equals(UiString.get(_S24))) {
+                        return card.isSplitCard();
                     } else {
                         return card.hasType(MagicType.FILTER_TYPES.toArray(new MagicType[0])[i]);
                     }
@@ -595,6 +599,7 @@ public class CardFilterPanel extends TexturedPanel implements ActionListener {
             if (MagicSystem.isDevMode()) {
                 types.add(UiString.get(_S23));
             }
+            types.add(UiString.get(_S24));
         }
         return types.toArray();
     }

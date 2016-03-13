@@ -1,0 +1,10 @@
+name=Allied Reinforcements
+image=http://magiccards.info/scans/en/ogw/15.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=U
+type=Sorcery
+cost={3}{W}
+effect=Put two 2/2 white Knight Ally creature tokens onto the battlefield.
+timing=main
+oracle=Put two 2/2 white Knight Ally creature tokens onto the battlefield.

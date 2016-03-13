@@ -1,0 +1,11 @@
+name=Thornscape Familiar
+image=http://magiccards.info/scans/en/ps/95.jpg
+value=4.098
+rarity=C
+type=Creature
+subtype=Insect
+cost={1}{G}
+pt=2/1
+requires_groovy_code
+timing=main
+oracle=Red spells and white spells you cast cost {1} less to cast.

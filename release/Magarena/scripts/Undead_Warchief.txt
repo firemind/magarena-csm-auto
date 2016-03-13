@@ -1,0 +1,12 @@
+name=Undead Warchief
+image=http://magiccards.info/scans/en/pch/44.jpg
+value=4.302
+rarity=U
+type=Creature
+subtype=Zombie
+cost={2}{B}{B}
+pt=1/1
+ability=Zombie creatures you control get +2/+1.
+requires_groovy_code
+timing=main
+oracle=Zombie spells you cast cost {1} less to cast.\nZombie creatures you control get +2/+1.

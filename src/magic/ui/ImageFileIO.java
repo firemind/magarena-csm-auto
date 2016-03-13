@@ -23,7 +23,7 @@ public final class ImageFileIO {
             return null;
         }
     }
-    
+
     public static BufferedImage toImg(final File input, final BufferedImage def) {
         return toImg(input, () -> def);
     }
@@ -40,6 +40,22 @@ public final class ImageFileIO {
             optimizedImage.getGraphics().drawImage(img, 0, 0 , null);
             return optimizedImage;
         }
+    }
+
+    public static BufferedImage getOptimizedImage(final File imageFile) {
+        BufferedImage sourceImage = loadImage(imageFile);
+        if (sourceImage == null) {
+            // no registered ImageReader able to read the file, likely file is corrupted
+            imageFile.delete();
+            return null;
+        }
+        BufferedImage optimizedImage = GraphicsUtils.getCompatibleBufferedImage(
+            sourceImage.getWidth(),
+            sourceImage.getHeight(),
+            sourceImage.getTransparency()
+        );
+        optimizedImage.getGraphics().drawImage(sourceImage, 0, 0, null);
+        return optimizedImage;
     }
 
     public static BufferedImage toImg(final URL input, final BufferedImage def) {

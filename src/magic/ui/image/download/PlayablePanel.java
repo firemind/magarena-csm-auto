@@ -18,19 +18,18 @@ class PlayablePanel extends DownloadPanel {
     PlayablePanel(DownloadMode aMode, CardTextLanguage aLang, DialogMainPanel aPanel) {
         super(aMode, aLang, aPanel);
     }
-    
+
     @Override
     protected String getProgressCaption() {
         return UiString.get(_S1);
     }
 
     @Override
-    public Stream<MagicCardDefinition> getCards(final DownloadMode aType) {
-        return aType == DownloadMode.ALL
-            ? CardDefinitions.getAllPlayableCardDefs().stream()
-            : getCards(
+    public Stream<MagicCardDefinition> getCards(final DownloadMode mode) {
+        return DownloadPanel.getCards(
                 CardDefinitions.getAllPlayableCardDefs(),
-                GeneralConfig.getInstance().getPlayableImagesDownloadDate()
+                GeneralConfig.getInstance().getPlayableImagesDownloadDate(),
+                mode
             );
     }
 
@@ -44,5 +43,5 @@ class PlayablePanel extends DownloadPanel {
         GeneralConfig.getInstance().setPlayableImagesDownloadDate(new Date());
         GeneralConfig.getInstance().save();
     }
-    
+
 }

@@ -6,7 +6,6 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import magic.data.GeneralConfig;
@@ -15,14 +14,14 @@ import magic.data.TextImages;
 import magic.model.DuelPlayerConfig;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicColor;
-import magic.model.MagicManaCost;
+import magic.model.MagicDeck;
 import magic.model.MagicManaType;
-import magic.model.MagicPermanent;
 import magic.model.player.PlayerProfile;
 import magic.ui.cardBuilder.renderers.CardBuilder;
 import magic.ui.prefs.ImageSizePresets;
 import magic.ui.theme.PlayerAvatar;
 import magic.ui.utility.GraphicsUtils;
+import magic.utility.MagicFileSystem;
 import magic.utility.MagicResources;
 
 public final class MagicImages {
@@ -37,8 +36,8 @@ public final class MagicImages {
     // when the preferred image or icon is missing.
     public static final BufferedImage MISSING_BIG = loadImage("missing.png");
     private static final BufferedImage MISSING_SMALL = loadImage("missing2.png");
-    public static final BufferedImage MISSING_CARD = loadImage("missing_card.png");
-    
+    public static final BufferedImage MISSING_CARD = BACK_IMAGE;
+
     // "M" logo variations.
     public static final BufferedImage LOGO = loadImage("logo.png");
     public static final BufferedImage MENU_LOGO = GraphicsUtils.scale(LOGO, 40, 40);
@@ -57,6 +56,8 @@ public final class MagicImages {
     private static final Map<MagicIcon, ImageIcon> icons = new HashMap<>();
     private static final Map<String, PlayerAvatar> avatarsMap = new HashMap<>();
 
+    private static final int MAX_IMAGES = 100;
+    private static final Map<Integer, BufferedImage> cache = new magic.data.LRUCache<>(MAX_IMAGES);
 
     /**
      * Gets preferred viewing size for a card image based on preset setting in preferences.
@@ -95,7 +96,7 @@ public final class MagicImages {
         return ImageFileIO.toImg(MagicResources.getManaImageUrl(manaIcon), MISSING_SMALL);
     }
 
-    private static BufferedImage loadImage(String name) {
+    public static BufferedImage loadImage(String name) {
         return ImageFileIO.toImg(MagicResources.getImageUrl(name), MISSING_SMALL);
     }
 
@@ -135,33 +136,23 @@ public final class MagicImages {
         throw new RuntimeException("No icon for MagicColor " + c);
     }
 
-    public static ImageIcon getIcon(MagicPermanent perm) {
-        if (perm.isAttacking()) {
-            return getIcon(MagicIcon.ATTACK);
-        } else if (perm.isBlocking()) {
-            return getIcon(MagicIcon.BLOCK);
-        } else if (perm.isCreature()) {
-            return getIcon(MagicIcon.CREATURE);
-        } else {
-            return getIcon(perm.getCardDefinition());
-        }
-    }
-
     public static ImageIcon getIcon(MagicCardDefinition cdef) {
-        if (cdef.isLand()) {
+        if (cdef.getTypes().size()>1) {
+            return getIcon(MagicIcon.MULTIPLE);
+        } else if (cdef.isLand()) {
             return getIcon(MagicIcon.LAND);
         } else if (cdef.isCreature()) {
             return getIcon(MagicIcon.CREATURE);
-        } else if (cdef.isEquipment()) {
-            return getIcon(MagicIcon.EQUIPMENT);
-        } else if (cdef.isAura()) {
-            return getIcon(MagicIcon.AURA);
-        } else if (cdef.isEnchantment()) {
-            return getIcon(MagicIcon.ENCHANTMENT);
         } else if (cdef.isArtifact()) {
             return getIcon(MagicIcon.ARTIFACT);
+        } else if (cdef.isEnchantment()) {
+            return getIcon(MagicIcon.ENCHANTMENT);
+        } else if (cdef.isInstant()) {
+            return getIcon(MagicIcon.INSTANT);
+        } else if (cdef.isSorcery()) {
+            return getIcon(MagicIcon.SORCERY);
         } else {
-            return getIcon(MagicIcon.SPELL);
+            return getIcon(MagicIcon.PLANESWALKER);
         }
     }
 
@@ -239,6 +230,71 @@ public final class MagicImages {
         return cardDef == MagicCardDefinition.UNKNOWN
             ? MISSING_CARD
             : CardBuilder.getCardBuilderImage(cardDef);
+    }
+
+
+    public static BufferedImage getOrigSizeCardImage(MagicCardDefinition aCard) {
+
+        if (aCard == null || aCard == MagicCardDefinition.UNKNOWN) {
+            return getMissingCardImage();
+        }
+
+        if (MagicFileSystem.getCustomCardImageFile(aCard).exists()) {
+            return ImageFileIO.getOptimizedImage(MagicFileSystem.getCustomCardImageFile(aCard));
+        }
+
+        if (MagicFileSystem.getCroppedCardImageFile(aCard).exists()) {
+            return CardBuilder.getCardBuilderImage(aCard);
+        }
+
+        if (MagicFileSystem.getCardImageFile(aCard).exists()) {
+            return ImageFileIO.getOptimizedImage(MagicFileSystem.getCardImageFile(aCard));
+        }
+
+        // else get missing image proxy...
+        return getMissingCardImage(aCard);
+    }
+
+    public static boolean isProxyImage(MagicCardDefinition aCard) {
+
+        if (aCard == null || aCard == MagicCardDefinition.UNKNOWN) {
+            return false;
+        }
+
+        if (MagicFileSystem.getCustomCardImageFile(aCard).exists()) {
+            return false;
+        }
+
+        if (MagicFileSystem.getCroppedCardImageFile(aCard).exists()) {
+            return true;
+        }
+
+        if (MagicFileSystem.getCardImageFile(aCard).exists()) {
+            return false;
+        }
+
+        // else missing image proxy...
+        return true;
+    }
+
+    public static BufferedImage geCardImageUseCache(MagicCardDefinition aCard) {
+        int key = aCard.getIndex();
+        if (cache.containsKey(key)) {
+            return cache.get(key);
+        }
+        BufferedImage image = getOrigSizeCardImage(aCard);
+        if (image != MISSING_CARD) {
+            cache.put(key, image);
+        }
+        return image;
+    }
+
+    public static boolean hasProxyImage(MagicDeck aDeck) {
+        return aDeck.stream().anyMatch(card -> MagicImages.isProxyImage(card));
+    }
+
+    public static void clearCache() {
+        cache.clear();
     }
 
 }

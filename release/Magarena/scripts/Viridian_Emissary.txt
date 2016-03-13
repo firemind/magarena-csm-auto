@@ -1,11 +1,12 @@
 name=Viridian Emissary
-image=http://magiccards.info/scans/en/pc2/80.jpg
+image=http://magiccards.info/scans/en/c15/208.jpg
+image_updated=2016-02-29
 value=3.643
 rarity=C
 type=Creature
 subtype=Elf,Scout
 cost={1}{G}
 pt=2/1
-ability=When SN dies, you may search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.
+ability=When SN dies, you may search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.
 timing=main
 oracle=When Viridian Emissary dies, you may search your library for a basic land card, put it onto the battlefield tapped, then shuffle your library.

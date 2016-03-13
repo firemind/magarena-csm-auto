@@ -1,6 +1,5 @@
 package magic.ui.deck.editor;
 
-import java.awt.Dimension;
 import javax.swing.JPanel;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
@@ -8,7 +7,6 @@ import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.ui.ScreenController;
 import magic.translate.UiString;
-import magic.ui.utility.GraphicsUtils;
 import magic.utility.MagicSystem;
 import net.miginfocom.swing.MigLayout;
 
@@ -21,22 +19,21 @@ public class DeckEditorScreenPanel extends JPanel implements IDeckEditorListener
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
 
     private final MigLayout migLayout = new MigLayout();
-    private final DeckEditorSideBarPanel sideBarPanel; // LHS
+    private final DeckSideBar sideBarPanel; // LHS
     private final MainViewsPanel viewsPanel; // RHS
     private final IDeckEditorListener listener;
     private boolean isStandalone = true;
 
     public DeckEditorScreenPanel(final MagicDeck deck, final IDeckEditorListener aListener) {
-        
+
         MagicSystem.waitForAllCards();
 
         this.listener = aListener;
 
         // lhs
-        sideBarPanel = new DeckEditorSideBarPanel();
+        sideBarPanel = new DeckSideBar();
         // rhs
         viewsPanel = new MainViewsPanel(deck, this);
-        setSelectedCard();
         //
         setLookAndFeel();
         refreshLayout();
@@ -48,18 +45,10 @@ public class DeckEditorScreenPanel extends JPanel implements IDeckEditorListener
     }
 
     private void refreshLayout() {
-        final Dimension imageSize = GraphicsUtils.getMaxCardImageSize();
         removeAll();
         migLayout.setLayoutConstraints("insets 0, gap 0");
-        if (CONFIG.isHighQuality()) {
-            migLayout.setColumnConstraints("[][grow]");
-            add(sideBarPanel, "h 100%, w 0:" + imageSize.width + ":" + imageSize.width);
-            add(viewsPanel, "h 100%, growx");
-        } else {
-            migLayout.setColumnConstraints("[" + imageSize.width + "!][100%]");
-            add(sideBarPanel, "h 100%");
-            add(viewsPanel, "w 100%, h 100%");
-        }
+        add(sideBarPanel, "h 100%");
+        add(viewsPanel, "w 100%, h 100%");
     }
 
     public void setCard(final MagicCardDefinition card) {
@@ -68,11 +57,7 @@ public class DeckEditorScreenPanel extends JPanel implements IDeckEditorListener
         sideBarPanel.setCardCount(cardCount);
     }
 
-    private void setSelectedCard() {
-        setCard(viewsPanel.getSelectedCard());
-        sideBarPanel.getStatsViewer().setDeck(viewsPanel.getDeck());
-    }
-
+    @Override
     public void setDeck(final MagicDeck deck) {
         viewsPanel.setDeck(deck);
     }
@@ -136,7 +121,7 @@ public class DeckEditorScreenPanel extends JPanel implements IDeckEditorListener
     @Override
     public void cardSelected(MagicCardDefinition card) {
         setCard(card);
-        sideBarPanel.getStatsViewer().setDeck(getDeck());
+        sideBarPanel.setDeck(getDeck());
     }
 
     @Override

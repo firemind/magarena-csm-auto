@@ -1,0 +1,10 @@
+name=Lead by Example
+image=http://magiccards.info/scans/en/ogw/134.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=C
+type=Instant
+cost={1}{G}
+effect=Support 2.
+timing=removal
+oracle=Support 2.

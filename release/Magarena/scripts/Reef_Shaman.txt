@@ -1,0 +1,11 @@
+name=Reef Shaman
+image=http://magiccards.info/scans/en/ap/29.jpg
+value=4.049
+rarity=C
+type=Creature
+subtype=Merfolk,Shaman
+cost={U}
+pt=0/2
+timing=main
+requires_groovy_code=Dream Thrush
+oracle={T}: Target land becomes the basic land type of your choice until end of turn.

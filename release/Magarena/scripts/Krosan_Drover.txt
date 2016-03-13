@@ -1,0 +1,11 @@
+name=Krosan Drover
+image=http://magiccards.info/scans/en/sc/122.jpg
+value=4.163
+rarity=C
+type=Creature
+subtype=Elf
+cost={3}{G}
+pt=2/2
+requires_groovy_code
+timing=main
+oracle=Creature spells you cast with converted mana cost 6 or greater cost {2} less to cast.

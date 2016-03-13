@@ -57,12 +57,10 @@ public enum MagicManaType {
     }
 
     public static List<MagicManaType> getList(final String name) {
-        if ("{1}".equals(name)) {
-            return Arrays.asList(Colorless);
-        } else if ("one mana of any color".equals(name)) {
+        if ("one mana of any color".equals(name)) {
             return ALL_COLORS;
         } else {
-            final String[] tokens = name.split(" or ");
+            final String[] tokens = name.split("( or |, or |, )");
             final MagicManaType[] types = new MagicManaType[tokens.length];
             for (int i = 0; i < tokens.length; i++) {
                 types[i] = get(tokens[i]);

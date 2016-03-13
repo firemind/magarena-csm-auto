@@ -1,21 +1,21 @@
 package magic.model.target;
 
-import magic.model.MagicGame;
-import magic.model.MagicPermanent;
-import magic.model.MagicPlayer;
-import magic.model.event.MagicEvent;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import magic.model.MagicGame;
+import magic.model.MagicPermanent;
+import magic.model.MagicPlayer;
+import magic.model.event.MagicEvent;
 
 public abstract class MagicTargetPicker<T> {
 
     protected void setEvent(final MagicEvent event) {
         //do nothing
     }
-    
+
     protected abstract int getTargetScore(final MagicGame game,final MagicPlayer event,final T target);
 
     public Collection<T> pickTargets(final MagicGame game,final MagicEvent event,final Collection<T> options) {
@@ -59,6 +59,7 @@ public abstract class MagicTargetPicker<T> {
         register("can't block", new MagicNoCombatTargetPicker(false,true,true));
         register("defender", new MagicNoCombatTargetPicker(true,false,true));
         register("tap", new MagicNoCombatTargetPicker(true,true,false));
+        register("untap", MagicTapTargetPicker.Untap);
         register("indestructible", MagicIndestructibleTargetPicker.create());
         register("must attack", MagicMustAttackTargetPicker.create());
         register("lose flying", MagicLoseFlyingTargetPicker.create());
@@ -67,6 +68,7 @@ public abstract class MagicTargetPicker<T> {
         register("power", MagicPowerTargetPicker.create());
         register("toughness", MagicToughnessTargetPicker.create());
         register("default", MagicDefaultPermanentTargetPicker.create());
+        register("regen", MagicRegenerateTargetPicker.create());
     }
 
     public MagicTargetPicker<MagicPermanent> create(final String arg) {

@@ -1,0 +1,11 @@
+name=Dragonspeaker Shaman
+image=http://magiccards.info/scans/en/ddg/53.jpg
+value=4.218
+rarity=U
+type=Creature
+subtype=Human,Barbarian,Shaman
+cost={1}{R}{R}
+pt=2/2
+requires_groovy_code
+timing=main
+oracle=Dragon spells you cast cost {2} less to cast.

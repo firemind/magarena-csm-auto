@@ -1,8 +1,12 @@
 package magic.model.condition;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import magic.model.MagicAbility;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
+import magic.model.MagicCardList;
 import magic.model.MagicColor;
 import magic.model.MagicCounterType;
 import magic.model.MagicGame;
@@ -13,28 +17,20 @@ import magic.model.MagicPlayerState;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
 import magic.model.MagicType;
-import magic.model.stack.MagicCardOnStack;
-import magic.model.phase.MagicPhaseType;
-import magic.model.target.MagicOtherPermanentTargetFilter;
-import magic.model.target.MagicTargetFilterFactory;
 import magic.model.action.PlayAbilityAction;
+import magic.model.event.MagicConditionEvent;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicEventAction;
 import magic.model.event.MagicMatchedCostEvent;
-import magic.model.event.MagicPlayAbilityEvent;
-import magic.model.event.MagicConditionEvent;
-
-import java.util.List;
-import java.util.LinkedList;
+import magic.model.phase.MagicPhaseType;
+import magic.model.stack.MagicCardOnStack;
+import magic.model.target.MagicOtherPermanentTargetFilter;
+import magic.model.target.MagicTargetFilterFactory;
 
 public abstract class MagicCondition implements MagicMatchedCostEvent {
 
-    private static final MagicEventAction PLAY_ABILITY_ACTION = new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new PlayAbilityAction(event.getPermanent()));
-        }
-    };
+    private static final MagicEventAction PLAY_ABILITY_ACTION = (final MagicGame game, final MagicEvent event) ->
+        game.doAction(new PlayAbilityAction(event.getPermanent()));
 
     public static List<MagicMatchedCostEvent> build(final String costs) {
         final List<MagicMatchedCostEvent> matched = new LinkedList<MagicMatchedCostEvent>();
@@ -299,7 +295,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
 
     public static MagicCondition NOT_CREATURE_CONDITION=new MagicCondition() {
         public boolean accept(final MagicSource source) {
-            return !source.isCreature();
+            return !source.isCreaturePermanent();
         }
     };
 
@@ -420,6 +416,19 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition THRESHOLD_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             return source.getController().getGraveyard().size() >= 7;
+        }
+    };
+
+    public static MagicCondition DELIRIUM_CONDITION = new MagicCondition() {
+        public boolean accept(MagicSource source) {
+            final MagicCardList graveyard = source.getController().getGraveyard();
+            int count = 0;
+            for (MagicType type : MagicType.ALL_CARD_TYPES) {
+                if (graveyard.containsType(type)) {
+                    count++;
+                }
+            }
+            return count >= 4;
         }
     };
 
@@ -777,12 +786,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
-    public static MagicCondition HAS_CREATURE_IN_GRAVEYARD = new MagicCondition() {
-        public boolean accept(MagicSource source) {
-            final MagicPlayer player = source.getController();
-            return MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD.filter(player).size() > 0;
-        }
-    };
+    public static MagicCondition HAS_CREATURE_IN_GRAVEYARD = MagicConditionFactory.YouHaveAtLeast(MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD, 1);
 
     public static MagicCondition HAS_CREATURE_IN_HAND = new MagicCondition() {
         public boolean accept(MagicSource source) {
@@ -830,7 +834,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
                     permanent.getCardDefinition().hasType(MagicType.Creature)==false;
         }
     };
-    
+
     public static MagicCondition WAS_KICKED = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicCardOnStack spell=(MagicCardOnStack)source;
@@ -838,4 +842,22 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
+    public static MagicCondition CAST_ANOTHER_SPELL_THIS_TURN = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            return source.getController().getSpellsCast() > 0;
+        }
+    };
+
+    public static MagicCondition DEFENDING_POISONED = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            return source.getGame().getDefendingPlayer().getPoison() > 0;
+        }
+    };
+
+    public static MagicCondition CONTROL_SINCE_LAST_TURN = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            final MagicPermanent permanent = (MagicPermanent)source;
+            return permanent.hasState(MagicPermanentState.Summoned) == false;
+        }
+    };
 }

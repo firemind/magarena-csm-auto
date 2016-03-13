@@ -14,7 +14,6 @@ import magic.ai.MagicAIImpl;
 import magic.data.CardDefinitions;
 import magic.utility.DeckUtils;
 import magic.data.DuelConfig;
-import magic.data.GeneralConfig;
 import magic.headless.HeadlessGameController;
 import magic.model.MagicDeckProfile;
 import magic.model.MagicDuel;
@@ -23,6 +22,7 @@ import magic.model.MagicGameLog;
 import magic.model.DuelPlayerConfig;
 import magic.model.MagicRandom;
 import magic.model.player.AiProfile;
+import magic.utility.MagicSystem;
 
 public class FiremindDuelRunner {
     private static int games;
@@ -104,17 +104,17 @@ public class FiremindDuelRunner {
         final MagicDuel testDuel = new MagicDuel(config);
 
         final MagicDeckProfile profile = new MagicDeckProfile("bgruw");
-        
+
         final DuelPlayerConfig player1 = new DuelPlayerConfig(
-            AiProfile.create("Player1", ai1, str1), 
+            AiProfile.create("Player1", ai1, str1),
             profile
         );
-        
+
         final DuelPlayerConfig player2 = new DuelPlayerConfig(
             AiProfile.create("Player2", ai2, str2),
             profile
         );
-        
+
         testDuel.setPlayers(new DuelPlayerConfig[] { player1, player2 });
 
         // Set the deck.
@@ -175,7 +175,7 @@ public class FiremindDuelRunner {
             if (testDuel.getGamesPlayed() > played) {
                 played = testDuel.getGamesPlayed();
                 long diff = System.currentTimeMillis() - started;
-                String[] vers = GeneralConfig.VERSION.split("\\.");
+                String[] vers = MagicSystem.VERSION.split("\\.");
                 String log = MagicGameLog.getLogFileName();
                 FiremindClient.postGame(currentDuel.id, played, new Date(
                         baseDate.getTime() + diff),

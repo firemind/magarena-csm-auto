@@ -1,0 +1,12 @@
+name=Soul Kiss
+image=http://magiccards.info/scans/en/me2/112.jpg
+value=2.536
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={2}{B}
+ability=Enchant creature;\
+        {B}, Pay 1 life: Enchanted creature gets +2/+2 until end of turn. Activate this ability no more than three times each turn.
+timing=aura
+enchant=pump,pos creature
+oracle=Enchant creature\n{B}, Pay 1 life: Enchanted creature gets +2/+2 until end of turn. Activate this ability no more than three times each turn.

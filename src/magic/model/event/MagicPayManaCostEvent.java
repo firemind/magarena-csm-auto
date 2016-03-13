@@ -3,12 +3,21 @@ package magic.model.event;
 import magic.model.MagicManaCost;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
+import magic.model.MagicCard;
 import magic.model.choice.MagicPayManaCostChoice;
 import magic.model.condition.MagicCondition;
 
 public class MagicPayManaCostEvent extends MagicEvent {
 
     private final MagicCondition cond;
+
+    public static final MagicPayManaCostEvent Cast(final MagicCard card, final String cost) {
+        return Cast(card, MagicManaCost.create(cost));
+    }
+
+    public static final MagicPayManaCostEvent Cast(final MagicCard card, final MagicManaCost cost) {
+        return new MagicPayManaCostEvent(card, card.getGame().modCost(card, cost));
+    }
 
     public MagicPayManaCostEvent(final MagicSource source, final String cost) {
         this(source, source.getController(), MagicManaCost.create(cost));
@@ -28,7 +37,7 @@ public class MagicPayManaCostEvent extends MagicEvent {
             player,
             new MagicPayManaCostChoice(cost),
             MagicEventAction.NONE,
-            "Pay "+cost.getText()+"$."
+            cost == MagicManaCost.NONE ? "" : "Pay " + cost.getText() + "$."
         );
         cond = cost.getCondition();
     }

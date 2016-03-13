@@ -35,7 +35,7 @@ import magic.ui.screen.interfaces.IWikiPage;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.MenuPanel;
-import magic.ui.widget.deck.DeckStatusPanel;
+import magic.ui.deck.widget.DeckStatusPanel;
 import magic.utility.MagicFileSystem;
 
 @SuppressWarnings("serial")
@@ -83,7 +83,7 @@ public class DeckEditorScreen
     private void setScreenContent(final MagicDeck deck) {
         screenContent = new DeckEditorScreenPanel(deck, this);
         screenContent.setIsStandalone(isStandalone);
-        setDeck(deck);
+        setDeck(deck == null ? new MagicDeck() : deck);
         setContent(screenContent);
     }
 
@@ -97,7 +97,7 @@ public class DeckEditorScreen
         }
         return null;
     }
-    
+
     private static MagicDeck loadDeck(final Path deckFilePath) {
         try {
             return DeckUtils.loadDeckFromFile(deckFilePath);

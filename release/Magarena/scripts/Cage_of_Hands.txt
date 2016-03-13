@@ -1,12 +1,14 @@
 name=Cage of Hands
-image=http://magiccards.info/scans/en/pc2/4.jpg
+image=http://magiccards.info/scans/en/c15/62.jpg
+image_updated=2016-02-29
 value=3.233
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{W}
-ability=Enchanted creature can't attack or block.;\
-        {1}{W}:Return SN to its owner's hand.
+ability=Enchant creature;\
+        Enchanted creature can't attack or block.;\
+        {1}{W}: Return SN to its owner's hand.
+timing=aura
 enchant=can't attack or block,neg creature
-timing=enchantment
 oracle=Enchant creature\nEnchanted creature can't attack or block.\n{1}{W}: Return Cage of Hands to its owner's hand.

@@ -1,6 +1,6 @@
 package magic.model.player;
 
-import java.util.Properties;
+import magic.utility.SortedProperties;
 
 public class HumanProfile extends PlayerProfile {
 
@@ -14,7 +14,7 @@ public class HumanProfile extends PlayerProfile {
     public HumanProfile() {
         loadProperties();
     }
-    
+
     public static HumanProfile create(final String name) {
         final HumanProfile hp = new HumanProfile();
         hp.setPlayerName(name);
@@ -23,7 +23,7 @@ public class HumanProfile extends PlayerProfile {
 
     @Override
     public void save() {
-        saveProperties(new Properties());
+        saveProperties(new SortedProperties());
     }
 
     @Override
@@ -38,5 +38,5 @@ public class HumanProfile extends PlayerProfile {
     protected String getPlayerType() {
         return PLAYER_TYPE;
     }
-        
+
 }

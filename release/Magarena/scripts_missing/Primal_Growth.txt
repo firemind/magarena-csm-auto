@@ -1,10 +1,11 @@
 name=Primal Growth
 image=http://magiccards.info/scans/en/c15/198.jpg
-image_updated=2015-11-15
+image_updated=2016-02-29
 value=3.819
 rarity=C
 type=Sorcery
 cost={2}{G}
-effect=Kicker—Sacrifice a creature.~Search your library for a basic land card, put that card onto the battlefield, then shuffle your library. If SN was kicked, instead search your library for up to two basic land cards, put them onto the battlefield, then shuffle your library.
+ability=Kicker—Sacrifice a creature.
+effect=Search your library for a basic land card, put that card onto the battlefield, then shuffle your library. If SN was kicked, instead search your library for up to two basic land cards, put them onto the battlefield, then shuffle your library.
 timing=main
 oracle=Kicker—Sacrifice a creature.\nSearch your library for a basic land card, put that card onto the battlefield, then shuffle your library. If Primal Growth was kicked, instead search your library for up to two basic land cards, put them onto the battlefield, then shuffle your library.

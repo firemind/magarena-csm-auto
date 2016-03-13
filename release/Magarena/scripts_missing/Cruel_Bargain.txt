@@ -1,9 +1,0 @@
-name=Cruel Bargain
-image=http://magiccards.info/scans/en/vma/111.jpg
-value=4.500
-rarity=R
-type=Sorcery
-cost={B}{B}{B}
-effect=Draw four cards. You lose half your life, rounded up.
-timing=main
-oracle=Draw four cards. You lose half your life, rounded up.

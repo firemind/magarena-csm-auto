@@ -21,7 +21,7 @@ public class DealDamageAction extends MagicAction {
     private final MagicDamage damage;
     private MagicTarget target;
     private int oldDamage = UNINIT;
-    
+
     public DealDamageAction(final MagicSource source, MagicTarget target, final int amt) {
         this(new MagicDamage(source, target, amt), null);
     }
@@ -42,7 +42,7 @@ public class DealDamageAction extends MagicAction {
     @Override
     public void doAction(final MagicGame game) {
         game.executeTrigger(MagicTriggerType.IfDamageWouldBeDealt,damage);
-        
+
         /*
         306.7. If damage would be dealt to a player by a source
         controlled by an opponent, that opponent may have that source deal that
@@ -64,8 +64,8 @@ public class DealDamageAction extends MagicAction {
         /*
         119.1. Objects can deal damage to creatures, planeswalkers, and players.
         */
-        if (!target.isCreature() &&
-            !target.isPlaneswalker() &&
+        if (!target.isCreaturePermanent() &&
+            !target.isPlaneswalkerPermanent() &&
             !target.isPlayer()) {
             return;
         }
@@ -78,12 +78,12 @@ public class DealDamageAction extends MagicAction {
 
         final MagicSource source=damage.getSource();
 
-        if (target.isPlaneswalker()) {
+        if (target.isPlaneswalkerPermanent()) {
             final MagicPermanent targetPermanent=(MagicPermanent)target;
             game.doAction(new ChangeCountersAction(targetPermanent,MagicCounterType.Loyalty,-dealtAmount));
         }
 
-        if (target.isCreature()) {
+        if (target.isCreaturePermanent()) {
             final MagicPermanent targetPermanent=(MagicPermanent)target;
             if (damage.hasNoRegeneration()) {
                 game.doAction(ChangeStateAction.Set(targetPermanent,MagicPermanentState.CannotBeRegenerated));

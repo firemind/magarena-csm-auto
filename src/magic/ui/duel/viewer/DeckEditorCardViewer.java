@@ -6,11 +6,10 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import magic.model.MagicCardDefinition;
 
 @SuppressWarnings("serial")
 public class DeckEditorCardViewer extends CardViewer {
-    
+
     private final static Dimension COUNTER_SIZE = new Dimension(100, 461);
     private int cardCount = 0;
 
@@ -25,7 +24,7 @@ public class DeckEditorCardViewer extends CardViewer {
         final int x = (getWidth() - COUNTER_SIZE.width) / 2;
         drawCardCount(g, x, 30, COUNTER_SIZE.width, COUNTER_SIZE.height);
     }
-    
+
     private void drawCardCount(Graphics g, int X, int Y, int W, int H) {
         if (cardCount > 0) {
             Graphics2D g2d = (Graphics2D)g;
@@ -55,12 +54,6 @@ public class DeckEditorCardViewer extends CardViewer {
         }
         g2d.setColor(FOREGROUND_COLOR);
         g2d.drawString(str,x,y);
-    }
-
-    @Override
-    public void setCard(final MagicCardDefinition cardDefinition, int index) {
-        cardCount = 0;
-        super.setCard(cardDefinition, index);
     }
 
 }

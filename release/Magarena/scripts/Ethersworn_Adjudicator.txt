@@ -6,8 +6,8 @@ type=Artifact,Creature
 subtype=Vedalken,Knight
 cost={4}{U}
 pt=4/4
-ability=flying;\
-        {1}{W}{B},{T}: Destroy target creature or enchantment.;\
+ability=Flying;\
+        {1}{W}{B}, {T}: Destroy target creature or enchantment.;\
         {2}{U}: Untap SN.
 timing=main
 oracle=Flying\n{1}{W}{B}, {T}: Destroy target creature or enchantment.\n{2}{U}: Untap Ethersworn Adjudicator.

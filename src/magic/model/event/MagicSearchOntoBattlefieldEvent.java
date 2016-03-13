@@ -22,11 +22,11 @@ public class MagicSearchOntoBattlefieldEvent extends MagicEvent {
     public MagicSearchOntoBattlefieldEvent(final MagicEvent event, final MagicChoice choice, final MagicPermanentAction... mods) {
         this(event.getSource(), event.getPlayer(), choice, Arrays.asList(mods));
     }
-    
+
     public MagicSearchOntoBattlefieldEvent(final MagicEvent event, final MagicChoice choice, final List<? extends MagicPermanentAction> mods) {
         this(event.getSource(), event.getPlayer(), choice, mods);
     }
-    
+
     public MagicSearchOntoBattlefieldEvent(final MagicSource source, final MagicPlayer player, final MagicChoice choice, final MagicPermanentAction... mods) {
         this(source, player, choice, Arrays.asList(mods));
     }
@@ -43,37 +43,30 @@ public class MagicSearchOntoBattlefieldEvent extends MagicEvent {
     }
 
     private static final MagicEventAction EventAction(final List<? extends MagicPermanentAction> mods) {
-        return new MagicEventAction() {
-            @Override
-            public void executeEvent(final MagicGame game, final MagicEvent event) {
-                // choice could be MagicMayChoice or MagicTargetChoice or MagicFromCardListChoice
-                if (event.isNo()) {
-                    // do nothing
-                } else if (event.getChosen()[0] instanceof MagicCardChoiceResult) {
-                    event.processChosenCards(game, new MagicCardAction() {
-                        public void doAction(final MagicCard card) {
-                            game.logAppendMessage(
-                                event.getPlayer(),
-                                String.format("Found (%s).", MagicMessage.getCardToken(card))
-                            );
-                            game.doAction(new AIRevealAction(card));
-                            game.doAction(new ReturnCardAction(MagicLocationType.OwnersLibrary,card,event.getPlayer(),mods));
-                        }
-                    });
-                    game.doAction(new ShuffleLibraryAction(event.getPlayer()));
-                } else {
-                    event.processTargetCard(game, new MagicCardAction() {
-                        public void doAction(final MagicCard card) {
-                            game.logAppendMessage(
-                                event.getPlayer(),
-                                String.format("Found (%s).", MagicMessage.getCardToken(card))
-                            );
-                            game.doAction(new AIRevealAction(card));
-                            game.doAction(new ReturnCardAction(MagicLocationType.OwnersLibrary,card,event.getPlayer(),mods));
-                        }
-                    });
-                    game.doAction(new ShuffleLibraryAction(event.getPlayer()));
-                }
+        return (final MagicGame game, final MagicEvent event) -> {
+            // choice could be MagicMayChoice or MagicTargetChoice or MagicFromCardListChoice
+            if (event.isNo()) {
+                // do nothing
+            } else if (event.getChosen()[0] instanceof MagicCardChoiceResult) {
+                event.processChosenCards(game, (final MagicCard card) -> {
+                    game.logAppendMessage(
+                        event.getPlayer(),
+                        MagicMessage.format("Found (%s).", card)
+                    );
+                    game.doAction(new AIRevealAction(card));
+                    game.doAction(new ReturnCardAction(MagicLocationType.OwnersLibrary,card,event.getPlayer(),mods));
+                });
+                game.doAction(new ShuffleLibraryAction(event.getPlayer()));
+            } else {
+                event.processTargetCard(game, (final MagicCard card) -> {
+                    game.logAppendMessage(
+                        event.getPlayer(),
+                        MagicMessage.format("Found (%s).", card)
+                    );
+                    game.doAction(new AIRevealAction(card));
+                    game.doAction(new ReturnCardAction(MagicLocationType.OwnersLibrary,card,event.getPlayer(),mods));
+                });
+                game.doAction(new ShuffleLibraryAction(event.getPlayer()));
             }
         };
     }

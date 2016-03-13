@@ -15,14 +15,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import magic.model.MagicCard;
+import magic.ui.prefs.ImageSizePresets;
 import magic.ui.utility.GraphicsUtils;
 import magic.ui.utility.MagicStyle;
 
@@ -58,12 +59,11 @@ public class CardsCanvas extends JPanel {
     private boolean refreshLayout = false;
     private ICardsCanvasListener listener = new NullCardsCanvasListener();
 
-    // CTR
-    public CardsCanvas(final Dimension preferredCardSize) {
+    public CardsCanvas() {
 
         setOpaque(false);
 
-        this.preferredCardSize = preferredCardSize;
+        this.preferredCardSize = ImageSizePresets.getDefaultSize();
         aspectRatio = (double)this.preferredCardSize.width / this.preferredCardSize.height;
 
         this.imageHandler = new ImageHandler(null);
@@ -76,7 +76,7 @@ public class CardsCanvas extends JPanel {
     public void setListener(ICardsCanvasListener aListener) {
         this.listener = aListener;
     }
-    
+
     private void setMouseListener() {
         addMouseListener(new MouseAdapter() {
             @Override
@@ -218,9 +218,9 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    public void refresh(final List<MagicCard> newCards, final Dimension preferredCardSize) {
+    public void refresh(final List<MagicCard> newCards, final Dimension aSize) {
         final List<CardCanvas> canvasCards = getCanvasCards(newCards);
-        this.preferredCardSize = preferredCardSize;
+        this.preferredCardSize = aSize;
         refreshLayout = true;
         currentCardIndex = -1;
         if (useAnimation && newCards != null) {
@@ -232,12 +232,14 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    private List<CardCanvas> getCanvasCards(final List<MagicCard> magicCards) {
-        final List <CardCanvas> canvasCards = new ArrayList<>();
-        for (MagicCard magicCard : magicCards) {
-            canvasCards.add(new CardCanvas(magicCard));
-        }
-        return canvasCards;
+    public void refresh(final List<MagicCard> newCards) {
+        refresh(newCards, preferredCardSize);
+    }
+
+    private List<CardCanvas> getCanvasCards(List<MagicCard> cards) {
+        return cards.stream()
+            .map(card -> new CardCanvas(card))
+            .collect(Collectors.toList());
     }
 
     public void setScale(final double newScale) {
@@ -284,7 +286,7 @@ public class CardsCanvas extends JPanel {
 //            drawHighlightBorder(g2d, rect);
         }
     }
-    
+
     private void drawHighlightBorder(Graphics2D g2d, Rectangle rect) {
         final int w = 4;
         g2d.setStroke(new BasicStroke(w));
@@ -306,18 +308,12 @@ public class CardsCanvas extends JPanel {
 
     private void drawCard(final Graphics g, final CardCanvas canvasCard) {
 
-        final int X = canvasCard.getPosition().x;
-        final int Y = canvasCard.getPosition().y;
-        final int W = (int)(preferredCardSize.width * cardCanvasScale);
-        final int H = (int)(preferredCardSize.height * cardCanvasScale);
+        final int X = canvasCard.getBounds().x;
+        final int Y = canvasCard.getBounds().y;
+        final int W = canvasCard.getBounds().width;
+        final int H = canvasCard.getBounds().height;
 
-        final boolean isScalingRequired =
-                !canvasCard.getSize().equals(preferredCardSize) || (cardCanvasScale != 1);
-        final BufferedImage unscaledImage = canvasCard.getFrontImage();
-        final BufferedImage image =
-                isScalingRequired ? imageHandler.getScaledImage(unscaledImage, W) : unscaledImage;
-
-        g.drawImage(image, X, Y, W, H, null);
+        g.drawImage(GraphicsUtils.scale(canvasCard.getFrontImage(), W, H), X, Y, null);
 
         if (stackDuplicateCards) {
             drawCardCount(g, X, Y, W, H, canvasCard);

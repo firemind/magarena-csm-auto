@@ -3,8 +3,8 @@
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isNonToken() &&
-                    otherPermanent.isCreature() && 
-                    otherPermanent.getCard().isFriend(permanent)) ?
+                    otherPermanent.isCreature() &&
+                    otherPermanent.isOwner(permanent.getController())) ?
                 new MagicEvent(
                     permanent,
                     new MagicMayChoice(),

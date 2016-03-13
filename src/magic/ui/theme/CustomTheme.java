@@ -10,12 +10,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import magic.ui.ImageFileIO;
 import magic.utility.FileIO;
+import magic.utility.MagicFileSystem;
 
 public class CustomTheme extends AbstractTheme {
 
@@ -28,10 +30,26 @@ public class CustomTheme extends AbstractTheme {
     private final PlayerAvatar[] playerAvatars;
     private int nrOfAvatars;
 
-    public CustomTheme(final File file,final String name) {
-        super(name);
-        this.file=file;
-        playerAvatars=new PlayerAvatar[MAX_AVATARS];
+    public CustomTheme(final File file) {
+        super(getThemeName(file));
+        this.file = file;
+        playerAvatars = new PlayerAvatar[MAX_AVATARS];
+    }
+
+    public static String getThemeName(final File aFile) {
+        final String name = aFile.getName();
+        if (aFile.isFile()) {
+            if (name.endsWith("_theme.zip")) {
+                return name.substring(0, name.length() - "_theme.zip".length());
+            }
+            if (name.endsWith(".zip")) {
+                return name.substring(0, name.length() - ".zip".length());
+            }
+        }
+        if (name.endsWith("_theme")) {
+            return name.substring(0, name.length() - "_theme".length());
+        }
+        return name;
     }
 
     @Override
@@ -125,4 +143,29 @@ public class CustomTheme extends AbstractTheme {
         }
     }
 
+    static File getThemeFile(String name) {
+        final Path path = MagicFileSystem.getThemesPath();
+        if (path.resolve(name).toFile().exists()) {
+            return path.resolve(name).toFile();
+        }
+        if (path.resolve(name + "_theme").toFile().exists()) {
+            return path.resolve(name + "_theme").toFile();
+        }
+        if (path.resolve(name + ".zip").toFile().exists()) {
+            return path.resolve(name + ".zip").toFile();
+        }
+        if (path.resolve(name + "_theme.zip").toFile().exists()) {
+            return path.resolve(name + "_theme.zip").toFile();
+        }
+        return null;
+    }
+
+    static Theme loadTheme(String name) {
+        if (getThemeFile(name) != null) {
+            final Theme t = new CustomTheme(getThemeFile(name));
+            t.load();
+            return t;
+        }
+        return null;
+    }
 }

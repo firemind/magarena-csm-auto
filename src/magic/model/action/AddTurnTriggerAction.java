@@ -11,22 +11,26 @@ public class AddTurnTriggerAction extends MagicAction {
     private final MagicTrigger<?> trigger;
     private MagicPermanentTrigger permanentTrigger;
 
-    public AddTurnTriggerAction(final MagicPermanent permanent,final MagicTrigger<?> trigger) {
-        this.permanent=permanent;
-        this.trigger=trigger;
+    public AddTurnTriggerAction(final MagicPermanent aPermanent,final MagicTrigger<?> aTrigger) {
+        permanent = aPermanent;
+        trigger = aTrigger;
     }
-    
+
     public AddTurnTriggerAction(final MagicTrigger<?> trigger) {
         this(MagicPermanent.NONE, trigger);
     }
 
     @Override
     public void doAction(final MagicGame game) {
-        permanentTrigger=game.addTurnTrigger(permanent,trigger);
+        if (permanent == MagicPermanent.NONE || permanent.isValid()) {
+            permanentTrigger=game.addTurnTrigger(permanent,trigger);
+        }
     }
 
     @Override
     public void undoAction(final MagicGame game) {
-        game.removeTurnTrigger(permanentTrigger);
+        if (permanentTrigger != null) {
+            game.removeTurnTrigger(permanentTrigger);
+        }
     }
 }

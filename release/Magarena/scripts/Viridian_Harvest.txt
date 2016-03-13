@@ -1,0 +1,12 @@
+name=Viridian Harvest
+image=http://magiccards.info/scans/en/nph/125.jpg
+value=1.777
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={G}
+ability=Enchant artifact
+timing=aura
+enchant=default,artifact
+requires_groovy_code
+oracle=Enchant artifact\nWhen enchanted artifact is put into a graveyard, you gain 6 life.

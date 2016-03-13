@@ -1,0 +1,12 @@
+name=Umara Entangler
+image=http://magiccards.info/scans/en/ogw/65.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=C
+type=Creature
+subtype=Merfolk,Rogue,Ally
+cost={1}{U}
+pt=2/1
+ability=Prowess
+timing=main
+oracle=Prowess

@@ -75,7 +75,7 @@ public enum MagicPlayMod implements MagicPermanentAction {
             ATTACKING.doAction(game, perm);
         }
     },
-    HASTE_UEOT("it gains haste until end of turn") {
+    HASTE_UEOT("(it|that creature) gains haste until end of turn") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             game.doAction(new GainAbilityAction(perm, MagicAbility.Haste));
         }
@@ -129,19 +129,9 @@ public enum MagicPlayMod implements MagicPermanentAction {
     },
     MANIFEST() {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
-            if (perm.isCreature()) {
-                final MagicManaCost manaCost = perm.getCardDefinition().getCost();
+            if (perm.isCreature() && perm.getCardDefinition().hasCost()) {
                 final MagicAbilityList morphAct = new MagicAbilityList();
-                final List<MagicMatchedCostEvent> cost = new LinkedList<>();
-                cost.add(new MagicMatchedCostEvent() {
-                    public MagicEvent getEvent(final MagicSource source) {
-                        return new MagicPayManaCostEvent(source, manaCost);
-                    }
-                    public boolean isIndependent() {
-                        return true;
-                    }
-                });
-                morphAct.add(new MagicMorphActivation(cost));
+                morphAct.add(MagicMorphActivation.Manifest);
                 game.doAction(new GainAbilityAction(perm, morphAct, MagicStatic.Forever));
             }
             perm.setState(MagicPermanentState.FaceDown);

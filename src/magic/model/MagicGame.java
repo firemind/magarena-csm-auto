@@ -1,17 +1,26 @@
 package magic.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import magic.data.GeneralConfig;
-import magic.model.action.MagicAction;
-import magic.model.action.MagicActionList;
+import magic.exception.GameException;
 import magic.model.action.AddEventAction;
 import magic.model.action.AddFirstEventAction;
+import magic.model.action.DequeueTriggerAction;
+import magic.model.action.EnqueueTriggerAction;
 import magic.model.action.ExecuteFirstEventAction;
 import magic.model.action.LogMarkerAction;
+import magic.model.action.MagicAction;
+import magic.model.action.MagicActionList;
 import magic.model.action.MarkerAction;
 import magic.model.action.PutItemOnStackAction;
 import magic.model.action.RemoveFromPlayAction;
-import magic.model.action.EnqueueTriggerAction;
-import magic.model.action.DequeueTriggerAction;
 import magic.model.choice.MagicCombatCreature;
 import magic.model.choice.MagicDeclareAttackersResult;
 import magic.model.choice.MagicDeclareBlockersResult;
@@ -43,15 +52,7 @@ import magic.model.trigger.MagicTrigger;
 import magic.model.trigger.MagicTriggerType;
 import magic.model.trigger.OtherEntersBattlefieldTrigger;
 import magic.model.trigger.PreventDamageTrigger;
-import magic.exception.GameException;
-
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import magic.ui.MagicSound;
 
 public class MagicGame {
 
@@ -545,12 +546,6 @@ public class MagicGame {
     public void addDelayedAction(final MagicAction action) {
         delayedActions.add(action);
     }
-    
-    public void doValidAction(final MagicPermanent perm, final MagicAction action) {
-        if (perm.isValid()) {
-            doAction(action);
-        }
-    }
 
     public void doAction(final MagicAction action) {
         actions.add(action);
@@ -586,10 +581,10 @@ public class MagicGame {
     public MagicManaCost modCost(final MagicCard card, final MagicManaCost cost) {
         MagicManaCost currCost = cost;
         for (final MagicPermanentStatic mps : getStatics(MagicLayer.CostIncrease)) {
-            currCost = mps.getStatic().increaseCost(mps.getPermanent(), card, cost);
+            currCost = mps.getStatic().increaseCost(mps.getPermanent(), card, currCost);
         }
         for (final MagicPermanentStatic mps : getStatics(MagicLayer.CostReduction)) {
-            currCost = mps.getStatic().reduceCost(mps.getPermanent(), card, cost);
+            currCost = mps.getStatic().reduceCost(mps.getPermanent(), card, currCost);
         }
         return currCost;
     }
@@ -1123,7 +1118,7 @@ public class MagicGame {
             for (final MagicPermanent world : targets) {
                 logAppendMessage(
                     world.getController(),
-                    world.getName() + " is put into its owner's graveyard."
+                    MagicMessage.format("%s is put into its owner's graveyard.", world)
                 );
                 doAction(new RemoveFromPlayAction(
                     world,
@@ -1390,5 +1385,11 @@ public class MagicGame {
     }
     public boolean isConceded() {
         return isConceded;
+    }
+
+    public void playSound(MagicSound aSound) {
+        if (isReal()) {
+            aSound.play();
+        }
     }
 }

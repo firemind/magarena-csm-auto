@@ -8,7 +8,6 @@ import magic.model.MagicObject;
 import magic.model.MagicPermanent;
 import magic.model.MagicType;
 import magic.model.stack.MagicCardOnStack;
-import magic.ui.CachedImagesProvider;
 import magic.ui.MagicImages;
 import magic.utility.MagicSystem;
 
@@ -59,13 +58,13 @@ public class CardViewerInfo {
     }
 
     public BufferedImage getImage() {
-        return CachedImagesProvider.getInstance().getImage(frontFace, 0, true);
+        return MagicImages.geCardImageUseCache(frontFace);
     }
- 
+
     public BufferedImage getBackFaceImage() {
         return backFace == MagicCardDefinition.UNKNOWN
             ? MagicImages.BACK_IMAGE
-            : CachedImagesProvider.getInstance().getImage(backFace, 0, true);
+            : MagicImages.geCardImageUseCache(backFace);
     }
 
     public MagicLocationType getLocation() {
@@ -83,7 +82,7 @@ public class CardViewerInfo {
     public boolean usesStack() {
         return frontFace.usesStack();
     }
-    
+
     private MagicCardDefinition getFrontFace(MagicCardOnStack aCard) {
         return aCard.getController().isHuman() || MagicSystem.isAiVersusAi()
             ? aCard.getRealCardDefinition()

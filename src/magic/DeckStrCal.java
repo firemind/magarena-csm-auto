@@ -136,8 +136,8 @@ public class DeckStrCal {
         // Set difficulty.
         final MagicDuel testDuel=new MagicDuel(config);
         testDuel.initialize();
-        
-        // Create players 
+
+        // Create players
         final DuelPlayerConfig[] players = new DuelPlayerConfig[2];
         for (int i = 0; i < 2; i++) {
             players[i] = new DuelPlayerConfig(
@@ -201,7 +201,7 @@ public class DeckStrCal {
         while (testDuel.getGamesPlayed() < testDuel.getGamesTotal()) {
             final MagicGame game=testDuel.nextGame();
             game.setArtificial(true);
-            
+
             //maximum duration of a game is 60 minutes
             final HeadlessGameController controller = new HeadlessGameController(game, 3600000);
 

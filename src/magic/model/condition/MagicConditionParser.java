@@ -1,17 +1,16 @@
 package magic.model.condition;
 
-import magic.model.ARG;
-import magic.model.MagicColor;
-import magic.model.MagicCounterType;
-import magic.model.MagicAbility;
-import magic.model.target.MagicTargetFilter;
-import magic.model.target.MagicTargetFilterFactory;
-import magic.model.event.MagicMatchedCostEvent;
-
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
-import java.util.LinkedList;
+
+import magic.model.ARG;
+import magic.model.MagicAbility;
+import magic.model.MagicColor;
+import magic.model.MagicCounterType;
+import magic.model.event.MagicMatchedCostEvent;
+import magic.model.target.MagicTargetFilterFactory;
 
 public enum MagicConditionParser {
 
@@ -42,6 +41,11 @@ public enum MagicConditionParser {
             return MagicConditionFactory.OpponentControl(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             );
+        }
+    },
+    DefenderPoisoned("defending player is poisoned") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.DEFENDING_POISONED;
         }
     },
     YouControlAnother("you control another " + ARG.WORDRUN) {
@@ -91,6 +95,11 @@ public enum MagicConditionParser {
         public MagicCondition toCondition(final Matcher arg) {
             final int amount = ARG.amount(arg);
             return MagicConditionFactory.GraveyardAtLeast(amount);
+        }
+    },
+    Delirium("there are four or more card types among cards in your graveyard") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.DELIRIUM_CONDITION;
         }
     },
     YourDevotionAtLeast("you have at least " + ARG.NUMBER + " devotion to "+ ARG.COLOR) {
@@ -165,7 +174,7 @@ public enum MagicConditionParser {
             return MagicConditionFactory.CounterEqual(counterType, amount);
         }
     },
-    CountersNone("SN has no " + ARG.WORD1 + " counters on it") {
+    CountersNone("(SN|it) (has|had) no " + ARG.WORD1 + " counters on it") {
         public MagicCondition toCondition(final Matcher arg) {
             final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(arg));
             return MagicConditionFactory.CounterEqual(counterType, 0);
@@ -513,6 +522,16 @@ public enum MagicConditionParser {
     WasKicked("SN was kicked") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.WAS_KICKED;
+        }
+    },
+    SurgePaid("SN's surge cost was paid") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.WAS_KICKED;
+        }
+    },
+    ControlledSinceLastTurn("you've controlled SN continuously since the beginning of your most recent turn") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.CONTROL_SINCE_LAST_TURN;
         }
     },
     ;

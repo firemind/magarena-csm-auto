@@ -1,0 +1,11 @@
+name=Ballyrush Banneret
+image=http://magiccards.info/scans/en/mt/1.jpg
+value=3.648
+rarity=C
+type=Creature
+subtype=Kithkin,Soldier
+cost={1}{W}
+pt=2/1
+requires_groovy_code
+timing=main
+oracle=Kithkin spells and Soldier spells you cast cost {1} less to cast.

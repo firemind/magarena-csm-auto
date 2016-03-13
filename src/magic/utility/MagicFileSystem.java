@@ -1,6 +1,7 @@
 package magic.utility;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -30,7 +31,6 @@ import org.apache.commons.io.FilenameUtils;
  *
  */
 public final class MagicFileSystem {
-
     private MagicFileSystem() {}
 
     // card images
@@ -76,7 +76,6 @@ public final class MagicFileSystem {
         SCRIPTS("scripts"),
         SCRIPTS_MISSING("scripts_missing"),
         SCRIPTS_ORIG("scripts_orig"),
-        SOUNDS("sounds"),
         LOGS("logs"),
         DUELS("duels"),
         PLAYERS("players"),
@@ -85,7 +84,8 @@ public final class MagicFileSystem {
         SAVED_GAMES("saved_games"),
         TRANSLATIONS("translations"),
         IMAGES("images"),
-        REPORTS("reports")
+        REPORTS("reports"),
+        THEMES("themes")
         ;
 
         private final Path directoryPath;
@@ -100,6 +100,9 @@ public final class MagicFileSystem {
         }
 
     }
+
+    private static final FileFilter THEME_FILE_FILTER = (final File file) ->
+        file.isDirectory() || (file.isFile() && file.getName().endsWith(".zip"));
 
     /**
      * Returns the main data directory.
@@ -122,27 +125,18 @@ public final class MagicFileSystem {
         return imageType.getPath();
     }
 
-    private static String getImageFilename(final MagicCardDefinition card, final int index) {
-        final int imageIndex = index % card.getImageCount();
-        final String indexPostfix = imageIndex > 0 ? String.valueOf(imageIndex + 1) : "";
-        return card.getImageName() + indexPostfix + CARD_IMAGE_EXT;
-    }
-
-    /**
-     * Returns a File object representing the given card's image file.
-     */
-    public static File getCardImageFile(final MagicCardDefinition card, final int index) {
-        final Path imageDirectory = card.isToken() ?
-                getImagesPath(ImagesPath.TOKENS) :
-                getImagesPath(ImagesPath.CARDS);
-        return new File(imageDirectory.toFile(), getImageFilename(card, index));
+    private static String getImageFilename(final MagicCardDefinition card) {
+        return card.getImageName() + CARD_IMAGE_EXT;
     }
 
     /**
      * Returns a File object representing the given card's image file.
      */
     public static File getCardImageFile(final MagicCardDefinition card) {
-        return getCardImageFile(card, 0);
+        final Path imageDirectory = card.isToken() ?
+                getImagesPath(ImagesPath.TOKENS) :
+                getImagesPath(ImagesPath.CARDS);
+        return new File(imageDirectory.toFile(), getImageFilename(card));
     }
 
     /**
@@ -150,8 +144,14 @@ public final class MagicFileSystem {
      */
     public static File getCroppedCardImageFile(final IRenderableCard cardDef) {
         final Path imageDirectory = getImagesPath(ImagesPath.CROPS);
-        return new File(imageDirectory.toFile(), cardDef.getImageName() + ".crop.jpg");
+        return new File(imageDirectory.toFile(), cardDef.getImageName() + ".jpg");
     }
+
+    public static File getCustomCardImageFile(final IRenderableCard cardDef) {
+        final Path imageDirectory = getImagesPath(ImagesPath.CUSTOM);
+        return new File(imageDirectory.toFile(), cardDef.getImageName() + ".jpg");
+    }
+
 
     /**
      * Deletes all directory contents and then directory itself.
@@ -291,4 +291,24 @@ public final class MagicFileSystem {
         FileUtils.cleanDirectory(getGameplayReportDirectory().toFile());
     }
 
+    public static boolean isCardImageMissing(MagicCardDefinition aCard) {
+        if (getCustomCardImageFile(aCard).exists()) {
+            return false;
+        }
+        if (getCroppedCardImageFile(aCard).exists()) {
+            return false;
+        }
+        if (getCardImageFile(aCard).exists()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static File[] getThemes() {
+        return getDataPath(DataPath.THEMES).toFile().listFiles(THEME_FILE_FILTER);
+    }
+
+    public static Path getThemesPath() {
+        return getDataPath(DataPath.THEMES);
+    }
 }

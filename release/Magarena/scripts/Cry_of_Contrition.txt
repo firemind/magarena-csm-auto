@@ -1,0 +1,11 @@
+name=Cry of Contrition
+image=http://magiccards.info/scans/en/gp/46.jpg
+value=3.553
+rarity=C
+type=Sorcery
+cost={B}
+ability=Haunt;\
+        When the creature SN haunts dies, target player discards a card.
+effect=Target player discards a card.
+timing=main
+oracle=Target player discards a card.\nHaunt\nWhen the creature Cry of Contrition haunts dies, target player discards a card.
