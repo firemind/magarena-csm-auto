@@ -11,11 +11,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import magic.ui.ImageFileIO;
+import static magic.ui.theme.Theme.ICON_SMALL_BATTLEFIELD;
+import static magic.ui.theme.Theme.ICON_SMALL_COMBAT;
 import magic.utility.FileIO;
 import magic.utility.MagicFileSystem;
 
@@ -29,11 +32,17 @@ public class CustomTheme extends AbstractTheme {
     private ZipFile zipFile;
     private final PlayerAvatar[] playerAvatars;
     private int nrOfAvatars;
+    private final Map<String, BufferedImage> imagesMap;
 
     public CustomTheme(final File file) {
         super(getThemeName(file));
+
+        addToTheme(ICON_SMALL_BATTLEFIELD, null);
+        addToTheme(ICON_SMALL_COMBAT, null);
+
         this.file = file;
         playerAvatars = new PlayerAvatar[MAX_AVATARS];
+        imagesMap = new HashMap<>();
     }
 
     public static String getThemeName(final File aFile) {
@@ -92,9 +101,9 @@ public class CustomTheme extends AbstractTheme {
                 typeValue=new Color(r,g,b);
             }
         } else if ("texture".equals(type)) {
-            typeValue=loadImage(value);
+            typeValue=value;
         } else if ("icon".equals(type)) {
-            typeValue=new ImageIcon(loadImage(value));
+            typeValue = value.isEmpty() ? null : new ImageIcon(loadImage(value));
         } else if ("option".equals(type)) {
             typeValue = Boolean.parseBoolean(value);
         }
@@ -168,4 +177,19 @@ public class CustomTheme extends AbstractTheme {
         }
         return null;
     }
+
+    private BufferedImage getImage(String imageKey, String filename) {
+        if (!imagesMap.containsKey(imageKey)) {
+            imagesMap.put(imageKey, loadImage(filename));
+        }
+        return imagesMap.get(imageKey);
+    }
+
+    @Override
+    public BufferedImage getTexture(String name) {
+        return hasValue(name)
+            ? getImage(name, getStringValue(name))
+            : MagicImages.MISSING_BIG;
+    }
+
 }

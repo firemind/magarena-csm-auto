@@ -14,7 +14,6 @@ import magic.model.MagicDuel;
 import magic.model.MagicGame;
 import magic.model.player.IPlayerProfileListener;
 import magic.model.player.PlayerProfile;
-import magic.ui.dialog.AboutDialog;
 import magic.ui.dialog.DuelSidebarLayoutDialog;
 import magic.ui.prefs.PreferencesDialog;
 import magic.ui.duel.choice.MulliganChoicePanel;
@@ -28,6 +27,7 @@ import magic.ui.screen.DeckEditorScreen;
 import magic.ui.screen.DeckTiledCardsScreen;
 import magic.ui.screen.DeckViewScreen;
 import magic.ui.deck.selector.DecksScreen;
+import magic.ui.screen.AboutScreen;
 import magic.ui.screen.DownloadImagesScreen;
 import magic.ui.screen.DuelDecksScreen;
 import magic.ui.screen.DuelGameScreen;
@@ -188,8 +188,13 @@ public final class ScreenController {
         showScreen(new ImportScreen());
     }
 
-    public static void showAboutDialog() {
-        new AboutDialog(getMainFrame());
+    public static void showAboutScreen() {
+        if (screens.peek() instanceof AboutScreen) {
+            // already open, do nothing
+        } else {
+            showScreen(new AboutScreen());
+            getMainFrame().getGlassPane().setVisible(false);
+        }
     }
 
     public static void showDownloadImagesScreen() {

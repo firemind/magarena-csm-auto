@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
 import magic.utility.DeckUtils;
@@ -40,12 +42,14 @@ public class MagicPredefinedFormat extends MagicFormat {
     public static final MagicFormat RETURN_TO_RAVNICA_BLOCK = new MagicPredefinedFormat("Return to Ravnica block", "return_to_ravnica_block");
     public static final MagicFormat THEROS_BLOCK = new MagicPredefinedFormat("Theros block", "theros_block");
     public static final MagicFormat KHANS_OF_TARKIR_BLOCK = new MagicPredefinedFormat("Khans of Tarkir block", "khans_of_tarkir_block");
+    public static final MagicFormat BATTLE_FOR_ZENDIKAR_BLOCK = new MagicPredefinedFormat("Battle for Zendikar block", "battle_for_zendikar_block");
 
     private static final List<MagicFormat> values = Collections.unmodifiableList(Arrays.asList(
         STANDARD,
         MODERN,
         LEGACY,
         VINTAGE,
+        BATTLE_FOR_ZENDIKAR_BLOCK,
         KHANS_OF_TARKIR_BLOCK,
         THEROS_BLOCK,
         RETURN_TO_RAVNICA_BLOCK,
@@ -102,10 +106,7 @@ public class MagicPredefinedFormat extends MagicFormat {
     }
 
     public static String[] getFilterValues() {
-        final List<String> values = new ArrayList<>();
-        for (final MagicFormat f : values()) {
-            values.add(f.getName());
-        }
+        final List<String> values = values().stream().map(MagicFormat::getName).collect(Collectors.toList());
         return values.toArray(new String[0]);
     }
 
@@ -113,8 +114,7 @@ public class MagicPredefinedFormat extends MagicFormat {
         try (final Scanner sc = new Scanner(MagicResources.getFileContent(this))) {
             while (sc.hasNextLine()) {
                 final String line = sc.nextLine().trim();
-                final boolean skipLine = (line.startsWith("#") || line.isEmpty());
-                if (!skipLine) {
+                if (!line.startsWith("#") && !line.isEmpty()) {
                     switch (line.substring(0, 1)) {
                         case "!":
                             bannedCardNames.add(line.substring(1));
@@ -130,15 +130,9 @@ public class MagicPredefinedFormat extends MagicFormat {
         }
     }
 
-    private boolean isCardExemptFromMaxCopiesRestriction(MagicCardDefinition card) {
-        return card.isLand() == true
-                || card.getName().equals("Relentless Rats")
-                || card.getName().equals("Shadowborn Apostle");
-    }
-
     @Override
     public CardLegality getCardLegality(MagicCardDefinition card, int cardCount) {
-        if (cardCount > getMaximumCardCopies() && isCardExemptFromMaxCopiesRestriction(card) == false) {
+        if (cardCount > maximumCardCopies && !card.canHaveAnyNumberInDeck()) {
             return CardLegality.TooManyCopies;
         }
         if (magicSets.isEmpty()) {
@@ -165,12 +159,12 @@ public class MagicPredefinedFormat extends MagicFormat {
     }
 
     public boolean isDeckLegal(final MagicDeck aDeck) {
-        if (aDeck.size() < getMinimumDeckSize()) {
+        if (aDeck.size() < minimumDeckSize) {
             return false;
         }
         for (final MagicCardDefinition card : DeckUtils.getDistinctCards(aDeck)) {
-            final int cardCountCheck = card.isLand() ? 1 : aDeck.getCardCount(card);
-            if (isCardLegal(card, cardCountCheck) == false) {
+            final int cardCountCheck = aDeck.getCardCount(card);
+            if (!isCardLegal(card, cardCountCheck)) {
                 return false;
             }
         }
@@ -178,11 +172,11 @@ public class MagicPredefinedFormat extends MagicFormat {
     }
 
     private boolean isCardBanned(MagicCardDefinition aCard) {
-        return bannedCardNames.isEmpty() == false && bannedCardNames.contains(aCard.getName());
+        return !bannedCardNames.isEmpty() && bannedCardNames.contains(aCard.getName());
     }
 
     private boolean isCardRestricted(MagicCardDefinition card) {
-        return restrictedCardNames.isEmpty() == false && restrictedCardNames.contains(card.getName());
+        return !restrictedCardNames.isEmpty() && restrictedCardNames.contains(card.getName());
     }
 
     private boolean isCardInFormat(MagicCardDefinition card) {

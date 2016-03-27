@@ -15,6 +15,7 @@ import magic.ui.screen.interfaces.IStatusBar;
 import magic.ui.screen.interfaces.IWikiPage;
 import magic.ui.screen.widget.ActionBar;
 import magic.ui.screen.widget.StatusBar;
+import magic.utility.WikiPage;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -57,14 +58,14 @@ public abstract class AbstractScreen extends JPanel {
 
     private void layoutMagStatusBar() {
         if (hasStatusBar()) {
-            add(new StatusBar(this), "w 100%");
+            add(new StatusBar(this), "w 100%, h 50!");
         }
     }
 
     private void layoutMagActionBar() {
         if (hasActionBar()) {
             this.actionbar = new ActionBar((IActionBar)this);
-            add(actionbar, "w 100%");
+            add(actionbar, "w 100%, h 50!");
         }
     }
 
@@ -90,7 +91,7 @@ public abstract class AbstractScreen extends JPanel {
 
     public void showWikiHelpPage() {
         if (this.hasWikiPage()) {
-            URLUtils.openURL(URLUtils.URL_WIKI + ((IWikiPage)this).getWikiPageName());
+            URLUtils.openURL(WikiPage.getUrl(((IWikiPage)this).getWikiPageName()));
         }
     }
 
