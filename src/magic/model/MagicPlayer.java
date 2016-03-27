@@ -574,11 +574,6 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         }
         return count;
     }
-    
-
-    public int getNrOfPermanents() {
-        return permanents.size();
-    }
 
     public int getNrOfPermanents(final MagicType type) {
         int count=0;

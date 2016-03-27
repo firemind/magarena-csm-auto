@@ -8,6 +8,7 @@ public enum MagicAIImpl {
     VEGAS("vegas", new VegasAI(false)),
     VEGASC("vegas (cheat)", new VegasAI(true)),
     FIREMIND("firemind", new FiremindAI(false)),
+    FIREMINDC("firemind", new FiremindAI(true)),
     MTDF("mtd(f)", new MTDF(false)),
     MTDFC("mtd(f) (cheat)", new MTDF(true)),
     MMABFast("minimax (deck strength)", magic.ai.MMAB.DeckStrAI()),

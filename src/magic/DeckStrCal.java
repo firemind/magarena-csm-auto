@@ -28,8 +28,8 @@ public class DeckStrCal {
     private static int seed;
     private static String profile = "**";
     private static String[] deck = {"", ""};
-    private static MagicAIImpl[] ai = {MagicAIImpl.FIREMIND, MagicAIImpl.MMAB};
-    private static int[] str = {6, 6};
+    private static MagicAIImpl[] ai = {MagicAIImpl.FIREMINDC, MagicAIImpl.MMABC};
+    private static int[] str = {1, 1};
     private static boolean duplicate = false;
 
     // Command line parsing.

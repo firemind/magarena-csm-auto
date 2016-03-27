@@ -1,9 +1,12 @@
 package magic.ai;
 
+import magic.firemind.GameCardState;
 import magic.firemind.GameState;
 import magic.firemind.ScoringSet;
+import magic.model.MagicCard;
 import magic.model.MagicGame;
 import magic.model.MagicGameLog;
+import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
 import magic.model.event.MagicEvent;
 import magic.model.phase.MagicStep;
@@ -14,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import magic.firemind.ai.*;
 public class FiremindAI implements MagicAI {
 
     private static final long SEC_TO_NANO=1000000000L;
@@ -21,6 +25,7 @@ public class FiremindAI implements MagicAI {
 
     private final boolean CHEAT;
     private final boolean DECKSTR;
+    final TreeVisualizer treeViz = new TreeVisualizer();
 
     public FiremindAI(final boolean cheat) {
         this(cheat, false);
@@ -34,13 +39,14 @@ public class FiremindAI implements MagicAI {
         CHEAT = cheat;
         DECKSTR = deckStr;
     }
-
-    private void log(final String message) {
-        MagicGameLog.log(message);
-    }
+//
+//    private void log(final String message) {
+//        MagicGameLog.log(message);
+//    }
 
     public Object[] findNextEventChoiceResults(final MagicGame sourceGame, final MagicPlayer scorePlayer) {
-        final long startTime = System.currentTimeMillis();
+
+        //final long startTime = System.currentTimeMillis();
 
         // copying the game is necessary because for some choices game scores might be calculated,
         // find all possible choice results.
@@ -64,6 +70,10 @@ public class FiremindAI implements MagicAI {
         final int artificialLevel = scorePlayer.getAiProfile().getAiLevel();
         final int rounds = (size + THREADS - 1) / THREADS;
         final long slice = artificialLevel * SEC_TO_NANO / rounds;
+
+        ChoiceNode root =treeViz.addNode(null, sourceGame.getPhase().getType()+":"+event.toString());
+
+
         
         for (final Object[] choice : choices) {
             final ArtificialChoiceResults achoice=new ArtificialChoiceResults(choice);
@@ -79,6 +89,7 @@ public class FiremindAI implements MagicAI {
             workerGame.setFastMana(true);
             workerGame.setFastTarget(true);
             workerGame.setFastBlocker(true);
+            ChoiceNode parent = treeViz.addNode(root, choice);
             
             executor.execute(new Runnable() {
                 @Override
@@ -89,7 +100,7 @@ public class FiremindAI implements MagicAI {
                         scoreBoard,
                         CHEAT
                     );
-                    worker.evaluateGame(achoice, scoreRef.get(), System.nanoTime() + slice);
+                    worker.evaluateGame(achoice, scoreRef.get(), System.nanoTime() + slice, parent);
                     scoreRef.update(achoice.aiScore.getScore());
                 }
             });
@@ -118,26 +129,34 @@ public class FiremindAI implements MagicAI {
         }
 
         // Logging.
-        final long timeTaken = System.currentTimeMillis() - startTime;
-//        log("FiremindAI" +
-//            " cheat=" + CHEAT +
-//            " index=" + scorePlayer.getIndex() +
-//            " life=" + scorePlayer.getLife() +
-//            " turn=" + sourceGame.getTurn() +
-//            " phase=" + sourceGame.getPhase().getType() +
-//            " slice=" + (slice/1000000) +
-//            " time=" + timeTaken
-//            );
-//        for (final ArtificialChoiceResults achoice : achoices) {
-//            log((achoice == bestAchoice ? "* " : "  ") + achoice);
-//        }
+        /*final long timeTaken = System.currentTimeMillis() - startTime;
+        log("FiremindAI" +
+            " cheat=" + CHEAT +
+            " index=" + scorePlayer.getIndex() +
+            " life=" + scorePlayer.getLife() +
+            " turn=" + sourceGame.getTurn() +
+            " phase=" + sourceGame.getPhase().getType() +
+            " slice=" + (slice/1000000) +
+            " time=" + timeTaken
+            );
+        for (final ArtificialChoiceResults achoice : achoices) {
+            log((achoice == bestAchoice ? "* " : "  ") + achoice);
+        } */
+        treeViz.finish(bestAchoice.choiceResults);
 
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return sourceGame.map(bestAchoice.choiceResults);
+        
     }
 
 class FiremindAIWorker {
 
-    private final boolean CHEAT;
+    //private final boolean CHEAT;
     private final long id;
     private final MagicGame game;
     private final ArtificialScoreBoard scoreBoard;
@@ -148,7 +167,7 @@ class FiremindAIWorker {
         this.id=id;
         this.game=game;
         this.scoreBoard=scoreBoard;
-        this.CHEAT=CHEAT;
+        //this.CHEAT=CHEAT;
     }
     
     /** Determines if game score should be cached for this game state. */
@@ -163,7 +182,7 @@ class FiremindAIWorker {
         }
     }
 
-    private ArtificialScore runGame(final Object[] nextChoiceResults, final ArtificialPruneScore pruneScore, final int depth, final long maxTime) {
+    private ArtificialScore runGame(final Object[] nextChoiceResults, final ArtificialPruneScore pruneScore, final int depth, final long maxTime, ChoiceNode parent) {
         game.snapshot();
 
         if (nextChoiceResults!=null) {
@@ -171,9 +190,11 @@ class FiremindAIWorker {
         }
 
         if (System.nanoTime() > maxTime || Thread.currentThread().isInterrupted()) {
-            GameState gsMe = new GameState(game.getScorePlayer(), new ScoringSet());
-            GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), new ScoringSet());
-            final ArtificialScore aiScore=new ArtificialScore(gsMe.getScore()-gsOp.getScore(),depth);
+//            GameState gsMe = new GameState(game.getScorePlayer(), new ScoringSet());
+//            GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), new ScoringSet());
+//            final ArtificialScore aiScore=new ArtificialScore(gsMe.getScore()-gsOp.getScore(),depth);
+            final ArtificialScore aiScore=new ArtificialScore(game.getScore(),depth);
+
             game.restore();
             gameCount++;
             return aiScore;
@@ -189,7 +210,7 @@ class FiremindAIWorker {
                     final long gameId=game.getGameId(pruneScore.getScore());
                     ArtificialScore bestScore=scoreBoard.getGameScore(gameId);
                     if (bestScore==null) {
-                        bestScore=runGame(null,pruneScore,depth,maxTime);
+                        bestScore=runGame(null,pruneScore,depth,maxTime, parent);
                         scoreBoard.setGameScore(gameId,bestScore.getScore(-depth));
                     } else {
                         bestScore=bestScore.getScore(depth);
@@ -236,7 +257,11 @@ class FiremindAIWorker {
             final long slice = (maxTime - end) / nrOfChoices;
             for (final Object[] choiceResults : choiceResultsList) {
                 end += slice;
-                final ArtificialScore score=runGame(choiceResults, newPruneScore, depth + 1, end);
+                
+                ChoiceNode child = treeViz.addNode(parent, choiceResults);
+
+                final ArtificialScore score=runGame(choiceResults, newPruneScore, depth + 1, end, child);
+
                 if (bestScore.isBetter(score,best)) {
                     bestScore=score;
                     // Stop when best score can no longer become the best score at previous levels.
@@ -251,22 +276,59 @@ class FiremindAIWorker {
         }
 
         // Game is finished.
-        GameState gsMe = new GameState(game.getScorePlayer(), new ScoringSet());
-        GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), new ScoringSet());
-        final ArtificialScore aiScore=new ArtificialScore(gsMe.getScore()-gsOp.getScore(),depth);
+//        GameState gsMe = new GameState(game.getScorePlayer(), new ScoringSet());
+//        GameState gsOp = new GameState(game.getPlayer((game.getScorePlayer().getIndex() + 1) % 2), new ScoringSet());
+//        final ArtificialScore aiScore=new ArtificialScore(gsMe.getScore()-gsOp.getScore(),depth);
+        final ArtificialScore aiScore=new ArtificialScore(game.getScore(),depth);
+
         game.restore();
         gameCount++;
         return aiScore;
     }
 
-    void evaluateGame(final ArtificialChoiceResults aiChoiceResults, final ArtificialPruneScore pruneScore, long maxTime) {
-        gameCount = 0;
+    
+    // Returns whether gs1 is strictly better than gs2
+    boolean strictlyBetter(MagicPlayer gs1, MagicPlayer gs2){
+        // HAND
+        List<String> cardsInHand = new ArrayList<String>();
+        gs2.getHand().forEach(card -> {
+            cardsInHand.add(card.getName());
+        });
+        for(MagicCard card: gs1.getHand()){
+            if(!cardsInHand.remove(card.getName())){
+                return false; // card that was previously in hand is no longer in it;
+            }
+        };
+        
+        // In game
+//        List<MagicPermanent> cardsInPlay = new ArrayList<MagicPermanent>();
+//        gs2.getPermanents().forEach(card -> {
+//            cardsInPlay.add(card);
+//        });
+//        for(MagicCard card: gs1.getScorePlayer().getHand()){
+//            if(!cardsInHand.remove(card.getName())){
+//                return false; // card that was previously in hand is no longer in it;
+//            }
+//        };
+//        for (final MagicPermanent card : gs2.getPermanents()) {
+//            final GameCardState tsCard = new GameCardState(card.getCard().getCardDefinition(), 1, card.isTapped());
+//            permanents.add(tsCard);
+//        }
+//        
+        return true;
+    }
 
+    
+    
+    void evaluateGame(final ArtificialChoiceResults aiChoiceResults, final ArtificialPruneScore pruneScore, long maxTime, ChoiceNode root) {
+        gameCount = 0;
+        
         aiChoiceResults.worker    = id;
-        aiChoiceResults.aiScore   = runGame(game.map(aiChoiceResults.choiceResults),pruneScore,0,maxTime);
+        aiChoiceResults.aiScore   = runGame(game.map(aiChoiceResults.choiceResults),pruneScore,0,maxTime, root);
         aiChoiceResults.gameCount = gameCount;
 
         game.undoAllActions();
     }
 }
+
 }
