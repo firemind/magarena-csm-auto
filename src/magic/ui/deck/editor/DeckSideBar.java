@@ -9,7 +9,7 @@ import magic.model.MagicDeck;
 import magic.ui.duel.viewer.CardViewer;
 import magic.ui.duel.viewer.DeckEditorCardViewer;
 import magic.ui.widget.TexturedPanel;
-import magic.ui.widget.deck.DeckInfoPanel;
+import magic.ui.deck.widget.DeckInfoPanel;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -32,7 +32,7 @@ public class DeckSideBar extends TexturedPanel {
     private void setLookAndFeel() {
 
         cardScrollPane.setViewportView(cardViewer);
-        cardScrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+        cardScrollPane.setBorder(null);
         cardScrollPane.setOpaque(false);
         cardScrollPane.getViewport().setOpaque(false);
         cardScrollPane.getVerticalScrollBar().setUnitIncrement(10);

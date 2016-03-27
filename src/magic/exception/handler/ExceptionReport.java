@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import magic.data.GeneralConfig;
 import magic.model.MagicCard;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
@@ -27,7 +26,7 @@ public class ExceptionReport {
         sb.append('\n');
         sb.append("CREATED ON ").append(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         sb.append('\n');
-        sb.append("MAGARENA VERSION ").append(GeneralConfig.VERSION);
+        sb.append("MAGARENA VERSION ").append(MagicSystem.VERSION);
         sb.append(", JRE ").append(System.getProperty("java.version"));
         sb.append(", OS ").append(System.getProperty("os.name"));
         sb.append("_").append(System.getProperty("os.version"));
@@ -82,6 +81,7 @@ public class ExceptionReport {
         report.append("  Phase : ").append(game.getPhase().getType());
         report.append("  Step : ").append(game.getStep());
         report.append("  Player : ").append(game.getTurnPlayer());
+        report.append("  AI : ").append(game.getPlayer(1).getAiProfile().getAiType());
         report.append("  Score : ").append(game.getScore());
         report.append("\n");
 
@@ -108,6 +108,10 @@ public class ExceptionReport {
 
         for (final MagicCard card : player.getGraveyard()) {
             buildCard("Graveyard", card, report);
+        }
+
+        for (final MagicCard card : player.getLibrary().getCardsFromTop(7)) {
+            buildCard("Library", card, report);
         }
 
         for (final MagicPermanent permanent : player.getPermanents()) {

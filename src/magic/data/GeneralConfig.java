@@ -17,13 +17,9 @@ import magic.ui.duel.animation.AnimationFx;
 import magic.ui.message.MessageStyle;
 import magic.ui.prefs.ImageSizePresets;
 import magic.utility.MagicFileSystem;
-import magic.utility.MagicSystem;
+import magic.utility.SortedProperties;
 
 public class GeneralConfig {
-
-    public static final String VERSION = "1.70";
-    public static final String SOFTWARE_TITLE =
-            "Magarena " + GeneralConfig.VERSION + (MagicSystem.isDevMode() ? " [DEV MODE]" : "");
 
     private static final GeneralConfig INSTANCE = new GeneralConfig();
 
@@ -138,7 +134,7 @@ public class GeneralConfig {
     private boolean isGamePausedOnPopup = false;
 
     private static final String MISSING_DOWNLOAD_DATE = "missingImagesDownloadDate";
-    private String missingImagesDownloadDate = "1970-01-01";
+    private String unimplementedImagesDownloadDate = "1970-01-01";
 
     private static final String PLAYABLE_DOWNLOAD_DATE = "imageDownloaderRunDate";
     private String playableImagesDownloadDate = "1970-01-01";
@@ -170,6 +166,9 @@ public class GeneralConfig {
 
     private static final String CARD_TEXT_LANG = "cardTextLanguage";
     private CardTextLanguage cardTextLanguage = CardTextLanguage.ENGLISH;
+
+    private static final String IMAGES_ON_DEMAND = "imagesOnDemand";
+    private boolean imagesOnDemand = false;
 
     private boolean isStatsVisible = true;
 
@@ -511,21 +510,21 @@ public class GeneralConfig {
     }
 
     /**
-     * Gets the last date missing images were downloaded.
+     * Gets the last date unimplemented images were downloaded.
      * <p>
      * If missing then date is set to "1970-01-01".
      */
-    public Date getMissingImagesDownloadDate() {
+    public Date getUnimplementedImagesDownloadDate() {
         try {
             final SimpleDateFormat df = new SimpleDateFormat(CardProperty.IMAGE_UPDATED_FORMAT);
-            return df.parse(missingImagesDownloadDate);
+            return df.parse(unimplementedImagesDownloadDate);
         } catch (ParseException ex) {
             throw new RuntimeException(ex);
         }
     }
-    public void setMissingImagesDownloadDate(final Date runDate) {
+    public void setUnimplementedImagesDownloadDate(final Date runDate) {
         final SimpleDateFormat df = new SimpleDateFormat(CardProperty.IMAGE_UPDATED_FORMAT);
-        missingImagesDownloadDate = df.format(runDate);
+        unimplementedImagesDownloadDate = df.format(runDate);
     }
 
     public boolean getHideAiActionPrompt() {
@@ -598,7 +597,7 @@ public class GeneralConfig {
         overlayPermanentMinHeight = Integer.parseInt(properties.getProperty(OVERLAY_PERMANENT_MIN_HEIGHT, "" + overlayPermanentMinHeight));
         ignoredVersionAlert = properties.getProperty(IGNORED_VERSION_ALERT, ignoredVersionAlert);
         isGamePausedOnPopup = Boolean.parseBoolean(properties.getProperty(PAUSE_GAME_POPUP, "" + isGamePausedOnPopup));
-        missingImagesDownloadDate = properties.getProperty(MISSING_DOWNLOAD_DATE, missingImagesDownloadDate);
+        unimplementedImagesDownloadDate = properties.getProperty(MISSING_DOWNLOAD_DATE, unimplementedImagesDownloadDate);
         playableImagesDownloadDate = properties.getProperty(PLAYABLE_DOWNLOAD_DATE, playableImagesDownloadDate);
         duelSidebarLayout = properties.getProperty(DUEL_SIDEBAR_LAYOUT, duelSidebarLayout);
         hideAiActionPrompt = Boolean.parseBoolean(properties.getProperty(HIDE_AI_ACTION_PROMPT, "" + hideAiActionPrompt));
@@ -610,6 +609,7 @@ public class GeneralConfig {
         preferredImageSize = ImageSizePresets.valueOf(properties.getProperty(PREF_IMAGE_SIZE, preferredImageSize.name()));
         cardTextLanguage = CardTextLanguage.valueOf(properties.getProperty(CARD_TEXT_LANG, cardTextLanguage.name()));
         gameVolume = Integer.parseInt(properties.getProperty(GAME_VOLUME, "" + gameVolume));
+        imagesOnDemand = Boolean.parseBoolean(properties.getProperty(IMAGES_ON_DEMAND, "" + imagesOnDemand));
     }
 
     public void load() {
@@ -649,7 +649,7 @@ public class GeneralConfig {
         properties.setProperty(SPLITVIEW_DECKEDITOR, String.valueOf(isSplitViewDeckEditor));
         properties.setProperty(IGNORED_VERSION_ALERT, ignoredVersionAlert);
         properties.setProperty(PAUSE_GAME_POPUP, String.valueOf(isGamePausedOnPopup));
-        properties.setProperty(MISSING_DOWNLOAD_DATE, missingImagesDownloadDate);
+        properties.setProperty(MISSING_DOWNLOAD_DATE, unimplementedImagesDownloadDate);
         properties.setProperty(PLAYABLE_DOWNLOAD_DATE, playableImagesDownloadDate);
         properties.setProperty(DUEL_SIDEBAR_LAYOUT, duelSidebarLayout);
         properties.setProperty(HIDE_AI_ACTION_PROMPT, String.valueOf(hideAiActionPrompt));
@@ -661,10 +661,11 @@ public class GeneralConfig {
         properties.setProperty(PREF_IMAGE_SIZE, preferredImageSize.name());
         properties.setProperty(CARD_TEXT_LANG, cardTextLanguage.name());
         properties.setProperty(GAME_VOLUME, String.valueOf(gameVolume));
+        properties.setProperty(IMAGES_ON_DEMAND, String.valueOf(imagesOnDemand));
     }
 
     public void save() {
-        final Properties properties=new Properties();
+        final Properties properties=new SortedProperties();
         save(properties);
         try { //save config
             FileIO.toFile(getConfigFile(), properties, "General configuration");
@@ -716,4 +717,13 @@ public class GeneralConfig {
     public void setStatsVisible(boolean b) {
         isStatsVisible = b;
     }
+
+    public boolean getImagesOnDemand() {
+        return imagesOnDemand;
+    }
+
+    public void setImagesOnDemand(boolean b) {
+        imagesOnDemand = b;
+    }
+    
 }

@@ -1,0 +1,9 @@
+name=Mystic Meditation
+image=http://magiccards.info/scans/en/dtk/64.jpg
+value=2.500
+rarity=C
+type=Sorcery
+cost={3}{U}
+timing=draw
+requires_groovy_code
+oracle=Draw three cards. Then discard two cards unless you discard a creature card.

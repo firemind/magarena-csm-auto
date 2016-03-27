@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
 import magic.data.CardLegality;
 import magic.data.MagicFormat;
 import magic.model.MagicCardDefinition;
@@ -96,11 +97,7 @@ public class CardsLegalityTableModel implements TableModel {
 
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
-        if (columnIndex == 1) {
-            return cardLegalityList.get(rowIndex).getCardName();
-        } else {
-            return "";
-        }
+        return columnIndex == 1 ? cardLegalityList.get(rowIndex).getCardName() : "";
     }
 
     @Override
@@ -119,7 +116,7 @@ public class CardsLegalityTableModel implements TableModel {
     private List<CardLegalityInfo> getCardsLegalityList(final MagicDeck aDeck, final MagicFormat aFormat) {
         final List<CardLegalityInfo> cardsLegalityList = new ArrayList<>();
         for (MagicCardDefinition card : DeckUtils.getDistinctCards(aDeck)) {
-            final int cardCountCheck = card.isLand() ? 1 : aDeck.getCardCount(card);
+            final int cardCountCheck = card.canHaveAnyNumberInDeck() ? 1 : aDeck.getCardCount(card);
             final CardLegality legality = aFormat.getCardLegality(card, cardCountCheck);
             final CardLegalityInfo cardLegality = new CardLegalityInfo(card, legality, aFormat);
             cardsLegalityList.add(cardLegality);

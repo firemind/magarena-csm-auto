@@ -141,6 +141,10 @@ public class TextImages {
         add(MagicCounterType.Death, MagicIcon.DEATHCOUNTER);
         add(MagicCounterType.Wind, MagicIcon.WINDCOUNTER);
         add(MagicCounterType.Tower, MagicIcon.TOWERCOUNTER);
+        add(MagicCounterType.Infection, MagicIcon.INFECTIONCOUNTER);
+        add(MagicCounterType.Fuse, MagicIcon.FUSECOUNTER);
+        add(MagicCounterType.Page, MagicIcon.PAGECOUNTER);
+        add(MagicCounterType.Sleep, MagicIcon.SLEEPCOUNTER);
     }
 
     private static void add(final MagicCounterType key, final MagicIcon icon) {

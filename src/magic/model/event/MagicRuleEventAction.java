@@ -24,12 +24,7 @@ import magic.model.mstatic.MagicStatic;
 import magic.model.stack.MagicCardOnStack;
 import magic.model.stack.MagicItemOnStack;
 import magic.model.target.*;
-import magic.model.trigger.AtEndOfCombatTrigger;
-import magic.model.trigger.AtEndOfTurnTrigger;
-import magic.model.trigger.AtUpkeepTrigger;
-import magic.model.trigger.PreventDamageTrigger;
-import magic.model.trigger.ReboundTrigger;
-import magic.model.trigger.ThisLeavesBattlefieldTrigger;
+import magic.model.trigger.*;
 
 public enum MagicRuleEventAction {
     ChooseOneOfThree(
@@ -1130,12 +1125,7 @@ public enum MagicRuleEventAction {
         public MagicEventAction getAction(final Matcher matcher) {
             final int amount = ARG.amount(matcher);
             return (game, event) -> {
-                final Collection<MagicPermanent> targets = MagicTargetFilterFactory.CREATURE_YOU_CONTROL.filter(event);
-                int minToughness = Integer.MAX_VALUE;
-                for (final MagicPermanent creature : targets) {
-                    minToughness = Math.min(minToughness, creature.getToughnessValue());
-                }
-                game.addEvent(new MagicBolsterEvent(event.getSource(), event.getPlayer(), amount, minToughness));
+                game.addEvent(new MagicBolsterEvent(event, amount));
             };
         }
     },
@@ -1987,6 +1977,17 @@ public enum MagicRuleEventAction {
             return EVENT_ACTION;
         }
     },
+    Investigate(
+        "investigate",
+        MagicTiming.Token,
+        "Investigate"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            return (game, event) -> game.doAction(new PlayTokenAction(event.getPlayer(), CardDefinitions.getToken("colorless Clue artifact token")));
+        }
+    },
+
     BecomesAlt(
         "(?<duration>until end of turn, )" + ARG.PERMANENTS + " becomes( a| an)?( )?(?<pt>[0-9]+/[0-9]+)? (?<all>.*?)( (with|and gains) (?<ability>.*?))?(?<additionTo>((\\.)? It's| that's) still [^\\.]*)?",
         MagicTiming.Animate,
@@ -2170,6 +2171,29 @@ public enum MagicRuleEventAction {
             }
         }
     },
+    GainAbilityCantBlockSN(
+        ARG.PERMANENTS + " can't block SN this turn",
+        MagicTargetHint.Negative,
+        MagicTiming.Attack,
+        "Can't Block"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                final int pIdx = event.getPlayer().getIndex();
+                final CantBlockTrigger trigger = CantBlockTrigger.create(event.getPermanent().getId());
+                game.doAction(new AddStaticAction(new MagicStatic(MagicLayer.Game, MagicStatic.UntilEOT) {
+                    @Override
+                    public void modGame(final MagicPermanent source, final MagicGame game) {
+                        for (final MagicPermanent it : filter.filter(game.getPlayer(pIdx))) {
+                            it.addAbility(trigger);
+                        }
+                    }
+                }));
+            };
+        }
+    },
     GainAbilityCan(
         ARG.PERMANENTS + " (?<ability>(can('t)?|attack(s)?) .+?)( this turn)?"
     ) {
@@ -2335,10 +2359,17 @@ public enum MagicRuleEventAction {
     ) {
         @Override
         public MagicChoice getChoice(final Matcher matcher) {
-            final MagicSourceEvent e = matcher.group("win") != null ?
-                MagicRuleEventAction.create(matcher.group("win")) :
-                MagicRuleEventAction.create(matcher.group("lose"));
-            return e.getChoice();
+            final String[] alts = {"win", "lose"};
+            for (final String alt : alts) {
+                final String effect = matcher.group(alt);
+                if (effect != null) {
+                    final MagicSourceEvent e = MagicRuleEventAction.create(effect);
+                    if (e.getChoice().isValid()) {
+                        throw new RuntimeException("flip effect should not have choice: \"" + effect + "\"");
+                    }
+                }
+            }
+            return MagicChoice.NONE;
         }
 
         @Override

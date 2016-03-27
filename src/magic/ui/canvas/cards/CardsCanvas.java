@@ -59,12 +59,11 @@ public class CardsCanvas extends JPanel {
     private boolean refreshLayout = false;
     private ICardsCanvasListener listener = new NullCardsCanvasListener();
 
-
-    public CardsCanvas(final Dimension preferredCardSize) {
+    public CardsCanvas() {
 
         setOpaque(false);
 
-        this.preferredCardSize = preferredCardSize;
+        this.preferredCardSize = ImageSizePresets.getDefaultSize();
         aspectRatio = (double)this.preferredCardSize.width / this.preferredCardSize.height;
 
         this.imageHandler = new ImageHandler(null);
@@ -72,10 +71,6 @@ public class CardsCanvas extends JPanel {
         setMouseListener();
         setMouseMotionListener();
 
-    }
-
-    public CardsCanvas() {
-        this(ImageSizePresets.getDefaultSize());
     }
 
     public void setListener(ICardsCanvasListener aListener) {
@@ -319,7 +314,7 @@ public class CardsCanvas extends JPanel {
         final int H = canvasCard.getBounds().height;
 
         g.drawImage(GraphicsUtils.scale(canvasCard.getFrontImage(), W, H), X, Y, null);
-        
+
         if (stackDuplicateCards) {
             drawCardCount(g, X, Y, W, H, canvasCard);
         }

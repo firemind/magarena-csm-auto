@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -34,6 +35,7 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
     private final DownloadMode downloadMode;
     private boolean updateDownloadDate = true;
     private boolean isLogging = true;
+    private int serverBusyCooldown = 1; // in millisecs
 
     DownloadWorker(IDownloadListener aListener, CardTextLanguage aLanguage, DownloadMode aMode) {
         this.listener = aListener;
@@ -124,6 +126,12 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         }
     }
 
+    private void setServerBusyCooldown(String errmsg) {
+        if (errmsg.contains("HTTP response code: 503")) {
+            serverBusyCooldown += 100;
+        }
+    }
+
     /**
      * Attempts to download alternate card image.
      * If it fails displays reason in error log panel.
@@ -133,6 +141,7 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
             aFile.doDownload(proxy);
         } catch (IOException ex) {
             listener.setMessage(String.format("%s [%s (%s)]", ex.toString(), aFile.getFilename(), aLang));
+            setServerBusyCooldown(ex.toString());
             return false;
         }
         return true;
@@ -149,6 +158,16 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         return false;
     }
 
+    private boolean doDeleteLocalImageFile(File aFile) {
+        try {
+            Files.deleteIfExists(aFile.toPath());
+        } catch (IOException ex) {
+            listener.setMessage(String.format("%s [%s]", ex.toString(), aFile.getName()));
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Attempts to download default card image.
      * If it fails displays reason in error log panel.
@@ -157,7 +176,12 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         try {
             aFile.doDownload(proxy);
         } catch (IOException ex) {
+            // if local file exists then download was triggered by the
+            // 'image_updated' script property. But download failed so
+            // remove local image so it becomes 'missing' instead.
+            updateDownloadDate = downloadMode != DownloadMode.CROPS && doDeleteLocalImageFile(aFile.getLocalFile());
             listener.setMessage(String.format("%s [%s]", ex.toString(), aFile.getFilename()));
+            setServerBusyCooldown(ex.toString());
             return false;
         }
         return true;
@@ -185,33 +209,42 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
     }
 
     private void doDownloadCardImage(CardImageFile imageFile, CardTextLanguage textLang) throws MalformedURLException {
-//        if (!deleteLocalImageFileIfMissing(imageFile)) {
-//            return;
-//        }
         if (textLang.isEnglish() || !downloadAlternateCardImage(imageFile, textLang)) {
             downloadDefaultCardImage(imageFile);
         }
     }
 
+    private void doPause(int millisecs) {
+        try {
+            Thread.sleep(millisecs);
+        } catch (InterruptedException ex) {
+            System.err.println(ex);
+        }
+    }
+
     private void doDownloadImages(CardTextLanguage textLang) throws MalformedURLException {
+
+        assert !SwingUtilities.isEventDispatchThread();
 
         initializeLogFiles();
         int fileCount = 0;
+        updateDownloadDate = downloadMode != DownloadMode.CROPS;
 
         for (DownloadableFile dFile : downloadList) {
 
             final CardImageFile imageFile = (CardImageFile) dFile;
-            
+
             if (downloadMode == DownloadMode.CROPS) {
-                doDownloadCroppedImage(imageFile);            
+                doDownloadCroppedImage(imageFile);
             } else {
                 doDownloadCardImage(imageFile, textLang);
             }
+            doPause(serverBusyCooldown);
 
             fileCount++;
 
             if (isCancelled()) {
-                break;
+                return;
             } else {
                 publish(new Integer(fileCount));
             }
@@ -222,26 +255,6 @@ class DownloadWorker extends SwingWorker<Void, Integer> {
         }
 
     }
-
-//    /**
-//     * If downloading missing images but local image file already exists then download was
-//     * triggered by 'image_updated'. If unable to delete image file so that it becomes
-//     * "missing" do not update 'imageDownloaderRunDate' so that image update remains pending.
-//     */
-//    private boolean deleteLocalImageFileIfMissing(CardImageFile imgFile) {
-//        final MagicCardDefinition card = imgFile.getCard();
-//        while (!MagicFileSystem.isCardImageMissing(card)) {
-//            final File aFile = MagicFileSystem.getCardImageFile(card);
-//            try {
-//                Files.deleteIfExists(aFile.toPath());
-//            } catch (IOException ex) {
-//                updateDownloadDate = false;
-//                listener.setMessage(String.format("%s [%s]", ex.toString(), imgFile.getFilename()));
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
     private void resetProgressBar() {
         assert SwingUtilities.isEventDispatchThread();

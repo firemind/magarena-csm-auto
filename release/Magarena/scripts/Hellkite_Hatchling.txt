@@ -1,0 +1,11 @@
+name=Hellkite Hatchling
+image=http://magiccards.info/scans/en/pc2/95.jpg
+value=2.905
+rarity=U
+type=Creature
+subtype=Dragon
+cost={2}{R}{G}
+pt=2/2
+timing=main
+requires_groovy_code
+oracle=Devour 1\nHellkite Hatchling has flying and trample if it devoured a creature.

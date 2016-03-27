@@ -1,0 +1,10 @@
+name=Last Laugh
+image=http://magiccards.info/scans/en/tr/68.jpg
+value=3.788
+rarity=R
+type=Enchantment
+cost={2}{B}{B}
+ability=Whenever another permanent is put into a graveyard from the battlefield, SN deals 1 damage to each creature and each player.;\
+        When no creatures are on the battlefield, sacrifice SN.
+timing=enchantment
+oracle=Whenever a permanent other than Last Laugh is put into a graveyard from the battlefield, Last Laugh deals 1 damage to each creature and each player.\nWhen no creatures are on the battlefield, sacrifice Last Laugh.

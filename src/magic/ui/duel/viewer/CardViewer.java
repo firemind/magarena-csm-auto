@@ -58,7 +58,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
         add(new JLabel());
         add(throbber, "alignx center");
         add(cardLabel, "w 100%");
-        
+
         setDefaultImage();
         setTransformCardListener();
     }
@@ -149,7 +149,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
             setCard(card);
         });
     }
-    
+
     void setImage(final Image aImage) {
         if (aImage == null) {
             isImagePending = true;
@@ -191,7 +191,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
             aCard = MagicCardDefinition.UNKNOWN;
         }
 
-        BufferedImage image = MagicImages.getOrigSizeCardImage(aCard);
+        BufferedImage image = MagicImages.getCardImage(aCard);
 
         if (image.getWidth() != prefSize.width || image.getHeight() != prefSize.height) {
             image = GraphicsUtils.scale(image, prefSize.width, prefSize.height);
@@ -210,5 +210,12 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
         });
         t.setRepeats(false);
         return t;
+    }
+
+    public static Dimension getSidebarImageSize() {
+        Dimension size = ImageSizePresets.getDefaultSize();
+        return size.width < ImageSizePresets.SIZE_312x445.getSize().width
+            ? ImageSizePresets.SIZE_312x445.getSize()
+            : size;
     }
 }

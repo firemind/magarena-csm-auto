@@ -171,6 +171,14 @@ final public class GraphicsUtils {
         return getCompatibleBufferedImage(image.getWidth(), image.getHeight(), image.getTransparency());
     }
 
+    public static BufferedImage getBufferedImage(ImageIcon icon) {
+        BufferedImage bi = getCompatibleBufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TRANSLUCENT);
+        Graphics g = bi.createGraphics();
+        icon.paintIcon(null, g, 0, 0);
+        g.dispose();
+        return bi;
+    }
+
     public static boolean isValidImageFile(final Path imageFilePath) {
         try {
             final BufferedImage image = ImageIO.read(imageFilePath.toFile());
@@ -301,6 +309,28 @@ final public class GraphicsUtils {
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return newImage;
+    }
+
+    public static Image getTranslucentImage(Image image, float opacity) {
+        final BufferedImage newImage = getCompatibleBufferedImage(
+            image.getWidth(null), image.getHeight(null), Transparency.TRANSLUCENT
+        );
+        final Graphics2D g2d = newImage.createGraphics();
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return newImage;
+    }
+
+
+    /**
+     *  Returns an optimized subimage defined by a specified rectangular region.
+     * <p>
+     *  getSubImage() on its own causes image to become unaccelerated.
+     *  (see <a href="http://www.jhlabs.com/ip/managed_images.html">external link</a>)
+     */
+    public static BufferedImage getOptimizedSubimage(BufferedImage image, Rectangle rect) {
+        return GraphicsUtils.getOptimizedImage(image.getSubimage(rect.x, rect.y, rect.width, rect.height));
     }
 
 }

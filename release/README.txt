@@ -60,15 +60,104 @@ Thanks to
   ShawnieBoy for implementing new cards, the M logo, and general image enhancements
   PalladiaMors for the Portuguese UI translation
   kannikkiy for the Russian UI translation
-  Pichoro, Acorntail and all at http://magicseteditor.sourceforge.net for CardBuilder components.
+  Pichoro, Acorntail and all at http://magicseteditor.sourceforge.net for CardBuilder components
   XMage for the ArrowBuilder code
+  neoedmund for the download images-on-demand implementation
   http://mtgjson.com for card script data
   http://magiccards.info for card images
   http://game-icons.net for UI icons
-  http://soundbible.com for sound effects.
+  http://soundbible.com, http://www.freesound.org for sound effects
   everyone on the CCGHQ forum, http://slightlymagic.net/forum/
 
 Thank you for your support and have fun!
+
+Release 1.71 (March 27, 2016)
+============
+lodici
+melvin
+neoedmund
+ShawnieBoy
+
+- new About dialog/screen
+
+- add "download images on demand" setting
+
+- move location of themes from "mods" to "themes" folder
+
+- display deck stats & description in sidebar of deck selector screen
+
+- update Madness according to new rules where exiling the card is compulsory
+
+- add Battle for Zendikar block
+
+- added the following to the card script:
+    * condition: there are four or more card types among cards in your graveyard (Delirium)
+    * ability: Skulk
+    * effect: Investigate.
+    * effect: <permanents> can't block SN this turn.
+
+- fixed the following bugs:
+    * unable to sort cards by rarity or subtype
+    * decks with more than 4 non-basic lands considered legal
+    * model spells that target did not trigger when targeted triggers (issue #678)
+    * layout anomaly in stats panel on Linux (issue #683)
+    * confusing play animation when AI plays Smallpox (issue #695)
+    * custom ability icons incorrectly shown on battlefield card images (issue #704)
+    * Firemind top decks with Æ are not being parsed correctly (issue #718)
+    * unable to download large number of images due to HTTP errors (issue #729)
+    * Gallowbraid log message had 'lose' instead of 'pay'
+    * Scarwood Bandits should not lose control of artifact when control changes
+    * Zodiac Dragon should only trigger if you both own and control it (issue #690)
+    * Thorn of Amethyst increases the casting cost of creatures by {1} (issue #698)
+    * Genesis Wave duplicated cards played from library (issue #712)
+    * Zada's Commando can tap itself to use cohort (issue #715)
+    * Jace the Mind Sculptor reveals the card looked at in the may choice (issue #727)
+    * Wandering Fumarole's last ability could lead to infinite activation by AI (issue #732)
+    * Bane Alley Broker logs names of exiled cards (issue #738)
+    * Snapcaster Mage allows casting cards that could not be paid due to cost increasers (issue #741)
+
+- added the following cards:
+Abduction, Academy Raider, Ætherplasm, Alaborn Zealot, Animate Wall,
+Arachnus Web, Blood Tribute, Briar Shield, Brink of Madness,
+Burning Anger, Call of the Full Moon, Carapace, Chamber of Manipulation,
+Charisma, Colossus of Akros, Compelling Deterrence, Consecrated by Blood,
+Corpse Churn, Crab Umbra, Cruel Bargain, Cryptborn Horror,
+Crystallization, Custodi Soulbinders, Cytoplast Manipulator,
+Devout Harpist, Dimensional Infiltrator, Dragonscale General,
+Dream Thrush, Drooling Ogre, Duct Crawler, Dying Wail, Earthlore,
+Ebonblade Reaper, Eldrazi Mimic, Encase in Ice, Endbringer,
+Extra Arms, Fathom Feeder, Favorable Destiny, Festering Wound,
+Field of Reality, Fractured Loyalty, Ghostly Possession, Gigantiform,
+Glade Watcher, Glaring Aegis, Glistening Oil, Goblin Bangchuckers,
+Grasp of the Hieromancer, Grixis Illusionist, Guan Yu, Sainted Warrior,
+Havoc Festival, Hellkite Hatchling, Helm of Obedience, Helm of Possession,
+Hivis of the Scale, Hunter's Ambush, Ice Cage, Ignition Team,
+Immobilizer Eldrazi, Incendiary, Infectious Bloodlust, Infernal Scarring,
+Inviolability, Isolation Zone, Jinxed Ring, Kazuul's Toll Collector,
+Kithkin Mourncaller, Kothophed, Soul Hoarder, Kozilek's Pathfinder,
+Krasis Incubation, Krovikan Plague, Last Laugh, Liability,
+Map the Wastes, Masked Gorgon, Mina and Denn, Wildborn, Mindswipe,
+Mindwrack Demon, Mirror Mockery, Mirrorpool, Moonbow Illusionist,
+Mortuary, Mystic Compass, Mystic Meditation, Oboro Envoy, One with Nature,
+Oni Possession, Overseer of the Damned, Paralyze, Part the Waterveil,
+Pattern of Rebirth, Pendelhaven Elder, Pendrell Flux, Piety Charm,
+Pillar of War, Planar Collapse, Planar Outburst, Polluted Bonds,
+Predatory Urge, Pretender's Claim, Prison Barricade, Private Research,
+Quicksilver Dagger, Realm Seekers, Reaver Drone, Reduce in Stature,
+Reef Shaman, Righteous Indignation, Rivalry, Roots, Runner's Bane,
+Sabertooth Alley Cat, Sandskin, Scrapheap, Screams from Within,
+Screeching Griffin, Scytheclaw, Sea Snidd, Seedling Charm,
+Shrewd Hatchling, Sigil of the New Dawn, Singing Bell Strike,
+Sinstriker's Will, Sire of Stagnation, Sisay's Ingenuity, Sleeping Potion,
+Song of the Dryads, Soul Kiss, Sower of Temptation, Spectral Cloak,
+Spectral Prison, Spell Rupture, Spell Syphon, Spin Engine, Spire Serpent,
+Stamina, Stoneforge Masterwork, Sunbond, Sunbringer's Touch,
+Suppression Bonds, Telemin Performance, Thrull Retainer, Tidal Visionary,
+Tideshaper Mystic, Tooth Collector, Topplegeist, Traveling Plague,
+Treacherous Link, Treefolk Mystic, Triclopean Sight, Unstable Frontier,
+Urban Burgeoning, Vampirism, Venarian Gold, Venomous Fangs,
+Veteran's Voice, Viridian Harvest, Visions of Brutality, Volition Reins,
+Voracious Wurm, Walker of the Wastes, Wellspring, Whiteout, Witch Hunt
 
 Release 1.70 (February 7, 2016)
 ============

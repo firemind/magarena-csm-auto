@@ -1,0 +1,9 @@
+name=Sigil of the New Dawn
+image=http://magiccards.info/scans/en/on/55.jpg
+value=4.160
+rarity=R
+type=Enchantment
+cost={3}{W}
+timing=enchantment
+requires_groovy_code
+oracle=Whenever a creature is put into your graveyard from the battlefield, you may pay {1}{W}. If you do, return that card to your hand.

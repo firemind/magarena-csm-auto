@@ -40,18 +40,14 @@ public class PTFrame {
 
             //draw ptText
             Rectangle2D box = new Rectangle(286, 469, 60, 28); //ptText dimensions (Can't use ptPanel due to shadow distorting size)
-            Point centre = new Point((int) box.getCenterX(), (int) box.getCenterY()); //Centre of box
+            Point centre = new Point((int)box.getCenterX(), (int)box.getCenterY()); //Centre of box
 
 
             TextLayout layout;
-            if (ptText.length() >= 6) { //power or toughness of 100+
-                layout = new TextLayout(ptText, cardPTFontSmall, frc2);
-            } else {
-                layout = new TextLayout(ptText, cardPTFont, frc2);
-            }
-            Point textCentre = new Point((int) layout.getBounds().getWidth() / 2, (int) layout.getBounds().getHeight() / 2); //Centre of text
+            layout = new TextLayout(ptText, ptText.length() >= 6 ? cardPTFontSmall : cardPTFont, frc2);
+            Point textCentre = new Point((int)layout.getBounds().getWidth() / 2, (int)layout.getBounds().getHeight() / 2); //Centre of text
 
-            layout.draw(g2d, (float) centre.getX() - (float) textCentre.getX(), (float) centre.getY() + (float) textCentre.getY());
+            layout.draw(g2d, (float)centre.getX() - (float)textCentre.getX(), (float)centre.getY() + (float)textCentre.getY());
 
             g2d.dispose();
         }
@@ -114,7 +110,7 @@ public class PTFrame {
 
     private static void drawPanelText(Graphics2D g2d, Rectangle box, String text, Font font) {
         TextLayout layout = new TextLayout(text, font, g2d.getFontRenderContext());
-        layout.draw(g2d, (float) box.getCenterX() - (float) layout.getBounds().getCenterX(), (float) box.getCenterY() - (float) layout.getBounds().getCenterY());
+        layout.draw(g2d, (float)box.getCenterX() - (float)layout.getBounds().getCenterX(), (float)box.getCenterY() - (float)layout.getBounds().getCenterY());
     }
 
     private static BufferedImage getLoyaltyPanel(String activation) {
@@ -153,9 +149,6 @@ public class PTFrame {
     }
 
     static void drawLevellerArrowText(BufferedImage cardImage, IRenderableCard cardDef) {
-        int xPosText = 35;
-        int width = 39;
-        int height = 39;
         String[] levelText = getLevellerArrowText(cardDef);
         Graphics2D g2d = cardImage.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -163,6 +156,9 @@ public class PTFrame {
         g2d.setColor(Color.BLACK);
 
         //Arrow 1
+        int xPosText = 35;
+        int width = 39;
+        int height = 39;
         OracleText.drawTextToCard(cardImage, xPosText, 386, levelText[0], new Rectangle(0, 0, width, height));
         //Arrow 2
         OracleText.drawTextToCard(cardImage, xPosText, 437, levelText[1], new Rectangle(0, 0, width, height));
@@ -298,13 +294,12 @@ public class PTFrame {
 
             //draw ptText
             Rectangle2D box = new Rectangle(286, 469, 60, 28); //ptText dimensions (Can't use ptPanel due to shadow distorting size)
-            Point centre = new Point((int) box.getCenterX(), (int) box.getCenterY()); //Centre of box
+            Point centre = new Point((int)box.getCenterX(), (int)box.getCenterY()); //Centre of box
 
-            TextLayout layout;
-            layout = ptText.length() >= 6 ? new TextLayout(ptText, cardPTFontSmall, frc2) : new TextLayout(ptText, cardPTFont, frc2); //Power or Toughness over 99
-            Point textCentre = new Point((int) layout.getBounds().getWidth() / 2, (int) layout.getBounds().getHeight() / 2); //Centre of text
+            TextLayout layout = new TextLayout(ptText, ptText.length() >= 6 ? cardPTFontSmall : cardPTFont, frc2); //Power or Toughness over 99
+            Point textCentre = new Point((int)layout.getBounds().getWidth() / 2, (int)layout.getBounds().getHeight() / 2); //Centre of text
 
-            layout.draw(g2d, (float) centre.getX() - (float) textCentre.getX(), (float) centre.getY() + (float) textCentre.getY());
+            layout.draw(g2d, (float)centre.getX() - (float)textCentre.getX(), (float)centre.getY() + (float)textCentre.getY());
 
             g2d.dispose();
         }
@@ -318,7 +313,11 @@ public class PTFrame {
         } else if (cardDef.isCreature() && cardDef.getTransformedDefinition().isPlaneswalker()) {
             typeSymbol = ResourceManager.sparkSymbol;
         }
-        g2d.drawImage(typeSymbol, 19, 25, null);
+        if (cardDef.isPlaneswalker()) {
+            g2d.drawImage(typeSymbol, 21, 18, null);
+        } else {
+            g2d.drawImage(typeSymbol, 19, 25, null);
+        }
         g2d.dispose();
     }
 }

@@ -5,9 +5,12 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
+import magic.data.CardImageFile;
 import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.data.TextImages;
@@ -27,6 +30,8 @@ import magic.utility.MagicResources;
 public final class MagicImages {
 
     public static final BufferedImage BACK_IMAGE;
+    private static Proxy proxy;
+
     static {
         BufferedImage image = ImageFileIO.toImg(MagicResources.getImageUrl("card-back.jpg"), null);
         Dimension size = getPreferredImageSize(image);
@@ -43,6 +48,9 @@ public final class MagicImages {
     public static final BufferedImage MENU_LOGO = GraphicsUtils.scale(LOGO, 40, 40);
     public static final BufferedImage APP_LOGO = GraphicsUtils.scale(LOGO, 32, 32);
 
+    // About
+    public static final BufferedImage ABOUT_LOGO = loadImage("magarena-logo.png");
+
     // default texture images
     public static final BufferedImage WOOD = loadTextureImage("wood.jpg");
     public static final BufferedImage MARBLE = loadTextureImage("marble.jpg");
@@ -57,7 +65,7 @@ public final class MagicImages {
     private static final Map<String, PlayerAvatar> avatarsMap = new HashMap<>();
 
     private static final int MAX_IMAGES = 100;
-    private static final Map<Integer, BufferedImage> cache = new magic.data.LRUCache<>(MAX_IMAGES);
+    private static final Map<String, BufferedImage> cache = new magic.data.LRUCache<>(MAX_IMAGES);
 
     /**
      * Gets preferred viewing size for a card image based on preset setting in preferences.
@@ -232,8 +240,19 @@ public final class MagicImages {
             : CardBuilder.getCardBuilderImage(cardDef);
     }
 
+    private static void tryDownloadingImage(MagicCardDefinition aCard) {
+        if (proxy == null) {
+            proxy = GeneralConfig.getInstance().getProxy();
+        }
+        try {
+            CardImageFile cif = new CardImageFile(aCard);
+            cif.doDownload(proxy);
+        } catch (IOException ex) {
+            System.err.println(aCard.getDistinctName() + " : " + ex);
+        }
+    }
 
-    public static BufferedImage getOrigSizeCardImage(MagicCardDefinition aCard) {
+    private static BufferedImage createCardImage(MagicCardDefinition aCard) {
 
         if (aCard == null || aCard == MagicCardDefinition.UNKNOWN) {
             return getMissingCardImage();
@@ -245,6 +264,10 @@ public final class MagicImages {
 
         if (MagicFileSystem.getCroppedCardImageFile(aCard).exists()) {
             return CardBuilder.getCardBuilderImage(aCard);
+        }
+
+        if (GeneralConfig.getInstance().getImagesOnDemand() && !MagicFileSystem.getCardImageFile(aCard).exists()) {
+            tryDownloadingImage(aCard);
         }
 
         if (MagicFileSystem.getCardImageFile(aCard).exists()) {
@@ -277,12 +300,12 @@ public final class MagicImages {
         return true;
     }
 
-    public static BufferedImage geCardImageUseCache(MagicCardDefinition aCard) {
-        int key = aCard.getIndex();
+    public static BufferedImage getCardImage(MagicCardDefinition aCard) {
+        final String key = aCard.getDistinctName();
         if (cache.containsKey(key)) {
             return cache.get(key);
         }
-        BufferedImage image = getOrigSizeCardImage(aCard);
+        final BufferedImage image = createCardImage(aCard);
         if (image != MISSING_CARD) {
             cache.put(key, image);
         }

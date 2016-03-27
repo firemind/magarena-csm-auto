@@ -34,6 +34,7 @@ public interface Theme {
     String COLOR_CHOICE_BORDER="color_choice_border";
     String COLOR_COMBAT_CHOICE_BORDER="color_combat_choice_border";
     String COLOR_GAME_BORDER="color_game_border";
+    String COLOR_MOUSEOVER="color_mouseover";
 
     String VALUE_SPACING="value_spacing";
     String VALUE_BACKGROUND_STRETCH="value_background_stretch";
@@ -63,4 +64,8 @@ public interface Theme {
     ImageIcon getAvatarIcon(final int index,final int size);
 
     ImageIcon getAbilityIcon(final AbilityIcon ability);
+
+    BufferedImage getBackgroundImage();
+
+    public boolean hasValue(String name);
 }

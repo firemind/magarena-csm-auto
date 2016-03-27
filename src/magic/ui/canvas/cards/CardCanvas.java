@@ -44,7 +44,7 @@ final class CardCanvas {
     }
 
     public BufferedImage getFrontImage() {
-        return MagicImages.geCardImageUseCache(card.getCardDefinition());
+        return MagicImages.getCardImage(card.getCardDefinition());
     }
 
     public BufferedImage getBackImage() {

@@ -380,6 +380,9 @@ public class MagicCard
 
     @Override
     public boolean hasColor(final MagicColor color) {
+        if (isSplitCard()) {
+            return color.hasColor(getColorFlags()) || getCardDefinition().getSplitDefinition().hasColor(color);
+        }
         return color.hasColor(getColorFlags());
     }
 

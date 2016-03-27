@@ -19,6 +19,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
@@ -95,15 +96,15 @@ public class CardTablePanel extends TexturedPanel {
         setColumnWidths(model);
 
         // center contents of columns.
-        table.getColumn("#").setCellRenderer(centerRenderer);
-        table.getColumn("P").setCellRenderer(centerRenderer);
-        table.getColumn("T").setCellRenderer(centerRenderer);
+        getColumn(CardTableColumn.Rating).setCellRenderer(centerRenderer);
+        getColumn(CardTableColumn.Power).setCellRenderer(centerRenderer);
+        getColumn(CardTableColumn.Toughness).setCellRenderer(centerRenderer);
 
         // center the column header captions.
         ((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
         // special renderer for mana symbols
-        model.getColumn(CardTableModel.COST_COLUMN_INDEX).setCellRenderer(new ManaCostCellRenderer());
+        model.getColumn(CardTableColumn.Cost.ordinal()).setCellRenderer(new ManaCostCellRenderer());
 
 
         // listener to sort on column header click
@@ -129,6 +130,10 @@ public class CardTablePanel extends TexturedPanel {
         setLayout(migLayout);
         refreshLayout();
 
+    }
+
+    private TableColumn getColumn(CardTableColumn col) {
+        return table.getColumnModel().getColumn(col.ordinal());
     }
 
     private ListSelectionListener getTableListSelectionListener() {
@@ -178,8 +183,8 @@ public class CardTablePanel extends TexturedPanel {
 
     private void setColumnWidths(final TableColumnModel model) {
         for (int i = 0; i < model.getColumnCount(); i++) {
-            model.getColumn(i).setMinWidth(CardTableModel.COLUMN_MIN_WIDTHS[i]);
-            model.getColumn(i).setPreferredWidth(CardTableModel.COLUMN_MIN_WIDTHS[i]);
+            model.getColumn(i).setMinWidth(CardTableColumn.getMinWidth(i));
+            model.getColumn(i).setPreferredWidth(CardTableColumn.getMinWidth(i));
         }
     }
 

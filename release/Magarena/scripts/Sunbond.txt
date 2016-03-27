@@ -1,0 +1,12 @@
+name=Sunbond
+image=http://magiccards.info/scans/en/bng/28.jpg
+value=3.847
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={3}{W}
+ability=Enchant creature
+timing=aura
+enchant=pump,pos creature
+requires_groovy_code
+oracle=Enchant creature\nEnchanted creature has "Whenever you gain life, put that many +1/+1 counters on this creature."

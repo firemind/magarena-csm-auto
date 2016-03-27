@@ -1,0 +1,12 @@
+name=Sower of Temptation
+image=http://magiccards.info/scans/en/lw/88.jpg
+value=4.449
+rarity=R
+type=Creature
+subtype=Faerie,Wizard
+cost={2}{U}{U}
+pt=2/2
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Flying\nWhen Sower of Temptation enters the battlefield, gain control of target creature for as long as Sower of Temptation remains on the battlefield.

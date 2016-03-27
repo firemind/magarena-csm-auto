@@ -36,6 +36,7 @@ public enum MagicIcon {
     SORCERIES_ICON("w_sorceries.png"),
     PLANESWALKERS_ICON("w_planeswalkers.png"),
     SPELLS_ICON("w_spells.png"),
+    STATS_ICON("w_stats.png"),
     EDIT_ICON("w_edit.png"),
     HELP_ICON("w_help.png"),
     OPEN_ICON("w_open.png"),
@@ -48,6 +49,7 @@ public enum MagicIcon {
     PLUS_ICON("w_plus28.png"),
     MINUS_ICON("w_minus28.png"),
     MARKER_ICON("w_marker.png"),
+    SCROLL_ICON("w_scroll.png"),
 
     MISSING_ICON("missing2.png"),
     ANY("any.png"),
@@ -175,6 +177,11 @@ public enum MagicIcon {
     DEATHCOUNTER("death-counter.png"),
     WINDCOUNTER("wind-counter.png"),
     TOWERCOUNTER("tower-counter.png"),
+    INFECTIONCOUNTER("spore-counter.png"),
+    FUSECOUNTER("fuse-counter.png"),
+    PAGECOUNTER("study-counter.png"),
+    SLEEPCOUNTER("sleep-counter.png"),
+
 
     MANA_ANY("anymana.gif"),
     MANA_PHYREXIAN_NULL("P.png"),
@@ -234,6 +241,7 @@ public enum MagicIcon {
     public static final Set<MagicIcon> COLOR_MANA = EnumSet.range(MANA_WHITE, MANA_GREEN);
     public static final Set<MagicIcon> HYBRID_COLOR_MANA = EnumSet.range(MANA_WHITE_BLUE, MANA_GREEN_BLUE);
     private static final Set<MagicIcon> MANA_ICONS = EnumSet.range(MANA_UNTAP, MANA_X);
+    public static final Set<MagicIcon> TYPE_ICONS = EnumSet.of(LAND, CREATURE, ARTIFACT, ENCHANTMENT, INSTANT, SORCERY, PLANESWALKER);
 
     private final String iconFilename;
 
