@@ -1,0 +1,3 @@
+http://magiccards.info/tpr/en/93.html
+Instant, B (1)
+Add {B}{B}{B} to your mana pool.
