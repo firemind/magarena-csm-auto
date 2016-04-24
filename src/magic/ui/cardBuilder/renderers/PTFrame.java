@@ -63,7 +63,7 @@ public class PTFrame {
         // Draw main Loyalty Panel
         int width = 12;
         int height = 34;
-        if (!loyaltyText.isEmpty()) {
+        if (!loyaltyText.equals("0")) {
             BufferedImage loyaltyImage = ResourceManager.loyaltyPanel;
             g2d.drawImage(loyaltyImage, 302, 460, null);
             drawPanelText(g2d, new Rectangle(326, 462, width, height), loyaltyText, cardLoyaltyFont);
@@ -71,7 +71,7 @@ public class PTFrame {
         // Draw activation panels
         String panelText;
         int xPos = 32;
-        if (OracleText.getPlaneswalkerAbilityCount(cardDef) == 3) {
+        if (OracleText.getPlaneswalkerAbilityCount(cardDef) <= 3) {
             String[] activations = getPlaneswalkerActivationCosts(cardDef);
             panelText = activations[0];
             if (!panelText.isEmpty()) {
@@ -83,8 +83,10 @@ public class PTFrame {
             g2d.drawImage(getLoyaltyPanel(activations[1]), 18, 383, null);
             drawPanelText(g2d, new Rectangle(xPos, 386, width, height), activations[1], cardLoyaltyFont);
             //Panel 3
-            g2d.drawImage(getLoyaltyPanel(activations[2]), 18, 432, null);
-            drawPanelText(g2d, new Rectangle(xPos, 435, width, height), activations[2], cardLoyaltyFont);
+            if (activations.length > 2) {
+                g2d.drawImage(getLoyaltyPanel(activations[2]), 18, 432, null);
+                drawPanelText(g2d, new Rectangle(xPos, 435, width, height), activations[2], cardLoyaltyFont);
+            }
         } else {
             String[] activations = getPlaneswalkerActivationCosts(cardDef);
             panelText = activations[0];
@@ -309,7 +311,7 @@ public class PTFrame {
         Graphics2D g2d = cardImage.createGraphics();
         BufferedImage typeSymbol = ResourceManager.sunSymbol;
         if (cardDef.isHidden()) {
-            typeSymbol = cardDef.isPlaneswalker() && cardDef.getTransformedDefinition().isPlaneswalker() ? ResourceManager.planeswalkerTypeSymbol : ResourceManager.moonSymbol;
+            typeSymbol = cardDef.isPlaneswalker() && !cardDef.getTransformedDefinition().isPlaneswalker() ? ResourceManager.planeswalkerTypeSymbol : ResourceManager.moonSymbol;
         } else if (cardDef.isCreature() && cardDef.getTransformedDefinition().isPlaneswalker()) {
             typeSymbol = ResourceManager.sparkSymbol;
         }

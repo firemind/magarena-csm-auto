@@ -1,0 +1,10 @@
+name=Broken Concentration
+image=http://magiccards.info/scans/en/soi/50.jpg
+value=2.500
+rarity=U
+type=Instant
+cost={1}{U}{U}
+ability=Madness {3}{U}
+effect=Counter target spell.
+timing=counter
+oracle=Counter target spell.\nMadness {3}{U}
