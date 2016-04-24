@@ -264,6 +264,12 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicStackFilterImpl CREATURE_SPELL_CMC_3_OR_LESS = new MagicStackFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack itemOnStack) {
+            return itemOnStack.isSpell(MagicType.Creature) && itemOnStack.getConvertedCost() <= 3;
+        }
+    };
+
     public static final MagicStackFilterImpl CREATURE_SPELL_WITH_INFECT = new MagicStackFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack itemOnStack) {
             return itemOnStack.isSpell(MagicType.Creature) && itemOnStack.hasAbility(MagicAbility.Infect);
@@ -1570,6 +1576,29 @@ public class MagicTargetFilterFactory {
 
     public static final MagicPermanentFilterImpl WEREWOLF_OR_WOLF_CREATURE_YOU_CONTROL = creatureOr(MagicSubType.Werewolf, MagicSubType.Wolf, Control.You);
 
+    public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(MagicSource source, MagicPlayer player, MagicPermanent target) {
+            return target.hasSubType(MagicSubType.Wolf) || target.hasSubType(MagicSubType.Werewolf);
+        }
+    };
+
+    public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF_YOU_CONTROL = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(MagicSource source, MagicPlayer player, MagicPermanent target) {
+            return target.isController(player) &&
+                (target.hasSubType(MagicSubType.Wolf) || target.hasSubType(MagicSubType.Werewolf));
+        }
+    };
+
+    public static final MagicPermanentFilterImpl ATTACKING_WOLF_OR_WEREWOLF = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(MagicSource source, MagicPlayer player, MagicPermanent target) {
+            return target.isAttacking() &&
+                (target.hasSubType(MagicSubType.Wolf) || target.hasSubType(MagicSubType.Werewolf));
+        }
+    };
+
     public static final MagicPermanentFilterImpl UNBLOCKED_ATTACKING_CREATURE_YOU_CONTROL = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return target.isController(player) &&
@@ -1619,6 +1648,18 @@ public class MagicTargetFilterFactory {
 
         public boolean acceptType(final MagicTargetType targetType) {
             return targetType == MagicTargetType.Library;
+        }
+    };
+
+    public static final MagicCardFilterImpl AURA_OR_EQUIPMENT_CARD_FROM_LIBRARY = new MagicCardFilterImpl() {
+        @Override
+        public boolean acceptType(MagicTargetType targetType) {
+            return targetType == MagicTargetType.Library;
+        }
+
+        @Override
+        public boolean accept(MagicSource source, MagicPlayer player, MagicCard target) {
+            return target.hasSubType(MagicSubType.Aura) || target.hasSubType(MagicSubType.Equipment);
         }
     };
 
@@ -2580,6 +2621,7 @@ public class MagicTargetFilterFactory {
         single.put("artifact card with converted mana cost 1 or less from your library", permanentCardMaxCMC(MagicType.Artifact, MagicTargetType.Library, 1));
         single.put("artifact card with converted mana cost 6 or greater from your library", permanentCardMinCMC(MagicType.Artifact, MagicTargetType.Library, 6));
         single.put("blue instant card from your library", BLUE_INSTANT_CARD_FROM_LIBRARY);
+        single.put("aura or equipment card from your library", AURA_OR_EQUIPMENT_CARD_FROM_LIBRARY);
 
         // <color|type|subtype> permanent card from your library
         single.put("Rebel permanent card with converted mana cost 1 or less from your library", permanentCardMaxCMC(MagicSubType.Rebel, MagicTargetType.Library, 1));
@@ -2636,6 +2678,7 @@ public class MagicTargetFilterFactory {
         single.put("creature you control with a +1/+1 counter on it", CREATURE_PLUSONE_COUNTER_YOU_CONTROL);
         single.put("creature you control with a level counter on it", CREATURE_LEVEL_COUNTER_YOU_CONTROL);
         single.put("creature you control with flying", CREATURE_WITH_FLYING_YOU_CONTROL);
+        single.put("creature with flying you control", CREATURE_WITH_FLYING_YOU_CONTROL);
         single.put("creature you control with trample", CREATURE_WITH_TRAMPLE_YOU_CONTROL);
         single.put("enchanted creature you control", ENCHANTED_CREATURE_YOU_CONTROL);
         single.put("multicolored creature you control", MULTICOLORED_CREATURE_YOU_CONTROL);
@@ -2643,6 +2686,7 @@ public class MagicTargetFilterFactory {
         single.put("red creature or white creature you control", RED_OR_WHITE_CREATURE_YOU_CONTROL);
         single.put("green or white creature you control", GREEN_OR_WHITE_CREATURE_YOU_CONTROL);
         single.put("werewolf or wolf creature you control", WEREWOLF_OR_WOLF_CREATURE_YOU_CONTROL);
+        single.put("creature you control that's a wolf or a werewolf", WEREWOLF_OR_WOLF_CREATURE_YOU_CONTROL);
         single.put("Eldrazi Spawn creature you control", ELDRAZI_SPAWN_CREATURE_YOU_CONTROL);
         single.put("Eldrazi Spawn you control", ELDRAZI_SPAWN_YOU_CONTROL);
         single.put("Eldrazi Scion you control", ELDRAZI_SCION_YOU_CONTROL);
@@ -2897,6 +2941,9 @@ public class MagicTargetFilterFactory {
         single.put("non-Aura enchantment", NON_AURA_ENCHANTMENT);
         single.put("attacking Human", ATTACKING_HUMAN);
         single.put("Aura attached to a creature", AURA_ATTACHED_TO_CREATURE);
+        single.put("wolf or werewolf", WOLF_OR_WEREWOLF);
+        single.put("attacking wolf or werewolf", ATTACKING_WOLF_OR_WEREWOLF);
+        single.put("wolf or werewolf you control", WOLF_OR_WEREWOLF_YOU_CONTROL);
 
         // <color|type> spell
         single.put("spell", SPELL);
@@ -2939,6 +2986,7 @@ public class MagicTargetFilterFactory {
         single.put("Spirit or Arcane spell", SPIRIT_OR_ARCANE_SPELL);
         single.put("multicolored spell", MULTICOLORED_SPELL);
         single.put("colorless spell", COLORLESS_SPELL);
+        single.put("creature spell with converted mana cost 3 or less", CREATURE_SPELL_CMC_3_OR_LESS);
 
         // player
         single.put("opponent", OPPONENT);
