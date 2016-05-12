@@ -1,18 +1,12 @@
 [
-    new LeavesBattlefieldTrigger(MagicTrigger.REPLACEMENT) {
+    new WouldBeMovedTrigger(MagicTrigger.REPLACEMENT) {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final RemoveFromPlayAction act) {
-            final MagicPermanent it = act.getPermanent();
-            if (it.isNonToken() &&
-                it.isCreature() &&
-                it.isEnemy(permanent) &&
-                act.to(MagicLocationType.Graveyard)) {
-
+        public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MoveCardAction act) {
+            if (act.card.hasType(MagicType.Creature) &&
+                act.card.isEnemy(permanent) &&
+                act.to(MagicLocationType.Graveyard) &&
+                act.from(MagicLocationType.Battlefield)) {
                 act.setToLocation(MagicLocationType.Exile);
-                game.doAction(new PlayTokenAction(
-                    permanent.getController(),
-                    CardDefinitions.getToken("2/2 black Zombie creature token")
-                ));
             }
             return MagicEvent.NONE;
         }
