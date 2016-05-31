@@ -71,6 +71,22 @@ Thanks to
 
 Thank you for your support and have fun!
 
+Release 1.73 (May 28, 2016)
+============
+melvin
+muppet
+ShawnieBoy
+
+- fixed the following bugs:
+  * crash when highlighting card ability on stack (issue #760)
+  * Stensia Masquerade puts +1/+1 counters on itself instead of the creature that dealt damage
+  * Anafenza did not prevent death trigger from occuring (issue #765)
+  * Sigarda, Heron's Grace crash due invalid ability (issue #768)
+
+- added the following cards:
+Gideon, Ally of Zendikar, Kalitas, Traitor of Ghet,
+Ormendahl, Profane Prince, Sylvan Advocate, Westvale Abbey
+
 Release 1.72 (April 23, 2016)
 ============
 lodici
