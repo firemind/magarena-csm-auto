@@ -1,9 +1,0 @@
-name=Fistful of Force
-image=http://magiccards.info/scans/en/lw/212.jpg
-value=2.457
-rarity=C
-type=Instant
-cost={1}{G}
-effect=Target creature gets +2/+2 until end of turn. Clash with an opponent. If you win, that creature gets an additional +2/+2 and gains trample until end of turn.
-timing=removal
-oracle=Target creature gets +2/+2 until end of turn. Clash with an opponent. If you win, that creature gets an additional +2/+2 and gains trample until end of turn.

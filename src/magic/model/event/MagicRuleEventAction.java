@@ -13,7 +13,6 @@ import magic.model.choice.MagicChoiceFactory;
 import magic.model.choice.MagicFromCardFilterChoice;
 import magic.model.choice.MagicMayChoice;
 import magic.model.choice.MagicOrChoice;
-import magic.model.choice.MagicPayManaCostChoice;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.condition.MagicArtificialCondition;
 import magic.model.condition.MagicCondition;
@@ -27,6 +26,29 @@ import magic.model.target.*;
 import magic.model.trigger.*;
 
 public enum MagicRuleEventAction {
+    ChooseOneOfFour(
+        "choose one — \\(1\\) (?<effect1>.*) \\(2\\) (?<effect2>.*) \\(3\\) (?<effect3>.*) \\(4\\) (?<effect4>.*)",
+        MagicTiming.Pump,
+        "Modal"
+    ) {
+        @Override
+        public MagicChoice getChoice(final Matcher matcher) {
+            final MagicSourceEvent e1 = MagicRuleEventAction.create(matcher.group("effect1"));
+            final MagicSourceEvent e2 = MagicRuleEventAction.create(matcher.group("effect2"));
+            final MagicSourceEvent e3 = MagicRuleEventAction.create(matcher.group("effect3"));
+            final MagicSourceEvent e4 = MagicRuleEventAction.create(matcher.group("effect4"));
+            return new MagicOrChoice(e1.getChoice(), e2.getChoice(), e3.getChoice(), e4.getChoice());
+        }
+
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicSourceEvent e1 = MagicRuleEventAction.create(matcher.group("effect1"));
+            final MagicSourceEvent e2 = MagicRuleEventAction.create(matcher.group("effect2"));
+            final MagicSourceEvent e3 = MagicRuleEventAction.create(matcher.group("effect3"));
+            final MagicSourceEvent e4 = MagicRuleEventAction.create(matcher.group("effect4"));
+            return (game, event) -> event.executeModalEvent(game, e1, e2, e3, e4);
+        }
+    },
     ChooseOneOfThree(
         "choose one — \\(1\\) (?<effect1>.*) \\(2\\) (?<effect2>.*) \\(3\\) (?<effect3>.*)",
         MagicTiming.Pump,
@@ -250,6 +272,18 @@ public enum MagicRuleEventAction {
             };
         }
     },
+    ExilePermOrSpell(
+        "exile sn",
+        MagicTiming.Removal,
+        "Exile",
+        (game, event) -> {
+            if (event.getSource().isPermanent()) {
+                game.doAction(new RemoveFromPlayAction(event.getPermanent(), MagicLocationType.Exile));
+            } else {
+                game.doAction(new ChangeCardDestinationAction(event.getCardOnStack(), MagicLocationType.Exile));
+            }
+        }
+    ),
     ExileCards(
         "exile " + ARG.CARDS,
         MagicTargetHint.Negative,
@@ -283,6 +317,26 @@ public enum MagicRuleEventAction {
             }
         }
     },
+    ExilePermanentsUntilLeaves(
+        "exile " + ARG.PERMANENTS + " until SN leaves the battlefield",
+        MagicTargetHint.Negative,
+        MagicExileTargetPicker.create(),
+        MagicTiming.Removal,
+        "Exile"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent perm : ARG.permanents(event, matcher, filter)) {
+                    if (event.getPermanent().isValid()) {
+                        game.doAction(new ExileLinkAction(event.getPermanent(), perm));
+                        game.doAction(new AddTriggerAction(event.getPermanent(), ThisLeavesBattlefieldTrigger.ExileUntilLeaves));
+                    }
+                }
+            };
+        }
+    },
     ExilePermanents(
         "exile " + ARG.PERMANENTS,
         MagicTargetHint.Negative,
@@ -299,6 +353,23 @@ public enum MagicRuleEventAction {
                         event.getSource().isPermanent() ? event.getPermanent() : MagicPermanent.NONE,
                         perm
                     ));
+                }
+            };
+        }
+    },
+    RemoveFromCombat(
+        "remove " + ARG.PERMANENTS + " from combat",
+        MagicTargetHint.None,
+        MagicBounceTargetPicker.create(),
+        MagicTiming.Removal,
+        "Remove"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent perm : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new RemoveFromCombatAction(perm));
                 }
             };
         }
@@ -562,7 +633,7 @@ public enum MagicRuleEventAction {
         }
     },
     PreventAllCombatBy(
-        "prevent all combat damage that would be dealt by " + ARG.PERMANENTS + " this turn",
+        "prevent all combat damage (that would be dealt (this turn )?by )?" + ARG.PERMANENTS + "( would deal)?( this turn)?",
         MagicTargetHint.Negative,
         new MagicNoCombatTargetPicker(true, true, false),
         MagicTiming.Block,
@@ -617,7 +688,7 @@ public enum MagicRuleEventAction {
         }
     },
     PreventAllDamageBy(
-        "prevent all damage that would be dealt by " + ARG.PERMANENTS + " this turn",
+        "prevent all damage (that would be dealt (this turn )?by )?" + ARG.PERMANENTS + "( would deal)?( this turn)?",
         MagicTargetHint.Negative,
         new MagicNoCombatTargetPicker(true, true, false),
         MagicTiming.Pump,
@@ -673,7 +744,7 @@ public enum MagicRuleEventAction {
         }
     },
     Draw(
-        ARG.PLAYERS + "( )?draw(s)? " + ARG.AMOUNT + " (additional )?card(s)?( for each " + ARG.WORDRUN + ")?",
+        ARG.PLAYERS + "( )?draw(s)?( " + ARG.AMOUNT + ")? (additional )?card(s)?( (for each|equal to) " + ARG.WORDRUN + ")?",
         MagicTargetHint.Positive,
         MagicTiming.Draw,
         "Draw"
@@ -690,19 +761,9 @@ public enum MagicRuleEventAction {
                     game.logAppendMessage(event.getPlayer(), "(" + total + ")");
                 }
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.doAction(new DrawAction(it, total));
+                    game.addEvent(new MagicDrawEvent(event.getSource(), it, total));
                 }
             };
-        }
-    },
-    DrawAlt(
-        ARG.PLAYERS + "( )?draw(s)? " + ARG.AMOUNT + "?cards equal to " + ARG.WORDRUN,
-        MagicTiming.Draw,
-        "Draw"
-    ) {
-        @Override
-        public MagicEventAction getAction(final Matcher matcher) {
-            return Draw.getAction(matcher);
         }
     },
     DrawDiscard(
@@ -798,7 +859,7 @@ public enum MagicRuleEventAction {
         }
     },
     GainLife(
-        ARG.PLAYERS + "( )?gain(s)? " + ARG.AMOUNT + " life( for each " + ARG.WORDRUN + ")?",
+        ARG.PLAYERS + "( )?gain(s)?( " + ARG.AMOUNT + ")? life( (for each|equal to) " + ARG.WORDRUN + ")?",
         MagicTargetHint.Positive,
         MagicTiming.Removal,
         "+Life"
@@ -821,7 +882,7 @@ public enum MagicRuleEventAction {
         }
     },
     LoseLife(
-        ARG.PLAYERS + "( )?lose(s)? " + ARG.AMOUNT + " life( for each " + ARG.WORDRUN + ")?",
+        ARG.PLAYERS + "( )?lose(s)?( " + ARG.AMOUNT + ")? life( (for each|equal to) " + ARG.WORDRUN + ")?",
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "-Life"
@@ -886,6 +947,34 @@ public enum MagicRuleEventAction {
             };
         }
     },
+    PumpX(
+        ARG.PERMANENTS + "( gain(s)? (?<ability>.+?) and)? get(s)? (an additional )?(?<pt>[X0-9+]+/[X0-9+]+) until end of turn, where X is " + ARG.WORDRUN,
+        MagicTargetHint.Positive,
+        MagicPumpTargetPicker.create(),
+        MagicTiming.Pump,
+        "Pump"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final String[] pt = ARG.ptStr(matcher);
+            final MagicAmount countX = MagicAmountParser.build(ARG.wordrun(matcher));
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            final MagicAbilityList abilityList = matcher.group("ability") != null ?
+                MagicAbility.getAbilityList(matcher.group("ability")) : null;
+            return (game, event) -> {
+                final int X = countX.getAmount(event);
+                final int power = MagicAmountParser.getX(pt[0], X);
+                final int toughness = MagicAmountParser.getX(pt[1], X);
+                game.logAppendMessage(event.getPlayer(), "(X=" + X + ")");
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new ChangeTurnPTAction(it, power, toughness));
+                    if (abilityList != null) {
+                        game.doAction(new GainAbilityAction(it, abilityList));
+                    }
+                }
+            };
+        }
+    },
     Weaken(
         ARG.PERMANENTS + " get(s)? (?<pt>[X0-9-]+/[X0-9-]+) until end of turn( for each " + ARG.WORDRUN + ")?",
         MagicTargetHint.Negative,
@@ -901,6 +990,25 @@ public enum MagicRuleEventAction {
         public MagicTargetPicker<?> getPicker(final Matcher matcher) {
             final String[] pt = ARG.ptStr(matcher);
             final MagicAmount toughnessCounter = MagicAmountParser.build(pt[1]);
+            return new MagicWeakenTargetPicker(toughnessCounter);
+        }
+    },
+    WeakenX(
+        ARG.PERMANENTS + "( gain(s)? (?<ability>.+?) and)? get(s)? (an additional )?(?<pt>[X0-9-]+/[X0-9-]+) until end of turn, where X is " + ARG.WORDRUN,
+        MagicTargetHint.Negative,
+        MagicTiming.Removal,
+        "Weaken"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            return PumpX.getAction(matcher);
+        }
+
+        @Override
+        public MagicTargetPicker<?> getPicker(final Matcher matcher) {
+            final String[] pt = ARG.ptStr(matcher);
+            final MagicAmount countX = MagicAmountParser.build(ARG.wordrun(matcher));
+            final MagicAmount toughnessCounter = pt[1].equalsIgnoreCase("-x") ? countX : MagicAmountParser.build(pt[1]);
             return new MagicWeakenTargetPicker(toughnessCounter);
         }
     },
@@ -1134,7 +1242,7 @@ public enum MagicRuleEventAction {
         MagicTiming.Draw,
         "Return",
         (game, event) -> game.doAction(new ShiftCardAction(
-            event.getCard(),
+            event.getSourceCard(),
             MagicLocationType.Graveyard,
             MagicLocationType.OwnersHand
         ))
@@ -1148,7 +1256,7 @@ public enum MagicRuleEventAction {
         public MagicEventAction getAction(final Matcher matcher) {
             final List<MagicPlayMod> mods = ARG.mods(matcher);
             return (game, event) -> game.doAction(new ReanimateAction(
-                event.getCard(),
+                event.getSourceCard(),
                 event.getPlayer(),
                 mods
             ));
@@ -1159,13 +1267,25 @@ public enum MagicRuleEventAction {
         MagicTiming.Draw,
         "Return",
         (game, event) -> game.doAction(new ShiftCardAction(
-            event.getPermanent().getCard(),
+            event.getSourceCard(),
             MagicLocationType.Graveyard,
             MagicLocationType.OwnersHand
         ))
     ),
+    ReturnPermOrSpell(
+        "return sn to its owner's hand",
+        MagicTiming.Draw,
+        "Return",
+        (game, event) -> {
+            if (event.getSource().isPermanent()) {
+                game.doAction(new RemoveFromPlayAction(event.getPermanent(), MagicLocationType.OwnersHand));
+            } else {
+                game.doAction(new ChangeCardDestinationAction(event.getCardOnStack(), MagicLocationType.OwnersHand));
+            }
+        }
+    ),
     RecoverCards(
-        "return " + ARG.CARDS + " to (your|its owner's) hand",
+        "return " + ARG.CARDS + " to (your hand|its owner's hand|their owner's hand|their owners' hands)",
         MagicTargetHint.Positive,
         MagicGraveyardTargetPicker.ReturnToHand,
         MagicTiming.Draw,
@@ -1310,14 +1430,15 @@ public enum MagicRuleEventAction {
         }
     },
     RevealToHand(
-        "reveal the top " + ARG.AMOUNT + " cards of your library\\. Put all " + ARG.WORDRUN + " revealed this way into your hand and the rest on the bottom of your library in any order",
+        "reveal the top " + ARG.AMOUNT + " cards of your library\\. Put all " + ARG.WORDRUN + " revealed this way into your hand and the rest ((?<graveyard>into your graveyard)|(?<bottom>on the bottom of your library in any order))",
         MagicTiming.Draw,
         "Reveal"
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             final int n = ARG.amount(matcher);
-            final MagicTargetFilter<MagicCard> filter = MagicTargetFilterFactory.Card(ARG.wordrun(matcher) + " from your hand");
+            final MagicTargetFilter<MagicCard> filter = MagicTargetFilterFactory.Card(ARG.wordrun(matcher) + " from your library");
+            final MagicLocationType restLocation = matcher.group("graveyard") != null ? MagicLocationType.Graveyard : MagicLocationType.BottomOfOwnersLibrary;
             return (game, event) -> {
                 final List<MagicCard> topN = event.getPlayer().getLibrary().getCardsFromTop(n);
                 game.doAction(new RevealAction(topN));
@@ -1327,10 +1448,22 @@ public enum MagicRuleEventAction {
                         MagicLocationType.OwnersLibrary,
                         filter.accept(event.getSource(), event.getPlayer(), it) ?
                             MagicLocationType.OwnersHand :
-                            MagicLocationType.BottomOfOwnersLibrary
+                            restLocation
                     ));
                 }
             };
+        }
+    },
+    RevealToHand2(
+        "reveal the top " + ARG.AMOUNT + " cards of your library\\. You may put a(n)? " + ARG.WORDRUN + " from among them into your hand. Put the rest into your graveyard",
+        MagicTiming.Draw,
+        "Reveal"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int amount = ARG.amount(matcher);
+            final MagicTargetFilter<MagicCard> filter = MagicTargetFilterFactory.Card(ARG.wordrun(matcher) + " from your library");
+            return (game, event) -> game.addEvent(MagicTutorTopEvent.reveal(event, amount, filter));
         }
     },
     SearchLibraryToHand(
@@ -1589,6 +1722,36 @@ public enum MagicRuleEventAction {
                 MagicActivation.NO_COND;
         }
     },
+    PutTokenCopy(
+        "(you )?put a token onto the battlefield that's a copy of " + ARG.PERMANENTS + "\\." + ARG.MODS,
+        MagicTiming.Token,
+        "Token"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            final List<MagicPlayMod> mods = ARG.mods(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new PlayTokenAction(
+                        event.getPlayer(),
+                        it,
+                        mods
+                    ));
+                }
+            };
+        }
+    },
+    PutTokenCopyAlt(
+        "(you )?put a token that's a copy of " + ARG.PERMANENTS + " onto the battlefield" + ARG.MODS,
+        MagicTiming.Token,
+        "Token"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            return PutTokenCopy.getAction(matcher);
+        }
+    },
     PutTokens(
         ARG.PLAYERS + "( )?put(s)? " + ARG.AMOUNT + " (?<name>[^\\.]*token[^\\.]*) onto the battlefield" + ARG.MODS + "( )?(for each " + ARG.WORDRUN + ")?",
         MagicTiming.Token,
@@ -1738,6 +1901,43 @@ public enum MagicRuleEventAction {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             return (game, event) -> game.addEvent(MagicScryEvent.Pseudo(event));
+        }
+    },
+    TutorTopReveal(
+        "Look at the top " + ARG.AMOUNT + " cards of your library. You may reveal a(n)? " + ARG.WORDRUN + " from among them and put it into your hand\\. " +
+        "(Then )?Put the rest on the bottom of your library in any order",
+        MagicTiming.Draw,
+        "Look"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int amount = ARG.amount(matcher);
+            final MagicTargetFilter<MagicCard> filter = MagicTargetFilterFactory.Card(ARG.wordrun(matcher) + " from your library");
+            return (game, event) -> game.addEvent(MagicTutorTopEvent.look(event, amount, filter));
+        }
+    },
+    TutorTopBottom(
+        "Look at the top " + ARG.AMOUNT + " cards of your library. Put " + ARG.AMOUNT2 + " of (them|those cards) into your hand and the (other|rest) on the bottom of your library( in any order)?",
+        MagicTiming.Draw,
+        "Look"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int n = ARG.amount(matcher);
+            final int h = ARG.amount2(matcher);
+            return (game, event) -> game.addEvent(MagicTutorTopEvent.toBottom(event, n, h));
+        }
+    },
+    TutorTopGraveyard(
+        "Look at the top " + ARG.AMOUNT + " cards of your library. Put " + ARG.AMOUNT2 + " of them into your hand and the (other|rest) into your graveyard",
+        MagicTiming.Draw,
+        "Look"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int n = ARG.amount(matcher);
+            final int h = ARG.amount2(matcher);
+            return (game, event) -> game.addEvent(MagicTutorTopEvent.toGraveyard(event, n, h));
         }
     },
     LoseGame(
@@ -1906,12 +2106,21 @@ public enum MagicRuleEventAction {
         "Flip",
         (game, event) -> game.doAction(new FlipAction(event.getPermanent()))
     ),
-    TransformSelf(
-        "transform sn",
+    Transform(
+        "transform " + ARG.PERMANENTS,
         MagicTiming.Pump,
-        "Transform",
-        (game, event) -> game.doAction(new TransformAction(event.getPermanent()))
-    ),
+        "Transform"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new TransformAction(it));
+                }
+            };
+        }
+    },
     Populate(
         "populate",
         MagicTiming.Token,
@@ -1987,7 +2196,21 @@ public enum MagicRuleEventAction {
             return (game, event) -> game.doAction(new PlayTokenAction(event.getPlayer(), CardDefinitions.getToken("colorless Clue artifact token")));
         }
     },
-
+    BecomeBlocked(
+        ARG.PERMANENTS + " become(s)? blocked",
+        MagicTiming.Block,
+        "Block"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(ChangeStateAction.Set(it, MagicPermanentState.Blocked));
+                }
+            };
+        }
+    },
     BecomesAlt(
         "(?<duration>until end of turn, )" + ARG.PERMANENTS + " becomes( a| an)?( )?(?<pt>[0-9]+/[0-9]+)? (?<all>.*?)( (with|and gains) (?<ability>.*?))?(?<additionTo>((\\.)? It's| that's) still [^\\.]*)?",
         MagicTiming.Animate,
@@ -2318,6 +2541,19 @@ public enum MagicRuleEventAction {
             }
         }
     },
+    NoCombatDamage(
+        ARG.IT + " assigns no combat damage this turn"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            return (game, event) -> {
+                game.doAction(ChangeStateAction.Set(
+                    ARG.itPermanent(event, matcher),
+                    MagicPermanentState.NoCombatDamage
+                ));
+            };
+        }
+    },
     GainControl(
         "gain control of " + ARG.PERMANENTS + "(?<ueot> until end of turn)?",
         MagicTargetHint.Negative,
@@ -2592,7 +2828,7 @@ public enum MagicRuleEventAction {
                 final String rider = (hasReference && matcher.group().contains("player")) ?
                     matcher.replaceAll("target player") :
                     matcher.replaceAll("target permanent");
-                final String riderWithoutPrefix = rider.replaceAll("^(and|then) ", "");
+                final String riderWithoutPrefix = rider.replaceAll("^(and|then|If you do,) ", "");
                 final MagicSourceEvent riderSourceEvent = build(riderWithoutPrefix);
 
                 //rider cannot have choices
@@ -2682,8 +2918,8 @@ public enum MagicRuleEventAction {
     }
 
     static final Pattern INTERVENING_IF = Pattern.compile("if " + ARG.COND + ", " + ARG.ANY, Pattern.CASE_INSENSITIVE);
-    static final Pattern MAY_PAY = Pattern.compile("you may pay " + ARG.MANACOST + "\\. if you do, .+", Pattern.CASE_INSENSITIVE);
-    static final Pattern MAY_COST = Pattern.compile("you may " + ARG.COST + "\\. if you don't, .+", Pattern.CASE_INSENSITIVE);
+    static final Pattern MAY_DO = Pattern.compile("you may " + ARG.MAY_COST + "\\. if you do, .+", Pattern.CASE_INSENSITIVE);
+    static final Pattern MAY_DONT = Pattern.compile("you may " + ARG.COST + "\\. if you don't, .+", Pattern.CASE_INSENSITIVE);
 
     public static MagicSourceEvent create(final String text) {
         return build(renameThisThat(text));
@@ -2699,19 +2935,21 @@ public enum MagicRuleEventAction {
         final MagicCondition ifCond = ifMatched ? MagicConditionParser.build(ARG.cond(ifMatcher)) : MagicCondition.NONE;
         final String ruleWithoutIf = ifMatched ? ARG.any(ifMatcher) : rule;
 
-        // handle you pay
-        final Matcher mayPayMatcher = MAY_PAY.matcher(ruleWithoutIf);
-        final boolean mayPayMatched = mayPayMatcher.matches();
-        final MagicManaCost manaCost = mayPayMatched ? MagicManaCost.create(ARG.manacost(mayPayMatcher)) : MagicManaCost.ZERO;
-        String prefix = mayPayMatched ? "^(Y|y)ou may pay [^\\.]+\\. If you do, " : "^(Y|y)ou may ";
-
-        // handle you <cost>. if you don't, <effect>
-        final Matcher mayCostMatcher = MAY_COST.matcher(ruleWithoutIf);
-        final boolean mayCostMatched = mayCostMatcher.matches();
-        final MagicMatchedCostEvent mayCost = mayCostMatched ?
-            new MagicRegularCostEvent(ARG.cost(mayCostMatcher)) :
+        // handle you may <cost>. if you do, <effect>
+        final Matcher mayDoMatcher = MAY_DO.matcher(ruleWithoutIf);
+        final boolean mayDoMatched = mayDoMatcher.matches();
+        final MagicMatchedCostEvent mayDoCost = mayDoMatched ?
+            new MagicRegularCostEvent(ARG.cost(mayDoMatcher)) :
             MagicRegularCostEvent.NONE;
-        prefix = mayCostMatched ? "^(Y|y)ou may [^\\.]+\\. If you don't, " : prefix;
+        String prefix = mayDoMatched ? "^(Y|y)ou may [^\\.]+\\. If you do, " : "^(Y|y)ou may ";
+
+        // handle you may <cost>. if you don't, <effect>
+        final Matcher mayDontMatcher = MAY_DONT.matcher(ruleWithoutIf);
+        final boolean mayDontMatched = mayDontMatcher.matches();
+        final MagicMatchedCostEvent mayDontCost = mayDontMatched ?
+            new MagicRegularCostEvent(ARG.cost(mayDontMatcher)) :
+            MagicRegularCostEvent.NONE;
+        prefix = mayDontMatched ? "^(Y|y)ou may [^\\.]+\\. If you don't, " : prefix;
 
         final String ruleWithoutMay = ruleWithoutIf.replaceFirst(prefix, "");
         final boolean optional = ruleWithoutMay.length() < ruleWithoutIf.length();
@@ -2730,17 +2968,20 @@ public enum MagicRuleEventAction {
         final String contextRule = personalize(choice, concat(ruleWithoutMay, part));
         final String playerRule = personalize(choice, concat(rule, part));
 
+        //'If you don't' effect cannot have a choice as MagicMayChoice only prompts for choice in "Yes" case
+        if (mayDontMatched && choice.isValid()) {
+            throw new RuntimeException("'If you don't' effect should not have choice: \"" + effect + "\"");
+        }
+
         final MagicChoiceFactory choiceFact = (source, player, ref) -> {
-            if (mayPayMatched) {
+            if (mayDoMatched) {
                 return new MagicMayChoice(
-                    MagicMessage.replaceName(pnMayChoice, source, player, ref),
-                    new MagicPayManaCostChoice(manaCost),
+                    MagicMessage.replaceName(capitalize(ARG.cost(mayDoMatcher)) + "? If you do, " + effect, source, player, ref),
                     choice
                 );
-            } else if (mayCostMatched) {
+            } else if (mayDontMatched) {
                 return new MagicMayChoice(
-                    MagicMessage.replaceName(capitalize(ARG.cost(mayCostMatcher)) + "? If you don't, " + effect, source, player, ref),
-                    choice
+                    MagicMessage.replaceName(capitalize(ARG.cost(mayDontMatcher)) + "? If you don't, " + effect, source, player, ref)
                 );
             } else if (optional) {
                 return new MagicMayChoice(
@@ -2752,8 +2993,9 @@ public enum MagicRuleEventAction {
             }
         };
 
-        final String eventDesc = mayPayMatched ? "PN may$ pay " + manaCost + "$. If PN does, " + contextRule
-            : mayCostMatched ? "PN may$ " + ARG.cost(mayCostMatcher) + ". If PN doesn't, " + contextRule
+        final String eventDesc =
+              mayDoMatched ? "PN may$ " + ARG.cost(mayDoMatcher) + ". If PN does, " + contextRule
+            : mayDontMatched ? "PN may$ " + ARG.cost(mayDontMatcher) + ". If PN doesn't, " + contextRule
             : optional ? "PN may$ " + mayTense(contextRule)
             : capitalize(playerRule);
 
@@ -2767,16 +3009,23 @@ public enum MagicRuleEventAction {
                 if (ifCond.accept(event.getSource()) == false) {
                     return;
                 }
-                final MagicEvent costEvent = mayCost.getEvent(event.getSource());
+
+                final MagicMatchedCostEvent matchedCost =
+                    mayDoMatched ? mayDoCost
+                  : mayDontMatched ? mayDontCost
+                  : MagicRegularCostEvent.NONE;
+
+                final MagicEvent costEvent = matchedCost.getEvent(event.getSource());
+
                 if (optional == false || (event.isYes() && costEvent.isSatisfied())) {
-                    if (mayCost != MagicRegularCostEvent.NONE) {
+                    if (matchedCost != MagicRegularCostEvent.NONE) {
                         game.addEvent(costEvent);
                     }
-                    if (mayCostMatched == false) {
+                    if (mayDontMatched == false) {
                         action.executeEvent(game, event);
                     }
                 } else {
-                    if (mayCostMatched) {
+                    if (mayDontMatched) {
                         action.executeEvent(game, event);
                     }
                 }

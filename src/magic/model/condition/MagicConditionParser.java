@@ -6,11 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import magic.model.ARG;
+import magic.model.MagicPermanent;
 import magic.model.MagicAbility;
 import magic.model.MagicColor;
 import magic.model.MagicCounterType;
 import magic.model.event.MagicMatchedCostEvent;
 import magic.model.target.MagicTargetFilterFactory;
+import magic.model.target.MagicTargetFilter;
 
 public enum MagicConditionParser {
 
@@ -174,7 +176,7 @@ public enum MagicConditionParser {
             return MagicConditionFactory.CounterEqual(counterType, amount);
         }
     },
-    CountersNone("(SN|it) (has|had) no " + ARG.WORD1 + " counters on it") {
+    CountersNone("((SN|it) (has|had)|there are) no " + ARG.WORD1 + " counters on (it|SN)") {
         public MagicCondition toCondition(final Matcher arg) {
             final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(arg));
             return MagicConditionFactory.CounterEqual(counterType, 0);
@@ -205,14 +207,27 @@ public enum MagicConditionParser {
             return MagicCondition.IS_NOT_ENCHANTMENT;
         }
     },
-    IsSpirit("(SN is|it's) a Spirit") {
+    IsPermanent("(SN is|it's) a(n)? " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
-            return MagicCondition.IS_SPIRIT;
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            return MagicConditionFactory.SelfIs(filter);
         }
     },
-    IsWarrior("(SN is|it's) a Warrior") {
+    EquippedIsA("equipped creature is( a| an)? " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
-            return MagicCondition.IS_WARRIOR;
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            return MagicConditionFactory.EquippedIs(filter);
+        }
+    },
+    EnchantedIsMountain("enchanted land is a basic Mountain") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.ENCHANTED_IS_BASIC_MOUNTAIN;
+        }
+    },
+    EnchantedIs("enchanted creature is( a| an)? " + ARG.WORDRUN) {
+        public MagicCondition toCondition(final Matcher arg) {
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            return MagicConditionFactory.EnchantedIs(filter);
         }
     },
     IsUntapped("(SN is|it's) untapped") {
@@ -225,15 +240,17 @@ public enum MagicConditionParser {
             return MagicCondition.TAPPED_CONDITION;
         }
     },
-    IsMonstrous("SN is monstrous") {
+    IsMonstrous("(SN is|it's) monstrous") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.IS_MONSTROUS_CONDITION;
         }
     },
     IsRenowned("(SN is|it's) renowned") {
-        public MagicCondition toCondition(final Matcher arg) { return MagicCondition.IS_RENOWNED_CONDITION; }
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.IS_RENOWNED_CONDITION;
+        }
     },
-    IsBlocked("it's blocked") {
+    IsBlocked("(SN is|it's) blocked") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.IS_BLOCKED_CONDITION;
         }
@@ -375,6 +392,21 @@ public enum MagicConditionParser {
             return MagicCondition.END_OF_COMBAT_CONDITION;
         }
     },
+    DuringCombatAfterBlockers("during combat after blockers are declared") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.DURING_COMBAT_AFTER_BLOCKERS;
+        }
+    },
+    DuringBlockers("during the declare blockers step") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.DURING_BLOCKERS;
+        }
+    },
+    DuringCombatBeforeBlockers("during combat before blockers are declared") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.DURING_COMBAT_BEFORE_BLOCKERS;
+        }
+    },
     YourTurn("during your turn") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.YOUR_TURN_CONDITION;
@@ -496,16 +528,24 @@ public enum MagicConditionParser {
         }
     },
     CreatureInYourGraveyard("you have a creature card in your graveyard") {
-        public MagicCondition toCondition(final Matcher arf) { return MagicCondition.HAS_CREATURE_IN_GRAVEYARD;}
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.HAS_CREATURE_IN_GRAVEYARD;
+        }
     },
     CreatureInYourHand("you have a creature card in your hand") {
-        public MagicCondition toCondition(final Matcher arf) { return MagicCondition.HAS_CREATURE_IN_HAND;}
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.HAS_CREATURE_IN_HAND;
+        }
     },
     ArtifactInYourGraveyard("you have an artifact card in your graveyard") {
-        public MagicCondition toCondition(final Matcher arf) { return MagicCondition.HAS_ARTIFACT_IN_GRAVEYARD;}
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.HAS_ARTIFACT_IN_GRAVEYARD;
+        }
     },
     EquipmentInYourHand("you have an equipment card in your hand") {
-        public MagicCondition toCondition(final Matcher arf) { return MagicCondition.HAS_EQUIPMENT_IN_HAND;}
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.HAS_EQUIPMENT_IN_HAND;
+        }
     },
     InstantOrSorceryInGraveyard("there is an instant or sorcery card in a graveyard") {
         public MagicCondition toCondition(final Matcher arg) {

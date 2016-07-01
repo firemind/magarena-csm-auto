@@ -1,9 +1,11 @@
 package magic.ui.duel.viewer;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import magic.data.GeneralConfig;
+import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
 import magic.ui.MagicImages;
 import magic.ui.cardtable.ICardSelectionListener;
@@ -28,9 +31,15 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class CardViewer extends JPanel implements ICardSelectionListener {
 
+    private static final Image TRANSFORM_ICON =
+            MagicImages.getIcon(MagicIcon.CYCLE_ICON).getImage();
+
     private final Dimension IMAGE_SIZE = getImageSize();
 
     private Image thisImage;
+    private Image gsImage;
+    private boolean isMouseOver = false;
+    private int defaultCursor = Cursor.DEFAULT_CURSOR;
     private MagicCardDefinition thisCard = MagicCardDefinition.UNKNOWN;
     private boolean isSwitchedAspect = false;
     private CardImageWorker worker;
@@ -60,7 +69,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
         add(cardLabel, "w 100%");
 
         setDefaultImage();
-        setTransformCardListener();
+        setMouseListener();
     }
 
     private void setDefaultImage() {
@@ -75,44 +84,48 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
         return lbl;
     }
 
-    private void setTransformCardListener() {
+    private void showColorImageIfGreyscale(boolean b) {
+        isMouseOver = b;
+        if (thisCard.isInvalid() || thisCard.hasMultipleAspects()) {
+            repaint();
+        }
+    }
+
+    private void setMouseListener() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (thisCard != null) {
-                    SwingUtilities.invokeLater(() -> {
-                        switchCardAspect();
-                    });
+                if (thisCard.hasMultipleAspects()) {
+                    switchCardAspect();
                 }
             }
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (thisCard.hasMultipleAspects() && thisCard.isValid()) {
-                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                } else {
-                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                }
+                defaultCursor = thisCard.hasMultipleAspects()
+                        ? Cursor.HAND_CURSOR
+                        : Cursor.DEFAULT_CURSOR;
+                setCursor(Cursor.getPredefinedCursor(defaultCursor));
+                showColorImageIfGreyscale(true);
             }
             @Override
             public void mouseExited(MouseEvent e) {
                 if (isSwitchedAspect) {
                     switchCardAspect();
                 }
+                showColorImageIfGreyscale(false);
             }
         });
     }
 
     private void switchCardAspect() {
-        if (thisCard.hasMultipleAspects()) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            if (thisCard.isDoubleFaced()) {
-                setCard(thisCard.getTransformedDefinition());
-            } else if (thisCard.isFlipCard()) {
-                setCard(thisCard.getFlippedDefinition());
-            }
-            isSwitchedAspect = !isSwitchedAspect;
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        if (thisCard.isDoubleFaced()) {
+            setCard(thisCard.getTransformedDefinition());
+        } else if (thisCard.isFlipCard()) {
+            setCard(thisCard.getFlippedDefinition());
         }
+        isSwitchedAspect = !isSwitchedAspect;
+        setCursor(Cursor.getPredefinedCursor(defaultCursor));
     }
 
     public final void setCard(final MagicCardDefinition aCard) {
@@ -156,7 +169,10 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
             throbber.setVisible(true);
             cardLabel.setVisible(true);
         } else {
-            this.thisImage = aImage;
+            thisImage = aImage;
+            gsImage = thisCard.isInvalid() && aImage != MagicImages.getMissingCardImage()
+                    ? GraphicsUtils.getGreyScaleImage(aImage)
+                    : null;
             isImagePending = false;
             throbber.setVisible(false);
             cardLabel.setVisible(false);
@@ -167,7 +183,12 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
     @Override
     public void paintComponent(final Graphics g) {
         if (thisImage != null) {
-            g.drawImage(thisImage, 0, 0, null);
+            final Graphics2D g2d = (Graphics2D) g;
+            g2d.drawImage(gsImage != null && !isMouseOver ? gsImage : thisImage, 0, 0, null);
+            if (thisCard.hasMultipleAspects() && !isMouseOver) {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+                g2d.drawImage(TRANSFORM_ICON, (getWidth() - TRANSFORM_ICON.getWidth(null)) / 2, 60, null);
+            }
         }
         if (isImagePending) {
             super.paintComponent(g);
@@ -197,11 +218,7 @@ public class CardViewer extends JPanel implements ICardSelectionListener {
             image = GraphicsUtils.scale(image, prefSize.width, prefSize.height);
         }
 
-        if (aCard.isInvalid() && image != MagicImages.getMissingCardImage()) {
-            return GraphicsUtils.getGreyScaleImage(image);
-        } else {
-            return image;
-        }
+        return image;
     }
 
     private Timer getCooldownTimer() {

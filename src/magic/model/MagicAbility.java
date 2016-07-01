@@ -74,6 +74,7 @@ public enum MagicAbility {
     ProtectionFromRed("(protection )?from red",20),
     ProtectionFromWhite("(protection )?from white",20),
     ProtectionFromMonoColored("protection from monocolored",50),
+    ProtectionFromMultiColored("protection from multicolored",50),
     ProtectionFromAllColors("protection from all colors",150),
     ProtectionFromColoredSpells("protection from colored spells",100),
     ProtectionFromEverything("protection from everything",200),
@@ -380,6 +381,12 @@ public enum MagicAbility {
             card.add(new MagicUnearthActivation(manaCost));
         }
     },
+    EquipCond("Equip( |—)" + ARG.COST + " to a " + ARG.WORDRUN, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            card.add(new MagicEquipActivation(matchedCostEvents, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))));
+        }
+    },
     Equip("Equip( |—)" + ARG.COST, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
@@ -611,6 +618,14 @@ public enum MagicAbility {
             card.add(MagicHandCastActivation.create(cardDef, arg, "Alt"));
         }
     },
+    AlternateCostIf("If " + ARG.COND + ", you may " + ARG.ANY + " rather than pay SN's mana cost\\.", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher matcher) {
+            final MagicCondition condition = MagicConditionParser.build(ARG.cond(matcher));
+            final String arg = matcher.group("any").replace(" and ",", ");
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicHandCastActivation.create(cardDef, condition, arg, "Alt"));
+        }
+    },
     Awaken("awaken " + ARG.NUMBER + "—" + ARG.COST, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicCardDefinition cardDef = (MagicCardDefinition)card;
@@ -772,7 +787,7 @@ public enum MagicAbility {
             card.add(BlocksTrigger.create(filter, sourceEvent));
         }
     },
-    BecomesBlockedEffect("Whenever " + ARG.WORDRUN + " becomes blocked, " + ARG.EFFECT, 10) {
+    BecomesBlockedEffect("When(ever)? " + ARG.WORDRUN + " becomes blocked, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(BecomesBlockedTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
@@ -864,21 +879,19 @@ public enum MagicAbility {
             ));
         }
     },
-    DamageCreature("Whenever " + ARG.WORDRUN + " deals damage to a creature, " + ARG.EFFECT, 10) {
+    YouSacrificeEffect("When(ever)? you sacrifice " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToCreature(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Any
+            card.add(SacrificeTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
+                MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    CombatDamageCreature("Whenever " + ARG.WORDRUN + " deals combat damage to a creature, " + ARG.EFFECT, 10) {
+    PlayerSacrificeEffect("When(ever)? a player sacrifices " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToCreature(
+            card.add(SacrificeTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Combat
+                MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
@@ -900,37 +913,21 @@ public enum MagicAbility {
             ));
         }
     },
-    DamageToOpponent("When(ever)? " + ARG.WORDRUN + " deals damage to an opponent, " + ARG.EFFECT, 10) {
+    DamageToTarget("When(ever)? " + ARG.WORDRUN + " deals damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToOpponent(
+            card.add(DamageIsDealtTrigger.DamageToTarget(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicTargetFilterFactory.Target(ARG.wordrun2(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Any
             ));
         }
     },
-    CombatDamageToOpponent("When(ever)? " + ARG.WORDRUN + " deals combat damage to an opponent, " + ARG.EFFECT, 10) {
+    CombatDamageToTarget("When(ever)? " + ARG.WORDRUN + " deals combat damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToOpponent(
+            card.add(DamageIsDealtTrigger.DamageToTarget(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Combat
-            ));
-        }
-    },
-    DamageToPlayer("When(ever)? " + ARG.WORDRUN + " deals damage to a player, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToPlayer(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Any
-            ));
-        }
-    },
-    CombatDamageToPlayer("When(ever)? " + ARG.WORDRUN + " deals combat damage to a player, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToPlayer(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicTargetFilterFactory.Target(ARG.wordrun2(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
                 MagicDamage.Combat
             ));
@@ -1222,6 +1219,13 @@ public enum MagicAbility {
         }
     },
 
+    // planeswalker loyalty ability
+    PlaneswalkerAbility("[+−]?[0-9]+: " + ARG.ANY, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicPlaneswalkerActivation.create(arg.group()));
+        }
+    },
+
     // activated permanent abilities
     ActivatedAbility("[^\"]+:(?! Add)" + ARG.ANY, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
@@ -1306,7 +1310,7 @@ public enum MagicAbility {
             }
         }
     },
-    ConditionPumpGainAlt("As long as (?<wordrun>[^\\,]*), " + ARG.WORDRUN2 + " (gets " + ARG.PT + "(.| ))?(and )?(" + ARG.ANY + ")?", 0) {
+    ConditionPumpGainAlt("As long as (?<wordrun>[^\\,]*), " + ARG.WORDRUN2 + " (?=(get|has|can))(gets " + ARG.PT + "(.| ))?(and )?(" + ARG.ANY + ")?", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             ConditionPumpGain.addAbilityImpl(card, arg);
         }
@@ -1356,6 +1360,18 @@ public enum MagicAbility {
     LordPumpEach(ARG.WORDRUN + " get(s)? " + ARG.PT + " for each " + ARG.WORDRUN2 + "\\.", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicPowerToughness pt = ARG.mpt(arg);
+            final MagicTargetFilter<MagicPermanent> affected = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicAmount count = MagicAmountParser.build(ARG.wordrun2(arg));
+            card.add(MagicStatic.genPTStatic(affected, count, pt));
+        }
+    },
+    LordPumpX(ARG.WORDRUN + " get(s)? " + ARG.XPT + ", where X is " + ARG.WORDRUN2 + "\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final String[] ptStr = ARG.ptStr(arg);
+            final MagicPowerToughness pt = new MagicPowerToughness(
+                MagicAmountParser.getX(ptStr[0], 1),
+                MagicAmountParser.getX(ptStr[1], 1)
+            );
             final MagicTargetFilter<MagicPermanent> affected = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
             final MagicAmount count = MagicAmountParser.build(ARG.wordrun2(arg));
             card.add(MagicStatic.genPTStatic(affected, count, pt));

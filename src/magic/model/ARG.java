@@ -43,6 +43,7 @@ public class ARG {
     }
 
     public static final String COST = "(?<cost>.+)";
+    public static final String MAY_COST = "(?<cost>(?!search|draw|exile).+)";
     public static String cost(final Matcher m) {
         return m.group("cost");
     }
@@ -96,6 +97,7 @@ public class ARG {
     }
 
     public static final String PT = "(?<pt>[+-][0-9]+/[+-][0-9]+)";
+    public static final String XPT = "(?<pt>[+-][X0]+/[+-][X0]+)";
     public static int[] pt(final Matcher m) {
         final String[] pt = m.group("pt").replace("+","").split("/");
         return new int[]{Integer.parseInt(pt[0]), Integer.parseInt(pt[1])};

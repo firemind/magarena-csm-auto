@@ -113,6 +113,25 @@ cards/unimplementable.tsv.add: cards/candidates_full.txt
 	grep "|" $^ | sed 's/NAME://;s/|/\t/' >> $(basename $@)
 	make $^
 
+cards/staples.txt:
+	curl \
+	http://www.mtggoldfish.com/format-staples/standard/full/creatures \
+	http://www.mtggoldfish.com/format-staples/standard/full/lands \
+	http://www.mtggoldfish.com/format-staples/standard/full/spells \
+	http://www.mtggoldfish.com/format-staples/modern/full/creatures \
+	http://www.mtggoldfish.com/format-staples/modern/full/lands \
+	http://www.mtggoldfish.com/format-staples/modern/full/spells \
+	http://www.mtggoldfish.com/format-staples/pauper/full/creatures \
+	http://www.mtggoldfish.com/format-staples/pauper/full/lands \
+	http://www.mtggoldfish.com/format-staples/pauper/full/spells \
+	http://www.mtggoldfish.com/format-staples/legacy/full/creatures \
+	http://www.mtggoldfish.com/format-staples/legacy/full/lands \
+	http://www.mtggoldfish.com/format-staples/legacy/full/spells \
+	http://www.mtggoldfish.com/format-staples/vintage/full/creatures \
+	http://www.mtggoldfish.com/format-staples/vintage/full/lands \
+	http://www.mtggoldfish.com/format-staples/vintage/full/spells \
+	| pup ".col-card a text{}" | sed "s/&#39;/'/g;s/ (.*)//g" | sort | uniq > $@
+
 %.out: $(MAG)
 	SGE_TASK_ID=$* exp/eval_mcts.sh
 	
@@ -505,6 +524,9 @@ checks: \
 remove_extra_missing:
 	git rm `join <(ls -1 release/Magarena/scripts | sort) <(ls -1 release/Magarena/scripts_missing | sort) | sed 's/^/release\/Magarena\/scripts_missing\//'`
 
+remove_extra_groovy:
+	git rm `make check_requires_groovy_code | grep '< ' | sed 's/< /release\/Magarena\/scripts\//;s/$$/.groovy/'`
+
 # check rarity using meta.xml
 check_rarity: scripts/fix_rarity.scala cards/meta.xml
 	cat release/Magarena/scripts/*.txt | scala $^ | grep -v "not be L" | grep -v "Windseeker Centaur" | ${NO_OUTPUT}
@@ -547,7 +569,7 @@ check_script_name:
 check_tokens:
 	diff \
 	<(grep -ho "name=.*" `grep token= -lr release/Magarena/scripts` | sed 's/name=//' | sort) \
-	<(grep 'TokenCardDefinitions.get("' -r release/Magarena/scripts src | grep -o '".*"' | sed 's/"//g' | sort | uniq) | grep ">" | ${NO_OUTPUT}
+	<(grep 'CardDefinitions.getToken("' -r release/Magarena/scripts src | grep -o '".*"' | sed 's/"//g' | sort | uniq) | grep ">" | ${NO_OUTPUT}
 
 # check that cards in decks exist in the game
 check_decks:
@@ -574,6 +596,12 @@ check_required_property:
 check_spells:
 	 grep requires_groovy_code -L $$(grep effect -L $$(grep "^type.*Instant" -lr release/Magarena/scripts)) | ${NO_OUTPUT}
 	 grep requires_groovy_code -L $$(grep effect -L $$(grep "^type.*Sorcery" -lr release/Magarena/scripts)) | ${NO_OUTPUT}
+
+check_unused_condition:
+	grep "public static" -r src/magic/model/condition/MagicCondition.java | grep -o "Condition [A-Z]\+[^ =]*" | sed 's/Condition //' | sort | uniq > declared-conds
+	for i in `cat declared-conds`; do grep $$i -r src release/Magarena/scripts | grep -v "public static" | grep -o $$i; done | sort | uniq > used-conds
+	diff declared-conds used-conds | ${NO_OUTPUT}
+	rm declared-conds used-conds
 
 check_unused_filter:
 	grep "Impl [A-Z]\+[^ =]*" src/magic/model/target/MagicTargetFilterFactory.java -o | sed 's/Impl //' | sort | uniq > declared-filters
@@ -776,7 +804,7 @@ resources/magic/data/AllCardNames.txt:
 missing_override:
 	grep public -B1 -r release/Magarena/scripts | awk '/Override/ {skip = NR + 1} NR != skip {print $$0}' | grep -v Override | grep release > $@
 
-parse_new.txt:
+parse_new.txt: cards/existing_master.txt
 	patch -p1 < parse_missing.patch
 	cp release/Magarena/scripts_missing/* release/Magarena/scripts
 	-rm 101.out
@@ -785,10 +813,10 @@ parse_new.txt:
 	grep OK 101.out | sed 's/OK card: //' | sort > parse_ok.txt  
 	git clean -qf release/Magarena/scripts
 	patch -p1 -R < parse_missing.patch
-	join -v2 -t'_' cards/existing_master.txt parse_ok.txt > $@
+	join -v2 -t'_' $^ parse_ok.txt > $@
 	diff parse_new.ignore $@
 
-parse_groovy.txt:
+parse_groovy.txt: cards/groovy.txt
 	patch -p1 < parse_missing.patch
 	cp scripts-builder/OUTPUT/scripts_missing/* release/Magarena/scripts
 	-rm 101.out
@@ -797,8 +825,13 @@ parse_groovy.txt:
 	grep OK 101.out | sed 's/OK card: //' | sort > parse_ok.txt
 	git checkout -- release/Magarena/scripts
 	patch -p1 -R < parse_missing.patch
-	join -t'_' <(sort cards/groovy.txt) <(sort parse_ok.txt) > $@
+	join -t'_' <(sort $^) <(sort parse_ok.txt) > $@
 	diff parse_groovy.ignore $@
+
+parse_groovy:
+	make cards/groovy.txt
+	cd scripts-builder && make gen-groovy
+	make parse_groovy.txt
 
 # extract name<tab>image url from gallery page
 %.tsv: %.html
