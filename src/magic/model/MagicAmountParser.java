@@ -18,6 +18,12 @@ public enum MagicAmountParser {
             return MagicAmountFactory.Domain;
         }
     },
+    Devotion("your devotion to " + ARG.COLOR) {
+        public MagicAmount toAmount(final Matcher arg) {
+            final MagicColor color = MagicColor.getColor(ARG.color(arg));
+            return MagicAmountFactory.Devotion(color);
+        }
+    },
     Equipment("Equipment attached to (it|SN)") {
         public MagicAmount toAmount(final Matcher arg) {
             return MagicAmountFactory.Equipment;
@@ -48,6 +54,11 @@ public enum MagicAmountParser {
     ColorOnPerms("color among permanents you control") {
         public MagicAmount toAmount(final Matcher arg) {
             return MagicAmountFactory.ColorsOnPerms;
+        }
+    },
+    GreatestPower("the greatest power among creatures you control") {
+        public MagicAmount toAmount(final Matcher arg) {
+            return MagicAmountFactory.GreatestPower;
         }
     },
     XCost("x") {
@@ -89,6 +100,16 @@ public enum MagicAmountParser {
     }
 
     public abstract MagicAmount toAmount(final Matcher arg);
+
+    public static final int getX(final String text, final int X) {
+        if (text.equalsIgnoreCase("x")) {
+            return X;
+        } else if (text.equalsIgnoreCase("-x")) {
+            return -X;
+        } else {
+            return EnglishToInt.convert(text);
+        }
+    }
 
     public static final MagicAmount build(final String text) {
         if (text == null || text.isEmpty()) {

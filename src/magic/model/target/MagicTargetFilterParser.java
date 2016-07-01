@@ -28,6 +28,11 @@ public enum MagicTargetFilterParser {
             return MagicTargetFilterFactory.cardName(ARG.any(arg)).from(MagicTargetType.OpponentsGraveyard);
         }
     },
+    CardNamedFromGraveyard("card named " + ARG.ANY + " from a graveyard") {
+        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
+            return MagicTargetFilterFactory.cardName(ARG.any(arg)).from(MagicTargetType.Graveyard).from(MagicTargetType.OpponentsGraveyard);
+        }
+    },
     PermanentNamed("permanent named " + ARG.ANY) {
         public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
             return MagicTargetFilterFactory.permanentName(ARG.any(arg), Control.Any);
@@ -118,49 +123,49 @@ public enum MagicTargetFilterParser {
             return MagicTargetFilterFactory.matchCardPrefix(arg.group(), ARG.wordrun(arg), MagicTargetType.Library);
         }
     },
+    CardFromAGraveyard(ARG.WORDRUN + " card from a graveyard") {
+        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
+            return MagicTargetFilterFactory.matchCardPrefix(arg.group(), ARG.wordrun(arg), MagicTargetType.Graveyard).from(MagicTargetType.OpponentsGraveyard);
+        }
+    },
+    CreatureYouControlWith("creature you control with " + ARG.WORDRUN) {
+        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
+            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), "creature with " + ARG.wordrun(arg), Control.You);
+        }
+    },
+    CreatureOppControlWith("creature an opponent controls with " + ARG.WORDRUN) {
+        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
+            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), "creature with " + ARG.wordrun(arg), Control.Opp);
+        }
+    },
+    CreatureDefControlWith("creature defending player controls with " + ARG.WORDRUN) {
+        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
+            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), "creature with " + ARG.wordrun(arg), Control.Def);
+        }
+    },
     CreatureYouControl(ARG.WORDRUN + " creature you control") {
         public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
             return MagicTargetFilterFactory.matchCreaturePrefix(arg.group(), ARG.wordrun(arg), Control.You);
         }
     },
-    CreatureOppControl(ARG.WORDRUN + " creature an opponent controls") {
+    CreatureOppControl(ARG.WORDRUN + " creature (an opponent controls|you don't control)") {
         public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
             return MagicTargetFilterFactory.matchCreaturePrefix(arg.group(), ARG.wordrun(arg), Control.Opp);
         }
     },
-    CreatureOppControlAlt(ARG.WORDRUN + " creature you don't control") {
-        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
-            return MagicTargetFilterFactory.matchCreaturePrefix(arg.group(), ARG.wordrun(arg), Control.Opp);
-        }
-    },
-    PermanentYouControl(ARG.WORDRUN + " permanent you control") {
+    PermanentYouControl(ARG.WORDRUN + "( permanent)? you control") {
         public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
             return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.You);
         }
     },
-    PermanentOppControl(ARG.WORDRUN + " permanent an opponent controls") {
+    PermanentOppControl(ARG.WORDRUN + "( permanent)? (an opponent controls|you don't control)") {
         public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
             return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.Opp);
         }
     },
-    PermanentOppControlAlt(ARG.WORDRUN + " permanent you don't control") {
+    PermanentDefControl(ARG.WORDRUN + "( permanent)? defending player controls") {
         public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
-            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.Opp);
-        }
-    },
-    PermanentYouControl2(ARG.WORDRUN + " you control") {
-        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
-            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.You);
-        }
-    },
-    PermanentOppControl2(ARG.WORDRUN + " an opponent controls") {
-        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
-            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.Opp);
-        }
-    },
-    PermanentOppControlAlt2(ARG.WORDRUN + " you don't control") {
-        public MagicTargetFilter<?> toTargetFilter(final Matcher arg) {
-            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.Opp);
+            return MagicTargetFilterFactory.matchPermanentPrefix(arg.group(), ARG.wordrun(arg), Control.Def);
         }
     },
     Permanent(ARG.WORDRUN + " permanent") {

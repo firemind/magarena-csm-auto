@@ -1,6 +1,5 @@
 package magic.ui.deck.widget;
 
-import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
 import magic.translate.UiString;
 
@@ -82,38 +81,20 @@ public class DeckFilter {
 
     private boolean isDeckDescValid(final MagicDeck deck) {
         final String searchText = deckDescFilterText.trim();
-        if (!searchText.isEmpty()) {
-            if (deck.getDescription() != null) {
-                return deck.getDescription().toLowerCase().contains(searchText);
-            } else {
-                return false;
-            }
-        } else {
-            return true ;
-        }
+        return deck.getDescription() != null &&
+               deck.getDescription().toLowerCase().contains(searchText);
     }
 
     private boolean isDeckNameValid(final MagicDeck deck) {
         final String searchText = deckNameFilterText.trim();
-        if (!searchText.isEmpty()) {
-            return deck.getName().toLowerCase().contains(searchText);
-        } else {
-            return true;
-        }
+        return deck.getName().toLowerCase().contains(searchText);
     }
 
     private boolean isCardInDeck(final MagicDeck deck) {
-        final String searchText = cardNameFilterText.trim();
-        if (!searchText.isEmpty()) {
-            for (MagicCardDefinition card : deck) {
-                if (card.getName().toLowerCase().contains(searchText)) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            return true;
-        }
+        final String searchText = cardNameFilterText.trim().toLowerCase();
+        return deck.stream().anyMatch(card ->
+            card.getName().toLowerCase().contains(searchText)
+        );
     }
 
     private boolean isDeckSizeValid(final MagicDeck deck) {

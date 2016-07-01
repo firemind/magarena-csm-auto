@@ -1,29 +1,24 @@
 package magic.model.action;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
-import magic.model.MagicGame;
-import magic.model.MagicPlayer;
-import magic.model.MagicPermanent;
-import magic.model.MagicPermanentState;
 import magic.model.MagicAbility;
 import magic.model.MagicAbilityList;
 import magic.model.MagicCounterType;
-import magic.model.MagicManaCost;
-import magic.model.MagicSource;
+import magic.model.MagicGame;
+import magic.model.MagicPermanent;
+import magic.model.MagicPermanentState;
+import magic.model.MagicPlayer;
+import magic.model.event.MagicMorphActivation;
 import magic.model.mstatic.MagicStatic;
 import magic.model.trigger.AtEndOfCombatTrigger;
 import magic.model.trigger.AtEndOfTurnTrigger;
 import magic.model.trigger.LeavesBattlefieldTrigger;
-import magic.model.event.MagicEvent;
-import magic.model.event.MagicMorphActivation;
-import magic.model.event.MagicMatchedCostEvent;
-import magic.model.event.MagicPayManaCostEvent;
 
 public enum MagicPlayMod implements MagicPermanentAction {
-    EXILE_AT_END_OF_COMBAT("Exile that token at end of combat") {
+    EXILE_AT_END_OF_COMBAT("Exile (that|the) token at end of combat") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             game.doAction(new AddTriggerAction(perm, AtEndOfCombatTrigger.Exile));
         }
@@ -54,6 +49,16 @@ public enum MagicPlayMod implements MagicPermanentAction {
             game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.Sacrifice));
         }
     },
+    SACRIFICE_AT_END_OF_COMBAT("Sacrifice (it|the token) at end of combat") {
+      protected void doAction(final MagicGame game, final MagicPermanent perm) {
+          game.doAction(new AddTriggerAction(perm, AtEndOfCombatTrigger.Sacrifice));
+      }
+    },
+    DESTROY_AT_END_OF_TURN("Destroy (it|those tokens) at the beginning of the next end step") {
+        protected void doAction(final MagicGame game, final MagicPermanent perm) {
+            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.Destroy));
+        }
+    },
     RETURN_AT_END_OF_TURN() {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.Return));
@@ -80,7 +85,7 @@ public enum MagicPlayMod implements MagicPermanentAction {
             game.doAction(new GainAbilityAction(perm, MagicAbility.Haste));
         }
     },
-    HASTE("it gains haste") {
+    HASTE("(it|that token) (gains|has) haste") {
         protected void doAction(final MagicGame game, final MagicPermanent perm) {
             game.doAction(new GainAbilityAction(perm, MagicAbility.Haste, MagicStatic.Forever));
         }

@@ -1,9 +1,0 @@
-name=Dangerous Wager
-image=http://magiccards.info/scans/en/avr/131.jpg
-value=3.967
-rarity=C
-type=Instant
-cost={1}{R}
-effect=Discard your hand, then draw two cards.
-timing=removal
-oracle=Discard your hand, then draw two cards.

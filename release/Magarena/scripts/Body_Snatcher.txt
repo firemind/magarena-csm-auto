@@ -1,0 +1,12 @@
+name=Body Snatcher
+image=http://magiccards.info/scans/en/ud/53.jpg
+value=4.534
+rarity=R
+type=Creature
+subtype=Minion
+cost={2}{B}{B}
+pt=2/2
+ability=When SN enters the battlefield, you may discard a creature card. If you don't, exile SN.;\
+        When SN dies, return target creature card from your graveyard to the battlefield~and exile SN.
+timing=main
+oracle=When Body Snatcher enters the battlefield, exile it unless you discard a creature card.\nWhen Body Snatcher dies, exile Body Snatcher and return target creature card from your graveyard to the battlefield.

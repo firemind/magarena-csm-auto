@@ -3,6 +3,7 @@ package magic.model;
 import magic.model.event.MagicEvent;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetFilterFactory;
 import magic.model.target.MagicTargetHint;
 
 public class MagicAmountFactory {
@@ -22,6 +23,15 @@ public class MagicAmountFactory {
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 final MagicPermanent perm = (MagicPermanent)source;
                 return perm.getCounters(type);
+            }
+        };
+    }
+
+    public static MagicAmount Devotion(final MagicColor color) {
+        return new MagicAmount() {
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                return source.getController().getDevotion(color);
             }
         };
     }
@@ -142,6 +152,19 @@ public class MagicAmountFactory {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 throw new RuntimeException("getAmount(source, player) called on NegXCost");
+            }
+        };
+
+    public static MagicAmount GreatestPower =
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                return MagicTargetFilterFactory.CREATURE_YOU_CONTROL
+                    .filter(source, player, MagicTargetHint.None)
+                    .stream()
+                    .mapToInt(it -> it.getPower())
+                    .max()
+                    .orElse(0);
             }
         };
 }
