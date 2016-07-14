@@ -356,19 +356,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
     }
 
     public int getDevotion(final MagicColor... colors) {
-        int devotion = 0;
-        for (final MagicCostManaType mt : getCardDefinition().getCost().getCostManaTypes(0)) {
-            if (mt == MagicCostManaType.Generic) {
-                continue;
-            }
-            for (final MagicColor c : colors) {
-                if (mt.getTypes().contains(c.getManaType())) {
-                    devotion++;
-                    break;
-                }
-            }
-        }
-        return devotion;
+        return getCardDefinition().getCost().getDevotion(colors);
     }
 
     public boolean producesMana() {
@@ -558,6 +546,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
         return !hasState(MagicPermanentState.Tapped);
     }
 
+    @Override
     public int getColorFlags() {
         return cachedColorFlags;
     }
@@ -1003,7 +992,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
                 return false;
             }
             if (attacker.hasAbility(MagicAbility.Intimidate) &&
-                ((getColorFlags() & attacker.getColorFlags()) == 0)) {
+                !shareColor(attacker)) {
                 return false;
             }
         }

@@ -256,7 +256,7 @@ public enum MagicRuleEventAction {
         }
     },
     FlickerEndStep(
-        "exile " + ARG.PERMANENTS + "\\. (if you do, )?return (those cards|the exiled card|that card|it|sn) to the battlefield under (their|its) owner's control at the beginning of the next end step",
+        "exile " + ARG.PERMANENTS + "\\. (if you do, )?return (those cards|the exiled card|that card|it|sn) to the battlefield under (their|its) owner('s|s') control at the beginning of the next end step",
         MagicTargetHint.None,
         MagicBounceTargetPicker.create(),
         MagicTiming.Removal,
@@ -855,6 +855,35 @@ public enum MagicRuleEventAction {
                 if (matcher.group("choice") == null || players.isEmpty() == false) {
                     game.doAction(new ChangeLifeAction(event.getPlayer(), amount2));
                 }
+            };
+        }
+    },
+    DrainLifeAlt(
+        ARG.PLAYERS + "( )?lose(s)?( " + ARG.AMOUNT + ")? life( (for each|equal to) " + ARG.WORDRUN + ")?\\. You gain life equal to the life lost this way",
+        MagicTargetHint.Negative,
+        MagicTiming.Removal,
+        "-Life"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int amount = ARG.amount(matcher);
+            final MagicAmount count = MagicAmountParser.build(ARG.wordrun(matcher));
+            final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
+            return (game, event) -> {
+                final int multiplier = count.getAmount(event);
+                final int total = amount * multiplier;
+                if (count != MagicAmountFactory.One) {
+                    game.logAppendMessage(event.getPlayer(), "(" + total + ")");
+                }
+                int totalLost = 0;
+                for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
+                    final ChangeLifeAction act = new ChangeLifeAction(it, -total);
+                    game.doAction(act);
+                    if (act.getLifeChange() < 0) {
+                        totalLost += -act.getLifeChange();
+                    }
+                }
+                game.doAction(new ChangeLifeAction(event.getPlayer(), totalLost));
             };
         }
     },
@@ -2063,13 +2092,22 @@ public enum MagicRuleEventAction {
         (game, event) -> game.doAction(new ShuffleLibraryAction(event.getPlayer()))
     ),
     AttachSelf(
-        "attach sn to " + ARG.CHOICE,
+        "attach sn to " + ARG.PERMANENTS,
         MagicTargetHint.Positive,
         MagicPumpTargetPicker.create(),
         MagicTiming.Pump,
-        "Attach",
-        (game, event) -> event.processTargetPermanent(game, creature -> game.doAction(new AttachAction(event.getPermanent(), creature)))
-    ),
+        "Attach"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new AttachAction(event.getPermanent(), it));
+                }
+            };
+        }
+    },
     TurnFaceDown(
         "turn " + ARG.PERMANENTS + " face down",
         MagicTiming.Tapping,

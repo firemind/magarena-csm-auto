@@ -94,6 +94,13 @@ public enum MagicAbility {
             ));
         }
     },
+    CannotBeBlockedByPermanent2(ARG.WORDRUN + " can't block it", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(CantBeBlockedTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
+            ));
+        }
+    },
     CannotBeBlockedExceptByPermanent("(SN )?can't be blocked except by " + ARG.WORDRUN, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(CantBeBlockedTrigger.createExcept(
@@ -273,7 +280,15 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
             card.add(MagicMultikickerCost.Replicate(cost));
-            card.add(ReplicateTrigger.create());
+            card.add(ThisSpellIsCastTrigger.Replicate);
+        }
+    },
+    Conspire("conspire", 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicKickerCost.Conspire(new MagicRegularCostEvent(
+                "Tap two untapped creatures you control that each share a color with it"
+            )));
+            card.add(ThisSpellIsCastTrigger.Conspire);
         }
     },
     Evoke("evoke " + ARG.MANACOST, 20) {
@@ -384,7 +399,7 @@ public enum MagicAbility {
     EquipCond("Equip( |—)" + ARG.COST + " to a " + ARG.WORDRUN, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
-            card.add(new MagicEquipActivation(matchedCostEvents, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))));
+            card.add(new MagicEquipActivation(matchedCostEvents, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control")));
         }
     },
     Equip("Equip( |—)" + ARG.COST, 0) {
@@ -404,6 +419,13 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicCardDefinition cardDef = (MagicCardDefinition)card;
             card.add(MagicHandCastActivation.affinity(cardDef, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))));
+        }
+    },
+    Emerge("emerge " + ARG.MANACOST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(MagicHandCastActivation.emerge(cardDef, manaCost));
         }
     },
     Outlast("outlast "+ARG.COST,10) {
@@ -843,6 +865,14 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(OtherEntersBattlefieldTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    OtherOppControlEntersEffect("Whenever " + ARG.WORDRUN + " enters the battlefield under an opponent's control, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherEntersBattlefieldTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " an opponent controls"),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }

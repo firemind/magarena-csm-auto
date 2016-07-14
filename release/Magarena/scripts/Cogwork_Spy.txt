@@ -1,0 +1,11 @@
+name=Cogwork Spy
+image=http://magiccards.info/scans/en/cns/59.jpg
+value=2.600
+rarity=C
+type=Artifact,Creature
+subtype=Bird,Construct
+cost={3}
+pt=2/1
+ability=Flying
+timing=main
+oracle=Reveal Cogwork Spy as you draft it. You may look at the next card drafted from this booster pack.\nFlying

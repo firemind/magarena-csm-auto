@@ -1,0 +1,10 @@
+name=Barkshell Blessing
+image=http://magiccards.info/scans/en/shm/224.jpg
+value=2.893
+rarity=C
+type=Instant
+cost={G/W}
+ability=Conspire
+effect=Target creature gets +2/+2 until end of turn.
+timing=pump
+oracle=Target creature gets +2/+2 until end of turn.\nConspire

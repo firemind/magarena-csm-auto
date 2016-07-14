@@ -806,7 +806,7 @@ missing_override:
 
 parse_new.txt: cards/existing_master.txt
 	patch -p1 < parse_missing.patch
-	cp release/Magarena/scripts_missing/* release/Magarena/scripts
+	cp `grep status=not -Lr release/Magarena/scripts_missing/` release/Magarena/scripts
 	-rm 101.out
 	make debug
 	grep "ERROR " 101.out | sed 's/java.lang.RuntimeException: //' | sed 's/\(ERROR.*\) \(cause: .*\)/\2 \1/' | sort > parse_missing.txt
@@ -876,6 +876,10 @@ groovy-by-size:
 normalize_scripts.diff:
 	diff -d -ru -I rarity= -I removal= -I image -I enchant= -I effect= -I value= -I static= -I timing= -I mana= \
 	release/Magarena/scripts scripts-builder/OUTPUT/scripts_missing | grep -v Only > $@
+
+sorted_status.txt:
+	grep status= -r release/Magarena/scripts_missing/ -h | sort | uniq > $@
+	echo "unknown" `grep -L status= -r release/Magarena/scripts_missing | wc -l` >> $@
 
 # export GITHUB_TOKEN=`cat token`
 create-draft-release:
