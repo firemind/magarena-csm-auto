@@ -1,11 +1,11 @@
 name=Moorish Cavalry
-image=http://mtgimage.com/card/moorish%20cavalry.jpg
+image=http://magiccards.info/scans/en/tsts/11.jpg
 value=3.244
 rarity=C
 type=Creature
 subtype=Human,Knight
 cost={2}{W}{W}
 pt=3/3
-ability=trample
+ability=Trample
 timing=main
 oracle=Trample

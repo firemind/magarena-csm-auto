@@ -1,9 +1,9 @@
 name=Call to Heel
-image=http://mtgimage.com/card/call%20to%20heel.jpg
+image=http://magiccards.info/scans/en/ddj/18.jpg
 value=2.385
 rarity=C
 type=Instant
 cost={1}{U}
+effect=Return target creature to its owner's hand.~Its controller draws a card.
 timing=removal
-requires_groovy_code
 oracle=Return target creature to its owner's hand. Its controller draws a card.

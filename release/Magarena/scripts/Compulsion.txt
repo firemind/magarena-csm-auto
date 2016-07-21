@@ -1,10 +1,10 @@
 name=Compulsion
-image=http://mtgimage.com/card/compulsion.jpg
+image=http://magiccards.info/scans/en/tr/34.jpg
 value=4.144
 rarity=U
 type=Enchantment
 cost={1}{U}
-ability={1}{U},Discard a card: Draw a card.;\
-        {1}{U},Sacrifice SN: Draw a card.
+ability={1}{U}, Discard a card: Draw a card.;\
+        {1}{U}, Sacrifice SN: Draw a card.
 timing=enchantment
-oracle={1}{U}, Discard a card: Draw a card. {1}{U}, Sacrifice Compulsion: Draw a card.
+oracle={1}{U}, Discard a card: Draw a card.\n{1}{U}, Sacrifice Compulsion: Draw a card.

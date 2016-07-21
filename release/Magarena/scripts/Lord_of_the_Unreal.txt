@@ -1,13 +1,12 @@
 name=Lord of the Unreal
-image=http://mtgimage.com/card/lord%20of%20the%20unreal.jpg
+image=http://magiccards.info/scans/en/m12/62.jpg
 value=4.171
 rarity=R
 type=Creature
 subtype=Human,Wizard
 cost={U}{U}
 pt=2/2
-ability=illusion creatures you control get +1/+1;\
-        illusion creatures you control have hexproof
+ability=Illusion creatures you control get +1/+1 and have hexproof.
 static=player
 timing=main
 oracle=Illusion creatures you control get +1/+1 and have hexproof.

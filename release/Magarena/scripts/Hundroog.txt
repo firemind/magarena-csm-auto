@@ -1,11 +1,11 @@
 name=Hundroog
-image=http://mtgimage.com/card/hundroog.jpg
+image=http://magiccards.info/scans/en/le/129.jpg
 value=1.333
 rarity=C
 type=Creature
 subtype=Beast
 cost={6}{G}
 pt=4/7
-ability=cycling {3}
+ability=Cycling {3}
 timing=main
 oracle=Cycling {3}

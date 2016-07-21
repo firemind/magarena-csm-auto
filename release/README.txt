@@ -1,17 +1,17 @@
-Magarena 
+Magarena
 ========
 Homepage: http://magarena.github.io
 Forum   : http://www.slightlymagic.net/forum/viewforum.php?f=82
 
-Requires: Java Runtime Environment 7 (http://java.com) or above must be installed on your computer
+Requires: Java Runtime Environment 8 (http://java.com) or above must be installed on your computer
 
 Starting Magarena:
   On Windows, double click on Magarena.exe
-  On Linux, execute ./Magarena.sh. 
+  On Linux, execute ./Magarena.sh.
   On Mac, double click the Magarena icon
-  
+
 Keyboard Controls
-=================  
+=================
 
 General
 -------
@@ -23,8 +23,7 @@ F12    : hide UI so you can admire the background art in all its glory!
 Duel Screen
 -----------
 Right arrow, Space              : action button
-Shift + Right arrow, 
-Shift + Space                   : skip until end of turn
+Shift+Right arrow, Shift+Space  : skip until end of turn
 Left arrow, Backspace, Delete   : undo button
 Y key                           : yes button
 N key                           : no button
@@ -36,7 +35,7 @@ Selecting the AI to play against:
 
 Thanks to
   ubeefx for creating such a great game
-  epiko for creating the Magarena logo and the amazing color themes
+  epiko for creating the first Magarena splash screen and the amazing color themes
   Salasnet, pedro1973, and elias for creating beautiful themes, http://www.slightlymagic.net/forum/viewforum.php?f=89
   IcoJoy, http://www.icojoy.com/blogs/, for the nice free mage logo and icon
   singularita for creating the scripts to add over 300 additional creature cards
@@ -57,21 +56,1315 @@ Thanks to
   PalladiaMors, PhazedOut, Aunukia, nado18, Erkcan Özcan, kdesmond, a.
   benedict balbuena, spartan vi, Braullynn, mecheng, pcastellazzi, rasdel,
   Tyrael, hong yie, ember hauler, Hector Marin, drooone, jericho.pumpkin,
-  Mike, Guest, and ShawnieBoy for implementing new cards
+  Mike, and Guest for implementing new cards
+  ShawnieBoy for implementing new cards, the M logo, and general image enhancements
+  PalladiaMors for the Portuguese UI translation
+  kannikkiy for the Russian UI translation
+  Pichoro, Acorntail and all at http://magicseteditor.sourceforge.net for CardBuilder components
+  XMage for the ArrowBuilder code
+  neoedmund for the download images-on-demand implementation
   http://mtgjson.com for card script data
-  http://mtgimage.com for card images
+  http://magiccards.info for card images
   http://game-icons.net for UI icons
+  http://soundbible.com, http://www.freesound.org for sound effects
   everyone on the CCGHQ forum, http://slightlymagic.net/forum/
 
 Thank you for your support and have fun!
 
+Release 1.74 (June 25, 2016)
+============
+lodici
+melvin
+muppet
+ShawnieBoy
 
+- show unimplemented card image in color on mouse over in card explorer
 
+- show watermark on card image to indicate card is transformable
+
+- add Korean to card text combo in download images dialog
+
+- update card images to SOI release
+
+- add Eternal Masters to sets
+
+- added the following to the card script:
+    * condition: during combat after blockers are declared
+    * condition: during combat before blockers are declared
+    * condition: during the declare blockers step
+    * condition: enchanted creature is <filter>
+    * condition: equipped creature is <filter>
+    * cost: Exile <amount> <permanents>
+    * effect: You may <cost>. If you do, <effect>.
+    * effect: Remove <permanents> from combat.
+    * effect: Exile SN. (move SN to the exile zone when it resolves)
+    * effect: Return SN to its owner's hand. (move SN to its owner's hand when it resolves)
+    * effect: Put a token that's a copy of <permanent> onto the battlefield.
+    * effect: <permanents> get gains <ability> and gets (+|-)(X|0)/(+|-)(X|0) until end of turn, where X is <count>.
+    * effect: (SN|RN) assigns no combat damage this turn.
+    * effect: Look at the top <amount> cards of your library. You may reveal a <card> from among them and put it into your hand. Put the rest on the bottom of your library in any order.
+    * effect: Look at the top <amount> cards of your library. Put <amount> of them into your hand and the rest into your graveyard.
+    * effect: Look at the top <amount> cards of your library. Put <amount> of them in your hand and the rest on the bottom of your library in any order.
+    * effect: Reveal the top <amount> cards of your library. You may put a <card> from among them into your hand. Put the rest into your graveyard.
+    * effect: Transform <permanents>.
+    * effect: Exile <permanents> until SN leaves the battlefield.
+    * effect: Choose one (1) <effect> (2) <effect> (3) <effect> (4) <effect>
+    * effect: <permanents> becomes blocked.
+    * effect: <players> gain/lose life equal to <amount>.
+    * effect: Draw cards equal to <amount>.
+    * ability: Equip <cost> to a <filter>
+    * ability: <permanenst> get (+|-)(X|0)/(+|-)(X|0), where X is <count>.
+    * ability: (+|-)<N>: <effect> (loyalty ability)
+    * ability: If <condition>, you may <cost> rather than pay SN's mana cost.
+    * ability: When this creature transforms into SN, <effect>.
+    * ability: Whenever you sacrifice a <permanent>, <effect>.
+    * ability: Whenever a player sacrifices a <permanent>, <effect>.
+    * ability: Protection from multicolored
+
+- fixed the following bugs:
+    * crash when double-clicking empty decks list in card explorer (issue #786)
+    * deck filter only matching lower case card name, should be case-insensitive
+    * trailing html tag shown due to trailing "\n" in string
+    * draw effect occurs before other effects (issue #205)
+    * Sigil of Valor counts the equipped creature (issue #773)
+    * Vampiric Tutor reveals selected card
+
+- added the following cards:
+Akroan Conscriptor, Aligned Hedron Network, Ancestral Memories,
+Ancient Stirrings, Angelic Favor, Anticipate, Archangel Avacyn,
+Augur of Bolas, Auriok Bladewarden, Avacynian Missionaries,
+Avacyn, the Purifier, Bearer of Overwhelming Truths, Betrothed of Fire,
+Bitter Revelation, Blazing Torch, Body Snatcher, Boldwyr Intimidator,
+Captivating Vampire, Chrome Mox, Colossal Whale, Commune with Nature,
+Commune with the Gods, Constricting Sliver, Crypsis, Cunning,
+Curtain of Light, Cyclone Sire, Dangerous Wager, Daring Sleuth,
+Dazzling Beauty, Declaration in Stone, Defend the Hearth, Defiant Stand,
+Demon-Possessed Witch, Devils' Playground, Disciple of the Ring,
+Disharmony, Dragonlord Ojutai, Dragon Tempest, Dragon Throne of Tarkir,
+Drudge Spell, Eldrazi Obligator, Enemy of the Guildpact,
+Engulf the Shore, Enthralling Victor, Equestrian Skill, Faerie Mechanist,
+Favored Hoplite, Fevered Visions, Fistful of Force, Flamerush Rider,
+Flamespeaker's Will, Fleeting Memories, Flesh Carver, Fog Patch,
+Force Away, Forgotten Creation, Freyalise, Llanowar's Fury,
+Frontline Strategist, Funeral March, Furnace Celebration, Gate Smasher,
+Geier Reach Bandit, Geistblast, Gemini Engine, Goatnapper,
+Graf Mole, Grasp of Fate, Graverobber Spider, Grisly Salvage,
+Grovetender Druids, Guildscorn Ward, Gurmag Drowner, Hanabi Blast,
+Harmless Assault, Harvester Troll, Haunted Cadaver, Hidden Dragonslayer,
+Hope Against Hope, Hornet Cannon, Illusory Ambusher, Impaler Shrike,
+Impulse, Inner Struggle, Intellectual Offering, Jazal Goldmane,
+Jeering Instigator, Jeskai Ascendancy, Junkyo Bell, Kalonian Twingrove,
+Karrthus, Tyrant of Jund, Khalni Heart Expedition, Kindly Stranger,
+King Macar, the Gold-Cursed, Kin-Tree Invocation, Lavamancer's Skill,
+Lone Revenant, Lunarch Inquisitors, Lys Alana Scarblade,
+Mage-Ring Responder, Magus of the Wheel, Mardu Woe-Reaper,
+Mazirek, Kraul Death Priest, Meletis Astronomer, Merciless Eviction,
+Mirror Match, Monkey Cage, Moonlight Hunt, Mortal Obstinacy,
+Mortician Beetle, Nagging Thoughts, Noyan Dar, Roil Shaper,
+Ob Nixilis, the Fallen, O-Naginata, Ooze Garden, Pack Guardian,
+Panic, Pathbreaker Ibex, Peer Through Depths, Prophetic Bolt,
+Pulse of Murasa, Puncture Bolt, Ravaging Blaze, Raven Familiar,
+Reconnaissance, Reef Worm, Release the Ants, Research the Deep,
+Resistance Fighter, Revive the Fallen, Runechanter's Pike,
+Rust Scarab, Ruthless Deathfang, Sanctum of Ugin, Saprazzan Bailiff,
+Saprazzan Raider, Satyr Wayfinder, Savra, Queen of the Golgari,
+Scout the Borders, Sea Gate Oracle, Second Harvest, Seedcradle Witch,
+Seed Guardian, Seek the Wilds, Shaman of the Pack, Sight Beyond Sight,
+Silkwrap, Skirk Alarmist, Skull Rend, Skymark Roc, Slab Hammer,
+Sleight of Hand, Smothering Abomination, Snag, Soldevi Golem,
+Soldier of the Pantheon, Songstitcher, Sphinx-Bone Wand, Spinebiter,
+Spite of Mogis, Spring Cleaning, Stabbing Pain, Stoneforge Acolyte,
+Strength from the Fallen, Suleiman's Legacy, Sunscorch Regent,
+Surge of Righteousness, Suspension Field, Swarm Surge, Swell of Growth,
+Tears of Rage, Temur Battle Rage, Tenacity, Thopter Assembly,
+Thraximundar, Throwing Knife, Tireless Tracker, Titan's Revenge,
+Tourach's Gate, Trap Runner, Treasured Find, Tribute to the Wild,
+True-Faith Censer, Ulvenwald Mysteries, Utvara Hellkite, Vampiric Rites,
+Vaultbreaker, Vedalken Anatomist, Vessel of Nascency, Viashino Racketeer,
+Vildin-Pack Alpha, Volatile Rig, Wall of Resurgence, Wandering Champion,
+War Dance, Waylay, Wirefly Hive, Woeleecher, Woodland Guidance,
+Words of Wisdom, Worldslayer, Wormfang Drake
+
+Release 1.73 (May 28, 2016)
+============
+melvin
+muppet
+ShawnieBoy
+
+- fixed the following bugs:
+  * crash when highlighting card ability on stack (issue #760)
+  * Stensia Masquerade puts +1/+1 counters on itself instead of the creature that dealt damage
+  * Anafenza did not prevent death trigger from occuring (issue #765)
+  * Sigarda, Heron's Grace crash due invalid ability (issue #768)
+
+- added the following cards:
+Gideon, Ally of Zendikar, Kalitas, Traitor of Ghet,
+Ormendahl, Profane Prince, Sylvan Advocate, Westvale Abbey
+
+Release 1.72 (April 23, 2016)
+============
+lodici
+melvin
+ShawnieBoy
+
+- add Shadows over Innistrad
+
+- allow filters and table headings to be translateable
+
+- update format legalities as of April 8th rotation
+
+- Transformed cards use the converted mana cost of the hidden side
+
+- update Oracle changes
+
+- update Keyword Glossary
+
+- fixed the following bugs:
+    * incorrect transform-type symbols for transform cards in cardbuilder
+    * loyalty for unimplemented Planeswalkers not displayed in cardbuilder
+    * permanent can tap itself twice to pay for '{T}, tap an untapped ...'
+    * Helm of Obedience did not check that cards entered the graveyard (issue #745)
+    
+- added the following cards:
+Aberrant Researcher, Aim High, Alms of the Vein, Always Watching,
+Ancient of the Equinox, Angelic Purge, Angel of Deliverance,
+Anguished Unmaking, Apothecary Geist, Asylum Visitor, Autumnal Gloom,
+Behind the Scenes, Biting Rain, Bloodmad Vampire, Branded Howler,
+Breakneck Rider, Broken Concentration, Bygone Bishop, Byway Courier,
+Call the Bloodline, Cathar's Companion, Chaplain's Blessing, Clip Wings,
+Confirm Suspicions, Convicted Killer, Crow of Dark Tidings,
+Cryptolith Rite, Dance with Devils, Dauntless Cathar,
+Deathcap Cultivator, Deny Existence, Descend upon the Sinful,
+Devilthorn Fox, Diregraf Colossus, Drogskol Cavalry,
+Drownyard Explorers, Drownyard Temple, Drunau Corpse Trawler,
+Elusive Tormentor, Ember-Eye Wolf, Emissary of the Sleepless,
+Epitaph Golem, Ethereal Guidance, Explosive Apparatus, Farbog Revenant,
+Fearsome Temper, Flameheart Werewolf, Forsaken Sanctuary, Foul Orchard,
+Furtive Homunculus, Geralf's Masterpiece, Ghoulcaller's Accomplice,
+Ghoulsteed, Gibbering Fiend, Gisa's Bidding, Gone Missing,
+Grotesque Mutation, Hanweir Militia Captain, Haunted Cloak,
+Heir of Falkenrath, Heir to the Night, Highland Lake, Hinterland Logger,
+Howlpack Resurgence, Howlpack Wolf, Hulking Devil, Humble the Brute,
+Incited Rabble, Incorrigible Youths, Indulgent Aristocrat,
+Inexorable Blob, Inquisitor's Ox, Insidious Mist, Inspiring Captain,
+Intrepid Provisioner, Invocation of Saint Traft, Jace's Scrutiny,
+Just the Wind, Kessig Dire Swine, Kessig Forgemaster, Lambholt Butcher,
+Lambholt Pacifist, Lamplighter of Selhoff, Magnifying Glass,
+Malevolent Whispers, Manic Scribe, Markov Dreadknight, Merciless Resolve,
+Militant Inquisitor, Moldgraf Scavenger, Moorland Drifter,
+Murderer's Axe, Murderous Compulsion, Nahiri's Machinations,
+Nearheath Chaplain, Neck Breaker, Nephalia Moondrakes, Niblis of Dusk,
+Obsessive Skinner, Olivia's Bloodsworn, One of the Pack, Open the Armory,
+Pale Rider of Trostad, Paranoid Parish-Blade, Perfected Form,
+Pious Evangel, Press for Answers, Pyre Hound, Quilled Wolf, Rancid Rats,
+Ravenous Bloodseeker, Reaper of Flight Moonsilver, Reduce to Ashes,
+Rise from the Tides, Root Out, Rottenheart Ghoul, Runaway Carriage,
+Rush of Adrenaline, Sanguinary Mage, Sanitarium Skeleton, Scourge Wolf,
+Seagraf Skaab, Senseless Rage, Shamble Back, Shard of Broken Glass,
+Sigarda, Heron's Grace, Silent Observer, Silverfur Partisan, Silverstrike,
+Sinister Concoction, Skeleton Key, Sleep Paralysis, Solitary Hunter,
+Soul Swallower, Spectral Shepherd, Spiteful Motives, Stallion of Ashmouth,
+Stensia Masquerade, Stern Constable, Stitched Mangler,
+Stitchwing Skaab, Stoic Builder, Stone Quarry, Stonewing Antagonizer,
+Stormrider Spirit, Strength of Arms, Stromkirk Mentor, Survive the Night,
+Tamiyo's Journal, Thalia's Lieutenant, Thornhide Wolves, Thraben Gargoyle,
+Thraben Inspector, Timber Shredder, Town Gossipmonger, Trail of Evidence,
+Twins of Maurer Estate, Ulrich's Kindred, Ulvenwald Hydra, Uncaged Fury,
+Unimpeded Trespasser, Uninvited Geist, Vampire Noble, Vessel of Ephemera,
+Vessel of Paramnesia, Veteran Cathar, Voldaren Duelist,
+Warped Landscape, Wayward Disciple, Westvale Cult Leader, Wicker Witch,
+Wild-Field Scarecrow, Woodland Stream
+
+Release 1.71 (March 27, 2016)
+============
+lodici
+melvin
+neoedmund
+ShawnieBoy
+
+- new About dialog/screen
+
+- add "download images on demand" setting
+
+- move location of themes from "mods" to "themes" folder
+
+- display deck stats & description in sidebar of deck selector screen
+
+- update Madness according to new rules where exiling the card is compulsory
+
+- add Battle for Zendikar block
+
+- added the following to the card script:
+    * condition: there are four or more card types among cards in your graveyard (Delirium)
+    * ability: Skulk
+    * effect: Investigate.
+    * effect: <permanents> can't block SN this turn.
+
+- fixed the following bugs:
+    * unable to sort cards by rarity or subtype
+    * decks with more than 4 non-basic lands considered legal
+    * model spells that target did not trigger when targeted triggers (issue #678)
+    * layout anomaly in stats panel on Linux (issue #683)
+    * confusing play animation when AI plays Smallpox (issue #695)
+    * custom ability icons incorrectly shown on battlefield card images (issue #704)
+    * Firemind top decks with Æ are not being parsed correctly (issue #718)
+    * unable to download large number of images due to HTTP errors (issue #729)
+    * Gallowbraid log message had 'lose' instead of 'pay'
+    * Scarwood Bandits should not lose control of artifact when control changes
+    * Zodiac Dragon should only trigger if you both own and control it (issue #690)
+    * Thorn of Amethyst increases the casting cost of creatures by {1} (issue #698)
+    * Genesis Wave duplicated cards played from library (issue #712)
+    * Zada's Commando can tap itself to use cohort (issue #715)
+    * Jace the Mind Sculptor reveals the card looked at in the may choice (issue #727)
+    * Wandering Fumarole's last ability could lead to infinite activation by AI (issue #732)
+    * Bane Alley Broker logs names of exiled cards (issue #738)
+    * Snapcaster Mage allows casting cards that could not be paid due to cost increasers (issue #741)
+
+- added the following cards:
+Abduction, Academy Raider, Ætherplasm, Alaborn Zealot, Animate Wall,
+Arachnus Web, Blood Tribute, Briar Shield, Brink of Madness,
+Burning Anger, Call of the Full Moon, Carapace, Chamber of Manipulation,
+Charisma, Colossus of Akros, Compelling Deterrence, Consecrated by Blood,
+Corpse Churn, Crab Umbra, Cruel Bargain, Cryptborn Horror,
+Crystallization, Custodi Soulbinders, Cytoplast Manipulator,
+Devout Harpist, Dimensional Infiltrator, Dragonscale General,
+Dream Thrush, Drooling Ogre, Duct Crawler, Dying Wail, Earthlore,
+Ebonblade Reaper, Eldrazi Mimic, Encase in Ice, Endbringer,
+Extra Arms, Fathom Feeder, Favorable Destiny, Festering Wound,
+Field of Reality, Fractured Loyalty, Ghostly Possession, Gigantiform,
+Glade Watcher, Glaring Aegis, Glistening Oil, Goblin Bangchuckers,
+Grasp of the Hieromancer, Grixis Illusionist, Guan Yu, Sainted Warrior,
+Havoc Festival, Hellkite Hatchling, Helm of Obedience, Helm of Possession,
+Hivis of the Scale, Hunter's Ambush, Ice Cage, Ignition Team,
+Immobilizer Eldrazi, Incendiary, Infectious Bloodlust, Infernal Scarring,
+Inviolability, Isolation Zone, Jinxed Ring, Kazuul's Toll Collector,
+Kithkin Mourncaller, Kothophed, Soul Hoarder, Kozilek's Pathfinder,
+Krasis Incubation, Krovikan Plague, Last Laugh, Liability,
+Map the Wastes, Masked Gorgon, Mina and Denn, Wildborn, Mindswipe,
+Mindwrack Demon, Mirror Mockery, Mirrorpool, Moonbow Illusionist,
+Mortuary, Mystic Compass, Mystic Meditation, Oboro Envoy, One with Nature,
+Oni Possession, Overseer of the Damned, Paralyze, Part the Waterveil,
+Pattern of Rebirth, Pendelhaven Elder, Pendrell Flux, Piety Charm,
+Pillar of War, Planar Collapse, Planar Outburst, Polluted Bonds,
+Predatory Urge, Pretender's Claim, Prison Barricade, Private Research,
+Quicksilver Dagger, Realm Seekers, Reaver Drone, Reduce in Stature,
+Reef Shaman, Righteous Indignation, Rivalry, Roots, Runner's Bane,
+Sabertooth Alley Cat, Sandskin, Scrapheap, Screams from Within,
+Screeching Griffin, Scytheclaw, Sea Snidd, Seedling Charm,
+Shrewd Hatchling, Sigil of the New Dawn, Singing Bell Strike,
+Sinstriker's Will, Sire of Stagnation, Sisay's Ingenuity, Sleeping Potion,
+Song of the Dryads, Soul Kiss, Sower of Temptation, Spectral Cloak,
+Spectral Prison, Spell Rupture, Spell Syphon, Spin Engine, Spire Serpent,
+Stamina, Stoneforge Masterwork, Sunbond, Sunbringer's Touch,
+Suppression Bonds, Telemin Performance, Thrull Retainer, Tidal Visionary,
+Tideshaper Mystic, Tooth Collector, Topplegeist, Traveling Plague,
+Treacherous Link, Treefolk Mystic, Triclopean Sight, Unstable Frontier,
+Urban Burgeoning, Vampirism, Venarian Gold, Venomous Fangs,
+Veteran's Voice, Viridian Harvest, Visions of Brutality, Volition Reins,
+Voracious Wurm, Walker of the Wastes, Wellspring, Whiteout, Witch Hunt
+
+Release 1.70 (February 7, 2016)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- card images selected based on location: custom -> crops -> cards/tokens -> missing proxy
+
+- new option to download cropped art for use with proxy images
+
+- choose preferred image size from preferences General tab
+
+- eliminate UI freeze when showing proxy images for the first time
+
+- improve layout of deck statistics panel and duel decks screen for a more consistent UI
+
+- remove text mode
+
+- display split cards as '<first half> // <second half> (card name)' in explorer
+
+- show damage prevent shield as blue number above pt
+
+- allow groovy code to add effects that reduce/increase mana cost, it does not
+  reduce additional costs
+
+- added the following to the card script:
+  * ability: Surge <mana cost>
+  * ability: When <name> enters the battlefield, if its surge cost was paid, <effect>
+  * ability: When you cast <name>, <effect>
+  * effect: You may <cost>. If you don't, <effect>
+  * effect: Return <permanent> to its owner's hand at the beginning of the next end step.
+  * effect: Shuffle your library.
+  * effect: <permanent> gain <ability>.
+  * effect: <permament> lose <ability>.
+
+- fixed the following bugs:
+  * unable to download card images
+  * poor quality image scaling in CardsCanvas for sample hand, deck tiled screen, etc
+  * Firemind decks not shown if name contains invalid filename character (issue #607)
+  * clicking on empty area of deck table increases count for selected card (issue #658)
+  * crash when activating ability that discards specific cards as cost (issue #384)
+  * crash in MCTS AI when the manifest effect
+  * "target creature and each other creature that shares a color with it" does
+    not include target creature when it is colorless
+  * three color lands appears in random two color decks (issue #646)
+  * no choice of which mana ability to use when mana permanents equal to mana cost (issue #639)
+  * Man lands missing missing mana_or_combat property
+  * Giant Caterpillar and Transluminant causes the AI to crash (issue #362)
+  * Knight of the Mists crashes when you select "No" for its trigger (issue #610)
+  * Raving Oni Slave triggering when other permanents leave the battlefield (issue #647)
+  * Sheltered Valley trigger should occur before other ETB triggers
+  * Tunneler Wurm should not have trample
+  * Cateran Enforcer missing fear
+  * Drill Skimmer missing flying
+  * Thousand Winds missing flying
+  * Glimmering Angel missing flying
+  * Harrier Griffin missing flying
+  * Felidar Umbra missing totem armor
+  * Piety giving +0/+2 instead of +0/+3
+  * Stone Idol Trap missing cost reduction
+  * Elixir of Vitality missing enters tapped
+  * Stasis Snare missing AI casting restriction
+  * Eater of Hope's first ability missing {B} cost
+  * Defiant Falcon's second ability missing {4} cost
+
+- added the following cards:
+Absolver Thrull, Abstruse Interference, Affa Protector, Alabaster Leech,
+Allied Reinforcements, Amrou Seekers, Ancient Crab, Andradite Leech,
+Animar, Soul of Elements, Arcane Melee, Aura of Silence,
+Ballyrush Banneret, Baloth Pup, Bearer of Silence, Belfry Spirit,
+Benediction of Moons, Birthing Hulk, Blade of Selves, Blind Hunter,
+Blinding Drone, Bonds of Mortality, Bosk Banneret, Boulder Salvo,
+Brace for Impact, Breaking Wave, Brighthearth Banneret, Brute Strength,
+Butcher's Glee, Call the Gatewatch, Canopy Gorger, Captain's Claws,
+Celestial Sword, Centaur Omenreader, Chained Throatseeker, Chill,
+Chill of Foreboding, Cinder Barrens, Cinder Hellion, Cliffhaven Vampire,
+Comparative Analysis, Consuming Sinkhole, Containment Membrane,
+Coral Net, Crush of Tentacles, Cry of Contrition, Cursed Monstrosity,
+Daru Warchief, Deepfathom Skulker, Defense Grid, Derelor, Desolation Twin,
+Devour in Flames, Dragonlord's Servant, Dragonspeaker Shaman,
+Drake Familiar, Drana's Chosen, Dread Charge, Dread Return, Dream Chisel,
+Eldrazi Aggressor, Embodiment of Fury, Embodiment of Insight,
+Emerald Medallion, Essence Depleter, Etherium Sculptor, Exalted Dragon,
+Exhumer Thrull, Expedite, Eye of Ugin, Fallow Wurm, Fencer's Magemark,
+Feroz's Ban, Firefright Mage, Flayer Drone, Floodtide Serpent,
+Frogtosser Banneret, Genesis Wave, Ghitu Fire, Gift of Tusks, Glowrider,
+Goblin Electromancer, Goblin Warchief, Grand Arbiter Augustin IV,
+Gravebane Zombie, Gravity Negator, Grip of the Roil, Guardian's Magemark,
+Harbinger of the Tides, Havoc Sower, Heartless Summoning,
+Hedron Crawler, Helm of Awakening, Herald of Kozilek,
+Herald of the Pantheon, Herald of War, Hero of Iroas, High Seas,
+Hissing Quagmire, Hum of the Radix, Immolating Glare, Immortal Coil,
+Impromptu Raid, Infiltrator's Magemark, Irini Sengir, Jace's Sanctum,
+Jade Leech, Jet Medallion, Joven's Tools, Jwar Isle Avenger,
+Kataki, War's Wage, Kinscaer Harpoonist, Kor Scythemaster,
+Kor Sky Climber, Kozilek's Translator, Krosan Drover, Krosan Warchief,
+Lashknife Barrier, Loam Larva, Lodestone Golem, Long-Forgotten Gohei,
+Lowland Oaf, Madblind Mountain, Make a Stand, Makindi Aeronaut,
+Malakir Soothsayer, Mana Matrix, Maw of Kozilek, Meandering River,
+Melancholy, Mercenary Knight, Munda's Vanguard, Myr Mindservant,
+Natural State, Necromancer's Magemark, Needle Spires, Nightscape Familiar,
+Null Caller, Oblivion Strike, Obscuring Æther, Ondu War Cleric,
+Orzhov Euthanist, Orzhov Pontiff, Overwhelming Denial, Pearl Medallion,
+Phyrexian Hydra, Planar Gate, Possessed Skaab, Prophet of Distortion,
+Pyric Salamander, Quickling, Reality Hemorrhage, Reckless Bushwhacker,
+Relentless Hunter, Rending Volley, Rime Transfusion, Rotting Giant,
+Ruby Leech, Ruby Medallion, Sapphire Leech, Sapphire Medallion,
+Scale Blessing, Scion Summoner, Scourglass, Sea Gate Wreckage,
+Searing Light, Seeker, Seer's Lantern, Seize the Soul, Sifter of Skulls,
+Skirk Shaman, Sky Scourer, Slaughter Drone, Slip Through Space,
+Soul Snare, Spatial Contortion, Spawnbinder Mage, Sphere of Resistance,
+Spinal Graft, Squeeze, Stalking Drone, Steppe Glider,
+Stinkdrinker Daredevil, Stone Calendar, Stone Haven Outfitter,
+Stonybrook Banneret, Stormchaser Mage, Stormscape Familiar,
+Submerged Boneyard, Sunscape Familiar, Tajuru Pathwarden, Tar Snare,
+Tears of Valakut, Thalia, Guardian of Thraben, Thing from the Deep,
+Thorn of Amethyst, Thornscape Familiar, Thundercloud Elemental,
+Thundering Wurm, Thunderscape Familiar, Timber Gorge, Tranquil Expanse,
+Treacherous Vampire, Twilight's Call, Tyrant of Valakut, Umara Entangler,
+Undead Warchief, Unnatural Endurance, Urza's Filter, Vampire Envoy,
+Vapor Snare, Veiled Apparition, Vines of the Recluse, Void Grafter,
+Void Shatter, Vryn Wingmare, Wandering Fumarole, Warden of Evos Isle,
+Warden of Geometries, Warping Wail, Wastes, Weapons Trainer,
+World Breaker, Zada's Commando, Zulaport Chainmage, Zulaport Enforcer
+
+Release 1.69 (December 27, 2015)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- improved generation of rendered card images using actual card frames
+  (known issues #577 #587 #588 #593)
+
+- deprecate text mode by disabling it by default, it can be enabled manually
+  from Settings -> Preferences -> General tab
+
+- replace the Wizard icon by IcoJoy with M icon by ShawnieBoy
+
+- reduce waiting time by setting up game in the background of duel decks screen
+
+- implement the Vancouver mulligan rule
+
+- allow users to select preferred language for card text in download dialog
+
+- support for generating colorless mana and colorless mana cost, use the new
+  colorless mana icon on permanents that generate colorless mana
+
+- added the following animations/effects:
+  * draw from library
+  * play-from arrows
+  * turn card over on play/draw
+
+- added the following to the card script:
+  * allow amount in card script effect to be X for {X} spells
+  * ability: At the beginning of each player's end step, <effect>
+  * ability: At the beginning of each opponent's upkeep, <effect>
+  * ability: When <creature> attacks and isn't blocked, <effect>
+  * ability: When <creature> attacks alone, <effect>
+  * ability: Whenever SN becomes target of RN, <effect>
+  * effect: Exile <card>.
+  * effect: Destroy <permanent> at the beginning of the next end step.
+  * effect: Prevent all combat damage that would be dealt to and dealt by <permanent> this turn.
+  * effect: <permanent> attacks this turn if able.
+  * effect: <player> lose the game.
+  * effect: <player> win the game.
+  * effect: <player> takes <amount> extra turns.
+  * effect: <player> get <amount> poison counters.
+  * effect: <player>'s life total becomes <number>.
+  * effect: <player> can't cast spells this turn.
+  * effect: <source> deals X damage to <targets>, where X is <amount>.
+  * effect: <source> deals <amount> damage to <permanents>. If a creature
+            dealt damage this way would die this turn, exilt it instead.
+
+- fixed the following bugs:
+  * crash when escape key pressed on game loading screen (issue #529)
+  * crash when moving mouse around the screen when deal animation is running (issue #540)
+  * crash when Firemind json feed has a null string (issue #563)
+  * crash when copying spell whose effect begins with an "if" clause (issue #519)
+  * potential resource leak when playing sound clip (issue #526)
+  * player limited to activating equip at most twice (issue #551)
+  * flickering manifest cards casts them if they are spells (issue #554)
+  * link in log/stack and card animation shows actual card and not morph card (issue #567)
+  * weird phrasing in log/stack for optional effects, eg "PN may PN draws"
+  * Lumbering Falls, Shambling Vent, and Izzet Keyrune missing mana_or_combat property in card script
+  * Clash of Wills allows player to pay any amount of mana to prevent the spell from being countered
+  * Faerie Impostor able to return itself when it should return another creature
+  * Gemstone Mine able to generate snow and colorless mana
+  * Lich and Nefarious Lich game loss trigger did not use the stack
+  * Transcendence's state trigger did not use the stack
+  * Plague Rats always has a power and toughness of 0/0
+
+- added the following cards:
+Ancient Kavu, Aura Flux, Barbed Foliage, Barrage of Boulders,
+Bearer of the Heavens, Blazing Blade Askari, Bogbrew Witch,
+Bubbling Cauldron, Chainbreaker, Chain of Acid,
+Chain of Plasma, Chain of Silence, Chain of Smog, Chain of Vapor,
+Cleric of the Forward Order, Clever Impersonator, Corrosive Gale,
+Crazed Armodon, Darksteel Reactor, Daxos's Torment, Diligent Farmhand,
+Drana's Emissary, Dutiful Attendant, Ethersworn Shieldmage,
+Feldon of the Third Path, Festering Newt, Flameshadow Conjuring,
+Forfend, Gideon's Phalanx, Gigantoplasm, Goblin Dynamo, Gravity Well,
+Gruesome Slaughter, Heartmender, Heat Shimmer, Helix Pinnacle,
+Ignoble Soldier, Junk Diver, Kalastria Healer, Lavaclaw Reaches,
+Lava Runner, Lightning Shrieker, Lurking Jackals, Magistrate's Scepter,
+Magmaquake, Magnetic Mine, Masterwork of Ingenuity, Mercurial Pretender,
+Minion Reflector, Mogg Cannon, Moonlight Geist, Myr Retriever,
+Noxious Revival, Pain Kami, Panacea, Pardic Firecat, Poisonbelly Ogre,
+Predatory Nightstalker, Puffer Extract, Quiet Contemplation,
+Raging Spirit, Retreat to Hagra, Rite of Consumption, Sarkhan's Rage,
+Savage Offensive, Scab-Clan Berserker, Secure the Wastes,
+Seed the Land, Shade's Breath, Sigil of Valor, Silent Assassin, Singe,
+Soratami Cloud Chariot, Sound the Call, Spawning Pool, Statute of Denial,
+Strength of Night, Supplant Form, Sylvan Hierophant, Syphon Soul, Tangle,
+Undead Servant, Unwilling Recruit, Urborg Phantom, Vampire's Bite,
+Vesuva, Zulaport Cutthroat
+
+Release 1.68 (November 29, 2015)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- provide a "Gameplay Report" option to the game menu that allows users to
+  create a zip file that should be submitted for gameplay bugs
+
+- update basic lands to use BFZ full art card images
+
+- allow overriding the default card image by adding image with the same name to '<images>/custom' folder
+
+- show choice indicator immediately after target description instead of at the end of the effect text
+
+- fixed the following bugs:
+  * Mac startup script stopped working since 1.64 (issue #492)
+  * AI unable to grant abilities to creatures during declare attackers step (issue #500)
+  * AI will sometimes sacrifice a permanent as a cost to pump the permanent itself
+  * name of card displayed in user prompt when AI plays megamorph ability (issue #454)
+  * face down creature is not interactive in log (issue #477)
+  * mill message appears before effect message (issue #487)
+  * image_updated property did not work with images for missing cards (issue #501)
+  * incorrect tense in "may" clause of effects (issue #503)
+  * cards that reduce life loss due to damage should not change life total and then set it (issue #512)
+  * Burnout should not allow opponent to pay {1} to prevent countering the spell
+  * Fyndhorn Pollen missing 'Cumulative upkeep {1}'
+  * Kobold Drill Sergeant gave Kobolds +1/+1, should be +0/+1
+  * Form of the Dragon should trigger life gain/loss
+  * Tooth and Nail puts creatures into play before searching for them (issue #460)
+  * Colfenor's Urn doesn't check current toughness (issue #462)
+  * Narcolepsy's log message mention of enchanted permanent is not interactive (issue #489)
+  * Wormfang Turtle removes all player's lands instead of chosen one (issue #490)
+  * Blessed Reversal required a target and did not gain life (issue #491)
+  * Dead-Iron Sledge crashes if it is not equipped when its trigger resolves (issue #494)
+  * Faerie Miscreant's trigger condition incorrectly scripted (issue #508)
+
+- added the following cards:
+Acolyte of the Inferno, Akoum Hellkite, Akoum Stonewaker, Angelic Gift,
+Banshee of the Dread Choir, Blastfire Bolt, Blisterpod, Boiling Earth,
+Broodbirth Viper, Brood Butcher, Brood Monitor, Caller of the Pack,
+Call the Scions, Carrier Thrall, Carry Away, Catacomb Sifter,
+Cloven Casting, Clutch of Currents, Coastal Discovery, Complete Disregard,
+Deathless Behemoth, Defiant Bloodlord, Drowner of Hope, Earthen Arms,
+Eldrazi Skyspawner, Eyeless Watcher, Fortified Rampart, From Beyond,
+Furnace Scamp, Herald of the Host, Illusory Gains, Incubator Drone,
+Kalemne's Captain, Karlov of the Ghost Council, Kor Castigator,
+Kozilek's Sentinel, Kudzu, Lich, Mire's Malice, Molten Nursery,
+Murderous Spoils, Nefarious Lich, Nettle Drone, Nissa's Renewal,
+Omnath, Locus of Rage, Ophiomancer, Oran-Rief Invoker, Prison Term,
+Retreat to Emeria, Rising Miasma, Roil Spout, Ruinous Path, Rush of Ice,
+Sai of the Shinobi, Sandstone Bridge, Scatter to the Winds, Searing Rays,
+Shielded by Faith, Spawning Bed, Spell Shrivel, Stasis Snare, Steam Vines,
+Stormrider Rig, Sudden Demise, Tightening Coils, Touch of the Eternal,
+Touch of the Void, Turn Against, Turn to Slag, Tymaret, the Murder King,
+Warchief Giant
+
+Release 1.67 (October 31, 2015)
+============
+lodici
+melvin
+Mike
+ShawnieBoy
+
+- update to format and legality as of Oct 2nd
+- display usable proxy image when card image is missing
+- move "cards" and "tokens" images folders to Magarena/images/cards and Magarena/images/tokens
+- clicking a card image in any of the following screens to view image at original size:
+    tiled deck view, sample hand, mulligan, and player zones
+- display deck sidebar in deck tiled view.
+
+- fixed the following bugs:
+  * crash when firemind json feed contains formats with no decks (issue #461)
+  * crash when attacking with face down permanents (issue #474)
+  * crash when trying to dynamically load Morph and Manifest card definitions (issue #470)
+  * crash when showing proxy image if oracle text contains hybrid mana symbol
+  * crash when MCTS is invoked before previous instance has completed (issue #479)
+  * undoing the log item was not removed because the log was not being repainted properly
+  * missing event description for first event in repeated events (issue #436)
+  * disable interactive card names in message text displayed in user prompt panel (issue #456)
+  * horizontal scrollbar goes missing in deck editor (issue #469)
+  * text in user prompt is not interactive so don't color (issue #457)
+  * visible stack button style not updated as toggle button is clicked
+  * card names in log messages not interactive (issue #463, #464)
+  * player able to view actual face of opponent's face down spells
+  * condition "two or fewer other lands" not applying correctly (issue #467)
+  * Manor Gargoyle does not lose indestructible when it loses defender (issue #447)
+  * Stoneshock Giant's ability should affect creatures that come into play after monstrous (issue #443)
+  * Avoid Fate can be cast without target and it remains in play (issue #473)
+  * Somberwald Alpha's first ability pumped itself instead of creature being blocked
+
+- added the following cards:
+Angel of Renewal, Belligerent Whiptail, Benthic Infiltrator,
+Blighted Cataract, Blighted Fen, Blighted Gorge, Blighted Steppe,
+Blighted Woodland, Bloodbond Vampire, Broodhunter Wurm, Canopy Vista,
+Chasm Guide, Cinder Glade, Cliffside Lookout, Cloud Manta,
+Coralhelm Guide, Courier Griffin, Culling Drone, Dampening Pulse,
+Demon's Grasp, Drana, Liberator of Malakir, Dust Stalker,
+Eldrazi Devastator, Endless One, Expedition Envoy, Felidar Cub,
+Forerunner of Slaughter, Ghostly Sentinel, Gideon's Reproach,
+Grove Rumbler, Hagra Sharpshooter, Hero of Goma Fada, Jaddi Offshoot,
+Kalastria Nightwatch, Kitesail Scout, Kor Bladewhirl, Kor Entanglers,
+Lantern Scout, Lavastep Raider, Lifespring Druid, Looming Spires,
+Lumbering Falls, Makindi Patrol, Makindi Sliderunner, Malakir Familiar,
+Mist Intruder, Mortuary Mire, Murasa Ranger, Natural Connection,
+Nirkana Assassin, Ondu Champion, Ondu Greathorn, Outnumber,
+Plated Crusher, Prairie Stream, Reckless Cohort, Reclaiming Vines,
+Resolute Blademaster, Retreat to Coralhelm, Retreat to Kazandu,
+Retreat to Valakut, Rot Shambler, Ruination Guide, Salvage Drone,
+Scour from Existence, Scythe Leopard, Serene Steward, Shadow Glider,
+Shambling Vent, Silent Skimmer, Skitterskin, Skyline Cascade,
+Sludge Crawler, Smoldering Marsh, Snapping Gnarlid, Stonefury,
+Stone Haven Medic, Sunken Hollow, Sure Strike, Tajuru Beastmaster,
+Tajuru Warcaller, Tide Drifter, Tunneling Geopede, Valakut Invoker,
+Valakut Predator, Vestige of Emrakul, Vile Aggregate, Volcanic Upheaval,
+Voracious Null, Wave-Wing Elemental
+
+Release 1.66 (September 26, 2015)
+============
+lodici
+melvin
+ShawnieBoy
+
+- card names in log/stack are now interactive, mouse over to highlight card
+  location or click to view full size image
+
+- choose one of four styles for the log/stack messages
+
+- replaced clunky two-click log/stack popup menu with single click icon bar
+
+- restore last selected view (basic/advanced) when opening log file screen
+
+- display alert at startup if current JRE is less than 1.8
+
+- fixed the following bugs:
+  * libpng warning: iCCP: known incorrect sRGB profile (issue #439).
+  * target indicator should appear before before period instead of after it (issue #442)
+
+- added the following cards:
+Embermaw Hellion, Unholy Hunger
+
+Release 1.65 (August 30, 2015)
+============
+lodici
+melvin
+ShawnieBoy
+
+- options for game log accessed via a new menu icon on the its titlebar
+
+- game log is completely hidden when turned off (issue #170)
+
+- add new deck pack from ubeefx
+
+- add Russian UI translation
+
+- keywords help page (keywords.txt) can now be translated
+
+- added the following to the card script:
+  * ability: devoid
+  * ability: ingest
+  * ability: awaken <n> <cost>
+
+- fixed the following bugs:
+  * log widget causes UI to slow down when there are many log entries (issue #419)
+  * translation setting is overwritten when importing
+  * casting without mana cost does not allow paying additional costs
+  * card used to cast a spell can be discarded to pay for its own additional cost
+  * miracle trigger did not check that card still in hand before casting
+  * cascade should move cards to bottom after casting instead of before
+  * AI would cast Skyreaping when it has zero devotion to green
+  * AI would cast Echoes of the Kin Tree when it doesn't have any creature in play (issue #399)
+  * Demonic Tutor's chosen card is revealed in the log (issue #411)
+  * Raka Sanctuary checks for green permanent instead of blue (issue #414)
+  * Warstorm Surge and Stalking Vengeance's trigger deals incorrect damage (issue #415)
+  * That Which Was Taken's target choice should be targetted (issue #424)
+  * Lifespinner's ability can be activated without three Spirits (issue #425)
+  * Garruk Relentless's transform triggered infinitely
+  * Disciple of Kangee's ability should cost {U} and not {2}
+  * Shuriken's throw ability causes the MCTS AI to crash
+  * Bloodthirsty Ogre's ability requires a Demon permanent not Demon creature
+  * Undead Leotau's ability should give it +1/-1 instead of +1/+1
+  * Owl Familiar missing flying
+  * Shallow Grave should reanimate the top creature card, not the top card
+  * Colfenor's Urn didn't return any cards to play after it was sacrificed
+
+- added the following cards:
+Anchor to the Æther, Artificer's Epiphany, Chandra's Ignition,
+Deep-Sea Terror, Displacement Wave, Dominator Drone,
+Dwynen, Gilt-Leaf Daen, Fiery Impulse, Graveblade Marauder, Sheer Drop,
+Vine Snare, Woodland Bellower
+
+Release 1.64 (July 31, 2015)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- refactor and update the UI to allow UI text to be translated to other languages
+
+- add Portuguese UI translation, it can be selected at startup or via the preferences dialog
+
+- to help translate the UI, please read https://github.com/magarena/magarena/wiki/Translating-Magarena
+
+- include the "Magic Origins" set in formats
+
+- improve AI timing hints for sorcery speed pump spells
+
+- added the following to the card script:
+  * condition: there are two or more instant and/or sorcery cards in your graveyard
+  * ability: renown <n>
+  * ability: When SN becomes renowned, <effect>
+
+- fixed the following bugs:
+  * mechanism to prevent AI infinite play loop not working
+  * limit AI's maximum activation of specific abilities to prevent infinite play loop
+  * incorrect implementation of Madness could leads to a situation where
+    player is unable to complete payment of mana cost (issue #385)
+  * crash when opening deck builder with invalid deck (issue #403)
+  * Platinum Angel did not prevent "if you would lose" replacement effect from occuring (issue #404)
+  * Diffusion Sliver did not check that spell/ability is controlled by an opponent
+
+- added the following cards:
+Akroan Jailer, Akroan Sergeant, Alchemist's Vial, Ampryn Tactician,
+Anafenza, the Foremost, Anointer of Champions, Aspiring Aeronaut,
+Avaricious Dragon, Aven Battle Priest, Blazing Hellhound,
+Blessed Spirits, Blood-Cursed Knight, Bounding Krasis,
+Caustic Caterpillar, Chief of the Foundry, Citadel Castellan,
+Clash of Wills, Conclave Naturalists, Consul's Lieutenant,
+Deadbridge Shaman, Dwynen's Elite, Elemental Bond, Enlightened Ascetic,
+Eyeblight Assassin, Eyeblight Massacre, Faerie Miscreant, Fetid Imp,
+Firefiend Elemental, Foundry of the Consuls, Ghirapur Æther Grid,
+Ghirapur Gearcrafter, Guardian Automaton, Hangarback Walker,
+Healing Hands, Heavy Infantry, Helm of the Gods, Hitchclaw Recluse,
+Honored Hierarch, Hydrolash, Iname as One, Iroas's Champion,
+Jhessian Thief, Knight of the Pilgrim's Road, Kytheon's Irregulars,
+Languish, Lightning Javelin, Mage-Ring Bully, Magmatic Insight,
+Malakir Cullblade, Managorger Hydra, Mantle of Webs, Molten Vortex,
+Nivix Barrier, Patron of the Valiant, Pharika's Disciple,
+Pia and Kiran Nalaar, Prickleboar, Priest of the Blood Rite,
+Rabid Bloodsucker, Ramroller, Reave Soul, Relic Seeker, Rhox Maulers,
+Ringwarden Owl, Seismic Elemental, Separatist Voidmage, Shambling Ghoul,
+Skyraker Giant, Skysnare Spider, Somberwald Alpha, Soulblade Djinn,
+Stalwart Aven, Subterranean Scout, Sword of the Animist, Thopter Engineer,
+Thunderclap Wyvern, Topan Freeblade, Undercity Troll, Valor in Akros,
+Veteran's Sidearm, Volcanic Rambler, War Horn, War Oracle, Whirler Rogue,
+Zendikar Incarnate, Zendikar's Roil
+
+Release 1.63 (June 30, 2015)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- support costs with the snow mana symbol {S}
+
+- layout and style updates to Deck Editor including persistent abbreviated deck view
+
+- add a Legality tab in Deck editor to show deck legality status
+
+- add an Audio tab in Preferences dialog for all audio settings, volume of UI sounds can now be adjusted
+
+- new feedback sounds when adding or removing a card from deck, bong sound for alerts, and clunk sound for invalid action
+
+- rename preference "Allow only sensible choices" to "Limit options for human player to those available to the AI",
+  change to off by default
+
+- improve AI's use of specific cards by adding AI specific casting restrictions
+
+- fixed the following bugs:
+  * crash when mana cost exceeds {16}
+  * crash when double clicking on card in hand (issue #374)
+  * crash when importing AI player profile due to missing default profile (issue #329)
+  * additional costs not required when casting imprinted spell
+  * "skip till end of turn" not cleared at end of turn (issue #350)
+  * static ability generated from ability property applied at the wrong layer (issue #331)
+  * image count not set to zero after image download completed
+  * wrong image for Snake Basket, Mystic Compass
+  * sorcery speed pump spells timing hint incorrect
+  * AI casting restriction applied to player (issue #341)
+  * Rancor stays attached to Treetop Village even when no longer a creature (issue #50)
+  * Momir Vig's triggers did not synergize (issue #328)
+  * Bogardan Phoenix did not get a death counter when it returns to the battlefield
+  * Orzhov Charm's bounce implementation could cause concurrent modification exception
+  * Scare Tactics' timing hint incorrect
+  * Grim Feast's trigger checks for when a creature an opponent controls dies
+  * Chimeric Mass's ability did not give it the Artifiact card type
+
+- added the following cards:
+Adarkar Windform, Alchor's Tomb, Ana Sanctuary, Apathy,
+Arbiter of Knollridge, Arcane Denial, Ashnod's Cylix, Aura Barbs,
+Aura of Dominion, Banshee, Battle Cry, Bellowing Fiend, Blizzard,
+Bloodbond March, Bloodthirsty Ogre, Boreal Centaur, Boreal Griffin,
+Branded Brawlers, Browse, Call for Blood, Call of the Wild, Calming Verse,
+Cerulean Sphinx, Ceta Sanctuary, Champion's Helm, Chilling Shade,
+Chimeric Coils, Cleansing Beam, Cloak of Confusion, Compulsive Research,
+Cover of Winter, Cromat, Crovax the Cursed, Curse Artifact, Cursed Rack,
+Cyclopean Snare, Dark Maze, Dark Temper, Dega Sanctuary, Diamond Faerie,
+Disorder, Distorting Lens, Dosan the Falling Leaf, Dwarven Armory,
+Early Harvest, Earth Surge, Elephant Resurgence, Enchanted Being,
+Ethereal Haze, Excise, Eye of Singularity, Farrel's Mantle, Feint,
+Filigree Fracture, First Volley, Flint Golem, Forbidden Alchemy,
+Forethought Amulet, Frost Raptor, Fylgja, Gaea's Balance,
+Gangrenous Zombies, Gaseous Form, Gelid Shackles, Ghosts of the Innocent,
+Giant Caterpillar, Glacial Plating, Glimpse the Future, Gnat Miser,
+Goblin Cadets, Goblin Rimerunner, Goblin Sappers, Goblin Ski Patrol,
+Goblin Snowman, Granulate, Gravecrawler, Haunted Angel, Heart of Light,
+Hokori, Dust Drinker, Imperial Mask, Incite Hysteria, Indentured Oaf,
+Insurrection, Invoke Prejudice, Jin-Gitaxias, Core Augur,
+Kitsune Palliator, Knight of Dusk, Knight of Valor, Kry Shield,
+Kyoki, Sanity's Eclipse, Leave No Trace, Lichenthrope, Lifespinner,
+Light of Sanction, Locust Miser, Manacles of Decay, Mana Short,
+Mana Vortex, Mark of Eviction, Martyrs of Korlis, Minamo Scrollkeeper,
+Mind Whip, Miracle Worker, Mistfolk, Monsoon, Mouth of Ronom,
+Mundungu, Murderous Betrayal, Natural Balance, Necra Sanctuary,
+Necropolis, Nivix Cyclops, Noble Purpose, Oath of Lim-Dûl,
+Ohran Yeti, Orb of Dreams, Orcish Captain, Orcish Squatters,
+Orcish Veteran, Pallid Mycoderm, Phantom Wings, Phyrexian Ironfoot,
+Phyrexian Snowcrusher, Phytohydra, Pillar Tombs of Aku, Plague Boiler,
+Pollenbright Wings, Preferred Selection, Primordial Ooze, Rakalite,
+Raka Sanctuary, Rally the Righteous, Razormane Masticore, Relic Bind,
+Rimebound Dead, Rimefeather Owl, Rimescale Dragon, Ring of Immortals,
+Ritual of the Returned, Roar of Reclamation, Rocket Launcher,
+Rohgahh of Kher Keep, Rolling Stones, Rubinia Soulsinger, Savaen Elves,
+Scarab of the Unseen, Scarwood Bandits, Scourge of Fleets,
+Scrying Sheets, Seasinger, Serpent Generator, Sheltered Valley,
+Shifting Sky, Shrieking Specter, Silklash Spider, Skyward Eye Prophets,
+Slate Street Ruffian, Sleeper Agent, Slumbering Tora, Snow Devil,
+Snow Fortress, Soldevi Heretic, Spell Crumple, Spitting Slug, Spore Cloud,
+Starfall, Stasis Cocoon, Steamflogger Boss, Strategic Planning, Subdue,
+Sudden Spoiling, Sultai Soothsayer, Surge of Zeal, Surrakar Spellblade,
+Tainted Æther, That Which Was Taken, Thirst for Knowledge,
+Thought Devourer, Thought Eater, Thought Nibbler, Thundercloud Shaman,
+Tolarian Winds, Tower Geist, Transluminant, Tresserhorn Skyknight,
+Trusted Advisor, Vampire Lacerator, Vedalken Shackles, Volrath the Fallen,
+Voodoo Doll, Warped Devotion, Willow Satyr, Wojek Apothecary,
+Wojek Embermage, Wojek Siren, Wrench Mind, Yukora, the Prisoner
+
+Release 1.62 (May 31, 2015)
+============
+lodici
+melvin
+PalladiaMors
+ShawnieBoy
+
+- display decks containing selected card in Card Explorer, double-click deck name to view list of cards in deck
+
+- display tokens in Card Explorer
+
+- highlight icons in action and status bar on mouse over
+
+- add reason in log for unattaching aura/equipment
+
+- added the following to the card script:
+  * Allow rider effect to reference target by putting reference word between asterisks
+    eg: Untap target permanent.~Gain control of *it* until end of turn.~*It* gains haste until end of turn.
+  * ability: Whenever SN enters the battlefield or attacks, <effect>
+  * ability: Prevent all damage that would be dealt to [permanents]
+  * ability: Prevent all combat damage that would be dealt to [permanents]
+  * ability: Prevent all noncombat damage that would be dealt to [permanents]
+  * ability: Whenever [permanent] is dealt damage, [effect]
+  * ability: Whenever a player discards a card, [effect]
+  * ability: Whenever an opponent discards a card, [effect]
+  * ability: When [condition], [effect]
+  * effect: Put a [token] onto the battlefield for each [amount].
+  * effect: Gain control of [permanent] until end of turn.
+  * effect: SN deals damage equal to [amount] to [target].
+
+- fixed the following bugs:
+  * crash due to change in focus on Mac OS (issue #130)
+  * crash due to unimplemented cards in deck (issue #252)
+  * crash due to no cards in category on tiled cards view (issue #310)
+  * initial default AI randomly chosen, should be MCTS (issue #181)
+  * new duel screen did not restore previously selected decks (issue #232)
+  * exceptions during card loading caused the card pool to be empty (issue #236)
+  * saved cube settings not restored after import (issue #305)
+  * themed random deck generator did not make use of selected cube
+  * maximum mana cost is 16 but explorer filter only goes to 15 (issue #233).
+  * placeholder text, such as SN and PN, appears in user choice panel for optional effects (issue #247)
+  * skip till end of turn did not allow player to gain priority at end of turn (issue #318)
+  * Invasion block included Planeshift, should be Planar Chaos
+  * 'prevent the next n damage' effect did not take effect if damage is replaced by a different action
+  * exploit trigger did not activate when creature to be exploited is itself (issue #282)
+  * state triggers did not wait till player has priority being going onto the stack
+  * Clone effect was countered if chosen permanent is removed before effect resolves
+  * Seaside Haven's activation cost is {W}{B}, should be {W}{U}
+  * Barbarian Bully's activation cost is discard, should be random discard
+  * Belltower Sphinx's triggered ability did not uses the stack (issue #255)
+  * Glint Eye Nephilim's trigger occurred when any permanent dealt damage to a player
+  * Aurification's type and ability modification is missing
+  * Ward Sliver enter the battlefield replacement uses the stack
+  * Dark Depths put the token into play regardless of whether the sacrifice action succeeds
+  * Relentless Rats' static ability had no effect (issue #243)
+  * wrong card images for Eager Cadet, Coral Eel, Goblin Raider, Giant Octopus, Sea Eagle, Silverback Ape, Vengeance, and Vizzerdrix
+
+- added the following cards:
+Academy Elite, Alpha Status, Animal Boneyard, Ashling, the Extinguisher,
+Auramancer's Guise, Avoid Fate, Baneful Omen, Blood-Chin Fanatic,
+Bloodletter Quill, Bog Down, Bravado, Brawl, Carrion, Cenn's Heir,
+Cerebral Eruption, Chaotic Backlash, City of Solitude, Civic Saber,
+Clone Legion, Coalition Victory, Coat of Arms, Convalescent Care,
+Corpse Lunge, Corrosion, Crash Landing, Crater's Claws,
+Cruel Ultimatum, Crumbling Sanctuary, Cyclops Gladiator,
+Dark Tutelage, Daybreak Coronet, Death Pit Offering, Demonmail Hauberk,
+Derevi, Empyrial Tactician, Descendant of Masumaro, Destructive Urge,
+Dragonlord Dromoka, Dragonlord Silumgar, Dragon Mage, Dune-Brood Nephilim,
+Duskmantle Seer, Dusk Urchins, Edge of Autumn, Electropotence, Electryte,
+Emissary of Despair, Emissary of Hope, Endangered Armodon, Endemic Plague,
+Endrek Sahr, Master Breeder, Enduring Victory, Essence Backlash,
+Fathom Seer, Final Strike, Floodgate, Force Bubble, Forge Armor,
+Foul-Tongue Shriek, Freyalise Supplicant, Gallows at Willow Hill,
+Gaze of Adamaro, General's Kabuto, Gerrard Capashen, Geth's Grimoire,
+Ghoulcaller Gisa, Gilder Bairn, Gleam of Authority, Gloomwidow's Feast,
+Goblin Razerunners, Golem-Skin Gauntlets, Graceblade Artisan,
+Granite Grip, Greater Good, Grim Feast, Hall of Triumph, Harvest Wurm,
+Heartless Hidetsugu, Helldozer, Hidden Predators, Hisoka, Minamo Sensei,
+Hold the Gates, Homarid Spawning Bed, Honorable Scout, Hooded Hydra,
+Hot Soup, Ichor Explosion, Incite Rebellion, Inspiring Call,
+Ire of Kaminari, Ixidron, Jagged Poppet, Jarad, Golgari Lich Lord,
+Jinxed Choker, Joyous Respite, Kangee, Aerie Keeper,
+Kheru Bloodsucker, Kheru Dreadmaw, Kinsbaile Borderguard, Kithkin Zealot,
+Kiyomaro, First to Stand, Knight of New Alara, Laccolith Rig, Lich's Tomb,
+Lifeblood Hydra, Life's Legacy, Lingering Death, Maga, Traitor to Mortals,
+Magus of the Mirror, Mana Bloom, Mastery of the Unseen,
+Megatherium, Mercadia's Downfall, Mercurial Chemister, Mercy Killing,
+Mindculling, Mind Unbound, Mirror Universe, Momentous Fall, Momentum,
+Mortis Dogs, Mycosynth Fiend, Myth Realized, Nature's Resurgence,
+Nemesis of Mortals, Nightmare Lash, Nomads' Assembly, Ojutai's Summons,
+Oloro, Ageless Ascetic, Opal Avenger, Orochi Hatchery, Orzhov Charm,
+Palisade Giant, Parallectric Feedback, Parallel Evolution,
+Parasitic Implant, Pennon Blade, Phantasmal Sphere, Phyrexian Swarmlord,
+Pinion Feast, Price of Knowledge, Prime Speaker Zegana, Public Execution,
+Pygmy Kavu, Rashida Scalebane, Razor Hippogriff, Recurring Insight,
+Renewing Dawn, Rhys the Redeemed, Ribbons of the Reikai, Riddlesmith,
+Riot Control, Riptide Director, Risen Executioner, Rite of the Serpent,
+Rogue Skycaptain, Rotfeaster Maggot, Rune-Tail, Kitsune Ascendant,
+Rune-Tail's Essence, Rush of Knowledge, Sage's Reverie, Sanguine Praetor,
+Scourge of Skola Vale, Scrapyard Salvo, Scroll of the Masters, Sever Soul,
+Shamanic Revelation, Shared Animosity, Shrine of Limitless Power,
+Shrine of Loyal Legions, Sigil of Distinction, Skarrgan Skybreaker,
+Skizzik Surger, Skywise Teachings, Slate of Ancestry,
+Soul of Ravnica, Soul's Grace, Soul Tithe, Spawn of Thraxes,
+Spiraling Embers, Spontaneous Generation, Starlight, Storm Entity,
+Street Wraith, Stronghold Discipline, Thermokarst, Thoughts of Ruin,
+Thunderbreak Regent, Toil to Renown, Tomb of the Spirit Dragon,
+Torch Song, Tormented Thoughts, Torrent of Fire, Transcendence,
+Unerring Sling, Unified Strike, Viashino Heretic, Vicious Shadows,
+Volcanic Vision, Vorel of the Hull Clade, Waiting in the Weeds,
+Warden of the First Tree, Warmonger's Chariot, War Report,
+Wave of Reckoning, Wave of Terror, Whispering Specter, Wild Slash,
+Wingmate Roc, Wing Storm, Withering Hex, Worthy Cause, Zephyr Spirit
+
+Release 1.61 (April 26, 2015)
+============
+lodici
+melvin
+Mike
+PalladiaMors
+ShawnieBoy
+
+- triggers go on stack after state-based-actions are checked, previously they
+  go on the stack immediately when they are triggered
+
+- give nameless permanents/spells a unique id to improve clarity of stack/log messages
+
+- rename save file for an onging duel to latest.duel due to change in format
+
+- restore selected deck type and deck name on opening deck chooser dialog
+
+- removed deck strength calculator
+
+- added the following to the card script:
+  * ability: split second
+  * ability: At the beginning of your draw step, <effect>
+  * ability: At the beginning of each other player's draw step, <effect>
+  * ability: At the beginning of combat on your turn, <effect>
+  * ability: Whenever SN blocks or becomes blocked by a <permanent>, <effect>
+  * ability: Whenever a <creature> attacks or blocks, <effect>
+  * ability: Whenever a <creature> blocks, <effect>
+  * ability: Whenever a <creature> attacks you, <effect>
+  * ability: Whenever a <permanent> becomes tapped, <effect>
+  * ability: Whenever an opponent draws a card, <effect>
+  * ability: Whenever a player draws a card, <effect>
+  * ability: Whenever you scry, <effect>
+  * ability: When <permanent> becomes the target of [spell/ability], <effect>
+  * ability: When <permanent> deals damage to you, <effect>
+  * ability: When <permanent> deals combat damage to an opponent, <effect>
+  * ability: SN gets <pt change> for each <target>
+  * ability: <costs>: Return SN from your graveyard to your hand.
+  * effect: Destroy that <permanent>.
+  * effect: Destroy that <permanent> at end of combat.
+  * effect: Return that <permanent> to its owner's hand at end of combat.
+  * effect: Reveal the top <amount> cards of your library. Put all <cards> revealed this way into your hand and the rest on the bottom of your library in any order.
+  * effect: Return SN from your graveyard to the battlefield.
+  * effect: Return <permanents> to their owner's hand.
+  * effect: Each <player> puts the top <amount> cards of his or her library into his or her graveyard.
+  * effect: Search your library for up to <amount> <cards> and put them onto the battlefield. Then shuffle your library.
+  * effect: Clash with an opponent, if you win, <effect>
+  * effect: Flip coin. If you win, <effect> if you lose, <effect>'
+  * effect: Look at the top card of your library. You may put that card on the bottom of your library.
+  * effect: SN becomes <pt> <color> <subtype> <type> with <abilities> until end of turn.
+  * effect: <target> becomes <pt> <color> <subtype> <type> with <abilities> until end of turn.
+
+- fixed the following bugs:
+  * crash when clicking on "Generate Deck" button if prebuild deck was used (issue #167)
+  * crash due to concurrent modification in MagicLogBook (issue #121)
+  * crash due to two spell on the stack having each other as target (issue #190)
+  * player targeting highlight disappears/flashes (issue #148)
+  * player was allowed to see the AI's face down cards (issue #215)
+  * message in user action panel disappears/flashes (issue #200)
+  * horizontal scrollbar appears in user action panel (issue #120)
+  * catch error on resume duel if player's deck is invalid (issue #220)
+  * face down cards were not revealed when they leave the battlefield
+  * type cycling did not count as cycling for the purpose of cycling triggers (issue #179)
+  * graft did not ensure that source had a +1/+1 before moving the counter onto to the target
+  * comes into play modifications did not affect comes into play triggers as they were applied too late (issue #151)
+  * show mana symbols on permanents base on actual mana ability instead of what is defined by the card (issue #158)
+  * Ambush Krotiq's second ability does nothing when it resolves
+  * Alesha, Who Smiles at Death's second ability did not remove card from the graveyard
+  * Alpha Brawl's effect caused the chosen creature to damage itself
+  * Ancient Grudge was targeting artifact or enchantment (issue #219)
+  * Beasts of Bogardan was checking for white permanent, should be nontoken white permanent
+  * Bullwhip was dealing 2 damage, should be 1 damage
+  * Bladewing the Risen did not have flying
+  * Fettergeist upkeep cost was computed assuming that it is always a creature
+  * March of the Machines causes all noncreature artifacts to be put into the graveyard
+  * Shorecrasher Mimic was checking for red and white spells
+
+- added the following cards:
+Abzan Beastmaster, Acid-Spewer Dragon, Ambuscade Shaman,
+Angel of the Dire Hour, Arashin Foremost, Ashcloud Phoenix,
+Atarka Monument, Avatar of the Resolute, Balance, Battle-Rattle Shaman,
+Belltoll Dragon, Bloodsoaked Champion, Bottle of Suleiman,
+Breaching Leviathan, Briar Patch, Celestial Crusader, Ceremonial Guard,
+Chaotic Goo, Charmed Griffin, Cinder Wall, Coffin Puppets,
+Creepy Doll, Crushing Pain, Deathbringer Regent, Denizen of the Deep,
+Dragon Whisperer, Dread Cacodemon, Dromoka Monument, Ensouled Scimitar,
+Entangling Trap, Eternal Dragon, Faerie Noble, Fatal Blow, Fatestitcher,
+Final-Sting Faerie, Fire Juggler, Firewing Phoenix, Flamespeaker Adept,
+Flowstone Salamander, Full Moon's Rise, Furnace Dragon,
+Furystoke Giant, Gangrenous Goliath, Ghoulcaller's Bell,
+Gift of Estates, Glory, Goblin Bomb, Godo's Irregulars,
+Grafted Skullcap, Grim Poppet, Guardian Shield-Bearer,
+Hammer of Bogardan, Hand of Emrakul, Harbinger of the Hunt,
+Heart-Piercer Bow, Herdchaser Dragon, High Sentinels of Arashin,
+Hooded Assassin, Hypnox, Icefeather Aven, Incandescent Soulstoke,
+Invasive Species, Kederekt Leviathan, Keeper of the Beasts,
+Keeper of the Flame, Keeper of the Light, Keeper of the Mind,
+Kiora's Follower, Knight of the White Orchid, Knowledge and Power,
+Kolaghan Aspirant, Kolaghan Monument, Krosan Grip, Kuldotha Phoenix,
+Leering Emblem, Magma Phoenix, Mana Vapors, Mardu Ascendancy,
+Mighty Emergence, Molten Birth, Myojin of Cleansing Fire,
+Myojin of Infinite Rage, Myojin of Night's Reach, Myojin of Seeing Winds,
+Necromaster Dragon, Necrosavant, Nim Devourer, Noble Stand,
+Oaken Brawler, Ojutai Monument, Opal Acrolith, Opportunist,
+Orim's Chant, Oriss, Samite Guardian, Paragon of Eternal Wilds,
+Paragon of Fierce Defiance, Paragon of Gathering Mists,
+Paragon of New Dawns, Paragon of Open Graves, Parallax Inhibitor,
+Pestilence Rats, Phage the Untouchable, Phyrexian Driver, Planar Chaos,
+Primal Forcemage, Puppet's Verdict, Quagmire Lamprey, Radiant, Archangel,
+Reassembling Skeleton, Reiver Demon, Renegade Warlord, Returned Reveler,
+Ringskipper, Rishadan Pawnshop, Rot Farm Skeleton, Sabertooth Outrider,
+Salvage Titan, Scion of Vitu-Ghazi, Scoria Wurm, Sealock Monster,
+Secret Plans, Seedguide Ash, Shard Phoenix, Shieldhide Dragon,
+Sibsig Host, Sight of the Scalelords, Silumgar Monument, Simic Basilisk,
+Skarrgan Firebird, Skittish Valesk, Skyclaw Thrash, Slavering Nulls,
+Slithering Shade, Slumbering Dragon, Soul of New Phyrexia, Soul of Theros,
+Soul of Zendikar, Springjack Knight, Sprite Noble, Stitch in Time,
+Stonewood Invocation, Stormwing Dragon, Sudden Death, Sudden Shock,
+Sulfur Elemental, Sulfuric Vortex, Sultai Flayer, Summon the School,
+Surrak, the Hunt Caller, Take Possession, Tattermunge Witch,
+Tavern Swindler, Teferi's Puzzle Box, Tideforce Elemental,
+Ulasht, the Hate Seed, Unbender Tine, Undead Gladiator,
+Unyaro Griffin, Vebulid, Viashino Sandswimmer, Vineweft, Wall of Roots,
+Warmonger Hellkite, Weathered Wayfarer, Well of Ideas, Whetstone,
+Wild Wurm, Winter Sky, Wipe Away, Witch's Mist, Word of Seizing,
+Yore-Tiller Nephilim, Zombie Mob
+
+Release 1.60 (March 30, 2015)
+============
+Guest
+lodici
+melvin
+Mike
+PalladiaMors
+ShawnieBoy
+
+- improve display of duel sidebar, move AI player panel from top of sidebar to
+  above Human player panel
+
+- improve player panel, display health, poison, and damage prevention as
+  overlays on the player image
+
+- add visual indication when player receives damage or gains health
+
+- download errors are shown to user in the UI instead of asking user to check the console
+
+- switch from mtgimage.com to magiccards.info for card images
+
+- improve robustness of Firemind worker
+
+- background loading of cards to reduce startup time
+
+- support Dragons of Tarkir in Card Explorer
+
+- added the following to the card script:
+  * cost: Exile <amount> <cards>
+  * condition: creatures you control have total power 8 or greater
+  * condition: SN is an Enchantment
+  * ability: exploit
+  * ability: megamorph <cost>
+  * ability: kinship <effect>
+  * ability: affinity for <permanents>
+  * ability: entwine <cost>
+  * ability: SN can't block <creatures>
+  * ability: SN can attack as as though it didn't have defender
+  * ability: When SN exploits a creature, <effect>
+  * ability: Whenever SN blocks a <creature>, <effect>
+  * ability: Whenever a <creature> attacks, <effect>
+  * effect: Rebound.
+  * effect: Regenerate each <permanent>.
+  * effect: Put <card> on the bottom of its owner's library.
+  * effect: SN becomes a <pt> <subtype> creature with <abilities>.
+  * effect: <permanent> gain protection from the color of your choice until end of turn.
+  * effect: Counter <spell>. If that spell is countered this way, exile it instead of putting it into its owner's graveyard.
+
+- fixed the following bugs:
+  * errors when playing sound causes program to crash (issue #112)
+  * horizontal scrollbar always present in user action panel (issue #120)
+  * mulligan screen closes prematurely if re-deal on two cards types (issue #44)
+  * images of cards with non ascii characters could not be saved on Mac OS
+  * crash when cards with characteristic-defining ability is in hand
+  * modal effects with a targeted mode could not select target
+  * casting a card with dash did not count as casting a spell (issue #97)
+  * cards that specify creatures with a certain toughness were checking for power instead
+  * instant and sorceries when manifested are cast instead of becoming face-down creatures (issue #107)
+  * effects that modify how a card entered the battlefield did not affect cards that clone permanents when they come into play (issue #108)
+  * creatures that receive damage and stop being creatures did not have damage cleared at end of turn (issue #131)
+  * Sakashima's Student and Phyrexian Metamorph's card abilities were overriden by AI casting hint (issue #81)
+  * *Chimera's ability should last forever instead of until end of turn
+  * Snapcaster Mage can only be cast by AI during the main phase
+  * Moltensteel Dragon and Pith Driller could not be cast by paying life
+
+- added the following cards:
+Aboroth, Abuna's Chant, Abzan Advantage, Abzan Kin-Guard, Abzan Runemark,
+Aerie Bowmasters, Ainok Artillerist, Ainok Survivalist, Alabaster Potion,
+Alesha, Who Smiles at Death, Ambush Krotiq, Anafenza, Kin-Tree Spirit,
+Ancestral Statue, Ancestral Vengeance, Ancient Carp, Apostle's Blessing,
+Armored Guardian, Artful Maneuver, Assert Authority, Atarka Beastbreaker,
+Atarka Efreet, Atarka, World Render, Aven Liberator, Aven Sunstriker,
+Aven Tactician, Barbarian Bully, Baru, Fist of Krosa, Bathe in Light,
+Battle Brawler, Benevolent Bodyguard, Berserkers' Onslaught,
+Blasphemous Act, Blessing of the Nephilim, Blinkmoth Infusion,
+Bogardan Phoenix, Boltwing Marauder, Book Burning, Bottled Cloister,
+Bower Passage, Brassclaw Orcs, Break Through the Line,
+Broodstar, Browbeat, Bullwhip, Butcher of the Horde, Center Soul,
+Chain Lightning, Champion of Arashin, Chaosphere, Chromescale Drake,
+Coat with Venom, Cold Storage, Colfenor's Urn, Collateral Damage,
+Colossodon Yearling, Conifer Strider, Contradict, Cunning Breezedancer,
+Custodian of the Trove, Cyclopean Mummy, Cyclops Tyrant, Dark Deal,
+Defeat, Dense Canopy, Desolation Angel, Desolation Giant, Dirgur Nemesis,
+Distortion Strike, Draco, Dragonloft Idol, Dragon-Scarred Bear,
+Dragon's Eye Sentry, Drekavac, Dromoka Captain, Dromoka Dunecaster,
+Dromoka's Gift, Dromoka, the Eternal, Dromoka Warrior, Dross Golem,
+Dwarven Scorcher, Dystopia, Earnest Fellowship, Echoes of the Kin Tree,
+Elite Scaleguard, Elusive Spellfist, Emberwilde Caliph, Emberwilde Djinn,
+Emerge Unscathed, Empty-Shrine Kannushi, Energy Bolt, Fascination,
+Fate Forgotten, Feat of Resistance, Feldon's Cane, Flatten,
+Fleet-Footed Monk, Fleshwrither, Foil, Foresight, Forsaken Wastes,
+Frogmite, Frontier Mastodon, Fruit of the First Tree, Gallowbraid,
+Garruk Relentless, Garruk, the Veil-Cursed, Ghoultree, Gibbering Hyenas,
+Glacial Chasm, Glint, Goblin Boom Keg, Goblin Diplomats, Goblin Mutant,
+Goblin Tinkerer, Gods Willing, Grave Strength, Grazing Kelpie,
+Great Teacher's Decree, Grip of Amnesia, Gudul Lurker, Hand of Silumgar,
+Harsh Sustenance, Herald of Dromoka, Hero's Blade, Hidden Horror,
+Humble Defector, Hunted Ghoul, Hydroblast, Impact Tremors,
+Incite War, Infernal Contract, Ink Dissolver, Inner Sanctum,
+Into Thin Air, Invoke the Firemind, Ironclaw Buzzardiers,
+Ironclaw Orcs, Jace, the Mind Sculptor, Jeskai Barricade,
+Jeskai Runemark, Jolrael, Empress of Beasts, Jovial Evil,
+Kami of the Painted Road, Khalni Hydra, Kithkin Zephyrnaut,
+Kolaghan Forerunners, Kolaghan Skirmisher, Kolaghan Stormsinger,
+Kolaghan, the Storm's Fury, Kookus, Korlash, Heir to Blackblade,
+Land Equilibrium, Land Tax, Leaf-Crowned Elder, Lightning Berserker,
+Lightwalker, Liquify, Lost Auramancers, Lyzolda, the Blood Witch,
+Maelstrom Djinn, Magmatic Chasm, Marang River Skeleton,
+Mardu Runemark, Marsh Hulk, Marshmist Titan, Midvast Protector,
+Might of the Nephilim, Mindscour Dragon, Minister of Pain,
+Misthoof Kirin, Momir Vig, Simic Visionary, Monastery Loremaster,
+Moonlit Strider, Morinfen, Mother of Runes, Mudbutton Clanger,
+Myr Enforcer, Nantuko Tracer, Natural Affinity, Nature's Wrath,
+Nettling Curse, Nightcreep, Nightshade Schemers, Oblivion Stone,
+Ogre Jailbreaker, Ojutai Interceptor, Ojutai's Breath,
+Ojutai, Soul of Winter, One Dozen Eyes, Orgg, Oxidda Golem,
+Palace Familiar, Pale Wayfarer, Pharagax Giant, Phyrexian Soulgorger,
+Pilgrim of the Fires, Pitiless Horde, Polar Kraken, Powder Keg,
+Prey's Vengeance, Profound Journey, Promise of Power, Psychic Vortex,
+Pyroblast, Pyroclast Consul, Qarsi Sadist, Quicksilver Behemoth,
+Qumulox, Rakdos Charm, Rakdos the Defiler, Rakshasa Gravecaller,
+Rakshasa's Disdain, Razor Barrier, Razor Golem, Reap and Sow,
+Reckless Imp, Resupply, Roar of the Kha, Roast, Rude Awakening,
+Safe Haven, Salt Road Quartermasters, Samite Elder, Sandcrafter Mage,
+Sandsteppe Scavenger, Sandstorm Charger, Sarkhan's Triumph,
+Scale of Chiss-Goria, Scion of Ugin, Screamreach Brawler,
+Segmented Krotiq, Seismic Rupture, Sejiri Steppe, Sensation Gorger,
+Serendib Djinn, Shaman of the Great Hunt, Shambling Goblin,
+Shape the Sands, Shelter, Shipwreck Singer, Shockmaw Dragon, Shrike Harpy,
+Sibsig Icebreakers, Sidisi's Faithful, Sidisi, Undead Vizier,
+Silumgar Butcher, Silumgar Sorcerer, Silumgar Spell-Eater,
+Silumgar, the Drifting Death, Skaab Goliath, Skullscorch,
+Smoldering Efreet, Sneaky Homunculus, Solar Tide, Somber Hoverguard,
+Spire Golem, Spiritual Asylum, Spiritual Sanctuary, Sprinting Warbrute,
+Squeaking Pie Grubfellows, Staggershock, Stalwart Shield-Bearers,
+Stampeding Elk Herd, Stave Off, Stoic Rebuttal, Stone Idol Trap,
+Stormcrag Elemental, Stormscape Master, Stratadon, Stratus Dancer,
+Strongarm Monk, Student of Ojutai, Sultai Runemark, Sunweb,
+Sygg, River Guide, Synod Sanctum, Taigam's Strike, Tangle Golem,
+Tangle Wire, Tarox Bladewing, Tectonic Instability, Temporal Cascade,
+Temur Runemark, Temur Sabertooth, Territorial Roc, Thawing Glaciers,
+Thornscape Master, Thoughtcast, Thought Lash, Tooth and Nail,
+Tooth of Chiss-Goria, Tread Upon, Ukud Cobra, Undergrowth,
+Updraft Elemental, Varchild's Crusader, Varchild's War-Riders,
+Vexing Sphinx, Vial of Dragonfire, Virulent Plague, Virulent Swipe,
+Void Squall, Volcanic Rush, Vulturous Aven, Wail of the Nim,
+Wakestone Gargoyle, Wall of Shards, Wandering Graybeard,
+Wandering Tombshell, War Flare, Waterspout Weavers, Winnower Patrol,
+Wolf-Skull Shaman, Worldgorger Dragon, Wormfang Behemoth,
+Youthful Scholar, Zephyr Scribe, Zurgo Bellstriker
+
+Release 1.59 (February 28, 2015)
+============
+lodici
+melvin
+Mike
+PalladiaMors
+
+- separate the core game engine from the UI, in preparation for updating the UI
+
+- improve mulligan choice for AI
+
+- improve how MCTS acts when it is on the losing end
+
+- work-in-progress on new AI engine, MTD(f)
+
+- added the following to the card script:
+  * effect: Choose one — • <effect1> • <effect2>
+  * effect: Choose one — • <effect1> • <effect2> • <effect3>
+  * effect: Put <permanent> on the bottom of its owner's library.
+
+- fixed the following bugs:
+   * modal effect did not ask for targets when putting effect on the stack
+   * not message shown when a player scry's but leave card on top
+   * missing reveal when card is shuffled into library instead of going to the graveyard
+   * missing AI hints for Banishing Light and Devour Flesh
+   * player avatars missing when resuming a game.
+   * Phyrexian Metamorph not able to copy an artifact
+   * Gilt-Leaf Archdruid's ability can be activated when you have only one druid
+
+- added the following cards:
+Active Volcano, Æther Shockwave, Ainok Guide, Aven Surveyor,
+Azorius Charm, Bant Charm, Barren Glory, Blue Elemental Blast,
+Boros Charm, Brutalizer Exarch, Chaos Charm, Consuming Bonfire,
+Crosis's Charm, Crushing Vines, Crux of Fate, Darigaaz's Charm,
+Darksteel Pendant, Defiant Ogre, Dromar's Charm, Emerald Charm,
+Energy Chamber, Energy Storm, Esper Charm, Essence Filter,
+Evolution Charm, Fatal Attraction, Feral Lightning, Fever Charm,
+Final Revels, Flash Flood, Fortify, Foundry Champion, Foxfire,
+Funeral Charm, Golgari Charm, Grixis Charm, Gruul Charm, Healing Leaves,
+Healing Salve, Hearth Charm, Hope Charm, Hurly-Burly, Ivory Charm,
+Izzet Charm, Jeskai Charm, Jund Charm, Krovikan Elementalist,
+Living Tsunami, Midnight Charm, Misery Charm, Nimbus Maze, Parch,
+Piracy Charm, Pooling Venom, Putrid Cyclops, Pyromancer's Swath,
+Quiet Disrepair, Recuperate, Red Elemental Blast, Samite Censer-Bearer,
+Sandsteppe Outcast, Second Wind, Selesnya Charm, Simic Charm,
+Slagstorm, Steel Sabotage, Sultai Charm, Treva's Charm, Triassic Egg,
+Valorous Stance, Vitality Charm, Whisperwood Elemental
 
 Release 1.58 (January 31, 2015)
 ============
 lodici
-melvinzhang
+melvin
 
 - support Fate Reforged in Card Explorer
 
@@ -209,7 +1502,7 @@ Guest
 Jericho Pumpkin
 Lodici
 melvin
-mike
+Mike
 PalladiaMors
 ShawnieBoy
 
@@ -217,7 +1510,7 @@ ShawnieBoy
   (requires an Internet connection)
 
 - when both players would lose due to life or poison counters, the active
-  player loses. 
+  player loses.
 
 - fixed the following bugs:
  * Mac launcher only allowed Java SE 7 to work, Java SE 8 did not work
@@ -261,14 +1554,14 @@ hong yie
 Lodici
 melvin
 Michael
-mike
+Mike
 PalladiaMors
 ShawnieBoy
 
 - Project Firemind integration
   You can support http://firemind.ch/, a deck evaluation with AI service, by
   running duels on your machine. You'll first need to obtain your access key
-  from your Project Firemind profile page, then enter it in 
+  from your Project Firemind profile page, then enter it in
   Settings -> Run Firemind Worker.
 
 - tabbed view for the deck editor for simpler, less cluttered UI which scales down to smaller screens
@@ -300,7 +1593,7 @@ ShawnieBoy
   * cost: Discard your hand
   * effect: <player> sacrifices <permanent>.
   * effect: Search your library for a card and put it into your hand. Then shuffle your library.
-  * effect: Search your library for up to <amount> <chosen> 
+  * effect: Search your library for up to <amount> <chosen>
   * effect: Exile SN, then return it to the battlefield under (your|its owner's) control.
   * effect: Exile <chosen>, then return it to the battlefield under (your|its owner's) control.
   * effect: Exile SN. Return it to the battlefield under its owner's control at the beginning of the next end step.
@@ -469,7 +1762,7 @@ ShawnieBoy
   optional to enable updating of low quality images to high quality images
 
 - click on double-sided or flip card in the card explorer to view other side
-  
+
 - add option to download images for unimplemented cards
 
 - add preferences setting to view card image at full size (480x680)
@@ -479,7 +1772,7 @@ ShawnieBoy
 - add icons for fear, intimidate, shroud, hexproof, and indestructible
 
 - added the following to the card script:
- * cost: sacrifice <amount> <permanents> 
+ * cost: sacrifice <amount> <permanents>
  * cost: tap <amount> untapped <permanents>
  * cost: untap <amount> tapped <permanents>
  * cost: put <amount> <counter type> counters on SN
@@ -510,7 +1803,7 @@ ShawnieBoy
  * ability: protection from <permanents>
  * ability: cannot be blocked by <permanents>
  * ability: cannot be blocked except by <permanents>
- * ability: morph <costs> 
+ * ability: morph <costs>
  * ability: Cast SN only <conditions>
  * ability: Cast SN with AI only <conditions>
  * ability: <activated ability> Activate this ability only <conditions>.
@@ -526,7 +1819,7 @@ ShawnieBoy
 
 - fixed the following bugs:
  * image files are corrupted due to partial download (issue 483)
- * tokens with variable power/toughness do not have their power/toughness copied (issue 523) 
+ * tokens with variable power/toughness do not have their power/toughness copied (issue 523)
  * permanents that enters the battlefield modified may trigger based on pre-modified state (issue 624)
  * not refreshing background after import (issue 628)
  * missing cards notification message not updated after download (issue 638)
@@ -737,10 +2030,10 @@ PalladiaMors
 ShawnieBoy
 
 - added Deck Chooser screen which replaces the file open dialog
-  
-- display invalid decks with the name scored out and in red  
 
-- show Status filter on Deck Editor screen 
+- display invalid decks with the name scored out and in red
+
+- show Status filter on Deck Editor screen
 
 - rename Oracle filter to Search and add tooltip explaining what it searches
 
@@ -748,7 +2041,7 @@ ShawnieBoy
 
 - added the following to the card script:
  * effect: Each <player> discard <amount> cards [at random].
- * ability: legendary landwalk 
+ * ability: legendary landwalk
  * ability: Channel - <costs>: <effect>
  * ability: Bloodrush - <costs>: <effect>
  * ability: madness <mana cost>
@@ -859,7 +2152,7 @@ melvin
 - added the following to the card script:
   * ability: dethrone
   * effect: You discard <amount> card [at random].
-  * effect: Each <player> draws <amount> cards. 
+  * effect: Each <player> draws <amount> cards.
 
 - fixed the following bugs:
   * Refresh's description showed 'permanent' instead of 'creature'
@@ -1006,8 +2299,8 @@ ShawnieBoy
   * ability: Whenever you gain life, <effect>
 
 - changed the following card script syntax (old -> new):
-  * lord <permanents> have/has <abilities> 
-    -> <permanents> have/has <abilities> 
+  * lord <permanents> have/has <abilities>
+    -> <permanents> have/has <abilities>
   * lord <permanents> get <power/toughness>
     -> <permanents> get <power/toughness>
 
@@ -1110,7 +2403,7 @@ ShawnieBoy
   * effect: Remove <amount> <counter> from SN.
   * effect: Switch <chosen>'s power and toughness until end of turn.
   * effect: Switch SN's power and toughness until end of turn.
-  * effect: Put <chosen from hand> onto the battlefield [tapped]
+  * effect: Put <chosen from hand> onto the battlefield <tapped>
   * effect: SN deals <amount> damage to each <creature/player>
   * effect: SN deals damage to each <creature/player> and each <creature/player>
   * effect: Draw a card at the beginning of the next turn's upkeep.
@@ -1125,7 +2418,7 @@ ShawnieBoy
   * effect: Sacrifice SN.
   * effect: Sacrifice SN at the beginning of the next end step.
   * effect: Search your library for <chosen>, reveal it, then shuffle your library. Then put that card on top of it.
-  * effect: <permanents> get <pt change> and gain <abilities> until end of turn. 
+  * effect: <permanents> get <pt change> and gain <abilities> until end of turn.
   * ability: Whenever a/an <permanent> enters the battlefield, <effect>
   * ability: Whenever another <permanent> enters the battlefield, <effect>
   * ability: Whenever another <permanent> enters the battlefield under your control, <effect>
@@ -1177,7 +2470,7 @@ ShawnieBoy
   * Jagged-Scar Archers did not show chosen target (issue 574)
   * Trigger from Garruk, Caller of Beasts' emblem is not optional (issue 517)
   * Brainstorm shows name of cards from hidden zone (issue 441)
-  * Flowstone Embrace gave enchanted creature +2/+2, should be +2/-2 
+  * Flowstone Embrace gave enchanted creature +2/+2, should be +2/-2
   * Unable to choose when Eldrazi Spawn to pay mana cost (issue 427)
 
 - added the following cards:
@@ -1313,7 +2606,7 @@ Grundomu
 Guest
 hong yie
 Lodici
-melvin 
+melvin
 mlkrime
 ShawnieBoy
 tiagoruback
@@ -1360,25 +2653,25 @@ woggle
 - changed the following card script syntax (old -> new):
   * pay <comma separate costs>: <effect>
     -> cost <comma separate costs>: <effect>
-  * combat damage player grow 
+  * combat damage player grow
     -> Whenever SN deals combat damage to a player, put a +1/+1 counter on SN.
-  * damage opponent draw card 
+  * damage opponent draw card
     -> Whenever SN deals damage to an opponent, draw a card.
-  * damage opponent may draw card 
+  * damage opponent may draw card
     -> Whenever SN deals damage to an opponent, you may draw a card.
-  * combat damage draw card 
-    -> Whenever SN deals combat damage to a player, draw a card. 
-  * combat damage may draw card 
+  * combat damage draw card
+    -> Whenever SN deals combat damage to a player, draw a card.
+  * combat damage may draw card
     -> Whenever SN deals combat damage to a player, you may draw a card.
-  * enters effect <effect> 
+  * enters effect <effect>
     -> When SN enters the battlefield, <effect>
   * leaves effect
     -> When SN leaves the battlefield, <effect>
-  * your upkeep effect <effect> 
+  * your upkeep effect <effect>
     -> At the beginning of your upkeep, <effect>
   * landfall effect <effect>
     -> Whenever a land enters the battlefield under your control, <effect>
-  * attacks effect <effect> 
+  * attacks effect <effect>
     -> Whenever SN attacks, <effect>
   * battalion effect <effect>
     -> Whenever SN and at least two other creatures attack, <effect>
@@ -1578,7 +2871,7 @@ tiagoruback
 - full screen card view will stack duplicate cards and display the count as an overlay
 
 - F10 takes a screen shot and displays it in the default application associated with "png" files if available
-  
+
 - added the following to the card script:
   * ability: tribute <n> effect <effect>
   * ability: enters with counter <counter type> <amount/X>
@@ -1870,7 +3163,7 @@ ShawnieBoy
   * effect: <chosen> discards <amount> cards.
   * effect: <chosen> discards <amount> cards at random.
   * effect: <chosen> draws <amount> cards, then discards <amount> cards.
-  * effect: <chosen> gains <amount> life. 
+  * effect: <chosen> gains <amount> life.
   * effect: prevent the next <amount> damage that would be dealt to SN this turn.
   * cost: Sacrifice an Elemental
   * cost: Sacrifice a Wall
@@ -2388,7 +3681,7 @@ Griffins.dec, Holy_Wood.dec, Insect_Doom.dec, Pain_and_Gain.dec,
 Random_Usefulness.dec, Sorcerer.dec, Spirit_Recycler.dec, Unlikely_Allies.dec,
 Vensers_Artifacts.dec, White_Infect.dec, White_Infect_40.dec,
 Zombie_Overlord.dec, Glorfindel_GWR_Zoo.dec, Glorfindel_G_Garruk.dec,
-Glorfindel_W_Auras-40.dec, Glorfindel_W_Elspeth.dec, 
+Glorfindel_W_Auras-40.dec, Glorfindel_W_Elspeth.dec,
 
 - added the following cards:
 Acidic Sliver, Ambassador Oak, Ancestor's Chosen, Anger of the Gods,
@@ -2506,7 +3799,7 @@ melvin
 - fixed: incorrect URL for image of Searing Spear
 - fixed: incorrect URL for image of Sliver token
 - fixed: incorrect URL for card text of Zhur-Taa Swine
-- fixed: Hedge Troll's ability cost {G} instead of {W} (issue 359) 
+- fixed: Hedge Troll's ability cost {G} instead of {W} (issue 359)
 - fixed: miracle trigger always treat X as 0 mana cost (issue 360)
 - fixed: Soulbond still applied if target is invalid upon resolution (issue 361)
 - fixed: Deadwood Treefolk can return itself from graveyard (issue 236)
@@ -2568,7 +3861,7 @@ includes contributions from melvin, a. benedict balbuena, manve.herumedre, and n
 - fixed: Wei Ambush Force should be 1/1, not 2/2
 - fixed: Howling Mine should trigger in the draw phase instead of upkeep phase
 - fixed: cards that enters tapped was triggering Gideon's Avenger
-- fixed: Outwit should not be able to target spells that did not target a player 
+- fixed: Outwit should not be able to target spells that did not target a player
 - fixed: double clicking in choice menu could cause the game to hang
 
 - added the following premade deck:
@@ -2677,7 +3970,7 @@ Garruk's Packleader
 
 Release 1.36 (March 29, 2013)
 ============
-includes contributions from melvin, Jak, and sponeta 
+includes contributions from melvin, Jak, and sponeta
 
 - added support for Planeswalker card type. Note that creatures do not
   directly attack Planeswalkers, rather the damage redirect rule applies to
@@ -2720,7 +4013,7 @@ includes contributions from melvin
   * unleash
 - added support for "creature you control" and "creature opponent control" to enchant property in card script
 - converted 99 cards with card code to use groovy code
-- added support for multiple card names to be specified in required_card_code and requires_groovy_code. 
+- added support for multiple card names to be specified in required_card_code and requires_groovy_code.
   Card names should be separated by a single comma without any space
 - removed white border around card pic pop up
 
@@ -2818,13 +4111,13 @@ includes contributions from melvin, Aunukia, and PhazedOut
 - rules parser integrated into main program at src/magic/grammar
 
 - fixed: changes to a creature's power and toughness may not be reflected immediately
-- fixed: change of control of a creature in combat was not removing creature from combat 
+- fixed: change of control of a creature in combat was not removing creature from combat
 - fixed: game crashes when sorting by power or toughness in deck editor
 - fixed: message shown when activating a pump ability shows "+1/+-1" instead of "+1/-1"
 - fixed: Sokenzan Spellblade's timing hint is set of flash, should be main
 - fixed: Glimmerdust Nap was able to enchant untapped creatures
 - fixed: Angelic Armaments doesn't make equipped creature white
-- fixed: Curiosity able to draw card when dealing damage to any player, 
+- fixed: Curiosity able to draw card when dealing damage to any player,
          should be only for opponent of controller of Curiosity
 
 - added the following cards:
@@ -2948,7 +4241,7 @@ Release 1.30 (September 30, 2012)
 includes contributions from melvin, a. benedict balbuena, and kdesmond
 
 - mulligan option is always available
-- added "effect" property to card script to allow spells to be scripted, 
+- added "effect" property to card script to allow spells to be scripted,
   currently supports destroy, exile and counter
 - added "kicker", "multikicker", and "enters with x" to "ability" property in card script,
   specific effect needs to be implemented as triggers in card code
@@ -2984,7 +4277,7 @@ Release 1.29 (August 25, 2012)
 ============
 includes contributions from melvin, a. benedict balbuena, spartan vi, Braullynn
 
-- allow "replicate" keyword in ability property of card script 
+- allow "replicate" keyword in ability property of card script
 - "value" property in card script should be determined from Gatherer's
   community rating
 - improved checking of abilities in card script
@@ -3065,7 +4358,7 @@ Zodiac Snake, Zodiac Tiger
 
 Release 1.28 (July 29, 2012)
 ============
-includes contributions from mecheng, melvin, pcastellazzi, and sponeta 
+includes contributions from mecheng, melvin, pcastellazzi, and sponeta
 
 - fixed: Jungle Troll not considered red
 - fixed: Ulvenwald Bear's was using Festerhide Boar's ability
@@ -3168,7 +4461,7 @@ Release 1.26 (May 26, 2012)
 - changed card script so that card name is described using "name=" instead of ">"
 - improved exception handling so that crash.log captures the relevant game state
 
-- fixed: generate deck does not use user's settings (issue 213) 
+- fixed: generate deck does not use user's settings (issue 213)
 - fixed: Scorch the Fields not dealing damage to all humans (issue 214)
 - fixed: program crash when loading Fallen_Knights_60.dec due to missing comment symbol
 - fixed: card image was not downloaded even though current image should be ignored
@@ -3492,7 +4785,7 @@ Wurm, Wretched Banquet, Zealot il-Vec
 Release 1.19 (October 28, 2011)
 ============
 brought to you by beholder, melvin, and wait321
- 
+
 - improved AI performance when there are a lot of blocking options
 - downloaded images are updated automatically. No need to restart Magarena
 - improved AI handling of equipment
@@ -3648,7 +4941,7 @@ Corpse, Wall of Diffusion, Wall of Tears, Wanderbrine Rootcutters, Wanderwine
 Prophets, Waning Wurm, Whispers of the Muse, Wing Splicer, Wirewood Lodge,
 Witherscale Wurm, Wolverine Pack, Wooden Stake, Woodland Cemetery, Woodland
 Sleuth, Woodripper, Wreath of Geists, Wren's Run Packmaster, Yavimaya Ants,
-Yavimaya Hollow, Zhalfirin Commander, Zhalfirin Knight, 
+Yavimaya Hollow, Zhalfirin Commander, Zhalfirin Knight,
 
 Release 1.18 (September 23, 2011)
 ============
@@ -4005,11 +5298,11 @@ This is a bug fix release.
   (978 cards in total)
 
 - added a crash log to the game, it is stored in the Magarena data folder
-  along with the game.cfg and tournament.cfg files. 
+  along with the game.cfg and tournament.cfg files.
 
 - fixed an issue where the game would crash when trying to play sound effects
 - fixed bug with Sun Titan's ability to return, previously could return
-  spell cards 
+  spell cards
 
 Release 1.17 (August 26, 2011)
 ============
@@ -4095,16 +5388,16 @@ Release 1.16 (July 25, 2011)
 - fixed issue 28: AI getting stuck when there are many creatures on the battlefield,
   needs more testing
 
-- added variant of minimax that cheats 
+- added variant of minimax that cheats
 - popup card info no longer disappears when the phase changes
 - do not auto pass priority when AI blocks your attackers
 - increased delay when auto passing priority with item on stack to 2s
 - selectable cards are now highlighted with a colored border instead of an overlay
 - removed GUI deck strength viewer as it could take a long time to run
-- added four more premade decks 
+- added four more premade decks
     decks/DL_Burn.dec
-    decks/Grundomu_Death_and_Rebirth.dec 
-    decks/Grundomu_Knights_Everywhere.dec 
+    decks/Grundomu_Death_and_Rebirth.dec
+    decks/Grundomu_Knights_Everywhere.dec
     decks/Kuno_RUw_Aggro_Control.dec
 
 Release 1.15 (June 20, 2011)
@@ -4191,7 +5484,7 @@ Release LE 1.12 (April 17, 2011)
 
 - modified game to work with a premade Magarena data folder
 - added selectable avatar sets in preferences, separate from theme
-- added unlimited undo support 
+- added unlimited undo support
 - added "Reset game" in menu, undoing all moves
 - added M key as an additional shortcut for messages
 
@@ -4294,7 +5587,7 @@ Release 1.4 (December 26, 2010)
 
 Release 1.3 (December 24, 2010)
 ===========
- 
+
 - 15 new cards (490 total)
 - replaced Elite Vanguard with Steppe Lynx
 - replaced Curse of Chains with Narcolepsy
@@ -4316,7 +5609,7 @@ Release 1.2 (December 18, 2010)
 ===========
 
 - 25 new cards (475 total)
-- replaced Disperse with Into the Roil 
+- replaced Disperse with Into the Roil
 - replaced Gruul War Plow with Chimeric Mass
 
 - support for loading and saving decks to an editable text format in decks folder

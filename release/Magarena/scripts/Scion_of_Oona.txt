@@ -1,14 +1,15 @@
 name=Scion of Oona
-image=http://mtgimage.com/card/scion%20of%20oona.jpg
+image=http://magiccards.info/scans/en/mma/63.jpg
 value=4.433
 rarity=R
 type=Creature
 subtype=Faerie,Soldier
 cost={2}{U}
 pt=1/1
-ability=flash;flying;\
-        other faerie creatures you control get +1/+1;\
-        other faeries you control have shroud
+ability=Flash;\
+        Flying;\
+        Other Faerie creatures you control get +1/+1.;\
+        Other Faeries you control have shroud.
 static=player
 timing=flash
-oracle=Flash. Flying. Other Faerie creatures you control get +1/+1. Other Faeries you control have shroud.
+oracle=Flash\nFlying\nOther Faerie creatures you control get +1/+1.\nOther Faeries you control have shroud.

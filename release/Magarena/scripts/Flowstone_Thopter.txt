@@ -1,11 +1,11 @@
 name=Flowstone Thopter
-image=http://mtgimage.com/card/flowstone%20thopter.jpg
+image=http://magiccards.info/scans/en/ne/132.jpg
 value=1.961
 rarity=U
 type=Artifact,Creature
 subtype=Thopter
 cost={7}
 pt=4/4
-ability={1}:SN gets +1/-1 and gains flying until end of turn.
-timing=artifact
+ability={1}: SN gets +1/-1 and gains flying until end of turn.
+timing=main
 oracle={1}: Flowstone Thopter gets +1/-1 and gains flying until end of turn.

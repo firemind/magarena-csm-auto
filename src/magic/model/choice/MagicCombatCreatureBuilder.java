@@ -24,7 +24,7 @@ public class MagicCombatCreatureBuilder {
                 return sdif;
             }
             return attacker1.permanent.compareTo(attacker2.permanent);
-         }
+        }
     };
 
     private final MagicGame game;
@@ -33,10 +33,7 @@ public class MagicCombatCreatureBuilder {
     private SortedSet<MagicCombatCreature> attackers;
     private Set<MagicCombatCreature> blockers;
 
-    MagicCombatCreatureBuilder(
-            final MagicGame game,
-            final MagicPlayer attackingPlayer,
-            final MagicPlayer defendingPlayer) {
+    MagicCombatCreatureBuilder(final MagicGame game, final MagicPlayer attackingPlayer, final MagicPlayer defendingPlayer) {
         this.game=game;
         this.attackingPlayer=attackingPlayer;
         this.defendingPlayer=defendingPlayer;

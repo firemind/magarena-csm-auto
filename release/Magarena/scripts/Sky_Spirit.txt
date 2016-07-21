@@ -1,11 +1,11 @@
 name=Sky Spirit
-image=http://mtgimage.com/card/sky%20spirit.jpg
+image=http://magiccards.info/scans/en/cns/192.jpg
 value=3.917
 rarity=U
 type=Creature
 subtype=Spirit
 cost={1}{W}{U}
 pt=2/2
-ability=flying;first strike
+ability=Flying, first strike
 timing=main
 oracle=Flying, first strike

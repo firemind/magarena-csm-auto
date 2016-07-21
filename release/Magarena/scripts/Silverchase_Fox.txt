@@ -1,11 +1,11 @@
 name=Silverchase Fox
-image=http://mtgimage.com/card/silverchase%20fox.jpg
+image=http://magiccards.info/scans/en/cns/81.jpg
 value=3.700
 rarity=C
 type=Creature
 subtype=Fox
 cost={1}{W}
 pt=2/2
-ability={1}{W},Sacrifice SN: Exile target enchantment.
+ability={1}{W}, Sacrifice SN: Exile target enchantment.
 timing=main
 oracle={1}{W}, Sacrifice Silverchase Fox: Exile target enchantment.

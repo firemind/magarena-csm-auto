@@ -1,11 +1,11 @@
 name=Shadow Alley Denizen
-image=http://mtgimage.com/card/shadow%20alley%20denizen.jpg
+image=http://magiccards.info/scans/en/ddm/44.jpg
 value=3.654
 rarity=C
 type=Creature
 subtype=Vampire,Rogue
 cost={B}
-ability=Whenever another black creature enters the battlefield under your control, target creature gains intimidate until end of turn.
 pt=1/1
+ability=Whenever another black creature enters the battlefield under your control, target creature gains intimidate until end of turn.
 timing=main
 oracle=Whenever another black creature enters the battlefield under your control, target creature gains intimidate until end of turn.

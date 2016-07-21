@@ -1,11 +1,12 @@
 name=Shambleshark
-image=http://mtgimage.com/card/shambleshark.jpg
+image=http://magiccards.info/scans/en/gtc/193.jpg
 value=3.806
 rarity=C
 type=Creature
 subtype=Fish,Crab
 cost={G}{U}
 pt=2/1
-ability=flash;evolve
+ability=Flash;\
+        Evolve
 timing=flash
-oracle=Flash. Evolve
+oracle=Flash\nEvolve

@@ -1,11 +1,12 @@
 name=Tattered Drake
-image=http://mtgimage.com/card/tattered%20drake.jpg
+image=http://magiccards.info/scans/en/rav/68.jpg
 value=1.643
 rarity=C
 type=Creature
 subtype=Zombie,Drake
 cost={4}{U}
 pt=2/2
-ability=flying;{B}: Regenerate SN.
+ability=Flying;\
+        {B}: Regenerate SN.
 timing=main
-oracle=Flying. {B}: Regenerate Tattered Drake.
+oracle=Flying\n{B}: Regenerate Tattered Drake.

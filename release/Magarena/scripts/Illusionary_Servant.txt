@@ -1,12 +1,12 @@
 name=Illusionary Servant
-image=http://mtgimage.com/card/illusionary%20servant.jpg
+image=http://magiccards.info/scans/en/m10/57.jpg
 value=3.617
 rarity=C
 type=Creature
 subtype=Illusion
 cost={1}{U}{U}
 pt=3/4
-ability=flying;\
+ability=Flying;\
         When SN becomes the target of a spell or ability, sacrifice it.
 timing=main
-oracle=Flying. When Illusionary Servant becomes the target of a spell or ability, sacrifice it.
+oracle=Flying\nWhen Illusionary Servant becomes the target of a spell or ability, sacrifice it.

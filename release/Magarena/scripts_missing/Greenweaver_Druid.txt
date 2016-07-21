@@ -1,6 +1,7 @@
 name=Greenweaver Druid
-image=http://mtgimage.com/card/greenweaver%20druid.jpg
-value=2.500
+image=http://magiccards.info/scans/en/dpa/68.jpg
+image_updated=2015-11-11
+value=3.480
 rarity=U
 type=Creature
 subtype=Elf,Druid

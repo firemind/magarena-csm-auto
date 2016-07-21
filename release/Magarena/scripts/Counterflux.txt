@@ -1,5 +1,6 @@
 name=Counterflux
-image=http://mtgimage.com/card/counterflux.jpg
+image=http://magiccards.info/scans/en/c15/214.jpg
+image_updated=2016-02-29
 value=3.695
 rarity=R
 type=Instant
@@ -8,4 +9,4 @@ timing=counter
 ability=SN can't be countered by spells or abilities.
 effect=Counter target spell you don't control.
 requires_groovy_code
-oracle=Counterflux can't be countered by spells or abilities. Counter target spell you don't control. Overload {1}{U}{U}{R}
+oracle=Counterflux can't be countered by spells or abilities.\nCounter target spell you don't control.\nOverload {1}{U}{U}{R}

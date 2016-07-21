@@ -1,10 +1,10 @@
 name=Molten Frame
-image=http://mtgimage.com/card/molten%20frame.jpg
+image=http://magiccards.info/scans/en/cfx/69.jpg
 value=2.010
 rarity=C
 type=Instant
 cost={1}{R}
-effect=destroy target artifact creature.
-ability=cycling {2}
+ability=Cycling {2}
+effect=Destroy target artifact creature.
 timing=removal
-oracle=Destroy target artifact creature. Cycling {2}
+oracle=Destroy target artifact creature.\nCycling {2}

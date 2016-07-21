@@ -1,11 +1,11 @@
 name=Frost Giant
-image=http://mtgimage.com/card/frost%20giant.jpg
+image=http://magiccards.info/scans/en/me3/101.jpg
 value=2.640
 rarity=U
 type=Creature
 subtype=Giant
 cost={3}{R}{R}{R}
 pt=4/4
-ability=rampage 2
+ability=Rampage 2
 timing=main
 oracle=Rampage 2

@@ -1,7 +1,8 @@
 name=Novijen Sages
-image=http://mtgimage.com/card/novijen%20sages.jpg
+image=http://magiccards.info/scans/en/mm2/53.jpg
+image_updated=2015-11-05
 value=2.500
-rarity=R
+rarity=U
 type=Creature
 subtype=Human,Advisor,Mutant
 cost={4}{U}{U}
@@ -9,4 +10,4 @@ pt=0/0
 ability=Graft 4;\
         {1}, Remove two +1/+1 counters from among creatures you control: Draw a card.
 timing=main
-oracle=Graft 4. {1}, Remove two +1/+1 counters from among creatures you control: Draw a card.
+oracle=Graft 4\n{1}, Remove two +1/+1 counters from among creatures you control: Draw a card.

@@ -7,7 +7,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
-                new MagicSacrificePermanentEvent(source,MagicTargetChoice.SACRIFICE_CREATURE),
+                new MagicSacrificePermanentEvent(source,SACRIFICE_CREATURE),
                 new MagicPlayAbilityEvent(source)
             ];
         }
@@ -19,19 +19,19 @@
                 payedCost.getTarget(),
                 this,
                 "Remove a -2/-2 counter from SN. " +
-                "If the sacrificed creature was a Thrull, put a +1/+0 counter on SN."
+                "If the sacrificed creature was a Thrull, PN puts a +1/+0 counter on SN."
             );
         }
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeCountersAction(
+            game.doAction(new ChangeCountersAction(
                 event.getPermanent(),
                 MagicCounterType.MinusTwo,
                 -1
             ));
-            if (event.getRefPermanent().hasSubType(MagicSubType.Thrull)) { 
-                game.doAction(new MagicChangeCountersAction(
+            if (event.getRefPermanent().hasSubType(MagicSubType.Thrull)) {
+                game.doAction(new ChangeCountersAction(
                     event.getPermanent(),
                     MagicCounterType.PlusOnePlusZero,
                     1

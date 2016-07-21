@@ -1,9 +1,11 @@
 name=Gone
-image=http://mtgimage.com/card/deadgone.jpg
-value=2.500
+image=http://magiccards.info/scans/en/pc/113b.jpg
+value=4.039
 rarity=C
 type=Instant
 cost={2}{R}
 effect=Return target creature you don't control to its owner's hand.
+split=Dead
 timing=removal
+second_half
 oracle=Return target creature you don't control to its owner's hand.

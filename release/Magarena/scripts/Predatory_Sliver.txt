@@ -1,12 +1,12 @@
 name=Predatory Sliver
-image=http://mtgimage.com/card/predatory%20sliver.jpg
+image=http://magiccards.info/scans/en/m14/189.jpg
 value=3.606
 rarity=C
 type=Creature
 subtype=Sliver
 cost={1}{G}
 pt=1/1
-ability=sliver creatures you control get +1/+1
+ability=Sliver creatures you control get +1/+1.
 static=player
 timing=main
 oracle=Sliver creatures you control get +1/+1.

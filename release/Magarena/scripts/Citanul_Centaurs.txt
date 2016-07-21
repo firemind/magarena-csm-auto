@@ -1,11 +1,12 @@
 name=Citanul Centaurs
-image=http://mtgimage.com/card/citanul%20centaurs.jpg
+image=http://magiccards.info/scans/en/us/243.jpg
 value=3.431
 rarity=R
 type=Creature
 subtype=Centaur
 cost={3}{G}
 pt=6/3
-ability=shroud;echo {3}{G}
+ability=Shroud;\
+        Echo {3}{G}
 timing=main
-oracle=Shroud. Echo {3}{G}
+oracle=Shroud\nEcho {3}{G}

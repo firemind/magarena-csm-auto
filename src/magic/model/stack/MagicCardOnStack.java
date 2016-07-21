@@ -11,7 +11,7 @@ import magic.model.MagicObject;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
-import magic.model.action.MagicMoveCardAction;
+import magic.model.action.MoveCardAction;
 import magic.model.event.MagicCardEvent;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicSourceActivation;
@@ -25,6 +25,7 @@ import java.util.Collections;
 public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
 
     private MagicLocationType moveLocation=MagicLocationType.Graveyard;
+    private MagicLocationType fromLocation=MagicLocationType.OwnersHand;
     private final MagicPayedCost payedCost;
     private final MagicCardEvent cardEvent;
     private final MagicEvent event;
@@ -35,25 +36,27 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         final MagicCard card,
         final MagicObject obj,
         final MagicPlayer controller,
-        final MagicCardEvent aCardEvent, 
+        final MagicCardEvent aCardEvent,
         final MagicPayedCost aPayedCost,
-        final List<? extends MagicPermanentAction> aModifications) {
+        final List<? extends MagicPermanentAction> aModifications
+    ) {
         super(card, controller);
         payedCost = aPayedCost;
         cardEvent = aCardEvent;
         cardDef = obj.getCardDefinition();
         event = aCardEvent.getEvent(this, aPayedCost);
+        assert event != MagicEvent.NONE : "event is NONE for " + cardDef;
         modifications = aModifications;
     }
 
     public MagicCardOnStack(final MagicCard card,final MagicCardEvent aCardEvent, final MagicPayedCost aPayedCost) {
         this(card, card, card.getController(), aCardEvent, aPayedCost, Collections.<MagicPermanentAction>emptyList());
     }
-    
+
     public MagicCardOnStack(final MagicCard card,final MagicPlayer controller,final MagicPayedCost aPayedCost) {
         this(card, card, controller, card.getCardDefinition().getCardEvent(), aPayedCost, Collections.<MagicPermanentAction>emptyList());
     }
-    
+
     public MagicCardOnStack(final MagicCard card,final MagicPlayer controller,final MagicPayedCost aPayedCost, final List<? extends MagicPermanentAction> aModifications) {
         this(card, card, controller, card.getCardDefinition().getCardEvent(), aPayedCost, aModifications);
     }
@@ -66,6 +69,7 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         super(copyMap, cardOnStack);
         payedCost = copyMap.copy(cardOnStack.payedCost);
         moveLocation = cardOnStack.moveLocation;
+        fromLocation = cardOnStack.fromLocation;
         cardEvent = cardOnStack.cardEvent;
         cardDef = cardOnStack.cardDef;
         event = copyMap.copy(cardOnStack.event);
@@ -81,33 +85,34 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         }
         return copyCardOnStack;
     }
-    
+
     @Override
     public long getStateId() {
         return magic.model.MurmurHash3.hash(new long[] {
             super.getStateId(),
             moveLocation.ordinal(),
+            fromLocation.ordinal(),
             payedCost.getStateId(),
             cardDef.getIndex()
         });
     }
-    
+
     @Override
     public MagicCardDefinition getCardDefinition() {
         return cardDef;
     }
-    
+
     @Override
     public MagicEvent getEvent() {
         return event;
     }
-    
+
     @Override
     public void resolve(final MagicGame game) {
         super.resolve(game);
         // Move card to move location that is not play
-        if (moveLocation != MagicLocationType.Play) {
-            game.doAction(new MagicMoveCardAction(this));
+        if (moveLocation != MagicLocationType.Battlefield) {
+            game.doAction(new MoveCardAction(this));
         }
     }
 
@@ -125,12 +130,20 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         return (MagicCard)getSource();
     }
 
-    public void setMoveLocation(final MagicLocationType moveLocation) {
-        this.moveLocation=moveLocation;
+    public void setMoveLocation(final MagicLocationType loc) {
+        moveLocation = loc;
     }
 
     public MagicLocationType getMoveLocation() {
         return moveLocation;
+    }
+
+    public void setFromLocation(final MagicLocationType loc) {
+        fromLocation = loc;
+    }
+
+    public MagicLocationType getFromLocation() {
+        return fromLocation;
     }
 
     public List<? extends MagicPermanentAction> getModifications() {
@@ -139,7 +152,7 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
 
     @Override
     public int getConvertedCost() {
-        return getCardDefinition().getConvertedCost() + payedCost.getX();
+        return getCardDefinition().getConvertedCost(payedCost.getX());
     }
 
     public int getX() {
@@ -155,6 +168,10 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
         return true;
     }
 
+    public boolean isCast() {
+        return payedCost != MagicPayedCost.NOT_SPELL;
+    }
+
     public boolean isRepresentedByACard() {
         return getCard().isToken() == false;
     }
@@ -168,7 +185,7 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
     public MagicGame getGame() {
         return getSource().getGame();
     }
-    
+
     @Override
     public Collection<MagicSourceActivation<? extends MagicSource>> getSourceActivations() {
         return Collections.emptyList();
@@ -180,5 +197,9 @@ public class MagicCardOnStack extends MagicItemOnStack implements MagicSource {
 
     public boolean isKicked() {
         return payedCost.isKicked();
+    }
+
+    public boolean isFaceDown() {
+        return false;
     }
 }

@@ -1,11 +1,11 @@
 name=Desert Drake
-image=http://mtgimage.com/card/desert%20drake.jpg
+image=http://magiccards.info/scans/en/po/127.jpg
 value=2.129
 rarity=U
 type=Creature
 subtype=Drake
 cost={3}{R}
 pt=2/2
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

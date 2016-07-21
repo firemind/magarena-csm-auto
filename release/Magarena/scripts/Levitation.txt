@@ -1,10 +1,10 @@
 name=Levitation
-image=http://mtgimage.com/card/levitation.jpg
+image=http://magiccards.info/scans/en/m12/61.jpg
 value=4.015
 rarity=U
 type=Enchantment
 cost={2}{U}{U}
-ability=creatures you control have flying
+ability=Creatures you control have flying.
 static=player
 timing=enchantment
 oracle=Creatures you control have flying.

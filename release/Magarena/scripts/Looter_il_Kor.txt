@@ -1,12 +1,12 @@
 name=Looter il-Kor
-image=http://mtgimage.com/card/looter%20il%2Dkor.jpg
+image=http://magiccards.info/scans/en/ts/66.jpg
 value=4.082
 rarity=C
 type=Creature
 subtype=Kor,Rogue
 cost={1}{U}
 pt=1/1
-ability=shadow;\
+ability=Shadow;\
         Whenever SN deals damage to an opponent, draw a card, then discard a card.
 timing=main
-oracle=Shadow. Whenever Looter il-Kor deals damage to an opponent, draw a card, then discard a card.
+oracle=Shadow\nWhenever Looter il-Kor deals damage to an opponent, draw a card, then discard a card.

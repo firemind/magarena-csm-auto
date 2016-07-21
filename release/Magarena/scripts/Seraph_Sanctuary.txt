@@ -1,10 +1,10 @@
 name=Seraph Sanctuary
-image=http://mtgimage.com/card/seraph%20sanctuary.jpg
+image=http://magiccards.info/scans/en/avr/228.jpg
 value=2.920
 rarity=C
 type=Land
 ability=When SN enters the battlefield, you gain 1 life.;\
         Whenever an Angel enters the battlefield under your control, you gain 1 life.;\
-        {T}: Add {1} to your mana pool.
+        {T}: Add {C} to your mana pool.
 timing=land
-oracle=When Seraph Sanctuary enters the battlefield, you gain 1 life. Whenever an Angel enters the battlefield under your control, you gain 1 life. {T}: Add {1} to your mana pool.
+oracle=When Seraph Sanctuary enters the battlefield, you gain 1 life.\nWhenever an Angel enters the battlefield under your control, you gain 1 life.\n{T}: Add {C} to your mana pool.

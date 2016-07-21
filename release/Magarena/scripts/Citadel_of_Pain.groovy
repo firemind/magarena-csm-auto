@@ -1,5 +1,5 @@
 [
-    new MagicAtEndOfTurnTrigger() {
+    new AtEndOfTurnTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer eotPlayer) {
             return new MagicEvent(
@@ -11,13 +11,13 @@
         }
         @Override
         public void executeEvent(final MagicGame game,final MagicEvent event) {
-            final int amount = event.getPlayer().getNrOfPermanents(MagicTargetFilterFactory.UNTAPPED_LAND_YOU_CONTROL);
-            game.doAction(new MagicDealDamageAction(
+            final int amount = event.getPlayer().getNrOfPermanents(UNTAPPED_LAND_YOU_CONTROL);
+            game.doAction(new DealDamageAction(
                 event.getSource(),
                 event.getPlayer(),
                 amount
             ));
-            game.logAppendMessage(event.getPlayer(),"(X="+amount+")");
+            game.logAppendX(event.getPlayer(),amount);
         }
     }
 ]

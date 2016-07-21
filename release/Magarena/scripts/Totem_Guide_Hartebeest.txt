@@ -1,7 +1,8 @@
 name=Totem-Guide Hartebeest
-image=http://mtgimage.com/card/totem-guide%20hartebeest.jpg
-value=3.318
-rarity=C
+image=http://magiccards.info/scans/en/ori/37.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=U
 type=Creature
 subtype=Antelope
 cost={4}{W}

@@ -1,11 +1,12 @@
 name=Craw Giant
-image=http://mtgimage.com/card/craw%20giant.jpg
+image=http://magiccards.info/scans/en/tsts/76.jpg
 value=3.593
 rarity=U
 type=Creature
 subtype=Giant
 cost={3}{G}{G}{G}{G}
 pt=6/4
-ability=trample;rampage 2
+ability=Trample;\
+        Rampage 2
 timing=main
-oracle=Trample. Rampage 2
+oracle=Trample\nRampage 2

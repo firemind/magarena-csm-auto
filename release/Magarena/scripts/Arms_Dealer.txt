@@ -1,11 +1,11 @@
 name=Arms Dealer
-image=http://mtgimage.com/card/arms%20dealer.jpg
+image=http://magiccards.info/scans/en/m13/120.jpg
 value=3.993
 rarity=U
 type=Creature
 subtype=Goblin,Rogue
 cost={2}{R}
 pt=1/1
-ability={1}{R},Sacrifice a Goblin:SN deals 4 damage to target creature.
+ability={1}{R}, Sacrifice a Goblin: SN deals 4 damage to target creature.
 timing=main
 oracle={1}{R}, Sacrifice a Goblin: Arms Dealer deals 4 damage to target creature.

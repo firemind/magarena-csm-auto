@@ -1,10 +1,10 @@
 name=Giant's Ire
-image=http://mtgimage.com/card/giant%27s%20ire.jpg
+image=http://magiccards.info/scans/en/lw/170.jpg
 value=2.648
 rarity=C
 type=Tribal,Sorcery
 subtype=Giant
 cost={3}{R}
+effect=SN deals 4 damage to target player.~If you control a Giant, draw a card.
 timing=removal
-requires_groovy_code
 oracle=Giant's Ire deals 4 damage to target player. If you control a Giant, draw a card.

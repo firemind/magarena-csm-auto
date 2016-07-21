@@ -1,9 +1,11 @@
 name=Fall
-image=http://mtgimage.com/card/risefall.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ddh/73b.jpg
+value=3.896
 rarity=U
 type=Sorcery
 cost={B}{R}
 effect=Target player reveals two cards at random from his or her hand, then discards each nonland card revealed this way.
+split=Rise
 timing=main
+second_half
 oracle=Target player reveals two cards at random from his or her hand, then discards each nonland card revealed this way.

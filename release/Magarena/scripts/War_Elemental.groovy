@@ -1,7 +1,7 @@
 def EFFECT = MagicRuleEventAction.create("Sacrifice SN.");
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return permanent.getOpponent().hasState(MagicPlayerState.WasDealtDamage) == false ?
@@ -9,7 +9,7 @@ def EFFECT = MagicRuleEventAction.create("Sacrifice SN.");
                 MagicEvent.NONE;
         }
     },
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
             return permanent.isOpponent(damage.getTarget()) ?
@@ -23,7 +23,7 @@ def EFFECT = MagicRuleEventAction.create("Sacrifice SN.");
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeCountersAction(event.getPermanent(),MagicCounterType.PlusOne,event.getRefInt()));
+            game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.PlusOne,event.getRefInt()));
         }
     }
 ]

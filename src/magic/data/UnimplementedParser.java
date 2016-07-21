@@ -1,5 +1,6 @@
 package magic.data;
 
+import magic.utility.FileIO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -109,7 +110,7 @@ public class UnimplementedParser {
             System.err.println("Failed to save " + LOG_FILE + " - " + ex);
         }
     }
-    
+
     private static void exportParseResults() {
         parsedCards.removeAll(errorCards);
         Collections.sort(errorList);

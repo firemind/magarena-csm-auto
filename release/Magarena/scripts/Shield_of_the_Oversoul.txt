@@ -1,11 +1,13 @@
 name=Shield of the Oversoul
-image=http://mtgimage.com/card/shield%20of%20the%20oversoul.jpg
+image=http://magiccards.info/scans/en/shm/242.jpg
 value=4.073
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{G/W}
+ability=Enchant creature;\
+        As long as enchanted creature is green, enchanted creature gets +1/+1 and has indestructible.;\
+        As long as enchanted creature is white, enchanted creature gets +1/+1 and has flying.
 timing=enchantment
 enchant=pump,pos creature
-requires_groovy_code
-oracle=Enchant creature. As long as enchanted creature is green, it gets +1/+1 and has indestructible. As long as enchanted creature is white, it gets +1/+1 and has flying.
+oracle=Enchant creature\nAs long as enchanted creature is green, it gets +1/+1 and has indestructible.\nAs long as enchanted creature is white, it gets +1/+1 and has flying.

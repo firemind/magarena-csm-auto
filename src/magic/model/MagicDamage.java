@@ -4,6 +4,9 @@ import magic.model.target.MagicTarget;
 
 public class MagicDamage {
 
+    public static final boolean Combat = true;
+    public static final boolean Any = false;
+
     private final MagicSource source;
     private MagicTarget target;
     private int amount;
@@ -30,9 +33,13 @@ public class MagicDamage {
     public MagicSource getSource() {
         return source;
     }
-    
+
     public boolean isSource(final MagicSource other) {
         return source == other;
+    }
+
+    public boolean isSourcePermanent() {
+        return source.isPermanent();
     }
 
     public void setTarget(final MagicTarget target) {
@@ -42,37 +49,41 @@ public class MagicDamage {
     public MagicTarget getTarget() {
         return target;
     }
-    
+
     public boolean isTarget(final MagicTarget other) {
         return target == other;
     }
-    
+
     public boolean isTargetPlayer() {
         return target.isPlayer();
     }
-    
+
     public boolean isTargetCreature() {
-        return target.isCreature();
+        return target.isCreaturePermanent();
     }
 
     public MagicPlayer getTargetPlayer() {
         return (MagicPlayer)target;
     }
-    
+
     public MagicPermanent getTargetPermanent() {
         return (MagicPermanent)target;
+    }
+
+    public MagicPermanent getSourcePermanent() {
+        return (MagicPermanent)source;
     }
 
     public void setAmount(final int amt) {
         amount = amt;
     }
-    
+
     public int replace() {
         final int oldAmount = amount;
         amount = 0;
         return oldAmount;
     }
-    
+
     public int prevent() {
         return prevent(amount);
     }
@@ -104,7 +115,7 @@ public class MagicDamage {
     public void setUnpreventable() {
         unpreventable=true;
     }
-    
+
     public boolean isPreventable() {
         return !unpreventable;
     }

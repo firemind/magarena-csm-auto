@@ -1,12 +1,12 @@
 name=Sentinel Sliver
-image=http://mtgimage.com/card/sentinel%20sliver.jpg
+image=http://magiccards.info/scans/en/m14/30.jpg
 value=3.556
 rarity=C
 type=Creature
 subtype=Sliver
 cost={1}{W}
 pt=2/2
-ability=sliver creatures you control have vigilance
+ability=Sliver creatures you control have vigilance.
 static=player
 timing=main
 oracle=Sliver creatures you control have vigilance.

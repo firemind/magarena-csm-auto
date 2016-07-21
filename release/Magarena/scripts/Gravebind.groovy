@@ -4,7 +4,7 @@
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack, final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_CREATURE,
+                NEG_TARGET_CREATURE,
                 MagicDestroyTargetPicker.DestroyNoRegen,
                 this,
                 "Target creature\$ can't be regenerated this turn. " +
@@ -14,13 +14,13 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
-                game.doAction(MagicChangeStateAction.Set(
+                game.doAction(ChangeStateAction.Set(
                     it,
                     MagicPermanentState.CannotBeRegenerated
                 ));
-                game.doAction(new MagicAddTriggerAction(
-                    MagicAtUpkeepTrigger.YouDraw(
-                        event.getSource(), 
+                game.doAction(new AddTriggerAction(
+                    AtUpkeepTrigger.YouDraw(
+                        event.getSource(),
                         event.getPlayer()
                     )
                 ));

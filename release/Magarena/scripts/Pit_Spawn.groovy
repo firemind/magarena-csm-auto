@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return (damage.isSource(permanent) && damage.isTargetCreature()) ?
@@ -14,7 +14,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processRefPermanent(game, {
-                game.doAction(new MagicRemoveFromPlayAction(it,MagicLocationType.Exile));            
+                game.doAction(new RemoveFromPlayAction(it,MagicLocationType.Exile));
             });
         }
     }

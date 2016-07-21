@@ -1,11 +1,11 @@
 name=Priest of Iroas
-image=http://mtgimage.com/card/priest%20of%20iroas.jpg
+image=http://magiccards.info/scans/en/ths/134.jpg
 value=2.339
 rarity=C
 type=Creature
 subtype=Human,Cleric
 cost={R}
 pt=1/1
-ability={3}{W},Sacrifice SN:Destroy target enchantment.
+ability={3}{W}, Sacrifice SN: Destroy target enchantment.
 timing=main
 oracle={3}{W}, Sacrifice Priest of Iroas: Destroy target enchantment.

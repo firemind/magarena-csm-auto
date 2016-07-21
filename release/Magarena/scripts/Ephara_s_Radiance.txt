@@ -1,11 +1,12 @@
 name=Ephara's Radiance
-image=http://mtgimage.com/card/ephara's%20radiance.jpg
+image=http://magiccards.info/scans/en/bng/9.jpg
 value=2.050
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={W}
-ability=Enchanted creature has "{1}{W}, {T}: You gain 3 life."
+ability=Enchant creature;\
+        Enchanted creature has "{1}{W}, {T}: You gain 3 life."
 timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. Enchanted creature has "{1}{W}, {T}: You gain 3 life."
+oracle=Enchant creature\nEnchanted creature has "{1}{W}, {T}: You gain 3 life."

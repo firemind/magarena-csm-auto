@@ -1,0 +1,13 @@
+name=Aven Battle Priest
+image=http://magiccards.info/scans/en/ori/6.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=C
+type=Creature
+subtype=Bird,Cleric
+cost={5}{W}
+pt=3/3
+ability=Flying;\
+        When SN enters the battlefield, you gain 3 life.
+timing=main
+oracle=Flying\nWhen Aven Battle Priest enters the battlefield, you gain 3 life.

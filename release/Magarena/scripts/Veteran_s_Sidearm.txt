@@ -1,0 +1,12 @@
+name=Veteran's Sidearm
+image=http://magiccards.info/scans/en/ori/242.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=C
+type=Artifact
+subtype=Equipment
+cost={2}
+ability=Equipped creature gets +1/+1.;\
+        Equip {1}
+timing=equipment
+oracle=Equipped creature gets +1/+1.\nEquip {1}

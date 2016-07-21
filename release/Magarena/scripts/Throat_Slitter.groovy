@@ -1,7 +1,7 @@
 def NONBLACK_CREATURE_YOUR_OPPONENT_CONTROLS=new MagicPermanentFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicPermanent target) {
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicPermanent target) {
         return target.isCreature() && !target.hasColor(MagicColor.Black) && target.isOpponent(player);
-    } 
+    }
 };
 
 def TARGET_NONBLACK_CREATURE_YOUR_OPPONENT_CONTROLS = new MagicTargetChoice(
@@ -10,7 +10,7 @@ def TARGET_NONBLACK_CREATURE_YOUR_OPPONENT_CONTROLS = new MagicTargetChoice(
 );
 
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -25,7 +25,7 @@ def TARGET_NONBLACK_CREATURE_YOUR_OPPONENT_CONTROLS = new MagicTargetChoice(
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
-                game.doAction(new MagicDestroyAction(it));
+                game.doAction(new DestroyAction(it));
             });
         }
     }

@@ -1,11 +1,13 @@
 name=Fists of the Demigod
-image=http://mtgimage.com/card/fists%20of%20the%20demigod.jpg
+image=http://magiccards.info/scans/en/shm/187.jpg
 value=3.960
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{B/R}
+ability=Enchant creature;\
+        As long as enchanted creature is black, enchanted creature gets +1/+1 and has wither.;\
+        As long as enchanted creature is red, enchanted creature gets +1/+1 and has first strike.
 timing=enchantment
 enchant=pump,pos creature
-requires_groovy_code
-oracle=Enchant creature. As long as enchanted creature is black, it gets +1/+1 and has wither. As long as enchanted creature is red, it gets +1/+1 and has first strike.
+oracle=Enchant creature\nAs long as enchanted creature is black, it gets +1/+1 and has wither.\nAs long as enchanted creature is red, it gets +1/+1 and has first strike.

@@ -1,11 +1,12 @@
 name=Sentinel Spider
-image=http://mtgimage.com/card/sentinel%20spider.jpg
+image=http://magiccards.info/scans/en/m13/189.jpg
 value=3.831
 rarity=C
 type=Creature
 subtype=Spider
 cost={3}{G}{G}
 pt=4/4
-ability=vigilance;reach
+ability=Vigilance;\
+        Reach
 timing=main
-oracle=Vigilance. Reach
+oracle=Vigilance\nReach

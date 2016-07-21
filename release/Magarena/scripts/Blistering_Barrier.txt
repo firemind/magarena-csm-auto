@@ -1,11 +1,11 @@
 name=Blistering Barrier
-image=http://mtgimage.com/card/blistering%20barrier.jpg
+image=http://magiccards.info/scans/en/mr/159.jpg
 value=2.738
 rarity=C
 type=Creature
 subtype=Wall
 cost={2}{R}
 pt=5/2
-ability=defender
+ability=Defender
 timing=main
 oracle=Defender

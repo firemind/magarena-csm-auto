@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
             return permanent.isEnemy(cardOnStack) ?
@@ -21,7 +21,7 @@
                 game.addEvent(new MagicSacrificePermanentEvent(
                     event.getPermanent(),
                     event.getPlayer(),
-                    MagicTargetChoice.SACRIFICE_PERMANENT
+                    SACRIFICE_PERMANENT
                 ));
             }
         }

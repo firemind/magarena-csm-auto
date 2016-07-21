@@ -1,9 +1,9 @@
 name=Ghitu War Cry
-image=http://mtgimage.com/card/ghitu%20war%20cry.jpg
+image=http://magiccards.info/scans/en/ul/78.jpg
 value=3.724
 rarity=U
 type=Enchantment
 cost={2}{R}
-ability={R}:Target creature gets +1/+0 until end of turn.
+ability={R}: Target creature gets +1/+0 until end of turn.
 timing=enchantment
 oracle={R}: Target creature gets +1/+0 until end of turn.

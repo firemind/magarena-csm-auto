@@ -1,11 +1,12 @@
 name=Fate Unraveler
-image=http://mtgimage.com/card/fate%20unraveler.jpg
+image=http://magiccards.info/scans/en/c15/126.jpg
+image_updated=2016-02-29
 value=3.847
 rarity=R
 type=Enchantment,Creature
 subtype=Hag
 cost={3}{B}
 pt=3/4
+ability=Whenever an opponent draws a card, SN deals 1 damage to that player.
 timing=main
-requires_groovy_code=Underworld Dreams
 oracle=Whenever an opponent draws a card, Fate Unraveler deals 1 damage to that player.

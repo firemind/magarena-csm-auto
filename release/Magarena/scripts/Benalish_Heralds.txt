@@ -1,11 +1,11 @@
 name=Benalish Heralds
-image=http://mtgimage.com/card/benalish%20heralds.jpg
+image=http://magiccards.info/scans/en/in/6.jpg
 value=2.547
 rarity=U
 type=Creature
 subtype=Human,Soldier
 cost={3}{W}
 pt=2/4
-ability={3}{U},{T}: Draw a card.
+ability={3}{U}, {T}: Draw a card.
 timing=main
 oracle={3}{U}, {T}: Draw a card.

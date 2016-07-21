@@ -1,7 +1,7 @@
-def T = new MagicWhenDamageIsDealtTrigger() {
+def T = new DamageIsDealtTrigger() {
     @Override
     public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
-        return (damage.getSource().isCreature() &&
+        return (damage.getSource().isCreaturePermanent() &&
                 damage.isCombat() &&
                 damage.getTarget() == permanent) ?
             new MagicEvent(
@@ -15,7 +15,7 @@ def T = new MagicWhenDamageIsDealtTrigger() {
 
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
-        game.doAction(new MagicDestroyAction(event.getRefPermanent()));
+        game.doAction(new DestroyAction(event.getRefPermanent()));
     }
 }
 
@@ -31,54 +31,21 @@ def T = new MagicWhenDamageIsDealtTrigger() {
         }
         @Override
         public void executeEvent(final MagicGame outerGame, final MagicEvent outerEvent) {
-            final MagicWhenDamageIsDealtTrigger trigger = T;
-            outerGame.doAction(new MagicAddTriggerAction(outerEvent.getPermanent(), trigger));
+            final DamageIsDealtTrigger trigger = T;
+            outerGame.doAction(new AddTriggerAction(outerEvent.getPermanent(), trigger));
             // remove the trigger during player's next upkeep
-            MagicAtUpkeepTrigger cleanup = new MagicAtUpkeepTrigger() {
+            AtUpkeepTrigger cleanup = new AtUpkeepTrigger() {
                 @Override
                 public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
                     if (upkeepPlayer.getId() == outerEvent.getPlayer().getId()) {
-                        game.addDelayedAction(new MagicRemoveTriggerAction(permanent, trigger));
-                        game.addDelayedAction(new MagicRemoveTriggerAction(permanent, this));
+                        game.addDelayedAction(new RemoveTriggerAction(permanent, trigger));
+                        game.addDelayedAction(new RemoveTriggerAction(permanent, this));
                     }
                     return MagicEvent.NONE;
                 }
             };
-            outerGame.doAction(new MagicAddTriggerAction(outerEvent.getPermanent(), cleanup));
+            outerGame.doAction(new AddTriggerAction(outerEvent.getPermanent(), cleanup));
 
-        }
-    },
-    new MagicPlaneswalkerActivation(-3) {
-        @Override
-        public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
-            return new MagicEvent(
-                source,
-                MagicTargetChoice.NEG_TARGET_NONLAND_PERMANENT,
-                MagicDestroyTargetPicker.Destroy,
-                this,
-                "Destroy target nonland permanent."
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.processTargetPermanent(game, {
-                game.doAction(new MagicDestroyAction(it));
-            });
-        }
-    },
-    new MagicPlaneswalkerActivation(-7) {
-        @Override
-        public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
-            return new MagicEvent(
-                source,
-                this,
-                "Put three 1/1 black Assassin creature tokens onto the battlefield with " +
-                "\"Whenever this creature deals combat damage to a player, that player loses the game.\""
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicPlayTokensAction(event.getPlayer(), TokenCardDefinitions.get("1/1 black Assassin creature token"), 3));
         }
     }
 ]

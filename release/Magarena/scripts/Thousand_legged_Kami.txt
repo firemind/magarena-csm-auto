@@ -1,11 +1,11 @@
 name=Thousand-legged Kami
-image=http://mtgimage.com/card/thousand%2Dlegged%20kami.jpg
+image=http://magiccards.info/scans/en/chk/246.jpg
 value=2.191
 rarity=U
 type=Creature
 subtype=Spirit
 cost={6}{G}{G}
 pt=6/6
-ability=soulshift 7
+ability=Soulshift 7
 timing=main
 oracle=Soulshift 7

@@ -1,11 +1,12 @@
 name=Colos Yearling
-image=http://mtgimage.com/card/colos%20yearling.jpg
+image=http://magiccards.info/scans/en/ud/79.jpg
 value=2.882
 rarity=C
 type=Creature
 subtype=Goat,Beast
 cost={2}{R}
 pt=1/1
-ability=mountainwalk;{R}: SN gets +1/+0 until end of turn.
+ability=Mountainwalk;\
+        {R}: SN gets +1/+0 until end of turn.
 timing=main
-oracle=Mountainwalk. {R}: Colos Yearling gets +1/+0 until end of turn.
+oracle=Mountainwalk\n{R}: Colos Yearling gets +1/+0 until end of turn.

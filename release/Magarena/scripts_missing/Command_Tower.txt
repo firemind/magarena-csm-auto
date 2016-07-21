@@ -1,8 +1,9 @@
 name=Command Tower
-image=http://mtgimage.com/card/command%20tower.jpg
-value=2.500
+image=http://magiccards.info/scans/en/c15/281.jpg
+image_updated=2016-02-29
+value=3.596
 rarity=C
 type=Land
 ability={T}: Add to your mana pool one mana of any color in your commander's color identity.
-timing=main
+timing=land
 oracle={T}: Add to your mana pool one mana of any color in your commander's color identity.

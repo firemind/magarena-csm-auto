@@ -1,0 +1,10 @@
+name=Aerial Volley
+image=http://magiccards.info/scans/en/ori/168.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=C
+type=Instant
+cost={G}
+effect=SN deals 3 damage divided as you choose among one, two, or three target creatures with flying.
+timing=removal
+oracle=Aerial Volley deals 3 damage divided as you choose among one, two, or three target creatures with flying.

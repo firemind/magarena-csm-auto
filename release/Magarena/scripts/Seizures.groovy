@@ -1,5 +1,5 @@
 [
-    new MagicWhenBecomesTappedTrigger() {
+    new BecomesTappedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent tapped) {
             final MagicPermanent enchanted = permanent.getEnchantedPermanent();
@@ -19,7 +19,7 @@
         @Override
         public void executeEvent(final MagicGame game,final MagicEvent event) {
             if (event.isNo()) {
-                game.doAction(new MagicDealDamageAction(event.getSource(),event.getPlayer(),3));
+                game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),3));
             }
         }
     }

@@ -1,11 +1,11 @@
 name=Krark-Clan Grunt
-image=http://mtgimage.com/card/krark-clan%20grunt.jpg
+image=http://magiccards.info/scans/en/mi/97.jpg
 value=2.680
 rarity=C
 type=Creature
 subtype=Goblin,Warrior
 cost={2}{R}
 pt=2/2
-ability=Sacrifice an artifact:SN gets +1/+0 and gains first strike until end of turn.
+ability=Sacrifice an artifact: SN gets +1/+0 and gains first strike until end of turn.
 timing=main
 oracle=Sacrifice an artifact: Krark-Clan Grunt gets +1/+0 and gains first strike until end of turn.

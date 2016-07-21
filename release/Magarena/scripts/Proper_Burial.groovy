@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             final int toughness = otherPermanent.getToughness();
@@ -16,7 +16,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeLifeAction(
+            game.doAction(new ChangeLifeAction(
                 event.getPlayer(),
                 event.getRefInt()
             ));

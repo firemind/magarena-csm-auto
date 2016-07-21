@@ -1,6 +1,7 @@
 name=Steam Augury
-image=http://mtgimage.com/card/steam%20augury.jpg
-value=2.500
+image=http://magiccards.info/scans/en/c15/233.jpg
+image_updated=2016-02-29
+value=3.000
 rarity=R
 type=Instant
 cost={2}{U}{R}

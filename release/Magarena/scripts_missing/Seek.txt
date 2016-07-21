@@ -1,9 +1,11 @@
 name=Seek
-image=http://mtgimage.com/card/hideseek.jpg
-value=2.500
+image=http://magiccards.info/scans/en/di/151b.jpg
+value=4.315
 rarity=R
 type=Instant
 cost={W}{B}
 effect=Search target opponent's library for a card and exile it. You gain life equal to its converted mana cost. Then that player shuffles his or her library.
+split=Hide
 timing=removal
+second_half
 oracle=Search target opponent's library for a card and exile it. You gain life equal to its converted mana cost. Then that player shuffles his or her library.

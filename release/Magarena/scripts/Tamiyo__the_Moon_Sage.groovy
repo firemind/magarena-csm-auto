@@ -1,32 +1,10 @@
 [
-    new MagicPlaneswalkerActivation(1) {
-        @Override
-        public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
-            return new MagicEvent(
-                source,
-                MagicTargetChoice.NEG_TARGET_PERMANENT,
-                MagicTapTargetPicker.Tap,
-                this,
-                "Tap target permanent\$. It doesn't untap during its controller's next untap step."
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            event.processTargetPermanent(game, {
-                game.doAction(new MagicTapAction(it));
-                game.doAction(MagicChangeStateAction.Set(
-                    it,
-                    MagicPermanentState.DoesNotUntapDuringNext
-                ));
-            });
-        }
-    },
     new MagicPlaneswalkerActivation(-2) {
         @Override
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                MagicTargetChoice.TARGET_PLAYER,
+                TARGET_PLAYER,
                 this,
                 "Draw a card for each tapped creature target player\$ controls."
             );
@@ -34,8 +12,8 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
-                final int amt = game.filterPermanents(it, MagicTargetFilterFactory.TAPPED_CREATURE_YOU_CONTROL).size();
-                game.doAction(new MagicDrawAction(event.getPlayer(),amt));
+                final int amt = TAPPED_CREATURE_YOU_CONTROL.filter(it).size();
+                game.doAction(new DrawAction(event.getPlayer(),amt));
             });
         }
     },
@@ -53,7 +31,7 @@
         @Override
         public void executeEvent(final MagicGame outerGame, final MagicEvent outerEvent) {
             final MagicPlayer you = outerEvent.getPlayer();
-            outerGame.doAction(new MagicAddStaticAction(
+            outerGame.doAction(new AddStaticAction(
                 new MagicStatic(MagicLayer.Player) {
                     @Override
                     public void modPlayer(final MagicPermanent source, final MagicPlayer player) {
@@ -63,29 +41,25 @@
                     }
                 }
             ));
-            outerGame.doAction(new MagicAddTriggerAction(
-                new MagicWhenOtherPutIntoGraveyardTrigger() {
+            outerGame.doAction(new AddTriggerAction(
+                new OtherPutIntoGraveyardTrigger() {
                     @Override
-                    public MagicEvent executeTrigger(
-                            final MagicGame game,
-                            final MagicPermanent permanent,
-                            final MagicMoveCardAction act) {
+                    public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MoveCardAction act) {
                         return act.card.getOwner().getId() == you.getId() ?
                             // HACK: As emblem is not represented, source of event is the card
                             new MagicEvent(
                                 act.card,
                                 new MagicMayChoice(),
                                 this,
-                                "PN may\$ return SN to your hand."
+                                "PN may\$ return SN to his or her hand."
                             ):
                             MagicEvent.NONE
                     }
 
                     @Override
                     public void executeEvent(final MagicGame game, final MagicEvent event) {
-                        if (event.isYes() && event.getCard().isInGraveyard()) {
-                            game.doAction(new MagicRemoveCardAction(event.getCard(),MagicLocationType.Graveyard));
-                            game.doAction(new MagicMoveCardAction(event.getCard(),MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+                        if (event.isYes()) {
+                            game.doAction(new ShiftCardAction(event.getCard(),MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
                         }
                     }
                 }

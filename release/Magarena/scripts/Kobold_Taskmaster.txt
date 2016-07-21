@@ -1,11 +1,11 @@
 name=Kobold Taskmaster
-image=http://mtgimage.com/card/kobold%20taskmaster.jpg
+image=http://magiccards.info/scans/en/me3/106.jpg
 value=3.500
 rarity=C
 type=Creature
 subtype=Kobold
 cost={1}{R}
 pt=1/2
-ability=other Kobold creatures you control get +1/+0
+ability=Other Kobold creatures you control get +1/+0.
 timing=main
 oracle=Other Kobold creatures you control get +1/+0.

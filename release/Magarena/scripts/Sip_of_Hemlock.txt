@@ -1,9 +1,9 @@
 name=Sip of Hemlock
-image=http://mtgimage.com/card/sip%20of%20hemlock.jpg
+image=http://magiccards.info/scans/en/ths/106.jpg
 value=2.011
 rarity=C
 type=Sorcery
 cost={4}{B}{B}
+effect=Destroy target creature.~Its controller loses 2 life.
 timing=main
-requires_groovy_code=Launch Party
 oracle=Destroy target creature. Its controller loses 2 life.

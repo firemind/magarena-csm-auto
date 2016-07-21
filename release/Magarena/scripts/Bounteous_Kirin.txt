@@ -1,12 +1,12 @@
 name=Bounteous Kirin
-image=http://mtgimage.com/card/bounteous%20kirin.jpg
+image=http://magiccards.info/scans/en/sok/123.jpg
 value=3.211
 rarity=R
 type=Legendary,Creature
 subtype=Kirin,Spirit
 cost={5}{G}{G}
 pt=4/4
-ability=flying
+ability=Flying
 timing=main
 requires_groovy_code
-oracle=Flying. Whenever you cast a Spirit or Arcane spell, you may gain life equal to that spell's converted mana cost.
+oracle=Flying\nWhenever you cast a Spirit or Arcane spell, you may gain life equal to that spell's converted mana cost.

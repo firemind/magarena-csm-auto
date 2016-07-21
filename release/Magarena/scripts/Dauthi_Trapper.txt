@@ -1,11 +1,11 @@
 name=Dauthi Trapper
-image=http://mtgimage.com/card/dauthi%20trapper.jpg
+image=http://magiccards.info/scans/en/sh/6.jpg
 value=3.690
 rarity=U
 type=Creature
 subtype=Dauthi,Minion
 cost={2}{B}
 pt=1/1
-ability={T}:Target creature gains shadow until end of turn.
+ability={T}: Target creature gains shadow until end of turn.
 timing=main
 oracle={T}: Target creature gains shadow until end of turn.

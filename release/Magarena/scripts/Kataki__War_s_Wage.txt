@@ -1,0 +1,11 @@
+name=Kataki, War's Wage
+image=http://magiccards.info/scans/en/md1/24.jpg
+value=4.409
+rarity=R
+type=Legendary,Creature
+subtype=Spirit
+cost={1}{W}
+pt=2/1
+ability=All artifacts have "At the beginning of your upkeep, you may pay {1}. If you don't, sacrifice this artifact."
+timing=main
+oracle=All artifacts have "At the beginning of your upkeep, sacrifice this artifact unless you pay {1}."

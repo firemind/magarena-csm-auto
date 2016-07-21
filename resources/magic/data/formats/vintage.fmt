@@ -15,10 +15,12 @@ ARB
 ARN
 ATQ
 AVR
+BFZ
 BNG
 BOK
 C13
 C14
+C15
 CFX
 CHK
 CHR
@@ -30,10 +32,12 @@ DIS
 DKA
 DRK
 DST
+DTK
 EVE
 EXO
 FEM
 FUT
+FRF
 GPT
 GTC
 HML
@@ -62,7 +66,9 @@ MRD
 NEM
 NPH
 ODY
+OGW
 ONS
+ORI
 PC2
 PCY
 PLC
@@ -77,6 +83,7 @@ S00
 S99
 SCG
 SHM
+SOI
 SOK
 SOM
 STH
@@ -92,12 +99,13 @@ VIS
 WTH
 WWK
 ZEN
+pMEI
 
 # banned: prefix with !
 !Advantageous Proclamation
 !Amulet of Quoz
 !Backup Plan
-!Brago’s Favor
+!Brago's Favor
 !Bronze Tablet
 !Chaos Orb
 !Contract from Below
@@ -108,7 +116,7 @@ ZEN
 !Immediate Action
 !Iterative Analysis
 !Jeweled Bird
-!Muzzio’s Preparations
+!Muzzio's Preparations
 !Power Play
 !Rebirth
 !Secret Summoning
@@ -125,15 +133,17 @@ ZEN
 *Balance
 *Black Lotus
 *Brainstorm
+*Chalice of the Void
 *Channel
 *Demonic Consultation
 *Demonic Tutor
+*Dig Through Time
 *Fastbond
 *Flash
-*Gifts Ungiven
 *Imperial Seal
 *Library of Alexandria
 *Lion's Eye Diamond
+*Lodestone Golem
 *Lotus Petal
 *Mana Crypt
 *Mana Vault
@@ -150,12 +160,12 @@ ZEN
 *Ponder
 *Sol Ring
 *Strip Mine
-*Thirst for Knowledge
 *Time Vault
 *Time Walk
 *Timetwister
 *Tinker
 *Tolarian Academy
+*Treasure Cruise
 *Trinisphere
 *Vampiric Tutor
 *Wheel of Fortune

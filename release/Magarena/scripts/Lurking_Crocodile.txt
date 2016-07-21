@@ -1,11 +1,12 @@
 name=Lurking Crocodile
-image=http://mtgimage.com/card/lurking%20crocodile.jpg
+image=http://magiccards.info/scans/en/m12/184.jpg
 value=3.096
 rarity=C
 type=Creature
 subtype=Crocodile
 cost={2}{G}
 pt=2/2
-ability=bloodthirst 1;islandwalk
+ability=Bloodthirst 1;\
+        Islandwalk
 timing=main
-oracle=Bloodthirst 1. Islandwalk
+oracle=Bloodthirst 1\nIslandwalk

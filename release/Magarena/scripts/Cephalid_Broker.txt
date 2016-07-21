@@ -1,11 +1,11 @@
 name=Cephalid Broker
-image=http://mtgimage.com/card/cephalid%20broker.jpg
+image=http://magiccards.info/scans/en/od/71.jpg
 value=3.538
 rarity=U
 type=Creature
 subtype=Cephalid
 cost={3}{U}
-ability={T}:Target player draws two cards, then discards two cards.
 pt=2/2
+ability={T}: Target player draws two cards, then discards two cards.
 timing=main
 oracle={T}: Target player draws two cards, then discards two cards.

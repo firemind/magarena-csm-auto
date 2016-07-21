@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return (damage.isSource(permanent) && damage.isTargetCreature() && damage.isCombat()) ?
@@ -18,7 +18,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isNo()) {
-                game.doAction(new MagicChangeLifeAction(event.getPlayer(), -2));
+                game.doAction(new ChangeLifeAction(event.getPlayer(), -2));
             }
         }
     }

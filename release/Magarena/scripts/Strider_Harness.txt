@@ -1,11 +1,12 @@
 name=Strider Harness
-image=http://mtgimage.com/card/strider%20harness.jpg
+image=http://magiccards.info/scans/en/ogw/167.jpg
+image_updated=2016-02-29
 value=3.010
-rarity=C
+rarity=U
 type=Artifact
 subtype=Equipment
 cost={3}
 ability=Equipped creature gets +1/+1 and has haste.;\
         Equip {1}
 timing=equipment
-oracle=Equipped creature gets +1/+1 and has haste. Equip {1}
+oracle=Equipped creature gets +1/+1 and has haste.\nEquip {1}

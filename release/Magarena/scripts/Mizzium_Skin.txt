@@ -1,10 +1,11 @@
 name=Mizzium Skin
-image=http://mtgimage.com/card/mizzium%20skin.jpg
+image=http://magiccards.info/scans/en/rtr/45.jpg
 value=3.283
 rarity=C
 type=Instant
 cost={U}
+ability=Cast SN with AI only if you control a creature.
 effect=Target creature you control gets +0/+1 and gains hexproof until end of turn.
 timing=pump
 requires_groovy_code
-oracle=Target creature you control gets +0/+1 and gains hexproof until end of turn. Overload {1}{U}
+oracle=Target creature you control gets +0/+1 and gains hexproof until end of turn.\nOverload {1}{U}

@@ -1,11 +1,11 @@
 name=Willow Faerie
-image=http://mtgimage.com/card/willow%20faerie.jpg
+image=http://magiccards.info/scans/en/hl/73.jpg
 value=2.933
 rarity=C
 type=Creature
 subtype=Faerie
 cost={1}{G}
 pt=1/2
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

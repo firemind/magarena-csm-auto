@@ -1,5 +1,5 @@
 [
-    new MagicWhenBlocksTrigger() {
+    new BlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             final MagicPermanent equippedCreature = permanent.getEquippedCreature();
@@ -15,7 +15,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(MagicChangeStateAction.Set(
+            game.doAction(ChangeStateAction.Set(
                 event.getRefPermanent(),
                 MagicPermanentState.DoesNotUntapDuringNext
             ));

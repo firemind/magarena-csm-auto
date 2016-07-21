@@ -1,5 +1,6 @@
 name=Swiftwater Cliffs
-image=http://mtgimage.com/card/swiftwater%20cliffs.jpg
+image=http://magiccards.info/scans/en/c15/310.jpg
+image_updated=2016-02-29
 value=3.333
 rarity=C
 type=Land
@@ -8,4 +9,4 @@ ability=SN enters the battlefield tapped.;\
         When SN enters the battlefield, you gain 1 life.;\
         {T}: Add {U} or {R} to your mana pool.
 timing=tapland
-oracle=Swiftwater Cliffs enters the battlefield tapped. When Swiftwater Cliffs enters the battlefield, you gain 1 life. {T}: Add {U} or {R} to your mana pool.
+oracle=Swiftwater Cliffs enters the battlefield tapped.\nWhen Swiftwater Cliffs enters the battlefield, you gain 1 life.\n{T}: Add {U} or {R} to your mana pool.

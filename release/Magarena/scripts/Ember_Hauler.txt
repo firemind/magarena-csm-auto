@@ -1,11 +1,11 @@
 name=Ember Hauler
-image=http://mtgimage.com/card/ember%20hauler.jpg
+image=http://magiccards.info/scans/en/m11/135.jpg
 value=3.972
 rarity=U
 type=Creature
 subtype=Goblin
 cost={R}{R}
 pt=2/2
-ability={1},Sacrifice SN: SN deals 2 damage to target creature or player.
+ability={1}, Sacrifice SN: SN deals 2 damage to target creature or player.
 timing=main
 oracle={1}, Sacrifice Ember Hauler: Ember Hauler deals 2 damage to target creature or player.

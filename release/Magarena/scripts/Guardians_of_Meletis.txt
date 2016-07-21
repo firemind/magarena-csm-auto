@@ -1,11 +1,12 @@
 name=Guardians of Meletis
-image=http://mtgimage.com/card/guardians%20of%20meletis.jpg
-value=3.345
+image=http://magiccards.info/scans/en/ori/228.jpg
+image_updated=2015-11-05
+value=2.500
 rarity=C
 type=Artifact,Creature
 subtype=Golem
 cost={3}
 pt=0/6
-ability=defender
-timing=artifact
+ability=Defender
+timing=smain
 oracle=Defender

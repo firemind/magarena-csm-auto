@@ -1,9 +1,9 @@
 name=Pegasus Refuge
-image=http://mtgimage.com/card/pegasus%20refuge.jpg
+image=http://magiccards.info/scans/en/tp/247.jpg
 value=2.203
 rarity=R
 type=Enchantment
 cost={3}{W}
-ability={2},Discard a card: Put a 1/1 white Pegasus creature token with flying onto the battlefield.
+ability={2}, Discard a card: Put a 1/1 white Pegasus creature token with flying onto the battlefield.
 timing=enchantment
 oracle={2}, Discard a card: Put a 1/1 white Pegasus creature token with flying onto the battlefield.

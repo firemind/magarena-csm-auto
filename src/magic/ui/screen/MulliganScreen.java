@@ -1,51 +1,59 @@
 package magic.ui.screen;
 
-import magic.data.GeneralConfig;
-import magic.ui.IconImages;
-import magic.model.MagicCardList;
-import magic.model.MagicGame;
-import magic.model.MagicPlayer;
-import magic.ui.canvas.cards.CardsCanvas;
-import magic.ui.canvas.cards.CardsCanvas.LayoutMode;
-import magic.ui.duel.choice.MulliganChoicePanel;
-import magic.ui.screen.interfaces.IActionBar;
-import magic.ui.screen.interfaces.IStatusBar;
-import magic.ui.screen.widget.ActionBarButton;
-import magic.ui.screen.widget.MenuButton;
-import net.miginfocom.swing.MigLayout;
-
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 import magic.data.MagicIcon;
+import magic.model.MagicCardList;
+import magic.model.MagicGame;
+import magic.model.MagicPlayer;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
+import magic.translate.UiString;
+import magic.ui.canvas.cards.CardsCanvas.LayoutMode;
+import magic.ui.canvas.cards.CardsCanvas;
+import magic.ui.duel.choice.MulliganChoicePanel;
+import magic.ui.screen.interfaces.IActionBar;
+import magic.ui.screen.interfaces.IStatusBar;
+import magic.ui.screen.interfaces.IWikiPage;
+import magic.ui.screen.widget.ActionBarButton;
+import magic.ui.screen.widget.MenuButton;
+import magic.utility.WikiPage;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class MulliganScreen
     extends AbstractScreen
-    implements IStatusBar, IActionBar {
+    implements IStatusBar, IActionBar, IWikiPage {
 
-    private final static Dimension cardSize = GeneralConfig.PREFERRED_CARD_SIZE;
+    // translatable string
+    private static final String _S1 = "Vancouver Mulligan";
+    private static final String _S2 = "Close";
+    private static final String _S3 = "Play this hand";
+    private static final String _S5 = "Returns this hand to your library then draws a new hand with one less card.<br>You may scry 1 if your opening hand has fewer cards than your starting hand size.";
+    private static final String _S6 = "You play %s";
+    private static final String _S7 = "first.";
+    private static final String _S8 = "second.";
 
     private volatile static boolean isActive = false;
 
-    private CardsCanvas content;
+    private CardsCanvas cardsCanvas;
     private MulliganChoicePanel choicePanel;
     private final AbstractAction takeMulliganAction = new TakeMulliganAction();
     private final StatusPanel statusPanel;
+    private final MagicCardList hand;
 
     public MulliganScreen(final MulliganChoicePanel choicePanel, final MagicCardList hand) {
         this.choicePanel = choicePanel;
+        this.hand = hand;
         isActive = true;
         statusPanel = new StatusPanel(choicePanel.getGameController().getGame());
         setContent(getScreenContent(hand));
@@ -66,7 +74,7 @@ public class MulliganScreen
         getActionMap().put("EscapeKeyAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!content.isBusy()) {
+                if (!cardsCanvas.isBusy()) {
                     isActive = false;
                     ScreenController.closeActiveScreen(false);
                 }
@@ -75,12 +83,12 @@ public class MulliganScreen
     }
 
     private JPanel getScreenContent(final MagicCardList hand) {
-        content = new CardsCanvas(cardSize);
-        content.setAnimationEnabled(true);
-        content.setAnimationDelay(50, 20);
-        content.setLayoutMode(LayoutMode.SCALE_TO_FIT);
+        cardsCanvas = new CardsCanvas();
+        cardsCanvas.setAnimationEnabled(true);
+        cardsCanvas.setAnimationDelay(50, 20);
+        cardsCanvas.setLayoutMode(LayoutMode.SCALE_TO_FIT);
         refreshCardsDisplay(hand);
-        return content;
+        return cardsCanvas;
     }
 
     public void dealNewHand(final MulliganChoicePanel choicePanel, final MagicCardList hand) {
@@ -93,28 +101,22 @@ public class MulliganScreen
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                content.refresh(hand, cardSize);
+                cardsCanvas.refresh(hand);
             }
         });
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagStatusBar#getScreenCaption()
-     */
     @Override
     public String getScreenCaption() {
-        return "Mulligan?";
+        return UiString.get(_S1);
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getLeftAction()
-     */
     @Override
     public MenuButton getLeftAction() {
-        return new MenuButton("Close", new AbstractAction() {
+        return new MenuButton(UiString.get(_S2), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                if (!content.isBusy()) {
+                if (!cardsCanvas.isBusy()) {
                     isActive = false;
                     ScreenController.closeActiveScreen(false);
                 }
@@ -122,15 +124,12 @@ public class MulliganScreen
         });
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getRightAction()
-     */
     @Override
     public MenuButton getRightAction() {
-        return new MenuButton("Play this hand", new AbstractAction() {
+        return new MenuButton(UiString.get(_S3), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                if (!content.isBusy()) {
+                if (!cardsCanvas.isBusy()) {
                     choicePanel.doMulliganAction(false);
                     isActive = false;
                     ScreenController.closeActiveScreen(false);
@@ -139,35 +138,33 @@ public class MulliganScreen
         });
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getMiddleActions()
-     */
     @Override
     public List<MenuButton> getMiddleActions() {
-        final List<MenuButton> buttons = new ArrayList<MenuButton>();
-        buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.MULLIGAN_ICON),
-                        "Mulligan", "Draw a new hand with one less card.",
+        final List<MenuButton> buttons = new ArrayList<>();
+        buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.MULLIGAN_ICON),
+                        UiString.get(_S1), UiString.get(_S5),
                         takeMulliganAction)
                 );
         return buttons;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.MagScreen#canScreenClose()
-     */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         return true;
     }
 
+    @Override
+    public String getWikiPageName() {
+        return WikiPage.MULLIGAN;
+    }
+
     private final class TakeMulliganAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!content.isBusy()) {
+            if (!cardsCanvas.isBusy()) {
                 choicePanel.doMulliganAction(true);
-                if (content.getCardsCount() <= 2) {
+                if (hand.size() <= 2) {
                     isActive = false;
                     ScreenController.closeActiveScreen(false);
                 }
@@ -175,9 +172,6 @@ public class MulliganScreen
         }
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.screen.interfaces.IStatusBar#getStatusPanel()
-     */
     @Override
     public JPanel getStatusPanel() {
         return statusPanel;
@@ -212,7 +206,10 @@ public class MulliganScreen
         private void setContent(final MagicGame game) {
             final MagicPlayer turnPlayer = game.getTurnPlayer();
             final MagicPlayer humanPlayer = game.getPlayer(0);
-            playingFirstLabel.setText("You play " + (turnPlayer == humanPlayer ? "first." : "second."));
+            playingFirstLabel.setText(UiString.get(_S6,
+                    turnPlayer == humanPlayer
+                            ? UiString.get(_S7)
+                            : UiString.get(_S8)));
             refreshLayout();
         }
 

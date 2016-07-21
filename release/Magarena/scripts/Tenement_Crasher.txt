@@ -1,11 +1,11 @@
 name=Tenement Crasher
-image=http://mtgimage.com/card/tenement%20crasher.jpg
+image=http://magiccards.info/scans/en/rtr/108.jpg
 value=2.536
 rarity=C
 type=Creature
 subtype=Beast
 cost={5}{R}
-ability=haste
 pt=5/4
+ability=Haste
 timing=fmain
 oracle=Haste

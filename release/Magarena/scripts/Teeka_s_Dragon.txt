@@ -1,11 +1,11 @@
 name=Teeka's Dragon
-image=http://mtgimage.com/card/teeka%27s%20dragon.jpg
+image=http://magiccards.info/scans/en/mr/285.jpg
 value=3.934
 rarity=R
 type=Artifact,Creature
 subtype=Dragon
 cost={9}
 pt=5/5
-ability=flying;trample;rampage 4
+ability=Flying; trample; rampage 4
 timing=main
 oracle=Flying; trample; rampage 4

@@ -1,9 +1,9 @@
 name=Demon's Horn
-image=http://mtgimage.com/card/demon%27s%20horn.jpg
+image=http://magiccards.info/scans/en/m12/205.jpg
 value=1.645
 rarity=U
 type=Artifact
 cost={2}
 ability=Whenever a player casts a black spell, you may gain 1 life.
-timing=fmain
+timing=artifact
 oracle=Whenever a player casts a black spell, you may gain 1 life.

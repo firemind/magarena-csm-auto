@@ -1,11 +1,11 @@
 name=Cartel Aristocrat
-image=http://mtgimage.com/card/cartel%20aristocrat.jpg
+image=http://magiccards.info/scans/en/gtc/150.jpg
 value=3.435
 rarity=U
 type=Creature
 subtype=Human,Advisor
 cost={W}{B}
 pt=2/2
+ability=Sacrifice another creature: SN gains protection from the color of your choice until end of turn.
 timing=main
-requires_groovy_code
 oracle=Sacrifice another creature: Cartel Aristocrat gains protection from the color of your choice until end of turn.

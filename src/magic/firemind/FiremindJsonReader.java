@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
-import magic.data.DeckUtils;
+import magic.utility.DeckUtils;
 import magic.data.GeneralConfig;
 import magic.data.json.DownloadableJsonFile;
 import magic.model.MagicDeck;
@@ -30,14 +30,14 @@ public final class FiremindJsonReader {
         try {
             final DownloadableJsonFile downloadFile =
                     new DownloadableJsonFile("https://www.firemind.ch/decks/top.json", jsonFile);
-            downloadFile.download(GeneralConfig.getInstance().getProxy());
+            downloadFile.doDownload(GeneralConfig.getInstance().getProxy());
         } catch (IOException ex) {
             System.err.println("Download of json file failed : " + ex.getMessage());
         }
         if (jsonFile.exists()) {
             if (!isJsonFileUpToDate(jsonFile)) {
                 // only attempt download once per day even if download fails.
-                final Calendar cal = Calendar.getInstance();                
+                final Calendar cal = Calendar.getInstance();
                 jsonFile.setLastModified(cal.getTimeInMillis());
             }
         } else {
@@ -75,7 +75,7 @@ public final class FiremindJsonReader {
             return;
         }
 
-        final List<MagicDeck> decks = new ArrayList<MagicDeck>();
+        final List<MagicDeck> decks = new ArrayList<>();
         try {
             decks.addAll(JsonOrgParser.parse(jsonFile));
         } catch (IOException ex) {
@@ -91,9 +91,10 @@ public final class FiremindJsonReader {
         }
 
         for (MagicDeck deck : decks) {
+            String validFilename = deck.getFilename().replaceAll("[^A-Za-z0-9' \\.\\-]", "_");
+            String decFilename = firemindDecksPath.resolve(validFilename + ".dec").toString();
             try {
-                final String filename = firemindDecksPath.resolve(deck.getFilename() + ".dec").toString();
-                DeckUtils.saveDeck(filename, deck);
+                DeckUtils.saveDeck(decFilename, deck);
             } catch (Exception ex) {
                 System.err.println("Invalid deck : " + deck.getFilename() + " - " + ex.getMessage());
             }

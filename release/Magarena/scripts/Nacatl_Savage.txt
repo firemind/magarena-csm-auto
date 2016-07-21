@@ -1,11 +1,11 @@
 name=Nacatl Savage
-image=http://mtgimage.com/card/nacatl%20savage.jpg
+image=http://magiccards.info/scans/en/cfx/86.jpg
 value=2.412
 rarity=C
 type=Creature
 subtype=Cat,Warrior
 cost={1}{G}
 pt=2/1
-ability=protection from artifacts
+ability=Protection from artifacts
 timing=main
 oracle=Protection from artifacts

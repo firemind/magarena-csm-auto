@@ -1,11 +1,11 @@
 name=Trench Wurm
-image=http://mtgimage.com/card/trench%20wurm.jpg
+image=http://magiccards.info/scans/en/in/127.jpg
 value=3.586
 rarity=U
 type=Creature
 subtype=Wurm
 cost={3}{B}
 pt=3/3
-ability={2}{R},{T}:Destroy target nonbasic land.
+ability={2}{R}, {T}: Destroy target nonbasic land.
 timing=main
 oracle={2}{R}, {T}: Destroy target nonbasic land.

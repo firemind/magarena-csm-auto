@@ -1,0 +1,12 @@
+name=Infiltrator's Magemark
+image=http://magiccards.info/scans/en/gp/28.jpg
+value=3.935
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={2}{U}
+ability=Enchant creature
+timing=aura
+enchant=unblockable,pos creature
+requires_groovy_code
+oracle=Enchant creature\nCreatures you control that are enchanted get +1/+1 and can't be blocked except by creatures with defender.

@@ -1,10 +1,10 @@
 name=Fade from Memory
-image=http://mtgimage.com/card/fade%20from%20memory.jpg
+image=http://magiccards.info/scans/en/on/144.jpg
 value=2.159
 rarity=U
 type=Instant
 cost={B}
+ability=Cycling {B}
 effect=Exile target card from a graveyard.
-ability=cycling {B}
 timing=removal
-oracle=Exile target card from a graveyard. Cycling {B}
+oracle=Exile target card from a graveyard.\nCycling {B}

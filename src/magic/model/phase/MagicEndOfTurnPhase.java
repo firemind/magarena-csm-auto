@@ -1,9 +1,9 @@
 package magic.model.phase;
 
-import magic.data.SoundEffects;
 import magic.model.MagicGame;
-import magic.model.action.MagicReturnExiledAction;
+import magic.model.action.ReturnExiledAction;
 import magic.model.trigger.MagicTriggerType;
+import magic.ui.MagicSound;
 
 public class MagicEndOfTurnPhase extends MagicPhase {
 
@@ -20,7 +20,7 @@ public class MagicEndOfTurnPhase extends MagicPhase {
     @Override
     public void executeBeginStep(final MagicGame game) {
         // Exiled until end of turn.
-        game.doAction(new MagicReturnExiledAction());
+        game.doAction(new ReturnExiledAction());
 
         // End of turn triggers.
         game.executeTrigger(MagicTriggerType.AtEndOfTurn,game.getTurnPlayer());
@@ -29,6 +29,6 @@ public class MagicEndOfTurnPhase extends MagicPhase {
 
     @Override
     protected void executeEndOfPhase(final MagicGame game) {
-        SoundEffects.playGameSound(game,SoundEffects.TURN_SOUND);
+        game.playSound(MagicSound.NEW_TURN);
     }
 }

@@ -1,9 +1,9 @@
 name=Mightstone
-image=http://mtgimage.com/card/mightstone.jpg
+image=http://magiccards.info/scans/en/me4/215.jpg
 value=2.333
 rarity=C
 type=Artifact
 cost={4}
-ability=attacking creatures get +1/+0
+ability=Attacking creatures get +1/+0.
 timing=artifact
 oracle=Attacking creatures get +1/+0.

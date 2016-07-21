@@ -1,5 +1,6 @@
 name=Bone Splinters
-image=http://mtgimage.com/card/bone%20splinters.jpg
+image=http://magiccards.info/scans/en/bfz/105.jpg
+image_updated=2015-11-08
 value=3.012
 rarity=C
 type=Sorcery
@@ -7,4 +8,4 @@ cost={B}
 ability=As an additional cost to cast SN, sacrifice a creature.
 effect=Destroy target creature.
 timing=main
-oracle=As an additional cost to cast Bone Splinters, sacrifice a creature. Destroy target creature.
+oracle=As an additional cost to cast Bone Splinters, sacrifice a creature.\nDestroy target creature.

@@ -1,5 +1,5 @@
 [
-    new MagicWhenLifeIsGainedTrigger() {
+    new LifeIsGainedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicLifeChangeTriggerData lifeChange) {
             return permanent.isController(lifeChange.player) ?
@@ -7,13 +7,13 @@
                     permanent,
                     new MagicMayChoice(
                         new MagicPayManaCostChoice(MagicManaCost.create("{1}{W}")),
-                        MagicTargetChoice.POS_TARGET_CREATURE
+                        POS_TARGET_CREATURE
                     ),
                     MagicPumpTargetPicker.create(),
                     lifeChange.amount,
                     this,
-                    "You may\$ pay {1}{W}\$. If you do, put a +1/+1 counter " +
-                    "on target creature\$ for each 1 life you gained."
+                    "PN may\$ pay {1}{W}\$. If PN does, he or she puts a +1/+1 counter " +
+                    "on target creature\$ for each 1 life he or she gained."
                 ):
                 MagicEvent.NONE;
         }
@@ -21,7 +21,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
                 event.processTargetPermanent(game, {
-                    game.doAction(new MagicChangeCountersAction(it,MagicCounterType.PlusOne,event.getRefInt()));
+                    game.doAction(new ChangeCountersAction(it,MagicCounterType.PlusOne,event.getRefInt()));
                 });
             }
         }

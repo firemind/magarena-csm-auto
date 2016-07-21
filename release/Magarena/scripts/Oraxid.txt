@@ -1,11 +1,11 @@
 name=Oraxid
-image=http://mtgimage.com/card/oraxid.jpg
+image=http://magiccards.info/scans/en/ne/35.jpg
 value=2.970
 rarity=C
 type=Creature
 subtype=Crab,Beast
 cost={3}{U}
 pt=2/3
-ability=protection from red
+ability=Protection from red
 timing=main
 oracle=Protection from red

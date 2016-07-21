@@ -1,0 +1,9 @@
+name=Merciless Eviction
+image=http://magiccards.info/scans/en/gtc/177.jpg
+value=4.036
+rarity=R
+type=Sorcery
+cost={4}{W}{B}
+effect=Choose one — (1) Exile all artifacts. (2) Exile all creatures. (3) Exile all enchantments. (4) Exile all planeswalkers.
+timing=main
+oracle=Choose one —\n• Exile all artifacts.\n• Exile all creatures.\n• Exile all enchantments.\n• Exile all planeswalkers.

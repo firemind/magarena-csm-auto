@@ -1,11 +1,11 @@
 name=Misshapen Fiend
-image=http://mtgimage.com/card/misshapen%20fiend.jpg
+image=http://magiccards.info/scans/en/mm/147.jpg
 value=1.817
 rarity=C
 type=Creature
 subtype=Horror,Mercenary
 cost={1}{B}
 pt=1/1
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

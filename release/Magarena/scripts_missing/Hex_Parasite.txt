@@ -1,6 +1,6 @@
 name=Hex Parasite
-image=http://mtgimage.com/card/hex%20parasite.jpg
-value=2.500
+image=http://magiccards.info/scans/en/nph/137.jpg
+value=4.327
 rarity=R
 type=Artifact,Creature
 subtype=Insect

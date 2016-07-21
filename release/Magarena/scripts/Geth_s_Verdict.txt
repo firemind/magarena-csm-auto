@@ -1,10 +1,10 @@
 name=Geth's Verdict
-image=http://mtgimage.com/card/geth%27s%20verdict.jpg
+image=http://magiccards.info/scans/en/nph/61.jpg
 value=3.815
 removal=1
 rarity=C
 type=Instant
 cost={B}{B}
+effect=Target player sacrifices a creature~and *he or she* loses 1 life.
 timing=removal
-requires_groovy_code
 oracle=Target player sacrifices a creature and loses 1 life.

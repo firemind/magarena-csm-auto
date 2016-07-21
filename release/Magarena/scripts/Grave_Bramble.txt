@@ -1,11 +1,11 @@
 name=Grave Bramble
-image=http://mtgimage.com/card/grave%20bramble.jpg
+image=http://magiccards.info/scans/en/isd/184.jpg
 value=3.362
 rarity=C
 type=Creature
 subtype=Plant
 cost={1}{G}{G}
 pt=3/4
-ability=defender;protection from Zombies
-timing=main
+ability=Defender, protection from Zombies
+timing=smain
 oracle=Defender, protection from Zombies

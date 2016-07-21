@@ -1,11 +1,11 @@
 name=Titan of Eternal Fire
-image=http://mtgimage.com/card/titan%20of%20eternal%20fire.jpg
+image=http://magiccards.info/scans/en/ths/144.jpg
 value=3.388
 rarity=R
 type=Creature
 subtype=Giant
 cost={5}{R}
 pt=5/6
-ability=Human creatures you control have "{R},{T}:SN deals 1 damage to target creature or player."
+ability=Each Human creature you control has "{R}, {T}: This creature deals 1 damage to target creature or player."
 timing=main
 oracle=Each Human creature you control has "{R}, {T}: This creature deals 1 damage to target creature or player."

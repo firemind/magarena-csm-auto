@@ -1,28 +1,29 @@
 package magic.ui.duel.choice;
 
-import magic.ui.IconImages;
-import magic.model.MagicSource;
-import magic.ui.SwingGameController;
-import magic.ui.duel.viewer.UserActionPanel;
-import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.TextLabel;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import magic.data.MagicIcon;
 import magic.model.IGameController;
+import magic.model.MagicSource;
+import magic.ui.MagicImages;
+import magic.ui.duel.SwingGameController;
+import magic.translate.UiString;
+import magic.ui.duel.viewer.UserActionPanel;
+import magic.ui.widget.FontsAndBorders;
+import magic.ui.message.TextLabel;
 
+@SuppressWarnings("serial")
 public class ManaCostXChoicePanel extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
+    // translatable strings
+    private static final String _S1 = "Choose a value for X.";
 
-    private static final String MESSAGE="Choose a value for X.";
+    private static final String MESSAGE = UiString.get(_S1);
     private static final Dimension BUTTON_DIMENSION=new Dimension(50,35);
 
     private final SwingGameController controller;
@@ -48,7 +49,7 @@ public class ManaCostXChoicePanel extends JPanel implements ActionListener {
         buttonPanel.setBorder(FontsAndBorders.EMPTY_BORDER);
         add(buttonPanel,BorderLayout.SOUTH);
 
-        leftButton=new JButton("",IconImages.getIcon(MagicIcon.LEFT));
+        leftButton=new JButton("",MagicImages.getIcon(MagicIcon.LEFT));
         leftButton.setPreferredSize(BUTTON_DIMENSION);
         leftButton.addActionListener(this);
         leftButton.setFocusable(false);
@@ -60,7 +61,7 @@ public class ManaCostXChoicePanel extends JPanel implements ActionListener {
         numberButton.setFocusable(false);
         buttonPanel.add(numberButton);
 
-        rightButton=new JButton(IconImages.getIcon(MagicIcon.RIGHT));
+        rightButton=new JButton(MagicImages.getIcon(MagicIcon.RIGHT));
         rightButton.setPreferredSize(BUTTON_DIMENSION);
         rightButton.addActionListener(this);
         rightButton.setFocusable(false);

@@ -1,11 +1,11 @@
 name=Zarichi Tiger
-image=http://mtgimage.com/card/zarichi%20tiger.jpg
+image=http://magiccards.info/scans/en/gtc/28.jpg
 value=2.275
 rarity=C
 type=Creature
 subtype=Cat
 cost={3}{W}
 pt=2/3
-ability={1}{W},{T}: You gain 2 life.
+ability={1}{W}, {T}: You gain 2 life.
 timing=main
 oracle={1}{W}, {T}: You gain 2 life.

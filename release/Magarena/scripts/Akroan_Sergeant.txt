@@ -1,0 +1,13 @@
+name=Akroan Sergeant
+image=http://magiccards.info/scans/en/ori/130.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=C
+type=Creature
+subtype=Human,Soldier
+cost={2}{R}
+pt=2/2
+ability=First strike;\
+        Renown 1
+timing=main
+oracle=First strike\nRenown 1

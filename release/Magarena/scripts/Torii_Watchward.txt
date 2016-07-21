@@ -1,11 +1,12 @@
 name=Torii Watchward
-image=http://mtgimage.com/card/torii%20watchward.jpg
+image=http://magiccards.info/scans/en/sok/30.jpg
 value=2.129
 rarity=C
 type=Creature
 subtype=Spirit
 cost={4}{W}
 pt=3/3
-ability=vigilance;soulshift 4
+ability=Vigilance;\
+        Soulshift 4
 timing=main
-oracle=Vigilance. Soulshift 4
+oracle=Vigilance\nSoulshift 4

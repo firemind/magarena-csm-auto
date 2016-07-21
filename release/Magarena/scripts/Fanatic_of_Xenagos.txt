@@ -1,11 +1,12 @@
 name=Fanatic of Xenagos
-image=http://mtgimage.com/card/fanatic%20of%20xenagos.jpg
+image=http://magiccards.info/scans/en/bng/147.jpg
 value=3.823
 rarity=U
 type=Creature
 subtype=Centaur,Warrior
 cost={1}{R}{G}
-ability=trample;tribute 1 effect SN gets +1/+1 and gains haste until end of turn.
 pt=3/3
+ability=Trample;\
+        Tribute 1 effect SN gets +1/+1 and gains haste until end of turn.
 timing=main
-oracle=Trample. Tribute 1. When Fanatic of Xenagos enters the battlefield, if tribute wasn't paid, it gets +1/+1 and gains haste until end of turn.
+oracle=Trample\nTribute 1\nWhen Fanatic of Xenagos enters the battlefield, if tribute wasn't paid, it gets +1/+1 and gains haste until end of turn.

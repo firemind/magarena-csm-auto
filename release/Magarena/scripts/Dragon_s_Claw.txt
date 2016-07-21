@@ -1,9 +1,9 @@
 name=Dragon's Claw
-image=http://mtgimage.com/card/dragon%27s%20claw.jpg
+image=http://magiccards.info/scans/en/m12/206.jpg
 value=2.385
 rarity=U
 type=Artifact
 cost={2}
 ability=Whenever a player casts a red spell, you may gain 1 life.
-timing=fmain
+timing=artifact
 oracle=Whenever a player casts a red spell, you may gain 1 life.

@@ -1,5 +1,5 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -14,8 +14,8 @@
         public void executeEvent(final MagicGame game,final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();
             final int amount = player.getHandSize()
-            game.logAppendMessage(player," (X="+amount+")");
-            game.doAction(new MagicMillLibraryAction(player,amount));
+            game.logAppendX(player,amount);
+            game.doAction(new MillLibraryAction(player,amount));
         }
     }
 ]

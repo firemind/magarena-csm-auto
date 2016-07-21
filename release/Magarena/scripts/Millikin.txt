@@ -1,11 +1,11 @@
 name=Millikin
-image=http://mtgimage.com/card/millikin.jpg
+image=http://magiccards.info/scans/en/od/302.jpg
 value=2.936
 rarity=U
 type=Artifact,Creature
 subtype=Construct
 cost={2}
 pt=0/1
-ability={T}, Put the top card of your library into your graveyard: Add {1} to your mana pool.
+ability={T}, Put the top card of your library into your graveyard: Add {C} to your mana pool.
 timing=main
-oracle={T}, Put the top card of your library into your graveyard: Add {1} to your mana pool.
+oracle={T}, Put the top card of your library into your graveyard: Add {C} to your mana pool.

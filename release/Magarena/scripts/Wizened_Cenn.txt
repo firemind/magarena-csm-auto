@@ -1,12 +1,12 @@
 name=Wizened Cenn
-image=http://mtgimage.com/card/wizened%20cenn.jpg
+image=http://magiccards.info/scans/en/lw/49.jpg
 value=3.793
 rarity=U
 type=Creature
 subtype=Kithkin,Cleric
 cost={W}{W}
 pt=2/2
-ability=other kithkin creatures you control get +1/+1
+ability=Other Kithkin creatures you control get +1/+1.
 static=player
 timing=main
 oracle=Other Kithkin creatures you control get +1/+1.

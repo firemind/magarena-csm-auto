@@ -1,9 +1,9 @@
 name=Cancel
-image=http://mtgimage.com/card/cancel.jpg
-value=2.625
+image=http://magiccards.info/scans/en/ktk/33.jpg
+value=2.700
 rarity=C
 type=Instant
 cost={1}{U}{U}
-timing=counter
 effect=Counter target spell.
+timing=counter
 oracle=Counter target spell.

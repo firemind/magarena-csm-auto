@@ -1,11 +1,13 @@
 name=Weakness
-image=http://mtgimage.com/card/weakness.jpg
+image=http://magiccards.info/scans/en/m10/121.jpg
+image_updated=2015-11-13
 value=3.167
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={B}
-ability=Enchanted creature gets -2/-1.
+ability=Enchant creature;\
+        Enchanted creature gets -2/-1.
 timing=aura
 enchant=weaken -2/-1,neg creature
-oracle=Enchant creature. Enchanted creature gets -2/-1.
+oracle=Enchant creature\nEnchanted creature gets -2/-1.

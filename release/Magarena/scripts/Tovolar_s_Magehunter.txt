@@ -1,14 +1,14 @@
 name=Tovolar's Magehunter
-image=http://mtgimage.com/card/tovolar%27s%20magehunter.jpg
+image=http://magiccards.info/scans/en/dka/98b.jpg
 value=3.403
 rarity=R
 type=Creature
 subtype=Werewolf
 color=r
 pt=5/5
-ability=At the beginning of each upkeep, if a player cast two or more spells last turn, transform SN.
-requires_groovy_code
+ability=Whenever an opponent casts a spell, SN deals 2 damage to that player.;\
+        At the beginning of each upkeep, if a player cast two or more spells last turn, transform SN.
 transform=Mondronen Shaman
 timing=main
 hidden
-oracle=Whenever an opponent casts a spell, Tovolar's Magehunter deals 2 damage to that player. At the beginning of each upkeep, if a player cast two or more spells last turn, transform Tovolar's Magehunter.
+oracle=Whenever an opponent casts a spell, Tovolar's Magehunter deals 2 damage to that player.\nAt the beginning of each upkeep, if a player cast two or more spells last turn, transform Tovolar's Magehunter.

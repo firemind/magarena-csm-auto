@@ -1,11 +1,12 @@
 name=Flowstone Wall
-image=http://mtgimage.com/card/flowstone%20wall.jpg
+image=http://magiccards.info/scans/en/ne/86.jpg
 value=2.589
 rarity=C
 type=Creature
 subtype=Wall
 cost={2}{R}
 pt=0/6
-ability=defender;{R}: SN gets +1/-1 until end of turn.
-timing=main
-oracle=Defender. {R}: Flowstone Wall gets +1/-1 until end of turn.
+ability=Defender;\
+        {R}: SN gets +1/-1 until end of turn.
+timing=smain
+oracle=Defender\n{R}: Flowstone Wall gets +1/-1 until end of turn.

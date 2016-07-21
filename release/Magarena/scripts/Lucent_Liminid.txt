@@ -1,11 +1,11 @@
 name=Lucent Liminid
-image=http://mtgimage.com/card/lucent%20liminid.jpg
+image=http://magiccards.info/scans/en/fut/24.jpg
 value=3.123
 rarity=C
 type=Enchantment,Creature
 subtype=Elemental
 cost={3}{W}{W}
 pt=3/3
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

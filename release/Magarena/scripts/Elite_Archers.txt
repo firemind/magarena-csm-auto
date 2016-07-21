@@ -1,11 +1,11 @@
 name=Elite Archers
-image=http://mtgimage.com/card/elite%20archers.jpg
+image=http://magiccards.info/scans/en/8e/18.jpg
 value=2.068
 rarity=R
 type=Creature
 subtype=Human,Soldier,Archer
 cost={5}{W}
 pt=3/3
-ability={T}:SN deals 3 damage to target attacking or blocking creature.
+ability={T}: SN deals 3 damage to target attacking or blocking creature.
 timing=main
 oracle={T}: Elite Archers deals 3 damage to target attacking or blocking creature.

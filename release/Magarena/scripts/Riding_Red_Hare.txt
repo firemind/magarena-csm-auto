@@ -1,9 +1,9 @@
 name=Riding Red Hare
-image=http://mtgimage.com/card/riding%20red%20hare.jpg
+image=http://magiccards.info/scans/en/p3k/18.jpg
 value=3.645
 rarity=C
 type=Sorcery
 cost={2}{W}
-effect=target creature gets +3/+3 and gains horsemanship until end of turn.
+effect=Target creature gets +3/+3 and gains horsemanship until end of turn.
 timing=main
 oracle=Target creature gets +3/+3 and gains horsemanship until end of turn.

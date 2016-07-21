@@ -1,9 +1,10 @@
 name=Rise
-image=http://mtgimage.com/card/risefall.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ddh/73a.jpg
+value=3.896
 rarity=U
 type=Sorcery
 cost={U}{B}
 effect=Return target creature card from a graveyard and target creature on the battlefield to their owners' hands.
+split=Fall
 timing=main
 oracle=Return target creature card from a graveyard and target creature on the battlefield to their owners' hands.

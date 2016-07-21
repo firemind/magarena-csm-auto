@@ -1,0 +1,12 @@
+name=Pendrell Flux
+image=http://magiccards.info/scans/en/us/87.jpg
+value=4.122
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={1}{U}
+ability=Enchant creature
+timing=aura
+enchant=sacrifice,neg creature
+requires_groovy_code
+oracle=Enchant creature\nEnchanted creature has "At the beginning of your upkeep, sacrifice this creature unless you pay its mana cost."

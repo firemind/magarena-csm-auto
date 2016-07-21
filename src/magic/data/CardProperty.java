@@ -1,5 +1,9 @@
 package magic.data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import magic.exception.ScriptParseException;
 import magic.model.MagicAbility;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicColor;
@@ -45,6 +49,7 @@ public enum CardProperty {
     SUBTYPE() {
         public void setProperty(final MagicCardDefinition card, final String value) {
             card.setSubTypes(value.split(COMMA));
+            card.setSubtypeText(value);
         }
     },
     COLOR() {
@@ -68,6 +73,7 @@ public enum CardProperty {
             final int p = pt[0].contains("*") ? 0 : Integer.parseInt(pt[0]);
             final int t = pt[1].contains("*") ? 0 : Integer.parseInt(pt[1]);
             card.setPowerToughness(p, t);
+            card.setPowerToughnessText(value);
         }
     },
     ABILITY() {
@@ -75,18 +81,33 @@ public enum CardProperty {
             card.setAbilityProperty(value);
         }
     },
-    LOAD_ABILITY() {
+    LOYALTY() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            final String[] names=value.split(SEMI);
+            card.setStartingLoyalty(Integer.parseInt(value));
+        }
+    },
+    LOAD_ABILITY_COMMA() {
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            final String[] names=value.split(COMMA);
             for (final String name : names) {
                 MagicAbility.getAbility(name).addAbility(card, name);
             }
         }
     },
-    GIVEN_PT() {
+    LOAD_ABILITY() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            final String[] pt = value.replace('+','0').split("/");
-            card.add(MagicStatic.genPTStatic(Integer.parseInt(pt[0]), Integer.parseInt(pt[1])));
+            final String[] names=value.split(SEMI);
+            for (final String name : names) {
+                try {
+                    MagicAbility.getAbility(name).addAbility(card, name);
+                } catch (final ScriptParseException origPE) {
+                    try {
+                        LOAD_ABILITY_COMMA.setProperty(card, name);
+                    } catch (final ScriptParseException newPE) {
+                        throw origPE;
+                    }
+                }
+            }
         }
     },
     SET_PT() {
@@ -97,7 +118,7 @@ public enum CardProperty {
     },
     GIVEN_ABILITY() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            card.add(MagicStatic.genABStatic(MagicAbility.getAbilityList(value.split(SEMI))));
+            card.add(MagicStatic.linkedABStatic(MagicAbility.getAbilityList(value.split(SEMI))));
         }
     },
     GIVEN_SUBTYPE() {
@@ -130,11 +151,13 @@ public enum CardProperty {
             card.setTiming(MagicTiming.getTimingFor(value));
         }
     },
-    IGNORE() {
+    IMAGE_UPDATED() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            final String[] sizes=value.split(COMMA);
-            for (final String size : sizes) {
-                card.addIgnore(Long.parseLong(size));
+            final SimpleDateFormat format = new SimpleDateFormat(IMAGE_UPDATED_FORMAT);
+            try {
+                card.setImageUpdated(format.parse(value));
+            } catch (final ParseException pe) {
+                throw new RuntimeException(pe);
             }
         }
     },
@@ -157,9 +180,10 @@ public enum CardProperty {
     NAME() {
         public void setProperty(final MagicCardDefinition card, final String value) {
             assert card.getName() == null;
-            assert card.getFullName() == null;
-            card.setName(value);
-            card.setFullName(value);
+            assert card.getDistinctName() == null;
+            final String[] names = value.split(SEMI);
+            card.setName(names[0]);
+            card.setDistinctName(names[names.length - 1]);
         }
     },
     EFFECT() {
@@ -169,7 +193,7 @@ public enum CardProperty {
     },
     LOAD_EFFECT() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            card.add(MagicSpellCardEvent.create(value));
+            card.add(MagicSpellCardEvent.create(card, value));
         }
     },
     REQUIRES_GROOVY_CODE() {
@@ -179,7 +203,7 @@ public enum CardProperty {
     },
     LOAD_GROOVY_CODE() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            final String cardName = !value.isEmpty() ? value : card.getFullName();
+            final String cardName = !value.isEmpty() ? value : card.getDistinctName();
             final String[] names = cardName.split(SEMI);
             for (final String name : names) {
                 CardDefinitions.addCardSpecificGroovyCode(card, name);
@@ -187,14 +211,24 @@ public enum CardProperty {
         }
     },
     FLIP() {
-      public void setProperty(final MagicCardDefinition card, final String value) {
-          card.setFlipCardName(value);
-      }
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setFlipCardName(value);
+        }
     },
     TRANSFORM() {
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setTransformCardName(value);
+        }
+    },
+    SPLIT() {
       public void setProperty(final MagicCardDefinition card, final String value) {
-          card.setTransformCardName(value);
+          card.setSplitCardName(value);
       }
+    },
+    SECOND_HALF() {
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setSecondHalf();
+        }
     },
     ORACLE() {
         public void setProperty(final MagicCardDefinition card, final String value) {
@@ -205,8 +239,15 @@ public enum CardProperty {
         public void setProperty(final MagicCardDefinition card, final String value) {
             card.setHidden();
         }
-    }
+    },
+    OVERLAY() {
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setOverlay();
+        }
+    },
     ;
+
+    public static final String IMAGE_UPDATED_FORMAT = "yyyy-MM-dd";
 
     private static final String SEMI = "\\s*;\\s*";
     private static final String COMMA = "\\s*,\\s*";

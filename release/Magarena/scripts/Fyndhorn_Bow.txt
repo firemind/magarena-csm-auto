@@ -1,9 +1,9 @@
 name=Fyndhorn Bow
-image=http://mtgimage.com/card/fyndhorn%20bow.jpg
+image=http://magiccards.info/scans/en/ia/293.jpg
 value=1.750
 rarity=U
 type=Artifact
 cost={2}
-ability={3},{T}:Target creature gains first strike until end of turn.
+ability={3}, {T}: Target creature gains first strike until end of turn.
 timing=artifact
 oracle={3}, {T}: Target creature gains first strike until end of turn.

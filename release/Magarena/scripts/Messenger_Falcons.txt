@@ -1,11 +1,12 @@
 name=Messenger Falcons
-image=http://mtgimage.com/card/messenger%20falcons.jpg
+image=http://magiccards.info/scans/en/arb/145.jpg
 value=2.717
 rarity=U
 type=Creature
 subtype=Bird
 cost={2}{G/U}{W}
 pt=2/2
-ability=flying;When SN enters the battlefield, draw a card.
-timing=fmain
-oracle=Flying. When Messenger Falcons enters the battlefield, draw a card.
+ability=Flying;\
+        When SN enters the battlefield, draw a card.
+timing=main
+oracle=Flying\nWhen Messenger Falcons enters the battlefield, draw a card.

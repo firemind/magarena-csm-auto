@@ -1,11 +1,14 @@
 name=Mulldrifter
-image=http://mtgimage.com/card/mulldrifter.jpg
+image=http://magiccards.info/scans/en/c15/97.jpg
+image_updated=2016-02-29
 value=4.205
-rarity=C
+rarity=U
 type=Creature
 subtype=Elemental
 cost={4}{U}
 pt=2/2
-ability=flying;When SN enters the battlefield, draw two cards.;evoke {2}{U}
+ability=Flying;\
+        When SN enters the battlefield, draw two cards.;\
+        Evoke {2}{U}
 timing=main
-oracle=Flying. When Mulldrifter enters the battlefield, draw two cards. Evoke {2}{U}
+oracle=Flying\nWhen Mulldrifter enters the battlefield, draw two cards.\nEvoke {2}{U}

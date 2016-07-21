@@ -1,11 +1,12 @@
 name=Volcanic Dragon
-image=http://mtgimage.com/card/volcanic%20dragon.jpg
+image=http://magiccards.info/scans/en/m12/158.jpg
 value=3.656
 rarity=R
 type=Creature
 subtype=Dragon
 cost={4}{R}{R}
 pt=4/4
-ability=flying;haste
+ability=Flying;\
+        Haste
 timing=fmain
-oracle=Flying. Haste
+oracle=Flying\nHaste

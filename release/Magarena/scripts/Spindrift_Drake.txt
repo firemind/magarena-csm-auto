@@ -1,12 +1,12 @@
 name=Spindrift Drake
-image=http://mtgimage.com/card/spindrift%20drake.jpg
+image=http://magiccards.info/scans/en/sh/44.jpg
 value=3.411
 rarity=C
 type=Creature
 subtype=Drake
 cost={U}
 pt=2/1
-ability=flying;\
+ability=Flying;\
         At the beginning of your upkeep, you may pay {U}. If you don't, sacrifice SN.
 timing=main
-oracle=Flying. At the beginning of your upkeep, sacrifice Spindrift Drake unless you pay {U}.
+oracle=Flying\nAt the beginning of your upkeep, sacrifice Spindrift Drake unless you pay {U}.

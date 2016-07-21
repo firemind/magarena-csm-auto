@@ -1,11 +1,11 @@
 name=Torch Fiend
-image=http://mtgimage.com/card/torch%20fiend.jpg
+image=http://magiccards.info/scans/en/m15/166.jpg
 value=3.611
 rarity=C
 type=Creature
 subtype=Devil
 cost={1}{R}
 pt=2/1
-ability={R},Sacrifice SN: Destroy target artifact.
+ability={R}, Sacrifice SN: Destroy target artifact.
 timing=main
 oracle={R}, Sacrifice Torch Fiend: Destroy target artifact.

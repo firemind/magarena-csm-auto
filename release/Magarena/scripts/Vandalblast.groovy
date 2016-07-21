@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{4}{R}")
+                MagicPayManaCostEvent.Cast(source,"{4}{R}")
             ];
         }
         @Override
@@ -11,14 +11,12 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Destroy each artifact you don't control."
+                "Destroy each artifact PN doesn't control."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets=
-                game.filterPermanents(event.getPlayer(),MagicTargetFilterFactory.ARTIFACT_YOUR_OPPONENT_CONTROLS);
-            game.doAction(new MagicDestroyAction(targets));
+            game.doAction(new DestroyAction(ARTIFACT_YOUR_OPPONENT_CONTROLS.filter(event)));
         }
     }
 ]

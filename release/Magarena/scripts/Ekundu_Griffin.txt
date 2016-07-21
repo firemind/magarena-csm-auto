@@ -1,11 +1,11 @@
 name=Ekundu Griffin
-image=http://mtgimage.com/card/ekundu%20griffin.jpg
+image=http://magiccards.info/scans/en/6e/18.jpg
 value=2.839
 rarity=C
 type=Creature
 subtype=Griffin
 cost={3}{W}
 pt=2/2
-ability=flying;first strike
+ability=Flying, first strike
 timing=main
 oracle=Flying, first strike

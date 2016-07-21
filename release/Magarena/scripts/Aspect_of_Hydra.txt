@@ -1,9 +1,9 @@
 name=Aspect of Hydra
-image=http://mtgimage.com/card/aspect%20of%20hydra.jpg
+image=http://magiccards.info/scans/en/bng/117.jpg
 value=3.800
 rarity=C
 type=Instant
 cost={G}
+effect=Target creature gets +X/+X until end of turn, where X is your devotion to green.
 timing=pump
-requires_groovy_code
 oracle=Target creature gets +X/+X until end of turn, where X is your devotion to green.

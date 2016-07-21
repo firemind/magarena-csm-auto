@@ -1,11 +1,11 @@
 name=Shu Cavalry
-image=http://mtgimage.com/card/shu%20cavalry.jpg
+image=http://magiccards.info/scans/en/me3/23.jpg
 value=3.545
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={2}{W}
 pt=2/2
-ability=horsemanship
+ability=Horsemanship
 timing=main
 oracle=Horsemanship

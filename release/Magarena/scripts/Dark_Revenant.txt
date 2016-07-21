@@ -1,12 +1,12 @@
 name=Dark Revenant
-image=http://mtgimage.com/card/dark%20revenant.jpg
+image=http://magiccards.info/scans/en/rtr/61.jpg
 value=1.812
 rarity=U
 type=Creature
 subtype=Spirit
 cost={3}{B}
 pt=2/2
-ability=flying
+ability=Flying
 timing=main
 requires_groovy_code
-oracle=Flying. When Dark Revenant dies, put it on top of its owner's library.
+oracle=Flying\nWhen Dark Revenant dies, put it on top of its owner's library.

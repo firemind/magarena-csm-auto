@@ -1,11 +1,11 @@
 name=Crazed Skirge
-image=http://mtgimage.com/card/crazed%20skirge.jpg
+image=http://magiccards.info/scans/en/br/16.jpg
 value=2.688
 rarity=U
 type=Creature
 subtype=Imp
 cost={3}{B}
 pt=2/2
-ability=flying;haste
+ability=Flying, haste
 timing=fmain
 oracle=Flying, haste

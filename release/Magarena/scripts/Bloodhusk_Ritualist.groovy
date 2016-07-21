@@ -1,11 +1,11 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return payedCost.isKicked() ?
                 new MagicEvent(
                     permanent,
-                    MagicTargetChoice.TARGET_OPPONENT,
+                    TARGET_OPPONENT,
                     payedCost.getKicker(),
                     this,
                     "Target opponent\$ discards a card for each time SN was kicked. (RN)"

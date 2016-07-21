@@ -37,7 +37,7 @@ public class MagicCondensedCardDefinition {
     public static final Comparator<MagicCondensedCardDefinition> RATING_COMPARATOR_DESC=new Comparator<MagicCondensedCardDefinition>() {
         @Override
         public int compare(final MagicCondensedCardDefinition cardDefinition1,final MagicCondensedCardDefinition cardDefinition2) {
-            return cardDefinition1.getCard().getGathererRating() - cardDefinition2.getCard().getGathererRating();
+            return Double.compare(cardDefinition1.getCard().getValue(), cardDefinition2.getCard().getValue());
         }
     };
 
@@ -89,13 +89,25 @@ public class MagicCondensedCardDefinition {
             return MagicCardDefinition.CONVERTED_COMPARATOR_ASC.compare(cardDefinition1.getCard(), cardDefinition2.getCard());
         }
     };
-
+    public static final Comparator<MagicCondensedCardDefinition> SUBTYPE_COMPARATOR_ASC=new Comparator<MagicCondensedCardDefinition>() {
+        @Override
+        public int compare(final MagicCondensedCardDefinition cardDefinition1,final MagicCondensedCardDefinition cardDefinition2) {
+            return MagicCardDefinition.SUBTYPE_COMPARATOR_ASC.compare(cardDefinition1.getCard(), cardDefinition2.getCard());
+        }
+    };
+    public static final Comparator<MagicCondensedCardDefinition> SUBTYPE_COMPARATOR_DESC=new Comparator<MagicCondensedCardDefinition>() {
+        @Override
+        public int compare(final MagicCondensedCardDefinition cardDefinition1,final MagicCondensedCardDefinition cardDefinition2) {
+            return MagicCardDefinition.SUBTYPE_COMPARATOR_DESC.compare(cardDefinition1.getCard(), cardDefinition2.getCard());
+        }
+    };
     public static final Comparator<MagicCondensedCardDefinition> TYPE_COMPARATOR_DESC=new Comparator<MagicCondensedCardDefinition>() {
         @Override
         public int compare(final MagicCondensedCardDefinition cardDefinition1,final MagicCondensedCardDefinition cardDefinition2) {
             return MagicCardDefinition.TYPE_COMPARATOR_DESC.compare(cardDefinition1.getCard(), cardDefinition2.getCard());
         }
     };
+
 
     public static final Comparator<MagicCondensedCardDefinition> TYPE_COMPARATOR_ASC=new Comparator<MagicCondensedCardDefinition>() {
         @Override

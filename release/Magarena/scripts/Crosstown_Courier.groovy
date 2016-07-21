@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -12,7 +12,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicMillLibraryAction(event.getPlayer(),event.getRefInt()));
+            game.doAction(new MillLibraryAction(event.getPlayer(),event.getRefInt()));
         }
     }
 ]

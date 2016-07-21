@@ -1,12 +1,12 @@
 name=Strandwalker
-image=http://mtgimage.com/card/strandwalker.jpg
+image=http://magiccards.info/scans/en/mbs/137.jpg
 value=2.873
 rarity=U
 type=Artifact
 subtype=Equipment
 cost={5}
-ability=living weapon;\
+ability=Living weapon;\
         Equipped creature gets +2/+4 and has reach.;\
         Equip {4}
 timing=equipment
-oracle=Living weapon. Equipped creature gets +2/+4 and has reach. Equip {4}
+oracle=Living weapon\nEquipped creature gets +2/+4 and has reach.\nEquip {4}

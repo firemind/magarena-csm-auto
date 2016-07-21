@@ -1,10 +1,10 @@
 name=Glorious Anthem
-image=http://mtgimage.com/card/glorious%20anthem.jpg
+image=http://magiccards.info/scans/en/10e/17.jpg
 value=4.304
 rarity=R
 type=Enchantment
 cost={1}{W}{W}
-ability=creatures you control get +1/+1
+ability=Creatures you control get +1/+1.
 static=player
 timing=enchantment
 oracle=Creatures you control get +1/+1.

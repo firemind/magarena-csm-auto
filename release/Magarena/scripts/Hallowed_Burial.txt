@@ -1,10 +1,10 @@
 name=Hallowed Burial
-image=http://mtgimage.com/card/hallowed%20burial.jpg
+image=http://magiccards.info/scans/en/eve/7.jpg
 value=4.069
 rarity=R
 type=Sorcery
 cost={3}{W}{W}
+effect=Put all creatures on the bottom of their owners' libraries.
 timing=removal
 removal=2
-requires_groovy_code=Terminus
 oracle=Put all creatures on the bottom of their owners' libraries.

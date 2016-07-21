@@ -1,9 +1,0 @@
-name=Pearl Medallion
-image=http://mtgimage.com/card/pearl%20medallion.jpg
-value=2.500
-rarity=R
-type=Artifact
-cost={2}
-ability=White spells you cast cost {1} less to cast.
-timing=main
-oracle=White spells you cast cost {1} less to cast.

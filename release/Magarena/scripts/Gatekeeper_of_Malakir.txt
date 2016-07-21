@@ -1,12 +1,12 @@
 name=Gatekeeper of Malakir
-image=http://mtgimage.com/card/gatekeeper%20of%20malakir.jpg
+image=http://magiccards.info/scans/en/ddk/8.jpg
 value=3.841
 rarity=U
 type=Creature
 subtype=Vampire,Warrior
 cost={B}{B}
-ability=kicker {B};\
-        When SN enters the battlefield, if it was kicked, target player sacrifices a creature.
 pt=2/2
+ability=Kicker {B};\
+        When SN enters the battlefield, if it was kicked, target player sacrifices a creature.
 timing=fmain
-oracle=Kicker {B}. When Gatekeeper of Malakir enters the battlefield, if it was kicked, target player sacrifices a creature.
+oracle=Kicker {B}\nWhen Gatekeeper of Malakir enters the battlefield, if it was kicked, target player sacrifices a creature.

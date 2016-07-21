@@ -1,9 +1,9 @@
 name=Rust
-image=http://mtgimage.com/card/rust.jpg
-value=2.500
+image=http://magiccards.info/scans/en/lg/117.jpg
+value=3.302
 rarity=C
 type=Instant
 cost={G}
 effect=Counter target activated ability from an artifact source.
-timing=removal
+timing=counter
 oracle=Counter target activated ability from an artifact source.

@@ -1,11 +1,11 @@
 name=Frontier Guide
-image=http://mtgimage.com/card/frontier%20guide.jpg
+image=http://magiccards.info/scans/en/zen/161.jpg
 value=2.953
 rarity=U
 type=Creature
 subtype=Elf,Scout
 cost={1}{G}
 pt=1/1
-ability={3}{G},{T}:Search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.
+ability={3}{G}, {T}: Search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.
 timing=main
 oracle={3}{G}, {T}: Search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.

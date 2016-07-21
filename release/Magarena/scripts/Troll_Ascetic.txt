@@ -1,12 +1,12 @@
 name=Troll Ascetic
-image=http://mtgimage.com/card/troll%20ascetic.jpg
+image=http://magiccards.info/scans/en/ddl/50.jpg
 value=4.196
 rarity=R
 type=Creature
 subtype=Troll,Shaman
 cost={1}{G}{G}
 pt=3/2
-ability=hexproof;\
+ability=Hexproof;\
         {1}{G}: Regenerate SN.
-timing=fmain
-oracle=Hexproof. {1}{G}: Regenerate Troll Ascetic.
+timing=main
+oracle=Hexproof\n{1}{G}: Regenerate Troll Ascetic.

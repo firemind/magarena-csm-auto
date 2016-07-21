@@ -1,12 +1,12 @@
 name=Griffin Protector
-image=http://mtgimage.com/card/griffin%20protector.jpg
+image=http://magiccards.info/scans/en/m13/16.jpg
 value=2.806
 rarity=C
 type=Creature
 subtype=Griffin
 cost={3}{W}
 pt=2/3
-ability=flying;\
+ability=Flying;\
         Whenever another creature enters the battlefield under your control, SN gets +1/+1 until end of turn.
 timing=main
-oracle=Flying. Whenever another creature enters the battlefield under your control, Griffin Protector gets +1/+1 until end of turn.
+oracle=Flying\nWhenever another creature enters the battlefield under your control, Griffin Protector gets +1/+1 until end of turn.

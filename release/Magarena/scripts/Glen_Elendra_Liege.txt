@@ -1,14 +1,14 @@
 name=Glen Elendra Liege
-image=http://mtgimage.com/card/glen%20elendra%20liege.jpg
+image=http://magiccards.info/scans/en/pc2/94.jpg
 value=3.519
 rarity=R
 type=Creature
 subtype=Faerie,Knight
 cost={1}{U/B}{U/B}{U/B}
 pt=2/3
-ability=flying;\
-        other blue creatures you control get +1/+1;\
-        other black creatures you control get +1/+1
+ability=Flying;\
+        Other blue creatures you control get +1/+1.;\
+        Other black creatures you control get +1/+1.
 static=player
 timing=main
-oracle=Flying. Other blue creatures you control get +1/+1. Other black creatures you control get +1/+1.
+oracle=Flying\nOther blue creatures you control get +1/+1.\nOther black creatures you control get +1/+1.

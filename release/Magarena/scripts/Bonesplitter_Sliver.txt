@@ -1,12 +1,12 @@
 name=Bonesplitter Sliver
-image=http://mtgimage.com/card/bonesplitter%20sliver.jpg
+image=http://magiccards.info/scans/en/ts/149.jpg
 value=3.670
 rarity=C
 type=Creature
 subtype=Sliver
 cost={3}{R}
 pt=2/2
-ability=all sliver creatures get +2/+0
+ability=All Sliver creatures get +2/+0.
 static=all
 timing=main
 oracle=All Sliver creatures get +2/+0.

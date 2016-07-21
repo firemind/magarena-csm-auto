@@ -1,10 +1,10 @@
 name=Flame Jet
-image=http://mtgimage.com/card/flame%20jet.jpg
+image=http://magiccards.info/scans/en/ud/81.jpg
 value=3.015
 rarity=C
 type=Sorcery
 cost={1}{R}
+ability=Cycling {2}
 effect=SN deals 3 damage to target player.
-ability=cycling {2}
 timing=main
-oracle=Flame Jet deals 3 damage to target player. Cycling {2}
+oracle=Flame Jet deals 3 damage to target player.\nCycling {2}

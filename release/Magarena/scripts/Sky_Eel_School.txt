@@ -1,12 +1,12 @@
 name=Sky-Eel School
-image=http://mtgimage.com/card/sky-eel%20school.jpg
+image=http://magiccards.info/scans/en/som/44.jpg
 value=2.175
 rarity=C
 type=Creature
 subtype=Fish
 cost={3}{U}{U}
 pt=3/3
-ability=flying;\
-        When SN enters the battlefield, draw a card, then discards a card.
+ability=Flying;\
+        When SN enters the battlefield, draw a card, then discard a card.
 timing=main
-oracle=Flying. When Sky-Eel School enters the battlefield, draw a card, then discard a card.
+oracle=Flying\nWhen Sky-Eel School enters the battlefield, draw a card, then discard a card.

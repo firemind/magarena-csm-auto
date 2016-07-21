@@ -1,6 +1,5 @@
 package magic.ui.screen;
 
-import magic.data.GeneralConfig;
 import magic.model.MagicCardList;
 import magic.ui.canvas.cards.CardsCanvas;
 import magic.ui.canvas.cards.CardsCanvas.LayoutMode;
@@ -10,73 +9,56 @@ import magic.ui.screen.widget.MenuButton;
 
 import javax.swing.JPanel;
 
-import java.awt.Dimension;
 import java.util.Collections;
 import java.util.List;
+import magic.translate.UiString;
 
 @SuppressWarnings("serial")
 public class CardZoneScreen
-    extends AbstractScreen
-    implements IStatusBar, IActionBar {
+        extends AbstractScreen
+        implements IStatusBar, IActionBar {
 
-    private final static Dimension cardSize = GeneralConfig.PREFERRED_CARD_SIZE;
+    // translatable strings
+    private static final String _S1 = "Close";
 
     private final CardsCanvas content;
     private final String screenCaption;
 
     public CardZoneScreen(final MagicCardList cards, final String zoneName, final boolean animateCards) {
         this.screenCaption = zoneName;
-        this.content = new CardsCanvas(cardSize);
+        this.content = new CardsCanvas();
         this.content.setAnimationEnabled(animateCards);
         this.content.setLayoutMode(LayoutMode.SCALE_TO_FIT);
         Collections.sort(cards);
-        content.refresh(cards, cardSize);
+        content.refresh(cards);
         setContent(content);
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagStatusBar#getScreenCaption()
-     */
     @Override
     public String getScreenCaption() {
         return screenCaption;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getLeftAction()
-     */
     @Override
     public MenuButton getLeftAction() {
-        return MenuButton.getCloseScreenButton("Close");
+        return MenuButton.getCloseScreenButton(UiString.get(_S1));
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getRightAction()
-     */
     @Override
     public MenuButton getRightAction() {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getMiddleActions()
-     */
     @Override
     public List<MenuButton> getMiddleActions() {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.MagScreen#canScreenClose()
-     */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.screen.interfaces.IStatusBar#getStatusPanel()
-     */
     @Override
     public JPanel getStatusPanel() {
         return null;

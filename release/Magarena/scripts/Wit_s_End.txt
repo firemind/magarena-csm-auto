@@ -1,9 +1,9 @@
 name=Wit's End
-image=http://mtgimage.com/card/wit%27s%20end.jpg
+image=http://magiccards.info/scans/en/m13/117.jpg
 value=1.906
 rarity=R
 type=Sorcery
 cost={5}{B}{B}
+effect=Target player discards his or her hand.
 timing=main
-requires_groovy_code
 oracle=Target player discards his or her hand.

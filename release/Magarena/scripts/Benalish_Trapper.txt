@@ -1,11 +1,11 @@
 name=Benalish Trapper
-image=http://mtgimage.com/card/benalish%20trapper.jpg
+image=http://magiccards.info/scans/en/vma/16.jpg
 value=3.500
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={1}{W}
 pt=1/2
-ability={W},{T}:Tap target creature.
+ability={W}, {T}: Tap target creature.
 timing=main
 oracle={W}, {T}: Tap target creature.

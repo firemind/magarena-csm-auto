@@ -1,6 +1,7 @@
 name=Reclaim
-image=http://mtgimage.com/card/reclaim.jpg
-value=3.454
+image=http://magiccards.info/scans/en/ori/195.jpg
+image_updated=2015-11-05
+value=2.500
 rarity=C
 type=Instant
 cost={G}

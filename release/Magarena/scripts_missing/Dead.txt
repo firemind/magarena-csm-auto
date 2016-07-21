@@ -1,9 +1,10 @@
 name=Dead
-image=http://mtgimage.com/card/deadgone.jpg
-value=2.500
+image=http://magiccards.info/scans/en/pc/113a.jpg
+value=4.039
 rarity=C
 type=Instant
 cost={R}
 effect=SN deals 2 damage to target creature.
+split=Gone
 timing=removal
 oracle=Dead deals 2 damage to target creature.

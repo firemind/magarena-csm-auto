@@ -1,9 +1,9 @@
 name=Bedlam
-image=http://mtgimage.com/card/bedlam.jpg
+image=http://magiccards.info/scans/en/7e/174.jpg
 value=4.137
 rarity=R
 type=Enchantment
 cost={2}{R}{R}
-ability=all creatures can't block.
+ability=Creatures can't block.
 timing=enchantment
 oracle=Creatures can't block.

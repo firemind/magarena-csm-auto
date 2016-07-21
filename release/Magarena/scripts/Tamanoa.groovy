@@ -1,10 +1,10 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             final int amount = damage.getDealtAmount();
             final MagicSource source = damage.getSource();
-            return (!source.isCreature() && permanent.isFriend(source)) ?
+            return (!source.isCreaturePermanent() && permanent.isFriend(source)) ?
                 new MagicEvent(
                     permanent,
                     amount,
@@ -15,7 +15,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeLifeAction(event.getPlayer(),event.getRefInt()));
+            game.doAction(new ChangeLifeAction(event.getPlayer(),event.getRefInt()));
         }
     }
 ]

@@ -1,11 +1,12 @@
 name=Pendrell Drake
-image=http://mtgimage.com/card/pendrell%20drake.jpg
+image=http://magiccards.info/scans/en/us/86.jpg
 value=3.044
 rarity=C
 type=Creature
 subtype=Drake
 cost={3}{U}
 pt=2/3
-ability=flying;cycling {2}
+ability=Flying;\
+        Cycling {2}
 timing=main
-oracle=Flying. Cycling {2}
+oracle=Flying\nCycling {2}

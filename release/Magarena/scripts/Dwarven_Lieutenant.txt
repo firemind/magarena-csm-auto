@@ -1,11 +1,11 @@
 name=Dwarven Lieutenant
-image=http://mtgimage.com/card/dwarven%20lieutenant.jpg
+image=http://magiccards.info/scans/en/fe/106.jpg
 value=2.703
 rarity=U
 type=Creature
 subtype=Dwarf,Soldier
 cost={R}{R}
 pt=1/2
-ability={1}{R}:Target Dwarf creature gets +1/+0 until end of turn.
+ability={1}{R}: Target Dwarf creature gets +1/+0 until end of turn.
 timing=main
 oracle={1}{R}: Target Dwarf creature gets +1/+0 until end of turn.

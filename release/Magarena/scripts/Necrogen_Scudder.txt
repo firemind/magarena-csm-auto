@@ -1,12 +1,12 @@
 name=Necrogen Scudder
-image=http://mtgimage.com/card/necrogen%20scudder.jpg
+image=http://magiccards.info/scans/en/m15/106.jpg
 value=3.500
 rarity=U
 type=Creature
 subtype=Horror
 cost={2}{B}
 pt=3/3
-ability=flying;\
+ability=Flying;\
         When SN enters the battlefield, you lose 3 life.
 timing=main
-oracle=Flying. When Necrogen Scudder enters the battlefield, you lose 3 life.
+oracle=Flying\nWhen Necrogen Scudder enters the battlefield, you lose 3 life.

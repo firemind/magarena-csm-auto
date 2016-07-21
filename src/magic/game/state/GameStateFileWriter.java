@@ -3,13 +3,11 @@ package magic.game.state;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.TreeSet;
-import magic.data.GeneralConfig;
 import magic.utility.MagicFileSystem;
+import magic.utility.MagicSystem;
+import magic.utility.SortedProperties;
 
 public final class GameStateFileWriter {
     private GameStateFileWriter() {}
@@ -19,24 +17,28 @@ public final class GameStateFileWriter {
     private static final String PROP_Difficulty = "difficulty";
     private static final String PROP_StartPlayerIndex = "startPlayerIndex";
 
-    public static void createSaveGameFile(final GameState gameState, final String filename) {
-        final Properties properties = getNewSortedProperties();
+    public static void createSaveGameFile(final GameState gameState, final File aFile) {
+        final Properties properties = new SortedProperties();
         setGameProperties(properties, gameState);
         setAllPlayerProperties(properties, gameState);
-        savePropertyFile(properties, filename);
+        savePropertyFile(properties, aFile);
     }
-    
-    private static void savePropertyFile(final Properties properties, final String filename) {
+
+    public static void createSaveGameFile(final GameState gameState, final String filename) {
         final File propertyFile = MagicFileSystem.getDataPath(MagicFileSystem.DataPath.SAVED_GAMES).resolve(filename).toFile();
-        try (final FileOutputStream fos = new FileOutputStream(propertyFile)) {
+        createSaveGameFile(gameState, propertyFile);
+    }
+
+    private static void savePropertyFile(final Properties properties, final File aFile) {
+        try (final FileOutputStream fos = new FileOutputStream(aFile)) {
             properties.store(fos, "Magarena Saved Game");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        }        
+        }
     }
 
     private static void setGameProperties(final Properties properties, final GameState gameState) {
-        properties.setProperty(PROP_Version, GeneralConfig.VERSION);
+        properties.setProperty(PROP_Version, MagicSystem.VERSION);
         properties.setProperty(PROP_PlayerCount, Integer.toString(gameState.getPlayers().size()));
         properties.setProperty(PROP_Difficulty, Integer.toString(gameState.getDifficulty()));
         properties.setProperty(PROP_StartPlayerIndex, Integer.toString(gameState.getStartPlayerIndex()));
@@ -63,11 +65,7 @@ public final class GameStateFileWriter {
         properties.setProperty(keyPrefix + ".deck.color", player.getDeckProfileColors());
     }
 
-    private static void setCardZoneProperties(
-            final List<GameCardState> cards,
-            final String keyPrefix,
-            final Properties properties) {
-
+    private static void setCardZoneProperties(final List<GameCardState> cards, final String keyPrefix, final Properties properties) {
         for (int j = 0; j < cards.size(); j++) {
             final GameCardState card = cards.get(j);
             final String key = keyPrefix + j;
@@ -77,16 +75,6 @@ public final class GameStateFileWriter {
                 properties.setProperty(key + ".tapped", Boolean.toString(card.isTapped()));
             }
         }
-    }
-
-    @SuppressWarnings("serial")
-    private static Properties getNewSortedProperties() {
-       return new Properties() {
-           @Override
-           public synchronized Enumeration<Object> keys() {
-               return Collections.enumeration(new TreeSet<>(super.keySet()));
-           }
-       };
     }
 
 }

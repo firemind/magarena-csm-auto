@@ -1,9 +1,9 @@
 name=Heat of Battle
-image=http://mtgimage.com/card/heat%20of%20battle.jpg
+image=http://magiccards.info/scans/en/sh/88.jpg
 value=3.210
 rarity=U
 type=Enchantment
 cost={1}{R}
+ability=Whenever a creature blocks, SN deals 1 damage to that creature's controller.
 timing=main
-requires_groovy_code
 oracle=Whenever a creature blocks, Heat of Battle deals 1 damage to that creature's controller.

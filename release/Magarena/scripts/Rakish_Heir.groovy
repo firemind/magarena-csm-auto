@@ -1,12 +1,12 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             final MagicSource dmgSource = damage.getSource();
             return (damage.isCombat() &&
                     damage.isTargetPlayer() &&
                     permanent.isFriend(dmgSource) &&
-                    dmgSource.isCreature() &&
+                    dmgSource.isCreaturePermanent() &&
                     dmgSource.hasSubType(MagicSubType.Vampire)) ?
                 new MagicEvent(
                     permanent,
@@ -18,7 +18,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeCountersAction(event.getRefPermanent(),MagicCounterType.PlusOne,1));
+            game.doAction(new ChangeCountersAction(event.getRefPermanent(),MagicCounterType.PlusOne,1));
         }
     }
 ]

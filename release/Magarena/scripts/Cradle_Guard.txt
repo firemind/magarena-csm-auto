@@ -1,11 +1,12 @@
 name=Cradle Guard
-image=http://mtgimage.com/card/cradle%20guard.jpg
+image=http://magiccards.info/scans/en/us/245.jpg
 value=4.148
 rarity=U
 type=Creature
 subtype=Treefolk
 cost={1}{G}{G}
 pt=4/4
-ability=trample;echo {1}{G}{G}
+ability=Trample;\
+        Echo {1}{G}{G}
 timing=main
-oracle=Trample. Echo {1}{G}{G}
+oracle=Trample\nEcho {1}{G}{G}

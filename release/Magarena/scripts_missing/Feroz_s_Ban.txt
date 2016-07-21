@@ -1,9 +1,0 @@
-name=Feroz's Ban
-image=http://mtgimage.com/card/feroz%27s%20ban.jpg
-value=2.500
-rarity=R
-type=Artifact
-cost={6}
-ability=Creature spells cost {2} more to cast.
-timing=main
-oracle=Creature spells cost {2} more to cast.

@@ -1,0 +1,9 @@
+name=Lose Calm
+image=http://magiccards.info/scans/en/dtk/147.jpg
+value=2.500
+rarity=C
+type=Sorcery
+cost={3}{R}
+effect=Gain control of target creature until end of turn. Untap that creature. It gains haste and menace until end of turn.
+timing=main
+oracle=Gain control of target creature until end of turn. Untap that creature. It gains haste and menace until end of turn.

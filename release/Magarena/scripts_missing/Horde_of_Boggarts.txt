@@ -1,12 +1,12 @@
 name=Horde of Boggarts
-image=http://mtgimage.com/card/horde%20of%20boggarts.jpg
-value=2.500
+image=http://magiccards.info/scans/en/shm/94.jpg
+value=3.408
 rarity=U
 type=Creature
 subtype=Goblin
 cost={3}{R}
 pt=*/*
-ability=SN's power and toughness are each equal to the number of red permanents you control.;\
-        SN can't be blocked except by two or more creatures.
+ability=Menace;\
+        SN's power and toughness are each equal to the number of red permanents you control.
 timing=main
-oracle=Horde of Boggarts's power and toughness are each equal to the number of red permanents you control. Horde of Boggarts can't be blocked except by two or more creatures.
+oracle=Menace\nHorde of Boggarts's power and toughness are each equal to the number of red permanents you control.

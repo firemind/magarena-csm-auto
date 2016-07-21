@@ -1,9 +1,9 @@
 name=Despoil
-image=http://mtgimage.com/card/despoil.jpg
+image=http://magiccards.info/scans/en/pr/62.jpg
 value=3.794
 rarity=C
 type=Sorcery
 cost={3}{B}
+effect=Destroy target land.~Its controller loses 2 life.
 timing=main
-requires_groovy_code
 oracle=Destroy target land. Its controller loses 2 life.

@@ -1,11 +1,11 @@
 name=Voice of Grace
-image=http://mtgimage.com/card/voice%20of%20grace.jpg
+image=http://magiccards.info/scans/en/us/54.jpg
 value=3.257
 rarity=U
 type=Creature
 subtype=Angel
 cost={3}{W}
 pt=2/2
-ability=protection from black;flying
+ability=Flying, protection from black
 timing=main
 oracle=Flying, protection from black

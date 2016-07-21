@@ -1,12 +1,12 @@
 name=Virulent Sliver
-image=http://mtgimage.com/card/virulent%20sliver.jpg
+image=http://magiccards.info/scans/en/fut/155.jpg
 value=4.459
 rarity=C
 type=Creature
 subtype=Sliver
 cost={G}
 pt=1/1
-ability=all sliver creatures have poisonous 1
+ability=All Sliver creatures have poisonous 1.
 static=all
 timing=main
 oracle=All Sliver creatures have poisonous 1.

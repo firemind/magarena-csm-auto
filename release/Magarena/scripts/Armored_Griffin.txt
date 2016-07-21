@@ -1,11 +1,11 @@
 name=Armored Griffin
-image=http://mtgimage.com/card/armored%20griffin.jpg
+image=http://magiccards.info/scans/en/pc2/1.jpg
 value=3.425
 rarity=U
 type=Creature
 subtype=Griffin
 cost={3}{W}
 pt=2/3
-ability=vigilance;flying
+ability=Flying, vigilance
 timing=main
 oracle=Flying, vigilance

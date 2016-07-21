@@ -1,12 +1,12 @@
 name=Necropede
-image=http://mtgimage.com/card/necropede.jpg
+image=http://magiccards.info/scans/en/som/185.jpg
 value=3.610
 rarity=U
 type=Artifact,Creature
 subtype=Insect
 cost={2}
 pt=1/1
-ability=infect;\
+ability=Infect;\
         When SN dies, you may put a -1/-1 counter on target creature.
 timing=main
-oracle=Infect. When Necropede dies, you may put a -1/-1 counter on target creature.
+oracle=Infect\nWhen Necropede dies, you may put a -1/-1 counter on target creature.

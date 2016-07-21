@@ -1,11 +1,12 @@
 name=Marked by Honor
-image=http://mtgimage.com/card/marked%20by%20honor.jpg
+image=http://magiccards.info/scans/en/m15/17.jpg
 value=2.000
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={3}{W}
-ability=Enchanted creature gets +2/+2 and has vigilance.
-timing=main
+ability=Enchant creature;\
+        Enchanted creature gets +2/+2 and has vigilance.
+timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. Enchanted creature gets +2/+2 and has vigilance.
+oracle=Enchant creature\nEnchanted creature gets +2/+2 and has vigilance.

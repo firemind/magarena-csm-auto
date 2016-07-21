@@ -1,11 +1,11 @@
 name=Weatherseed Faeries
-image=http://mtgimage.com/card/weatherseed%20faeries.jpg
+image=http://magiccards.info/scans/en/ul/48.jpg
 value=3.586
 rarity=C
 type=Creature
 subtype=Faerie
 cost={2}{U}
 pt=2/1
-ability=protection from red;flying
+ability=Flying, protection from red
 timing=main
 oracle=Flying, protection from red

@@ -1,11 +1,11 @@
 name=Syndicate Enforcer
-image=http://mtgimage.com/card/syndicate%20enforcer.jpg
+image=http://magiccards.info/scans/en/gtc/80.jpg
 value=2.443
 rarity=C
 type=Creature
 subtype=Human,Rogue
 cost={3}{B}
 pt=3/2
-ability=extort
+ability=Extort
 timing=main
 oracle=Extort

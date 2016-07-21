@@ -1,11 +1,12 @@
 name=Undercity Shade
-image=http://mtgimage.com/card/undercity%20shade.jpg
+image=http://magiccards.info/scans/en/rav/110.jpg
 value=2.111
 rarity=U
 type=Creature
 subtype=Shade
 cost={4}{B}
 pt=1/1
-ability=fear;{B}: SN gets +1/+1 until end of turn.
+ability=Fear;\
+        {B}: SN gets +1/+1 until end of turn.
 timing=main
-oracle=Fear. {B}: Undercity Shade gets +1/+1 until end of turn.
+oracle=Fear\n{B}: Undercity Shade gets +1/+1 until end of turn.

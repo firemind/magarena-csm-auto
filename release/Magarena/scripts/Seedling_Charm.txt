@@ -1,0 +1,9 @@
+name=Seedling Charm
+image=http://magiccards.info/scans/en/mr/138.jpg
+value=3.917
+rarity=C
+type=Instant
+cost={G}
+effect=Choose one — (1) Return target Aura attached to a creature to its owner's hand. (2) Regenerate target green creature. (3) Target creature gains trample until end of turn.
+timing=removal
+oracle=Choose one —\n• Return target Aura attached to a creature to its owner's hand.\n• Regenerate target green creature.\n• Target creature gains trample until end of turn.

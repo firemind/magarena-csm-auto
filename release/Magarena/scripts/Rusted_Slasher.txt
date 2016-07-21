@@ -1,11 +1,11 @@
 name=Rusted Slasher
-image=http://mtgimage.com/card/rusted%20slasher.jpg
+image=http://magiccards.info/scans/en/mbs/128.jpg
 value=2.115
 rarity=C
 type=Artifact,Creature
 subtype=Horror
 cost={4}
 pt=4/1
-ability=Sacrifice an artifact: Regenerate SN.
+ability=Sacrifice an artifact: Regenerate SN. Activate this ability with AI only if you control another artifact.
 timing=main
 oracle=Sacrifice an artifact: Regenerate Rusted Slasher.

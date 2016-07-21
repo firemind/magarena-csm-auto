@@ -1,11 +1,11 @@
 name=Voice of Reason
-image=http://mtgimage.com/card/voice%20of%20reason.jpg
+image=http://magiccards.info/scans/en/ud/24.jpg
 value=3.352
 rarity=U
 type=Creature
 subtype=Angel
 cost={3}{W}
 pt=2/2
-ability=protection from blue;flying
+ability=Flying, protection from blue
 timing=main
 oracle=Flying, protection from blue

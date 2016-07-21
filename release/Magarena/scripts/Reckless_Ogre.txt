@@ -1,11 +1,11 @@
 name=Reckless Ogre
-image=http://mtgimage.com/card/reckless%20ogre.jpg
+image=http://magiccards.info/scans/en/ex/98.jpg
 value=3.250
 rarity=C
 type=Creature
 subtype=Ogre
 cost={3}{R}
 pt=3/2
+ability=Whenever SN attacks alone, SN gets +3/+0 until end of turn.
 timing=main
-requires_groovy_code
 oracle=Whenever Reckless Ogre attacks alone, it gets +3/+0 until end of turn.

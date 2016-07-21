@@ -1,11 +1,12 @@
 name=Basilica Screecher
-image=http://mtgimage.com/card/basilica%20screecher.jpg
+image=http://magiccards.info/scans/en/gtc/58.jpg
 value=3.153
 rarity=C
 type=Creature
 subtype=Bat
 cost={1}{B}
 pt=1/2
-ability=flying;extort
+ability=Flying;\
+        Extort
 timing=main
-oracle=Flying. Extort
+oracle=Flying\nExtort

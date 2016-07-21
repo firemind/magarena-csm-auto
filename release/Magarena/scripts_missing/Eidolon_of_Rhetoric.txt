@@ -1,6 +1,6 @@
 name=Eidolon of Rhetoric
-image=http://mtgimage.com/card/eidolon%20of%20rhetoric.jpg
-value=2.500
+image=http://magiccards.info/scans/en/jou/10.jpg
+value=4.071
 rarity=U
 type=Enchantment,Creature
 subtype=Spirit

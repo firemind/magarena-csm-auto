@@ -1,11 +1,11 @@
 name=Towering Indrik
-image=http://mtgimage.com/card/towering%20indrik.jpg
+image=http://magiccards.info/scans/en/rtr/137.jpg
 value=2.262
 rarity=C
 type=Creature
 subtype=Beast
-ability=reach
 cost={3}{G}
 pt=2/4
+ability=Reach
 timing=main
 oracle=Reach

@@ -1,0 +1,13 @@
+name=Managorger Hydra
+image=http://magiccards.info/scans/en/ori/186.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=R
+type=Creature
+subtype=Hydra
+cost={2}{G}
+pt=1/1
+ability=Trample;\
+        Whenever a player casts a spell, put a +1/+1 counter on SN.
+timing=main
+oracle=Trample\nWhenever a player casts a spell, put a +1/+1 counter on Managorger Hydra.

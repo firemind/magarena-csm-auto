@@ -1,10 +1,10 @@
 name=Rootbound Crag
-image=http://mtgimage.com/card/rootbound%20crag.jpg
+image=http://magiccards.info/scans/en/m13/228.jpg
 value=3.858
 rarity=R
 type=Land
 mana=r3g3
-ability={T}: Add {R} or {G} to your mana pool.;\
-        SN enters the battlefield tapped unless you control a Mountain or a Forest.
+ability=SN enters the battlefield tapped unless you control a Mountain or a Forest.;\
+        {T}: Add {R} or {G} to your mana pool.
 timing=land
-oracle=Rootbound Crag enters the battlefield tapped unless you control a Mountain or a Forest. {T}: Add {R} or {G} to your mana pool.
+oracle=Rootbound Crag enters the battlefield tapped unless you control a Mountain or a Forest.\n{T}: Add {R} or {G} to your mana pool.

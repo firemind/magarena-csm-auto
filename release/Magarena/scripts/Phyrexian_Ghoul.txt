@@ -1,11 +1,11 @@
 name=Phyrexian Ghoul
-image=http://mtgimage.com/card/phyrexian%20ghoul.jpg
+image=http://magiccards.info/scans/en/pvc/6.jpg
 value=4.000
 rarity=C
 type=Creature
 subtype=Zombie
 cost={2}{B}
 pt=2/2
-ability=Sacrifice a creature: SN gets +2/+2 until end of turn.
+ability=Sacrifice a creature: SN gets +2/+2 until end of turn. Activate this ability with AI only if you control another creature.
 timing=main
 oracle=Sacrifice a creature: Phyrexian Ghoul gets +2/+2 until end of turn.

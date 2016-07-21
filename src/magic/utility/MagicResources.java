@@ -3,8 +3,9 @@ package magic.utility;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import magic.data.FileIO;
-import magic.data.MagicFormats;
+import magic.data.GeneralConfig;
+import magic.data.MagicIcon;
+import magic.data.MagicPredefinedFormat;
 import magic.data.MagicSets;
 
 public final class MagicResources {
@@ -13,11 +14,21 @@ public final class MagicResources {
     // Used as reference class for accessing JAR resources.
     private static final MagicResources instance = new MagicResources();
 
+    public static String getKeywordsFileContent() {
+        final String content = getResourceFileContent(
+                String.format("/magic/data/keywords/%s.txt",
+                        GeneralConfig.getInstance().getTranslation())
+        );
+        return content.isEmpty()
+                ? getResourceFileContent("/magic/data/keywords/English.txt")
+                : content;
+    }
+
     public static String getFileContent(final MagicSets magicSet) {
         return getResourceFileContent("/magic/data/sets/" + magicSet.toString().replace("_", "") + ".txt");
     }
 
-    public static String getFileContent(final MagicFormats magicFormat) {
+    public static String getFileContent(final MagicPredefinedFormat magicFormat) {
         return getResourceFileContent("/magic/data/formats/" + magicFormat.getFilename() + ".fmt");
     }
 
@@ -34,6 +45,10 @@ public final class MagicResources {
         }
     }
 
+    public static URL getManaImageUrl(MagicIcon manaIcon) {
+        return instance.getClass().getResource("/magic/data/icons/mana/" + manaIcon.getFilename());
+    }
+
     public static URL getImageUrl(final String imageFilename) {
         return instance.getClass().getResource("/magic/data/icons/" + imageFilename);
     }
@@ -44,6 +59,10 @@ public final class MagicResources {
 
     public static InputStream getAllCardNames() {
         return getJarResourceStream("/magic/data/AllCardNames.txt");
+    }
+
+    public static URL getSoundUrl(final String filename) {
+        return instance.getClass().getResource("/soundfx/" + filename);
     }
 
 }

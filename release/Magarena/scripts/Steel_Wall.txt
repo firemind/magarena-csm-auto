@@ -1,11 +1,11 @@
 name=Steel Wall
-image=http://mtgimage.com/card/steel%20wall.jpg
+image=http://magiccards.info/scans/en/ddf/41.jpg
 value=4.104
 rarity=C
 type=Artifact,Creature
 subtype=Wall
 cost={1}
 pt=0/4
-ability=defender
+ability=Defender
 timing=smain
 oracle=Defender

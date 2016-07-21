@@ -1,11 +1,12 @@
 name=Seraph of Dawn
-image=http://mtgimage.com/card/seraph%20of%20dawn.jpg
+image=http://magiccards.info/scans/en/avr/35.jpg
 value=3.878
 rarity=C
 type=Creature
 subtype=Angel
 cost={2}{W}{W}
 pt=2/4
-ability=flying;lifelink
+ability=Flying;\
+        Lifelink
 timing=main
-oracle=Flying. Lifelink
+oracle=Flying\nLifelink

@@ -1,11 +1,11 @@
 name=Keen-Eyed Archers
-image=http://mtgimage.com/card/keen%2Deyed%20archers.jpg
+image=http://magiccards.info/scans/en/po/181.jpg
 value=3.048
 rarity=C
 type=Creature
 subtype=Elf,Archer
 cost={2}{W}
 pt=2/2
-ability=reach
+ability=Reach
 timing=main
 oracle=Reach

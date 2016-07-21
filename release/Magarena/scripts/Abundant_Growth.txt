@@ -1,12 +1,13 @@
 name=Abundant Growth
-image=http://mtgimage.com/card/abundant%20growth.jpg
+image=http://magiccards.info/scans/en/avr/167.jpg
 value=3.796
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={G}
-ability=When SN enters the battlefield, draw a card.;\
+ability=Enchant land;\
+        When SN enters the battlefield, draw a card.;\
         Enchanted land has "{T}: Add one mana of any color to your mana pool."
+timing=aura
 enchant=pump,pos land
-timing=enchantment
-oracle=Enchant land. When Abundant Growth enters the battlefield, draw a card. Enchanted land has "{T}: Add one mana of any color to your mana pool."
+oracle=Enchant land\nWhen Abundant Growth enters the battlefield, draw a card.\nEnchanted land has "{T}: Add one mana of any color to your mana pool."

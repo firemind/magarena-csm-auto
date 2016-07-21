@@ -1,11 +1,11 @@
 name=Elder of Laurels
-image=http://mtgimage.com/card/elder%20of%20laurels.jpg
+image=http://magiccards.info/scans/en/isd/177.jpg
 value=3.509
 rarity=R
 type=Creature
 subtype=Human,Advisor
 cost={2}{G}
 pt=2/3
+ability={3}{G}: Target creature gets +X/+X until end of turn, where X is the number of creatures you control.
 timing=fmain
-requires_groovy_code
 oracle={3}{G}: Target creature gets +X/+X until end of turn, where X is the number of creatures you control.

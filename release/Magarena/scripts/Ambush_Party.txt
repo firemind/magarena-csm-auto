@@ -1,11 +1,11 @@
 name=Ambush Party
-image=http://mtgimage.com/card/ambush%20party.jpg
+image=http://magiccards.info/scans/en/me2/115.jpg
 value=2.194
 rarity=C
 type=Creature
 subtype=Human,Rogue
 cost={4}{R}
 pt=3/1
-ability=first strike;haste
+ability=First strike, haste
 timing=fmain
 oracle=First strike, haste

@@ -1,11 +1,12 @@
 name=Aven Fisher
-image=http://mtgimage.com/card/aven%20fisher.jpg
+image=http://magiccards.info/scans/en/10e/68.jpg
 value=2.714
 rarity=C
 type=Creature
 subtype=Bird,Soldier
 cost={3}{U}
 pt=2/2
-ability=flying;When SN dies, you may draw a card.
+ability=Flying;\
+        When SN dies, you may draw a card.
 timing=main
-oracle=Flying. When Aven Fisher dies, you may draw a card.
+oracle=Flying\nWhen Aven Fisher dies, you may draw a card.

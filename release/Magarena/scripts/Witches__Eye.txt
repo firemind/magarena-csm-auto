@@ -1,11 +1,11 @@
 name=Witches' Eye
-image=http://mtgimage.com/card/witches'%20eye.jpg
+image=http://magiccards.info/scans/en/ths/222.jpg
 value=2.645
 rarity=U
 type=Artifact
 subtype=Equipment
 cost={1}
-ability=Equipped creature has "{1},{T}: Scry 1.";\
+ability=Equipped creature has "{1}, {T}: Scry 1.";\
         Equip {1}
-timing=artifact
-oracle=Equipped creature has "{1}, {T}: Scry 1.". Equip {1}
+timing=equipment
+oracle=Equipped creature has "{1}, {T}: Scry 1."\nEquip {1}

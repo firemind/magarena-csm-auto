@@ -1,9 +1,0 @@
-name=Squeeze
-image=http://mtgimage.com/card/squeeze.jpg
-value=2.500
-rarity=R
-type=Enchantment
-cost={3}{U}
-ability=Sorcery spells cost {3} more to cast.
-timing=main
-oracle=Sorcery spells cost {3} more to cast.

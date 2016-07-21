@@ -1,9 +1,11 @@
 name=Error
-image=http://mtgimage.com/card/trialerror.jpg
-value=2.500
+image=http://magiccards.info/scans/en/di/158b.jpg
+value=3.196
 rarity=U
 type=Instant
 cost={U}{B}
 effect=Counter target multicolored spell.
-timing=removal
+split=Trial
+timing=counter
+second_half
 oracle=Counter target multicolored spell.

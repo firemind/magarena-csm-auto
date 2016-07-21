@@ -1,9 +1,9 @@
 name=Dread of Night
-image=http://mtgimage.com/card/dread%20of%20night.jpg
+image=http://magiccards.info/scans/en/6e/122.jpg
 value=4.058
 rarity=U
 type=Enchantment
 cost={B}
-ability=white creatures get -1/-1
+ability=White creatures get -1/-1.
 timing=enchantment
 oracle=White creatures get -1/-1.

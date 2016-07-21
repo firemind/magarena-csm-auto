@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
             return new MagicEvent(
@@ -7,15 +7,15 @@
                 permanent.getController(),
                 cardOnStack.getOpponent(),
                 this,
-                "PN sacrifices SN. If you do, RN draws three cards."
+                "PN sacrifices SN. If PN does, RN draws three cards."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicSacrificeAction sac = new MagicSacrificeAction(event.getPermanent());
+            final SacrificeAction sac = new SacrificeAction(event.getPermanent());
             game.doAction(sac);
             if (sac.isValid()) {
-                game.doAction(new MagicDrawAction(event.getRefPlayer(),3));
+                game.doAction(new DrawAction(event.getRefPlayer(),3));
             }
         }
     }

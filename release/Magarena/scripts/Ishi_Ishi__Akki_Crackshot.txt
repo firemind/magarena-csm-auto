@@ -1,11 +1,11 @@
 name=Ishi-Ishi, Akki Crackshot
-image=http://mtgimage.com/card/ishi-ishi%2C%20akki%20crackshot.jpg
+image=http://magiccards.info/scans/en/bok/110.jpg
 value=2.654
 rarity=R
 type=Legendary,Creature
 subtype=Goblin,Warrior
 cost={1}{R}
 pt=1/1
+ability=Whenever an opponent casts a Spirit or Arcane spell, SN deals 2 damage to that player.
 timing=main
-requires_groovy_code
 oracle=Whenever an opponent casts a Spirit or Arcane spell, Ishi-Ishi, Akki Crackshot deals 2 damage to that player.

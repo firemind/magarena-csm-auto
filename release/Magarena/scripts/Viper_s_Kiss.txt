@@ -1,11 +1,12 @@
 name=Viper's Kiss
-image=http://mtgimage.com/card/viper's%20kiss.jpg
+image=http://magiccards.info/scans/en/ths/109.jpg
 value=3.076
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={B}
-ability=Enchanted creature gets -1/-1, and its activated abilities can't be activated.
+ability=Enchant creature;\
+        Enchanted creature gets -1/-1, and its activated abilities can't be activated.
 timing=aura
 enchant=weaken -1/-1,neg creature
-oracle=Enchant creature. Enchanted creature gets -1/-1, and its activated abilities can't be activated.
+oracle=Enchant creature\nEnchanted creature gets -1/-1, and its activated abilities can't be activated.

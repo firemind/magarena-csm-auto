@@ -1,11 +1,11 @@
 name=Auriok Transfixer
-image=http://mtgimage.com/card/auriok%20transfixer.jpg
+image=http://magiccards.info/scans/en/mi/5.jpg
 value=2.750
 rarity=C
 type=Creature
 subtype=Human,Scout
 cost={W}
 pt=1/1
-ability={W},{T}: Tap target artifact.
+ability={W}, {T}: Tap target artifact.
 timing=main
 oracle={W}, {T}: Tap target artifact.

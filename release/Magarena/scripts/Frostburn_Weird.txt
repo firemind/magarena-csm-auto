@@ -1,11 +1,11 @@
 name=Frostburn Weird
-image=http://mtgimage.com/card/frostburn%20weird.jpg
+image=http://magiccards.info/scans/en/rtr/215.jpg
 value=3.555
 rarity=C
 type=Creature
 subtype=Weird
-ability={U/R}: SN gets +1/-1 until end of turn.
 cost={U/R}{U/R}
 pt=1/4
+ability={U/R}: SN gets +1/-1 until end of turn.
 timing=main
 oracle={U/R}: Frostburn Weird gets +1/-1 until end of turn.

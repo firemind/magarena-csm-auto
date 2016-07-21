@@ -1,11 +1,11 @@
 name=Goblin Berserker
-image=http://mtgimage.com/card/goblin%20berserker.jpg
+image=http://magiccards.info/scans/en/ud/82.jpg
 value=2.882
 rarity=U
 type=Creature
 subtype=Goblin,Berserker
 cost={3}{R}
 pt=2/2
-ability=first strike;haste
+ability=First strike, haste
 timing=fmain
 oracle=First strike, haste

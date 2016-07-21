@@ -1,5 +1,5 @@
 name=Reiterate
-image=http://mtgimage.com/card/reiterate.jpg
+image=http://magiccards.info/scans/en/ts/175.jpg
 value=4.066
 rarity=R
 type=Instant
@@ -7,4 +7,4 @@ cost={1}{R}{R}
 effect=Copy target instant or sorcery spell. You may choose new targets for the copy.
 ability=buyback {3}
 timing=spell
-oracle=Buyback {3}. Copy target instant or sorcery spell. You may choose new targets for the copy.
+oracle=Buyback {3}\nCopy target instant or sorcery spell. You may choose new targets for the copy.

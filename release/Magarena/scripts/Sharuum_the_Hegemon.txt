@@ -1,12 +1,12 @@
 name=Sharuum the Hegemon
-image=http://mtgimage.com/card/sharuum%20the%20hegemon.jpg
+image=http://magiccards.info/scans/en/c13/212.jpg
 value=4.167
 rarity=M
 type=Legendary,Artifact,Creature
 subtype=Sphinx
 cost={3}{W}{U}{B}
 pt=5/5
-ability=flying;\
+ability=Flying;\
         When SN enters the battlefield, you may return target artifact card from your graveyard to the battlefield.
 timing=main
-oracle=Flying. When Sharuum the Hegemon enters the battlefield, you may return target artifact card from your graveyard to the battlefield.
+oracle=Flying\nWhen Sharuum the Hegemon enters the battlefield, you may return target artifact card from your graveyard to the battlefield.

@@ -12,7 +12,7 @@ def DestroyTwin = new MagicPermanentActivation(
     @Override
     public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
         final MagicTargetChoice targetChoice = new MagicTargetChoice(
-            new MagicNameTargetFilter(MagicTargetFilterFactory.CREATURE, source.getName()),
+            new MagicNameTargetFilter(CREATURE, source.getName()),
             MagicTargetHint.Negative,
             "target creature"
         );
@@ -27,11 +27,11 @@ def DestroyTwin = new MagicPermanentActivation(
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
         event.processTargetPermanent(game, {
-            game.doAction(new MagicDestroyAction(it));
+            game.doAction(new DestroyAction(it));
         });
     }
 };
-    
+
 def GainAct = new MagicStatic(MagicLayer.Ability) {
     @Override
     public void modAbilityFlags(final MagicPermanent source, final MagicPermanent permanent, final Set<MagicAbility> flags) {
@@ -45,10 +45,10 @@ def GainAct = new MagicStatic(MagicLayer.Ability) {
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                new MagicMayChoice(MagicTargetChoice.CREATURE),
+                new MagicMayChoice(A_CREATURE),
                 MagicCopyPermanentPicker.create(),
                 this,
-                "Put SN onto the battlefield. You may\$ have SN enter the battlefield as a copy of any creature\$ on the battlefield, " + 
+                "PN may\$ have SN enter the battlefield as a copy of any creature on the battlefield\$, " +
                 "except it gains \"{U}{B}, {T}: Destroy target creature with the same name as this creature.\""
             );
         }
@@ -56,18 +56,16 @@ def GainAct = new MagicStatic(MagicLayer.Ability) {
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                event.processTargetPermanent(game, {
-                    game.doAction(new MagicEnterAsCopyAction(event.getCardOnStack(), it, {
-                        final MagicPermanent perm ->
-                        final MagicGame G = perm.getGame();
-                        G.doAction(new MagicAddStaticAction(
-                            perm,
-                            GainAct
-                        ));
-                    }));
-                });
+                game.doAction(new EnterAsCopyAction(event.getCardOnStack(), event.getTarget(), {
+                    final MagicPermanent perm ->
+                    final MagicGame G = perm.getGame();
+                    G.doAction(new AddStaticAction(
+                        perm,
+                        GainAct
+                    ));
+                }));
             } else {
-                game.doAction(new MagicPlayCardFromStackAction(
+                game.doAction(new PlayCardFromStackAction(
                     event.getCardOnStack()
                 ));
             }

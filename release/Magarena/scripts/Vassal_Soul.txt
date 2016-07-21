@@ -1,11 +1,11 @@
 name=Vassal Soul
-image=http://mtgimage.com/card/vassal%20soul.jpg
+image=http://magiccards.info/scans/en/rtr/224.jpg
 value=2.739
 rarity=C
 type=Creature
 subtype=Spirit
 cost={1}{W/U}{W/U}
-ability=flying
 pt=2/2
+ability=Flying
 timing=main
 oracle=Flying

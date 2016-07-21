@@ -27,11 +27,11 @@
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             final int amount=source.getCounters(MagicCounterType.Level)>=4?2:1;
             final String description = amount == 2 ?
-                    "Copy target instant or sorcery spell\$ twice. You may choose new targets for the copies.":
-                    "Copy target instant or sorcery spell\$. You may choose new targets for the copy.";
+                    "Copy target instant or sorcery spell\$ twice. PN may choose new targets for the copies.":
+                    "Copy target instant or sorcery spell\$. PN may choose new targets for the copy.";
             return new MagicEvent(
                 source,
-                MagicTargetChoice.TARGET_INSTANT_OR_SORCERY_SPELL,
+                TARGET_INSTANT_OR_SORCERY_SPELL,
                 amount,
                 this,
                 description
@@ -44,7 +44,7 @@
                 final MagicPlayer player = event.getPlayer();
                 final int amount=event.getRefInt();
                 for (int count=amount;count>0;count--) {
-                    game.doAction(new MagicCopyCardOnStackAction(player,it));
+                    game.doAction(new CopyCardOnStackAction(player,it));
                 }
             });
         }

@@ -1,11 +1,12 @@
 name=Oyobi, Who Split the Heavens
-image=http://mtgimage.com/card/oyobi,%20who%20split%20the%20heavens.jpg
+image=http://magiccards.info/scans/en/bok/18.jpg
 value=3.791
 rarity=R
 type=Legendary,Creature
 subtype=Spirit
 cost={6}{W}
 pt=3/6
-ability=flying;Whenever you cast a Spirit or Arcane spell, put a 3/3 white Spirit creature token with flying onto the battlefield.
+ability=Flying;\
+        Whenever you cast a Spirit or Arcane spell, put a 3/3 white Spirit creature token with flying onto the battlefield.
 timing=main
-oracle=Flying. Whenever you cast a Spirit or Arcane spell, put a 3/3 white Spirit creature token with flying onto the battlefield.
+oracle=Flying\nWhenever you cast a Spirit or Arcane spell, put a 3/3 white Spirit creature token with flying onto the battlefield.

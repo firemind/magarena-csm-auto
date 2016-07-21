@@ -1,11 +1,11 @@
 name=Horror of the Dim
-image=http://mtgimage.com/card/horror%20of%20the%20dim.jpg
+image=http://magiccards.info/scans/en/gtc/68.jpg
 value=2.260
 rarity=C
 type=Creature
 subtype=Horror
 cost={4}{B}
 pt=3/4
-ability={U}:SN gains hexproof until end of turn.
+ability={U}: SN gains hexproof until end of turn.
 timing=main
 oracle={U}: Horror of the Dim gains hexproof until end of turn.

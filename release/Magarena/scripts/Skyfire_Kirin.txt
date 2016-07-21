@@ -1,12 +1,12 @@
 name=Skyfire Kirin
-image=http://mtgimage.com/card/skyfire%20kirin.jpg
+image=http://magiccards.info/scans/en/sok/113.jpg
 value=3.465
 rarity=R
 type=Legendary,Creature
 subtype=Kirin,Spirit
 cost={2}{R}{R}
 pt=3/3
-ability=flying
+ability=Flying
 timing=main
 requires_groovy_code
-oracle=Flying. Whenever you cast a Spirit or Arcane spell, you may gain control of target creature with that spell's converted mana cost until end of turn.
+oracle=Flying\nWhenever you cast a Spirit or Arcane spell, you may gain control of target creature with that spell's converted mana cost until end of turn.

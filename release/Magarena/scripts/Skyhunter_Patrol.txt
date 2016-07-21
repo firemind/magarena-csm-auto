@@ -1,11 +1,11 @@
 name=Skyhunter Patrol
-image=http://mtgimage.com/card/skyhunter%20patrol.jpg
+image=http://magiccards.info/scans/en/ddg/19.jpg
 value=3.204
 rarity=C
 type=Creature
 subtype=Cat,Knight
 cost={2}{W}{W}
 pt=2/3
-ability=flying;first strike
+ability=Flying, first strike
 timing=main
 oracle=Flying, first strike

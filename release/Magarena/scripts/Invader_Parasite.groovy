@@ -1,9 +1,9 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent otherPermanent) {
             final String cardName = permanent.getExiledCard().getName();
-            return (otherPermanent.isLand() && 
+            return (otherPermanent.isLand() &&
                     otherPermanent.getName().equals(cardName) &&
                     otherPermanent.isEnemy(permanent)) ?
                 new MagicEvent(
@@ -16,12 +16,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicDamage damage = new MagicDamage(
-                event.getSource(),
-                event.getPlayer(),
-                2
-            );
-            game.doAction(new MagicDealDamageAction(damage));
+            game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),2));
         }
     }
 ]

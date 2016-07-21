@@ -1,9 +1,10 @@
 name=Mulch
-image=http://mtgimage.com/card/mulch.jpg
-value=2.500
+image=http://magiccards.info/scans/en/c15/191.jpg
+image_updated=2016-02-29
+value=4.087
 rarity=C
 type=Sorcery
 cost={1}{G}
-timing=main
-requires_groovy_code
+effect=Reveal the top four cards of your library. Put all land cards revealed this way into your hand and the rest into your graveyard.
+timing=draw
 oracle=Reveal the top four cards of your library. Put all land cards revealed this way into your hand and the rest into your graveyard.

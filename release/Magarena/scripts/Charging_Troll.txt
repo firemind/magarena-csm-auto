@@ -1,12 +1,12 @@
 name=Charging Troll
-image=http://mtgimage.com/card/charging%20troll.jpg
+image=http://magiccards.info/scans/en/pvc/45.jpg
 value=4.156
 rarity=U
 type=Creature
 subtype=Troll
 cost={2}{G}{W}
 pt=3/3
-ability=vigilance;\
+ability=Vigilance;\
         {G}: Regenerate SN.
 timing=main
-oracle=Vigilance. {G}: Regenerate Charging Troll.
+oracle=Vigilance\n{G}: Regenerate Charging Troll.

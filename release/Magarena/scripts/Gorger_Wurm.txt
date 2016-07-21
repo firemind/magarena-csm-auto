@@ -1,11 +1,11 @@
 name=Gorger Wurm
-image=http://mtgimage.com/card/gorger%20wurm.jpg
+image=http://magiccards.info/scans/en/arb/56.jpg
 value=3.124
 rarity=C
 type=Creature
 subtype=Wurm
 cost={3}{R}{G}
 pt=5/5
-ability=devour 1
+ability=Devour 1
 timing=main
 oracle=Devour 1

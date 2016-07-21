@@ -1,5 +1,5 @@
 name=Sivitri Scarzam
-image=http://mtgimage.com/card/sivitri%20scarzam.jpg
+image=http://magiccards.info/scans/en/me3/175.jpg
 value=1.833
 rarity=C
 type=Legendary,Creature
@@ -7,3 +7,4 @@ subtype=Human
 cost={5}{U}{B}
 pt=6/4
 timing=main
+oracle=NONE

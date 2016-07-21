@@ -1,11 +1,11 @@
 name=Joven
-image=http://mtgimage.com/card/joven.jpg
+image=http://magiccards.info/scans/en/hl/97.jpg
 value=2.860
 rarity=C
 type=Legendary,Creature
 subtype=Human,Rogue
 cost={3}{R}{R}
 pt=3/3
-ability={R}{R}{R},{T}:Destroy target noncreature artifact.
+ability={R}{R}{R}, {T}: Destroy target noncreature artifact.
 timing=main
 oracle={R}{R}{R}, {T}: Destroy target noncreature artifact.

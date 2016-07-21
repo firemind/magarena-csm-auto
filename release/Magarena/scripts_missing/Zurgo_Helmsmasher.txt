@@ -1,6 +1,6 @@
 name=Zurgo Helmsmasher
-image=http://mtgimage.com/card/zurgo%20helmsmasher.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ktk/214.jpg
+value=3.750
 rarity=M
 type=Legendary,Creature
 subtype=Orc,Warrior
@@ -10,5 +10,5 @@ ability=Haste;\
         SN attacks each combat if able.;\
         SN has indestructible as long as it's your turn.;\
         Whenever a creature dealt damage by SN this turn dies, put a +1/+1 counter on SN.
-timing=main
-oracle=Haste. Zurgo Helmsmasher attacks each combat if able. Zurgo Helmsmasher has indestructible as long as it's your turn. Whenever a creature dealt damage by Zurgo Helmsmasher this turn dies, put a +1/+1 counter on Zurgo Helmsmasher.
+timing=fmain
+oracle=Haste\nZurgo Helmsmasher attacks each combat if able.\nZurgo Helmsmasher has indestructible as long as it's your turn.\nWhenever a creature dealt damage by Zurgo Helmsmasher this turn dies, put a +1/+1 counter on Zurgo Helmsmasher.

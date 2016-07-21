@@ -1,10 +1,10 @@
 name=Honor of the Pure
-image=http://mtgimage.com/card/honor%20of%20the%20pure.jpg
+image=http://magiccards.info/scans/en/md1/6.jpg
 value=3.458
 rarity=R
 type=Enchantment
 cost={1}{W}
-ability=white creatures you control get +1/+1
+ability=White creatures you control get +1/+1.
 static=player
 timing=enchantment
 oracle=White creatures you control get +1/+1.

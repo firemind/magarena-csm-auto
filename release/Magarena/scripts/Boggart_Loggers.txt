@@ -1,11 +1,13 @@
 name=Boggart Loggers
-image=http://mtgimage.com/card/boggart%20loggers.jpg
+image=http://magiccards.info/scans/en/lw/103.jpg
 value=2.276
 rarity=C
 type=Creature
 subtype=Goblin,Rogue
 cost={2}{B}
 pt=2/1
-ability=forestwalk;{2}{B},Sacrifice SN:Destroy target Treefolk.;{2}{B},Sacrifice SN:Destroy target Forest.
+ability=Forestwalk;\
+        {2}{B}, Sacrifice SN: Destroy target Treefolk.;\
+        {2}{B}, Sacrifice SN: Destroy target Forest.
 timing=main
-oracle=Forestwalk. {2}{B}, Sacrifice Boggart Loggers: Destroy target Treefolk or Forest.
+oracle=Forestwalk\n{2}{B}, Sacrifice Boggart Loggers: Destroy target Treefolk or Forest.

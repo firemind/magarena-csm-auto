@@ -1,10 +1,10 @@
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isNonToken() &&
-                    otherPermanent.isCreature() && 
-                    otherPermanent.getCard().isFriend(permanent)) ?
+                    otherPermanent.isCreature() &&
+                    otherPermanent.isOwner(permanent.getController())) ?
                 new MagicEvent(
                     permanent,
                     this,
@@ -14,9 +14,9 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicPlayTokenAction(
-                event.getPlayer(), 
-                TokenCardDefinitions.get("1/1 white Spirit creature token with flying")
+            game.doAction(new PlayTokenAction(
+                event.getPlayer(),
+                CardDefinitions.getToken("1/1 white Spirit creature token with flying")
             ));
         }
     }

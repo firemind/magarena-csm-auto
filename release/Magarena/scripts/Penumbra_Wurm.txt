@@ -1,12 +1,12 @@
 name=Penumbra Wurm
-image=http://mtgimage.com/card/penumbra%20wurm.jpg
+image=http://magiccards.info/scans/en/vma/224.jpg
 value=3.333
 rarity=R
 type=Creature
 subtype=Wurm
 cost={5}{G}{G}
 pt=6/6
-ability=trample;\
+ability=Trample;\
         When SN dies, put a 6/6 black Wurm creature token with trample onto the battlefield.
 timing=main
-oracle=Trample. When Penumbra Wurm dies, put a 6/6 black Wurm creature token with trample onto the battlefield.
+oracle=Trample\nWhen Penumbra Wurm dies, put a 6/6 black Wurm creature token with trample onto the battlefield.

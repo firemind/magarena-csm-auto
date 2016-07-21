@@ -1,5 +1,5 @@
 def ANGEL_OR_DEMON_OR_DRAGON_CARD_FROM_HAND = new MagicCardFilterImpl() {
-    public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
+    public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
         return target.hasType(MagicType.Creature) &&
                (target.hasSubType(MagicSubType.Angel) ||
                target.hasSubType(MagicSubType.Demon) ||
@@ -8,23 +8,21 @@ def ANGEL_OR_DEMON_OR_DRAGON_CARD_FROM_HAND = new MagicCardFilterImpl() {
     public boolean acceptType(final MagicTargetType targetType) {
         return targetType == MagicTargetType.Hand;
     }
-}; 
+};
 def AN_ANGEL_OR_DEMON_OR_DRAGON_CARD_FROM_HAND = new MagicTargetChoice(
-    ANGEL_OR_DEMON_OR_DRAGON_CARD_FROM_HAND,  
+    ANGEL_OR_DEMON_OR_DRAGON_CARD_FROM_HAND,
     MagicTargetHint.None,
     "an Angel, Demon or Dragon creature card from your hand"
 );
 [
-    new MagicWhenAttacksTrigger(1) {
+    new ThisAttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent attacker) {
-            return permanent == attacker ?
-                new MagicEvent(
-                    permanent,
-                    this,
-                    "PN may put an Angel, Demon or Dragon creature card from his or her hand onto the battlefield tapped and attacking."
-                ):
-                MagicEvent.NONE;
+            return new MagicEvent(
+                permanent,
+                this,
+                "PN may put an Angel, Demon or Dragon creature card from his or her hand onto the battlefield tapped and attacking."
+            );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {

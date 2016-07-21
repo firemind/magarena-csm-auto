@@ -1,0 +1,12 @@
+name=Skyraker Giant
+image=http://magiccards.info/scans/en/ori/162.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=U
+type=Creature
+subtype=Giant
+cost={2}{R}{R}
+pt=4/3
+ability=Reach
+timing=main
+oracle=Reach

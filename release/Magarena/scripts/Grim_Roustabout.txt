@@ -1,12 +1,12 @@
 name=Grim Roustabout
-image=http://mtgimage.com/card/grim%20roustabout.jpg
+image=http://magiccards.info/scans/en/rtr/68.jpg
 value=2.620
 rarity=C
 type=Creature
 subtype=Skeleton,Warrior
 cost={1}{B}
 pt=1/1
-ability=unleash;\
+ability=Unleash;\
         {1}{B}: Regenerate SN.
 timing=main
-oracle=Unleash. {1}{B}: Regenerate Grim Roustabout.
+oracle=Unleash\n{1}{B}: Regenerate Grim Roustabout.

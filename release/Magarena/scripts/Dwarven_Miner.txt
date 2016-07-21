@@ -1,11 +1,11 @@
 name=Dwarven Miner
-image=http://mtgimage.com/card/dwarven%20miner.jpg
+image=http://magiccards.info/scans/en/mr/169.jpg
 value=4.082
 rarity=U
 type=Creature
 subtype=Dwarf
 cost={1}{R}
 pt=1/2
-ability={2}{R},{T}: Destroy target nonbasic land.
+ability={2}{R}, {T}: Destroy target nonbasic land.
 timing=main
 oracle={2}{R}, {T}: Destroy target nonbasic land.

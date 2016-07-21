@@ -1,11 +1,12 @@
 name=Wildfire Emissary
-image=http://mtgimage.com/card/wildfire%20emissary.jpg
+image=http://magiccards.info/scans/en/tsts/72.jpg
 value=4.033
 rarity=U
 type=Creature
 subtype=Efreet
 cost={3}{R}
 pt=2/4
-ability=protection from white;{1}{R}: SN gets +1/+0 until end of turn.
+ability=Protection from white;\
+        {1}{R}: SN gets +1/+0 until end of turn.
 timing=main
-oracle=Protection from white. {1}{R}: Wildfire Emissary gets +1/+0 until end of turn.
+oracle=Protection from white\n{1}{R}: Wildfire Emissary gets +1/+0 until end of turn.

@@ -1,12 +1,12 @@
 name=Living Airship
-image=http://mtgimage.com/card/living%20airship.jpg
+image=http://magiccards.info/scans/en/ap/28.jpg
 value=2.588
 rarity=C
 type=Creature
 subtype=Metathran
 cost={3}{U}
 pt=2/3
-ability=flying;\
+ability=Flying;\
         {2}{G}: Regenerate SN.
 timing=main
-oracle=Flying. {2}{G}: Regenerate Living Airship.
+oracle=Flying\n{2}{G}: Regenerate Living Airship.

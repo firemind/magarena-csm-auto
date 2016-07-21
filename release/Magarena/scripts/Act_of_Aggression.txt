@@ -1,5 +1,6 @@
 name=Act of Aggression
-image=http://mtgimage.com/card/act%20of%20aggression.jpg
+image=http://magiccards.info/scans/en/c15/141.jpg
+image_updated=2016-02-29
 value=3.567
 removal=5
 rarity=U
@@ -7,6 +8,6 @@ type=Instant
 cost={3}{R/P}{R/P}
 ability=alt cost {3}{R/P}, Pay 2 life named Pay 2 life;\
         alt cost {3}, Pay 4 life named Pay 4 life
-timing=main
-requires_groovy_code
+effect=Gain control of target creature an opponent controls until end of turn.~Untap *that creature*.~*It* gains haste until end of turn.
+timing=removal
 oracle=Gain control of target creature an opponent controls until end of turn. Untap that creature. It gains haste until end of turn.

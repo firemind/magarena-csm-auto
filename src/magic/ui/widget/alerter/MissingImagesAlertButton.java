@@ -5,13 +5,15 @@ import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 import magic.data.CardDefinitions;
 import magic.data.GeneralConfig;
+import magic.translate.UiString;
 import magic.ui.ScreenController;
-import magic.ui.dialog.DownloadImagesDialog;
 
 @SuppressWarnings("serial")
 public class MissingImagesAlertButton extends AlertButton {
-    
-    private static DownloadImagesDialog downloadDialog;
+
+    // translatable strings
+    private static final String _S1 =  "Download missing card images";
+
     private static boolean isSoundEffectPlayed = false;
     private static boolean hasChecked = false;
     private boolean isMissingImages = false;
@@ -22,13 +24,8 @@ public class MissingImagesAlertButton extends AlertButton {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                if (downloadDialog == null || !downloadDialog.isDisplayable()) {
-                    downloadDialog = new DownloadImagesDialog(ScreenController.getMainFrame());
-                } else {
-                    downloadDialog.setVisible(true);
-                }
+                ScreenController.showDownloadImagesScreen();
                 hasChecked = false;
-                doAlertCheck();
             }
         };
     }
@@ -43,20 +40,29 @@ public class MissingImagesAlertButton extends AlertButton {
 
     @Override
     protected String getAlertCaption() {
-        
+
         assert !SwingUtilities.isEventDispatchThread();
 
         if (!hasChecked || isVisible()) {
-            isMissingImages = CardDefinitions.isMissingImages();
+            isMissingImages = CardDefinitions.isMissingPlayableImages();
             GeneralConfig.getInstance().setIsMissingFiles(isMissingImages);
             hasChecked = true;
         }
         if (isMissingImages) {
-            return "Download missing card images";
+            return UiString.get(_S1);
         } else {
             return "";
         }
 
+    }
+
+    @Override
+    public void doAlertCheck() {
+        if (GeneralConfig.getInstance().getImagesOnDemand()) {
+            setVisible(false);
+        } else {
+            super.doAlertCheck();
+        }
     }
 
 }

@@ -1,9 +1,0 @@
-name=Rivalry
-image=http://mtgimage.com/card/rivalry.jpg
-value=2.500
-rarity=R
-type=Enchantment
-cost={2}{R}
-ability=At the beginning of each player's upkeep, if that player controls more lands than each other player, SN deals 2 damage to him or her.
-timing=main
-oracle=At the beginning of each player's upkeep, if that player controls more lands than each other player, Rivalry deals 2 damage to him or her.

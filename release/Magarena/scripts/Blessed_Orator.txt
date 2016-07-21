@@ -1,12 +1,12 @@
 name=Blessed Orator
-image=http://mtgimage.com/card/blessed%20orator.jpg
+image=http://magiccards.info/scans/en/9e/6.jpg
 value=2.768
 rarity=U
 type=Creature
 subtype=Human,Cleric
 cost={3}{W}
 pt=1/4
-ability=other creatures you control get +0/+1
+ability=Other creatures you control get +0/+1.
 static=player
 timing=main
 oracle=Other creatures you control get +0/+1.

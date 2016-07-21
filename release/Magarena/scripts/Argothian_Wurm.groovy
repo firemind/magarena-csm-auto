@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -14,12 +14,12 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPermanent perm = event.getPermanent();
             if (event.getPlayer().controlsPermanent(MagicType.Land) && event.isYes()) {
-                game.addEvent(new MagicSacrificePermanentEvent(perm,event.getPlayer(),MagicTargetChoice.SACRIFICE_LAND));
-                game.doAction(new MagicRemoveFromPlayAction(
+                game.addEvent(new MagicSacrificePermanentEvent(perm,event.getPlayer(),SACRIFICE_LAND));
+                game.doAction(new RemoveFromPlayAction(
                     perm,
                     MagicLocationType.TopOfOwnersLibrary
                 ));
-            } 
+            }
         }
     }
 ]

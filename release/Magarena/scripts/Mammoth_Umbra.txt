@@ -1,12 +1,13 @@
 name=Mammoth Umbra
-image=http://mtgimage.com/card/mammoth%20umbra.jpg
+image=http://magiccards.info/scans/en/pc2/10.jpg
 value=2.841
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={4}{W}
-ability=Enchanted creature gets +3/+3 and has vigilance.;\
-        totem armor
+ability=Enchant creature;\
+        Enchanted creature gets +3/+3 and has vigilance.;\
+        Totem armor
 timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. Enchanted creature gets +3/+3 and has vigilance. Totem armor
+oracle=Enchant creature\nEnchanted creature gets +3/+3 and has vigilance.\nTotem armor

@@ -6,11 +6,11 @@ def PT = new MagicStatic(MagicLayer.SetPT, MagicStatic.UntilEOT) {
 };
 
 [
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {  
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
             return (permanent.isFriend(cardOnStack) &&
-                    cardOnStack.hasColor(MagicColor.Red) && 
+                    cardOnStack.hasColor(MagicColor.Red) &&
                     cardOnStack.hasColor(MagicColor.Blue)) ?
                 new MagicEvent(
                     permanent,
@@ -21,11 +21,11 @@ def PT = new MagicStatic(MagicLayer.SetPT, MagicStatic.UntilEOT) {
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicAddStaticAction(
+            game.doAction(new AddStaticAction(
                 event.getPermanent(), PT
             ));
-            game.doAction(new MagicGainAbilityAction(
-                event.getPermanent(), 
+            game.doAction(new GainAbilityAction(
+                event.getPermanent(),
                 MagicAbility.Unblockable
             ));
         }

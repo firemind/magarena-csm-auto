@@ -1,11 +1,12 @@
 name=Rustrazor Butcher
-image=http://mtgimage.com/card/rustrazor%20butcher.jpg
+image=http://magiccards.info/scans/en/shm/105.jpg
 value=3.400
 rarity=C
 type=Creature
 subtype=Goblin,Warrior
 cost={1}{R}
 pt=1/2
-ability=first strike;wither
+ability=First strike;\
+        Wither
 timing=main
-oracle=First strike. Wither
+oracle=First strike\nWither

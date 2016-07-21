@@ -1,11 +1,11 @@
 name=Forked-Branch Garami
-image=http://mtgimage.com/card/forked%2Dbranch%20garami.jpg
+image=http://magiccards.info/scans/en/bok/125.jpg
 value=3.500
 rarity=U
 type=Creature
 subtype=Spirit
 cost={3}{G}{G}
 pt=4/4
-ability=soulshift 4;soulshift 4
+ability=Soulshift 4, soulshift 4
 timing=main
 oracle=Soulshift 4, soulshift 4

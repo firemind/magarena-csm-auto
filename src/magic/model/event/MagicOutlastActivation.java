@@ -7,11 +7,11 @@ import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPermanent;
-import magic.model.action.MagicChangeCountersAction;
+import magic.model.action.ChangeCountersAction;
 import magic.model.condition.MagicCondition;
 
 public class MagicOutlastActivation extends MagicPermanentActivation{
-    
+
     private static final MagicActivationHints HINT = new MagicActivationHints(MagicTiming.Pump);
     private static final MagicCondition COND[] = new MagicCondition[] {MagicCondition.SORCERY_CONDITION};
     private final List<MagicMatchedCostEvent> matchedCostEvents;
@@ -30,7 +30,7 @@ public class MagicOutlastActivation extends MagicPermanentActivation{
         }
         return costEvents;
     }
-    
+
     @Override
     public MagicEvent getPermanentEvent(MagicPermanent source, MagicPayedCost payedCost) {
         return new MagicEvent(
@@ -42,6 +42,6 @@ public class MagicOutlastActivation extends MagicPermanentActivation{
 
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
-        game.doAction(new MagicChangeCountersAction(event.getPermanent(), MagicCounterType.PlusOne, 1));
+        game.doAction(new ChangeCountersAction(event.getPermanent(), MagicCounterType.PlusOne, 1));
     }
 }

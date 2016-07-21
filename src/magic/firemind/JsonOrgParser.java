@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import magic.data.DeckUtils;
+import magic.utility.DeckUtils;
 import magic.data.json.DownloadableJsonFile;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
@@ -23,7 +23,12 @@ public final class JsonOrgParser {
         final List<String> formats = new ArrayList<>(Arrays.asList(JSONObject.getNames(jsonRoot)));
         for (String format : formats) {
             final JSONObject jsonFormat = jsonRoot.getJSONObject(format);
-            final List<String> deckNames = new ArrayList<>(Arrays.asList(JSONObject.getNames(jsonFormat)));
+            final String[] deckNamesArray = JSONObject.getNames(jsonFormat);
+            if (deckNamesArray == null)
+                continue;   // no decks specified for given format.
+
+            final List<String> deckNames = new ArrayList<>(Arrays.asList(deckNamesArray));
+
             for (String deckName : deckNames) {
                 final JSONObject jsonDeck = jsonFormat.getJSONObject(deckName);
                 final MagicDeck deck = new MagicDeck();
@@ -36,7 +41,7 @@ public final class JsonOrgParser {
 
         return decks;
     }
-    
+
     private static void addCardsToDeck(final MagicDeck deck, final JSONArray jsonCards) {
         for (int i = 0; i < jsonCards.length(); i++) {
             final JSONObject jsonCard = jsonCards.getJSONObject(i);
@@ -49,12 +54,16 @@ public final class JsonOrgParser {
         }
     }
 
+    private static String getJsonString(JSONObject jsonDeck, String key) {
+        return !jsonDeck.isNull(key) ? jsonDeck.getString(key) : "";
+    }
+
     private static String getDeckDescription(final JSONObject jsonDeck) {
         final StringBuffer sb = new StringBuffer();
-        sb.append("Author: ").append(jsonDeck.getString("author"));
+        sb.append("Author: ").append(getJsonString(jsonDeck, "author"));
         sb.append("\nRating: ").append(jsonDeck.getString("rating"));
-        sb.append("\nReleased: ").append(getFormattedReleaseDate(jsonDeck.getString("releaseDate")));
-        if (!jsonDeck.getString("description").trim().isEmpty()) {
+        sb.append("\nReleased: ").append(getFormattedReleaseDate(getJsonString(jsonDeck, "releaseDate")));
+        if (!getJsonString(jsonDeck, "description").trim().isEmpty()) {
             sb.append("\n\n").append(jsonDeck.getString("description"));
         }
         return sb.toString();

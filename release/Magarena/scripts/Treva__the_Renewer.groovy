@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -9,8 +9,8 @@
                     MagicColorChoice.MOST_INSTANCE
                 ),
                 this,
-                "PN may\$ pay {2}{W}\$. If you do, choose a color\$. " +
-                "PN gains 1 life for each permanent of that color."
+                "PN may\$ pay {2}{W}\$. If PN does, he or she chooses a color\$, "+
+                "then gains 1 life for each permanent of that color."
             );
         }
         @Override
@@ -19,13 +19,12 @@
                 int life=0;
                 final MagicPlayer player=event.getPlayer();
                 final MagicColor color=event.getChosenColor();
-                final Collection<MagicPermanent> targets=game.filterPermanents(player,MagicTargetFilterFactory.PERMANENT);
-                for (final MagicPermanent permanent : targets) {
-                    if (permanent.hasColor(color)) {
+                PERMANENT.filter(event) each {
+                    if (it.hasColor(color)) {
                         life++;
                     }
                 }
-                game.doAction(new MagicChangeLifeAction(player,life));
+                game.doAction(new ChangeLifeAction(player,life));
             }
         }
     }

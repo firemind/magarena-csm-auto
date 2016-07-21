@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -11,7 +11,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPermanent permanent = event.getPermanent();
-            game.doAction(new MagicChangeCountersAction(
+            game.doAction(new ChangeCountersAction(
                 permanent,
                 MagicCounterType.PlusOne,
                 permanent.getController().getDevotion(MagicColor.Green)

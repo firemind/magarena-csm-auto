@@ -1,9 +1,9 @@
 name=Kiss of the Amesha
-image=http://mtgimage.com/card/kiss%20of%20the%20amesha.jpg
+image=http://magiccards.info/scans/en/ala/177.jpg
 value=3.021
 rarity=U
 type=Sorcery
 cost={4}{W}{U}
+effect=Target player gains 7 life.~*That player* draws two cards.
 timing=draw
-requires_groovy_code
 oracle=Target player gains 7 life and draws two cards.

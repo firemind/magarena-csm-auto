@@ -1,11 +1,11 @@
 name=Patrol Signaler
-image=http://mtgimage.com/card/patrol%20signaler.jpg
+image=http://magiccards.info/scans/en/eve/12.jpg
 value=2.915
 rarity=U
 type=Creature
 subtype=Kithkin,Soldier
 cost={1}{W}
 pt=1/1
-ability={1}{W},{Q}: Put a 1/1 white Kithkin Soldier creature token onto the battlefield.
+ability={1}{W}, {Q}: Put a 1/1 white Kithkin Soldier creature token onto the battlefield.
 timing=main
 oracle={1}{W}, {Q}: Put a 1/1 white Kithkin Soldier creature token onto the battlefield.

@@ -1,0 +1,12 @@
+name=Urban Burgeoning
+image=http://magiccards.info/scans/en/rtr/138.jpg
+value=2.868
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={G}
+ability=Enchant land
+timing=aura
+enchant=untap,pos land
+requires_groovy_code
+oracle=Enchant land\nEnchanted land has "Untap this land during each other player's untap step."

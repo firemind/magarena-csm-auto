@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -11,9 +11,9 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();
-            final MagicChangeLifeAction act = new MagicChangeLifeAction(player.getOpponent(),-1);
+            final ChangeLifeAction act = new ChangeLifeAction(player.getOpponent(),-1);
             game.doAction(act);
-            game.doAction(new MagicChangeLifeAction(player,-act.getLifeChange()));
+            game.doAction(new ChangeLifeAction(player,-act.getLifeChange()));
         }
     }
 ]

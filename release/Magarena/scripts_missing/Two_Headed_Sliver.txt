@@ -1,11 +1,11 @@
 name=Two-Headed Sliver
-image=http://mtgimage.com/card/two-headed%20sliver.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ts/183.jpg
+value=3.551
 rarity=C
 type=Creature
 subtype=Sliver
 cost={1}{R}
 pt=1/1
-ability=All Sliver creatures have "This creature can't be blocked except by two or more creatures."
+ability=All Sliver creatures have menace.
 timing=main
-oracle=All Sliver creatures have "This creature can't be blocked except by two or more creatures."
+oracle=All Sliver creatures have menace.

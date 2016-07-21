@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return permanent.getEnchantedPermanent().getEquippedCreature().isValid() ?
@@ -13,7 +13,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDestroyAction(event.getRefPermanent()));
+            game.doAction(new DestroyAction(event.getRefPermanent()));
         }
     }
 ]

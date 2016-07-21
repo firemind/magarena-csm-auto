@@ -1,11 +1,11 @@
 name=Slippery Bogle
-image=http://mtgimage.com/card/slippery%20bogle.jpg
+image=http://magiccards.info/scans/en/eve/160.jpg
 value=4.050
 rarity=C
 type=Creature
 subtype=Beast
 cost={G/U}
 pt=1/1
-ability=hexproof
+ability=Hexproof
 timing=main
 oracle=Hexproof

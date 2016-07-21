@@ -1,9 +1,9 @@
 name=Hallowed Ground
-image=http://mtgimage.com/card/hallowed%20ground.jpg
+image=http://magiccards.info/scans/en/med/14.jpg
 value=3.733
 rarity=U
 type=Enchantment
 cost={1}{W}
 ability={W}{W}: Return target nonsnow land you control to its owner's hand.
-timing=main
+timing=enchantment
 oracle={W}{W}: Return target nonsnow land you control to its owner's hand.

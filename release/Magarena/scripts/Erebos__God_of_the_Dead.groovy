@@ -13,9 +13,9 @@
             return source.getController().getDevotion(MagicColor.Black) < 5;
         }
     },
-    new MagicIfLifeWouldChangeTrigger() {
+    new IfLifeWouldChangeTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicChangeLifeAction act) {
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final ChangeLifeAction act) {
             if (permanent.isOpponent(act.getPlayer()) && act.getLifeChange() > 0) {
                 act.setLifeChange(0);
             }

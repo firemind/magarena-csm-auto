@@ -1,0 +1,11 @@
+name=Sylvan Hierophant
+image=http://magiccards.info/scans/en/wl/83.jpg
+value=3.485
+rarity=U
+type=Creature
+subtype=Human,Cleric
+cost={1}{G}
+pt=1/2
+timing=main
+requires_groovy_code
+oracle=When Sylvan Hierophant dies, exile Sylvan Hierophant, then return another target creature card from your graveyard to your hand.

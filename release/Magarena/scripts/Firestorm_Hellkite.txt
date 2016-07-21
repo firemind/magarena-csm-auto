@@ -1,11 +1,12 @@
 name=Firestorm Hellkite
-image=http://mtgimage.com/card/firestorm%20hellkite.jpg
+image=http://magiccards.info/scans/en/vi/130.jpg
 value=3.038
 rarity=R
 type=Creature
 subtype=Dragon
 cost={4}{U}{R}
 pt=6/6
-ability=flying;trample;cumulative upkeep {U}{R}
+ability=Flying, trample;\
+        Cumulative upkeep {U}{R}
 timing=main
-oracle=Flying, trample. Cumulative upkeep {U}{R}
+oracle=Flying, trample\nCumulative upkeep {U}{R}

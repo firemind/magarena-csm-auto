@@ -1,11 +1,11 @@
 name=Deepwood Drummer
-image=http://mtgimage.com/card/deepwood%20drummer.jpg
+image=http://magiccards.info/scans/en/mm/239.jpg
 value=2.862
 rarity=C
 type=Creature
 subtype=Human,Spellshaper
 cost={1}{G}
 pt=1/1
-ability={G},{T},Discard a card:Target creature gets +2/+2 until end of turn.
+ability={G}, {T}, Discard a card: Target creature gets +2/+2 until end of turn.
 timing=main
 oracle={G}, {T}, Discard a card: Target creature gets +2/+2 until end of turn.

@@ -1,0 +1,11 @@
+name=Seer's Lantern
+image=http://magiccards.info/scans/en/ogw/165.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=C
+type=Artifact
+cost={3}
+ability={T}: Add {C} to your mana pool.;\
+        {2}, {T}: Scry 1.
+timing=artifact
+oracle={T}: Add {C} to your mana pool.\n{2}, {T}: Scry 1.

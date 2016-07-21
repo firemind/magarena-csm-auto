@@ -1,8 +1,9 @@
 name=Grasp of Darkness
-image=http://mtgimage.com/card/grasp%20of%20darkness.jpg
+image=http://magiccards.info/scans/en/ogw/85.jpg
+image_updated=2016-02-29
 value=4.029
 removal=3
-rarity=C
+rarity=U
 type=Instant
 cost={B}{B}
 effect=Target creature gets -4/-4 until end of turn.

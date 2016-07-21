@@ -1,11 +1,11 @@
 name=Seizan, Perverter of Truth
-image=http://mtgimage.com/card/seizan%2C%20perverter%20of%20truth.jpg
+image=http://magiccards.info/scans/en/chk/143.jpg
 value=3.958
 rarity=R
 type=Legendary,Creature
 subtype=Demon,Spirit
 cost={3}{B}{B}
 pt=6/5
+ability=At the beginning of each player's upkeep, that player loses 2 life~and RN draws two cards.
 timing=main
-requires_groovy_code
 oracle=At the beginning of each player's upkeep, that player loses 2 life and draws two cards.

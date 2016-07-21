@@ -1,11 +1,11 @@
 name=Samurai Enforcers
-image=http://mtgimage.com/card/samurai%20enforcers.jpg
+image=http://magiccards.info/scans/en/chk/42.jpg
 value=2.612
 rarity=U
 type=Creature
 subtype=Human,Samurai
 cost={4}{W}{W}
 pt=4/4
-ability=bushido 2
+ability=Bushido 2
 timing=main
 oracle=Bushido 2

@@ -1,11 +1,11 @@
 name=Ripscale Predator
-image=http://mtgimage.com/card/ripscale%20predator.jpg
-value=2.500
+image=http://magiccards.info/scans/en/gtc/103.jpg
+value=3.080
 rarity=U
 type=Creature
 subtype=Lizard
 cost={4}{R}{R}
 pt=6/5
-ability=SN can't be blocked except by two or more creatures.
+ability=Menace
 timing=main
-oracle=Ripscale Predator can't be blocked except by two or more creatures.
+oracle=Menace

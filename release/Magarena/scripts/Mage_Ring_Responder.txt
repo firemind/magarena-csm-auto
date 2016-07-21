@@ -1,0 +1,14 @@
+name=Mage-Ring Responder
+image=http://magiccards.info/scans/en/ori/232.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=R
+type=Artifact,Creature
+subtype=Golem
+cost={7}
+pt=7/7
+ability=SN doesn't untap during your untap step.;\
+        {7}: Untap SN.;\
+        Whenever SN attacks, SN deals 7 damage to target creature defending player controls.
+timing=main
+oracle=Mage-Ring Responder doesn't untap during your untap step.\n{7}: Untap Mage-Ring Responder.\nWhenever Mage-Ring Responder attacks, it deals 7 damage to target creature defending player controls.

@@ -1,8 +1,8 @@
 name=Polluted Delta
-image=http://mtgimage.com/card/polluted%20delta.jpg
+image=http://magiccards.info/scans/en/ktk/239.jpg
 value=4.600
 rarity=R
 type=Land
-ability={T},Pay 1 life,Sacrifice SN:Search your library for an Island or Swamp card and put it onto the battlefield. Then shuffle your library.
+ability={T}, Pay 1 life, Sacrifice SN: Search your library for an Island or Swamp card and put it onto the battlefield. Then shuffle your library.
 timing=land
 oracle={T}, Pay 1 life, Sacrifice Polluted Delta: Search your library for an Island or Swamp card and put it onto the battlefield. Then shuffle your library.

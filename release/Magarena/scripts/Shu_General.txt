@@ -1,11 +1,11 @@
 name=Shu General
-image=http://mtgimage.com/card/shu%20general.jpg
+image=http://magiccards.info/scans/en/me3/25.jpg
 value=3.724
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={3}{W}
 pt=2/2
-ability=vigilance;horsemanship
+ability=Vigilance, horsemanship
 timing=main
-oracle=Vigilance; horsemanship
+oracle=Vigilance, horsemanship

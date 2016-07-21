@@ -1,11 +1,11 @@
 name=Ego Erasure
-image=http://mtgimage.com/card/ego%20erasure.jpg
+image=http://magiccards.info/scans/en/lw/59.jpg
 value=2.762
 rarity=U
 type=Tribal,Instant
 subtype=Shapeshifter
-ability=changeling
 cost={2}{U}
+ability=Changeling
 timing=removal
 requires_groovy_code
-oracle=Changeling. Creatures target player controls get -2/-0 and lose all creature types until end of turn.
+oracle=Changeling\nCreatures target player controls get -2/-0 and lose all creature types until end of turn.

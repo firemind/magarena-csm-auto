@@ -1,5 +1,5 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return permanent.getCounters(MagicCounterType.Time) == 0 ?
@@ -12,7 +12,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicPlayTokensAction(
+            game.doAction(new PlayTokensAction(
                 event.getPlayer(),
                 event.getPermanent(),
                 2

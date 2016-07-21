@@ -1,9 +1,9 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             if  (otherPermanent.isArtifact() || otherPermanent.isLand()) {
-                game.doAction(MagicTapAction.Enters(otherPermanent));
+                game.doAction(TapAction.Enters(otherPermanent));
             }
             return MagicEvent.NONE;
         }

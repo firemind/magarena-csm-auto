@@ -1,12 +1,13 @@
 name=Flight of Fancy
-image=http://mtgimage.com/card/flight%20of%20fancy.jpg
+image=http://magiccards.info/scans/en/rav/49.jpg
 value=3.745
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={3}{U}
-ability=When SN enters the battlefield, draw two cards.;\
+ability=Enchant creature;\
+        When SN enters the battlefield, draw two cards.;\
         Enchanted creature has flying.
 timing=aura
 enchant=flying,pos creature
-oracle=Enchant creature. When Flight of Fancy enters the battlefield, draw two cards. Enchanted creature has flying.
+oracle=Enchant creature\nWhen Flight of Fancy enters the battlefield, draw two cards.\nEnchanted creature has flying.

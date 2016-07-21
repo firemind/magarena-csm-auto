@@ -1,12 +1,12 @@
 name=Watcher Sliver
-image=http://mtgimage.com/card/watcher%20sliver.jpg
+image=http://magiccards.info/scans/en/ts/45.jpg
 value=3.111
 rarity=C
 type=Creature
 subtype=Sliver
 cost={3}{W}
 pt=2/2
-ability=all sliver creatures get +0/+2
+ability=All Sliver creatures get +0/+2.
 static=all
 timing=main
 oracle=All Sliver creatures get +0/+2.

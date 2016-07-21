@@ -1,12 +1,12 @@
 name=Shriekgeist
-image=http://mtgimage.com/card/shriekgeist.jpg
+image=http://magiccards.info/scans/en/dka/49.jpg
 value=3.213
 rarity=C
 type=Creature
 subtype=Spirit
 cost={1}{U}
 pt=1/1
-ability=flying
+ability=Flying;\
+        Whenever SN deals combat damage to a player, that player puts the top two cards of his or her library into his or her graveyard.
 timing=main
-requires_groovy_code
-oracle=Flying. Whenever Shriekgeist deals combat damage to a player, that player puts the top two cards of his or her library into his or her graveyard.
+oracle=Flying\nWhenever Shriekgeist deals combat damage to a player, that player puts the top two cards of his or her library into his or her graveyard.

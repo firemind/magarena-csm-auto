@@ -1,12 +1,12 @@
 name=Guardian Seraph
-image=http://mtgimage.com/card/guardian%20seraph.jpg
+image=http://magiccards.info/scans/en/m10/13.jpg
 value=4.300
 rarity=R
 type=Creature
 subtype=Angel
 cost={2}{W}{W}
 pt=3/4
-ability=flying
+ability=Flying
 timing=fmain
 requires_groovy_code
-oracle=Flying. If a source an opponent controls would deal damage to you, prevent 1 of that damage.
+oracle=Flying\nIf a source an opponent controls would deal damage to you, prevent 1 of that damage.

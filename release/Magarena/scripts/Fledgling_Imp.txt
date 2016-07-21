@@ -1,11 +1,11 @@
 name=Fledgling Imp
-image=http://mtgimage.com/card/fledgling%20imp.jpg
+image=http://magiccards.info/scans/en/od/137.jpg
 value=1.268
 rarity=C
 type=Creature
 subtype=Imp
 cost={2}{B}
 pt=2/2
-ability={B},Discard a card:SN gains flying until end of turn.
+ability={B}, Discard a card: SN gains flying until end of turn.
 timing=main
 oracle={B}, Discard a card: Fledgling Imp gains flying until end of turn.

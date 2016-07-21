@@ -1,11 +1,11 @@
 name=Goliath Beetle
-image=http://mtgimage.com/card/goliath%20beetle.jpg
+image=http://magiccards.info/scans/en/ud/107.jpg
 value=3.054
 rarity=C
 type=Creature
 subtype=Insect
 cost={2}{G}
 pt=3/1
-ability=trample
+ability=Trample
 timing=main
 oracle=Trample

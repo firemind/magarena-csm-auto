@@ -1,11 +1,12 @@
 name=Signal Pest
-image=http://mtgimage.com/card/signal%20pest.jpg
+image=http://magiccards.info/scans/en/mbs/131.jpg
 value=3.966
 rarity=U
 type=Artifact,Creature
 subtype=Pest
 cost={1}
 pt=0/1
-ability=battle cry;SN can't be blocked except by creatures with flying or reach.
-timing=smain
-oracle=Battle cry. Signal Pest can't be blocked except by creatures with flying or reach.
+ability=Battle cry;\
+        SN can't be blocked except by creatures with flying or reach.
+timing=main
+oracle=Battle cry\nSignal Pest can't be blocked except by creatures with flying or reach.

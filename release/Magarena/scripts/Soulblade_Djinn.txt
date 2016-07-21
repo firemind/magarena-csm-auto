@@ -1,0 +1,13 @@
+name=Soulblade Djinn
+image=http://magiccards.info/scans/en/ori/75.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=R
+type=Creature
+subtype=Djinn
+cost={3}{U}{U}
+pt=4/3
+ability=Flying;\
+        Whenever you cast a noncreature spell, creatures you control get +1/+1 until end of turn.
+timing=main
+oracle=Flying\nWhenever you cast a noncreature spell, creatures you control get +1/+1 until end of turn.

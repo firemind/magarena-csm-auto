@@ -1,12 +1,12 @@
 name=Cosmic Larva
-image=http://mtgimage.com/card/cosmic%20larva.jpg
+image=http://magiccards.info/scans/en/5dn/63.jpg
 value=3.724
 rarity=R
 type=Creature
 subtype=Beast
 cost={1}{R}{R}
 pt=7/6
-ability=Trample
+ability=Trample;\
+        At the beginning of your upkeep, you may sacrifice two lands. If you don't, sacrifice SN.
 timing=main
-requires_groovy_code
-oracle=Trample. At the beginning of your upkeep, sacrifice Cosmic Larva unless you sacrifice two lands.
+oracle=Trample\nAt the beginning of your upkeep, sacrifice Cosmic Larva unless you sacrifice two lands.

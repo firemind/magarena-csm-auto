@@ -1,11 +1,11 @@
 name=Deranged Assistant
-image=http://mtgimage.com/card/deranged%20assistant.jpg
+image=http://magiccards.info/scans/en/isd/52.jpg
 value=3.774
 rarity=C
 type=Creature
 subtype=Human,Wizard
 cost={1}{U}
 pt=1/1
-ability={T}, Put the top card of your library into your graveyard: Add {1} to your mana pool.
+ability={T}, Put the top card of your library into your graveyard: Add {C} to your mana pool.
 timing=main
-oracle={T}, Put the top card of your library into your graveyard: Add {1} to your mana pool.
+oracle={T}, Put the top card of your library into your graveyard: Add {C} to your mana pool.

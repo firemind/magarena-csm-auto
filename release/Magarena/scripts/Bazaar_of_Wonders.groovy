@@ -1,25 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
-        @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPayedCost payedCost) {
-            return new MagicEvent(
-                permanent,
-                this,
-                "Exile all cards from all graveyards."
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            for (final MagicPlayer player : game.getAPNAP()) {
-                final MagicCardList graveyard = new MagicCardList(player.getGraveyard());
-                for (final MagicCard cardGraveyard : graveyard) {
-                    game.doAction(new MagicRemoveCardAction(cardGraveyard,MagicLocationType.Graveyard));
-                    game.doAction(new MagicMoveCardAction(cardGraveyard,MagicLocationType.Graveyard,MagicLocationType.Exile));
-                }
-            }
-        }
-    },
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
             return new MagicEvent(
@@ -33,21 +13,16 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicCardOnStack spell = event.getRefCardOnStack();
             final String name = spell.getCard().getName();
-            final int graveyard = game.filterCards(
-                MagicTargetFilterFactory.cardName(name)
+            final int graveyard = cardName(name)
                 .from(MagicTargetType.Graveyard)
                 .from(MagicTargetType.OpponentsGraveyard)
-            ).size();
-            final int battlefield = game.filterPermanents(
-                MagicTargetFilterFactory.nonTokenPermanentName(
-                    name, 
-                    MagicTargetFilterFactory.Control.Any
-                )
-            ).size();
+                .filter(event)
+                .size()
+            final int battlefield = nonTokenPermanentName(name, Control.Any).filter(event).size();
             final int amount = graveyard + battlefield;
             if (amount > 0) {
                 game.logAppendMessage(event.getPlayer(), "("+name+") is countered.")
-                game.doAction(new MagicCounterItemOnStackAction(spell));
+                game.doAction(new CounterItemOnStackAction(spell));
             }
         }
     }

@@ -1,11 +1,11 @@
 name=Gerrard's Irregulars
-image=http://mtgimage.com/card/gerrard%27s%20irregulars.jpg
+image=http://magiccards.info/scans/en/mm/192.jpg
 value=2.984
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={4}{R}
 pt=4/2
-ability=trample;haste
+ability=Trample, haste
 timing=fmain
 oracle=Trample, haste

@@ -1,9 +1,9 @@
 name=Windstorm
-image=http://mtgimage.com/card/windstorm.jpg
+image=http://magiccards.info/scans/en/ktk/157.jpg
 value=3.250
 rarity=U
 type=Instant
 cost={X}{G}
+effect=SN deals X damage to each creature with flying.
 timing=removal
-requires_groovy_code
 oracle=Windstorm deals X damage to each creature with flying.

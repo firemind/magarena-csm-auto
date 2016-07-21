@@ -1,9 +1,10 @@
 name=City of Traitors
-image=http://mtgimage.com/card/city%20of%20traitors.jpg
+image=http://magiccards.info/scans/en/tpr/237.jpg
+image_updated=2015-11-14
 value=2.500
 rarity=R
 type=Land
 ability=When you play another land, sacrifice SN.;\
-        {T}: Add {2} to your mana pool.
-timing=main
-oracle=When you play another land, sacrifice City of Traitors. {T}: Add {2} to your mana pool.
+        {T}: Add {C}{C} to your mana pool.
+timing=land
+oracle=When you play another land, sacrifice City of Traitors.\n{T}: Add {C}{C} to your mana pool.

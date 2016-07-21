@@ -1,10 +1,10 @@
 name=Clear
-image=http://mtgimage.com/card/clear.jpg
+image=http://magiccards.info/scans/en/us/7.jpg
 value=3.452
 rarity=U
 type=Instant
 cost={1}{W}
-ability=cycling {2}
+ability=Cycling {2}
 effect=Destroy target enchantment.
 timing=removal
-oracle=Destroy target enchantment. Cycling {2}
+oracle=Destroy target enchantment.\nCycling {2}

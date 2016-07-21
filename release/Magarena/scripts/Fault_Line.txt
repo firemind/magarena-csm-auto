@@ -1,10 +1,10 @@
 name=Fault Line
-image=http://mtgimage.com/card/fault%20line.jpg
+image=http://magiccards.info/scans/en/us/185.jpg
 value=3.932
 rarity=R
 type=Instant
 cost={X}{R}{R}
+effect=SN deals X damage to each creature without flying and each player.
 timing=removal
 removal=2
-requires_groovy_code=Earthquake
 oracle=Fault Line deals X damage to each creature without flying and each player.

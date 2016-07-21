@@ -1,11 +1,12 @@
 name=Battering Krasis
-image=http://mtgimage.com/card/battering%20krasis.jpg
+image=http://magiccards.info/scans/en/dgm/41.jpg
 value=3.373
 rarity=C
 type=Creature
 subtype=Fish,Beast
 cost={2}{G}
 pt=2/1
-ability=evolve;trample
+ability=Trample;\
+        Evolve
 timing=main
-oracle=Trample. Evolve
+oracle=Trample\nEvolve

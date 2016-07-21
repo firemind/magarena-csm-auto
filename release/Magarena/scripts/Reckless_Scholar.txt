@@ -1,11 +1,11 @@
 name=Reckless Scholar
-image=http://mtgimage.com/card/reckless%20scholar.jpg
+image=http://magiccards.info/scans/en/cns/104.jpg
 value=3.375
 rarity=C
 type=Creature
 subtype=Human,Wizard
 cost={2}{U}
 pt=2/1
-ability={T}:Target player draws a card, then discards a card.
+ability={T}: Target player draws a card, then discards a card.
 timing=main
 oracle={T}: Target player draws a card, then discards a card.

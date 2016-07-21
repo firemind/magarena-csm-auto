@@ -1,12 +1,12 @@
 name=Shadow Sliver
-image=http://mtgimage.com/card/shadow%20sliver.jpg
+image=http://magiccards.info/scans/en/ts/76.jpg
 value=3.110
 rarity=C
 type=Creature
 subtype=Sliver
 cost={2}{U}
 pt=1/1
-ability=all sliver creatures have shadow
+ability=All Sliver creatures have shadow.
 static=all
 timing=main
 oracle=All Sliver creatures have shadow.

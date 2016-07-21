@@ -1,11 +1,11 @@
 name=Promised Kannushi
-image=http://mtgimage.com/card/promised%20kannushi.jpg
+image=http://magiccards.info/scans/en/sok/141.jpg
 value=3.531
 rarity=C
 type=Creature
 subtype=Human,Druid
 cost={G}
 pt=1/1
-ability=soulshift 7
+ability=Soulshift 7
 timing=main
 oracle=Soulshift 7

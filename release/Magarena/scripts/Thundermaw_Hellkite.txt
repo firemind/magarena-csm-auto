@@ -1,12 +1,12 @@
 name=Thundermaw Hellkite
-image=http://mtgimage.com/card/thundermaw%20hellkite.jpg
+image=http://magiccards.info/scans/en/m13/150.jpg
 value=4.103
 rarity=M
 type=Creature
 subtype=Dragon
 cost={3}{R}{R}
 pt=5/5
-ability=flying;haste
+ability=Flying;haste
 timing=main
 requires_groovy_code
-oracle=Flying. Haste. When Thundermaw Hellkite enters the battlefield, it deals 1 damage to each creature with flying your opponents control. Tap those creatures.
+oracle=Flying\nHaste\nWhen Thundermaw Hellkite enters the battlefield, it deals 1 damage to each creature with flying your opponents control. Tap those creatures.

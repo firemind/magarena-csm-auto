@@ -1,5 +1,5 @@
 [
-    new MagicWhenLifeIsLostTrigger() {
+    new LifeIsLostTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicLifeChangeTriggerData lifeChange) {
             final int amount = lifeChange.amount;
@@ -14,7 +14,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeLifeAction(
+            game.doAction(new ChangeLifeAction(
                 event.getPlayer(),
                 event.getRefInt()
             ));

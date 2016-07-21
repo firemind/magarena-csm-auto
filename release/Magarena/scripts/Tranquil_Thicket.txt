@@ -1,11 +1,11 @@
 name=Tranquil Thicket
-image=http://mtgimage.com/card/tranquil%20thicket.jpg
+image=http://magiccards.info/scans/en/c14/316.jpg
 value=3.250
 rarity=C
 type=Land
 mana=g3
 ability=SN enters the battlefield tapped.;\
         {T}: Add {G} to your mana pool.;\
-        cycling {G}
+        Cycling {G}
 timing=tapland
-oracle=Tranquil Thicket enters the battlefield tapped. {T}: Add {G} to your mana pool. Cycling {G}
+oracle=Tranquil Thicket enters the battlefield tapped.\n{T}: Add {G} to your mana pool.\nCycling {G}

@@ -5,15 +5,14 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "SN deals 5 damage to each creature without flying if you have 7 or more cards in your graveyard."
+                "SN deals 5 damage to each creature without flying if PN has 7 or more cards in his or her graveyard."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (MagicCondition.THRESHOLD_CONDITION.accept(event.getSource())) {
-                final Collection<MagicPermanent> targets = game.filterPermanents(MagicTargetFilterFactory.CREATURE_WITHOUT_FLYING);
-                for (final MagicPermanent target : targets) {
-                    game.doAction(new MagicDealDamageAction(event.getSource(),target,5));
+                CREATURE_WITHOUT_FLYING.filter(event) each {
+                    game.doAction(new DealDamageAction(event.getSource(),it,5));
                 }
             }
         }

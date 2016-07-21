@@ -1,9 +1,9 @@
 name=Howl from Beyond
-image=http://mtgimage.com/card/howl%20from%20beyond.jpg
+image=http://magiccards.info/scans/en/me4/87.jpg
 value=3.333
 rarity=C
 type=Instant
 cost={X}{B}
+effect=Target creature gets +X/+0 until end of turn.
 timing=pump
-requires_groovy_code=Bloodcurdling Scream
 oracle=Target creature gets +X/+0 until end of turn.

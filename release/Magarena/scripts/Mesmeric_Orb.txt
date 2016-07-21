@@ -1,9 +1,9 @@
 name=Mesmeric Orb
-image=http://mtgimage.com/card/mesmeric%20orb.jpg
+image=http://magiccards.info/scans/en/mi/204.jpg
 value=4.396
 rarity=R
 type=Artifact
 cost={2}
+ability=Whenever a permanent becomes untapped, that permanent's controller puts the top card of his or her library into his or her graveyard.
 timing=artifact
-requires_groovy_code
 oracle=Whenever a permanent becomes untapped, that permanent's controller puts the top card of his or her library into his or her graveyard.

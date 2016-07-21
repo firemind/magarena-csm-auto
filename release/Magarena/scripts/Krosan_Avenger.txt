@@ -1,12 +1,12 @@
 name=Krosan Avenger
-image=http://mtgimage.com/card/krosan%20avenger.jpg
+image=http://magiccards.info/scans/en/od/247.jpg
 value=3.250
 rarity=C
 type=Creature
 subtype=Human,Druid
 cost={2}{G}
 pt=3/1
-ability=trample;\
+ability=Trample;\
         {1}{G}: Regenerate SN. Activate this ability only if seven or more cards are in your graveyard.
 timing=main
-oracle=Trample. Threshold — {1}{G}: Regenerate Krosan Avenger. Activate this ability only if seven or more cards are in your graveyard.
+oracle=Trample\nThreshold — {1}{G}: Regenerate Krosan Avenger. Activate this ability only if seven or more cards are in your graveyard.

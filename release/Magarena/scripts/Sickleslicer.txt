@@ -1,7 +1,8 @@
 name=Sickleslicer
-image=http://mtgimage.com/card/sickleslicer.jpg
+image=http://magiccards.info/scans/en/mm2/228.jpg
+image_updated=2015-11-05
 value=2.729
-rarity=U
+rarity=C
 type=Artifact
 subtype=Equipment
 cost={3}
@@ -9,4 +10,4 @@ ability=Living weapon;\
         Equipped creature gets +2/+2.;\
         Equip {4}
 timing=equipment
-oracle=Living weapon. Equipped creature gets +2/+2. Equip {4}
+oracle=Living weapon\nEquipped creature gets +2/+2.\nEquip {4}

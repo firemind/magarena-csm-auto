@@ -1,12 +1,12 @@
 name=Shield Sphere
-image=http://mtgimage.com/card/shield%20sphere.jpg
+image=http://magiccards.info/scans/en/med/166.jpg
 value=4.380
-rarity=U
+rarity=C
 type=Artifact,Creature
 subtype=Wall
 cost={0}
 pt=0/6
 ability=Defender;\
         Whenever SN blocks, put a -0/-1 counter on SN.
-timing=main
-oracle=Defender. Whenever Shield Sphere blocks, put a -0/-1 counter on it.
+timing=smain
+oracle=Defender\nWhenever Shield Sphere blocks, put a -0/-1 counter on it.

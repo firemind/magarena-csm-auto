@@ -1,11 +1,11 @@
 name=Wild Elephant
-image=http://mtgimage.com/card/wild%20elephant.jpg
+image=http://magiccards.info/scans/en/mr/152.jpg
 value=2.846
 rarity=C
 type=Creature
 subtype=Elephant
 cost={3}{G}
 pt=3/3
-ability=trample
+ability=Trample
 timing=main
 oracle=Trample

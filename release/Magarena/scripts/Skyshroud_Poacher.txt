@@ -1,11 +1,11 @@
 name=Skyshroud Poacher
-image=http://mtgimage.com/card/skyshroud%20poacher.jpg
+image=http://magiccards.info/scans/en/ne/119.jpg
 value=4.127
 rarity=R
 type=Creature
 subtype=Human,Rebel
 cost={2}{G}{G}
 pt=2/2
-ability={3},{T}:Search your library for an Elf permanent card and put it onto the battlefield. Then shuffle your library.
+ability={3}, {T}: Search your library for an Elf permanent card and put it onto the battlefield. Then shuffle your library.
 timing=main
 oracle={3}, {T}: Search your library for an Elf permanent card and put it onto the battlefield. Then shuffle your library.

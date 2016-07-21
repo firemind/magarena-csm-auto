@@ -1,11 +1,11 @@
 name=Dowsing Shaman
-image=http://mtgimage.com/card/dowsing%20shaman.jpg
+image=http://magiccards.info/scans/en/pc2/63.jpg
 value=3.000
 rarity=U
 type=Creature
 subtype=Centaur,Shaman
 cost={4}{G}
 pt=3/4
-ability={2}{G},{T}:Return target enchantment card from your graveyard to your hand.
+ability={2}{G}, {T}: Return target enchantment card from your graveyard to your hand.
 timing=main
 oracle={2}{G}, {T}: Return target enchantment card from your graveyard to your hand.

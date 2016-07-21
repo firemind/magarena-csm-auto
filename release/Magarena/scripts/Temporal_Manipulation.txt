@@ -1,9 +1,9 @@
 name=Temporal Manipulation
-image=http://mtgimage.com/card/temporal%20manipulation.jpg
+image=http://magiccards.info/scans/en/me2/69.jpg
 value=3.976
 rarity=R
 type=Sorcery
 cost={3}{U}{U}
-timing=main
-requires_groovy_code=Time Walk
+effect=Take an extra turn after this one.
+timing=smain
 oracle=Take an extra turn after this one.

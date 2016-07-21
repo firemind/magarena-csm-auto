@@ -1,11 +1,11 @@
 name=Young Wolf
-image=http://mtgimage.com/card/young%20wolf.jpg
+image=http://magiccards.info/scans/en/dka/134.jpg
 value=4.056
 rarity=C
 type=Creature
 subtype=Wolf
 cost={G}
 pt=1/1
-ability=undying
+ability=Undying
 timing=main
 oracle=Undying

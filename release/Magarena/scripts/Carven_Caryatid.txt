@@ -1,12 +1,12 @@
 name=Carven Caryatid
-image=http://mtgimage.com/card/carven%20caryatid.jpg
+image=http://magiccards.info/scans/en/rav/155.jpg
 value=4.006
 rarity=U
 type=Creature
 subtype=Spirit
 cost={1}{G}{G}
 pt=2/5
-ability=defender;\
+ability=Defender;\
         When SN enters the battlefield, draw a card.
 timing=smain
-oracle=Defender. When Carven Caryatid enters the battlefield, draw a card.
+oracle=Defender\nWhen Carven Caryatid enters the battlefield, draw a card.

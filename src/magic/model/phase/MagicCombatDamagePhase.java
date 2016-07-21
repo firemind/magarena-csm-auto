@@ -1,9 +1,9 @@
 package magic.model.phase;
 
-import magic.data.SoundEffects;
 import magic.model.MagicGame;
 import magic.model.MagicPlayer;
-import magic.model.action.MagicCombatDamageAction;
+import magic.model.action.CombatDamageAction;
+import magic.ui.MagicSound;
 
 public class MagicCombatDamagePhase extends MagicPhase {
 
@@ -27,10 +27,10 @@ public class MagicCombatDamagePhase extends MagicPhase {
 
         //deal first strike damage
         if (game.getStep() == MagicStep.Begin) {
-            game.doAction(new MagicCombatDamageAction(attackingPlayer,defendingPlayer, true));
+            game.doAction(new CombatDamageAction(attackingPlayer,defendingPlayer, true));
         } else {
         //deal regular damage
-            game.doAction(new MagicCombatDamageAction(attackingPlayer,defendingPlayer, false));
+            game.doAction(new CombatDamageAction(attackingPlayer,defendingPlayer, false));
         }
 
         final int lifeAfter=defendingPlayer.getLife();
@@ -51,7 +51,7 @@ public class MagicCombatDamagePhase extends MagicPhase {
         if (game.getStep() == MagicStep.Begin) {
             game.setStep(MagicStep.ActivePlayer);
         } else {
-            SoundEffects.playGameSound(game,SoundEffects.COMBAT_SOUND);
+            game.playSound(MagicSound.COMBAT);
         }
     }
 

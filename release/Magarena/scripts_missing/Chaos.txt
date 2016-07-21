@@ -1,9 +1,11 @@
 name=Chaos
-image=http://mtgimage.com/card/orderchaos.jpg
-value=2.500
+image=http://magiccards.info/scans/en/pch/104b.jpg
+value=4.151
 rarity=U
 type=Instant
 cost={2}{R}
 effect=Creatures can't block this turn.
-timing=removal
+split=Order
+timing=attack
+second_half
 oracle=Creatures can't block this turn.

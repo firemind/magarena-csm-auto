@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
-import magic.data.FileIO;
+import java.util.UUID;
+import magic.utility.FileIO;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
+import magic.utility.SortedProperties;
 
 public abstract class PlayerProfile {
-
-    private static String lastId = "";
 
     private Path profilePath = null;
     private String playerName = "";
@@ -21,9 +21,29 @@ public abstract class PlayerProfile {
     abstract public void save();
     abstract protected String getPlayerType();
 
+    /**
+     * Loads an existing saved player profile.
+     */
     protected PlayerProfile(final String profileId) {
-        setProfilePath(profileId == null ? PlayerProfile.getNewPlayerProfileId() : profileId);
+        setProfilePath(profileId);
         loadStats();
+    }
+
+    /**
+     * Creates a new player profile with a unique ID.
+     * Use subclass {@code save()} method to make permanent.
+     */
+    protected PlayerProfile() {
+        this(PlayerProfile.getNewPlayerProfileId());
+    }
+
+
+    public boolean isArtificial() {
+        return this instanceof AiProfile;
+    }
+
+    public boolean isHuman() {
+        return this instanceof HumanProfile;
     }
 
     public String getId() {
@@ -59,7 +79,7 @@ public abstract class PlayerProfile {
 
     protected Properties loadPlayerProperties() {
         final File propertiesFile = new File(getProfilePath().resolve("player.profile").toString());
-        final Properties properties = propertiesFile.exists() ? FileIO.toProp(propertiesFile) : new Properties();
+        final Properties properties = propertiesFile.exists() ? FileIO.toProp(propertiesFile) : new SortedProperties();
         playerName = properties.getProperty("playerName", "");
         return properties;
     }
@@ -83,30 +103,13 @@ public abstract class PlayerProfile {
         stats = new PlayerStatistics(this);
     }
 
-    public static String getNewPlayerProfileId() {
-        String id = Long.toHexString(System.currentTimeMillis()).toUpperCase();
-        while (id.equals(lastId)) {
-            // wait a bit in order to generate a unique id based on current time.
-            // required because currentTimeMillis() granularity dependent on OS.
-            sleep(100);
-            id = Long.toHexString(System.currentTimeMillis()).toUpperCase();
-        }
-        lastId = id;
-        return id;
-    }
-
-    private static void sleep(final long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    private static String getNewPlayerProfileId() {
+        return UUID.randomUUID().toString();
     }
 
     public static PlayerProfile getHumanPlayer(final String playerId) {
         if (playerId != null && PlayerProfiles.getPlayerProfile(playerId) != null) {
-            return new HumanPlayer(playerId);
+            return new HumanProfile(playerId);
         } else {
             return PlayerProfiles.getDefaultHumanPlayer();
         }
@@ -114,7 +117,7 @@ public abstract class PlayerProfile {
 
     public static PlayerProfile getAiPlayer(final String playerId) {
         if (playerId != null && PlayerProfiles.getPlayerProfile(playerId) != null) {
-            return new AiPlayer(playerId);
+            return new AiProfile(playerId);
         } else {
             return PlayerProfiles.getDefaultAiPlayer();
         }
@@ -137,7 +140,15 @@ public abstract class PlayerProfile {
         return this.getId().hashCode();
     }
 
-    public static boolean isAiPlayer(final PlayerProfile player) {
-        return player instanceof AiPlayer;
+    public String getPlayerTypeLabel() {
+        return "";
+    }
+
+    public String getPlayerAttributeLabel() {
+        return "";
+    }
+
+    public String getPlayerLabel() {
+        return playerName;
     }
 }

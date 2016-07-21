@@ -1,11 +1,11 @@
 name=Barkhide Mauler
-image=http://mtgimage.com/card/barkhide%20mauler.jpg
+image=http://magiccards.info/scans/en/on/246.jpg
 value=2.700
 rarity=C
 type=Creature
 subtype=Beast
 cost={4}{G}
 pt=4/4
-ability=cycling {2}
+ability=Cycling {2}
 timing=main
 oracle=Cycling {2}

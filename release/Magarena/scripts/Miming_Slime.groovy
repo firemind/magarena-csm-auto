@@ -5,29 +5,23 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Put an X/X green Ooze creature token onto the battlefield, where X is the greatest power among creatures you control."
+                "PN puts an X/X green Ooze creature token onto the battlefield, where X is the greatest power among creatures PN controls."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets = game.filterPermanents(
-                event.getPlayer(),
-                MagicTargetFilterFactory.CREATURE_YOU_CONTROL
-            );
             int x = 0;
-            for (final MagicPermanent creature : targets) {
-                x = Math.max(x,creature.getPower());
+            CREATURE_YOU_CONTROL.filter(event) each {
+                x = Math.max(x,it.getPower());
             }
-            game.doAction(new MagicPlayTokenAction(event.getPlayer(), MagicCardDefinition.create({
-                it.setName("Ooze");
-                it.setFullName("green Ooze creature token");
-                it.setPowerToughness(x, x);
-                it.setColors("g");
-                it.addSubType(MagicSubType.Ooze);
-                it.addType(MagicType.Creature);
-                it.setToken();
-                it.setValue(x);
-            })));
+            game.logAppendValue(event.getPlayer(), x);
+            game.doAction(new PlayTokenAction(event.getPlayer(), MagicCardDefinition.create(
+                CardDefinitions.getToken("green Ooze creature token"),
+                {
+                    it.setPowerToughness(x, x);
+                    it.setValue(x);
+                }
+            )));
         }
     }
 ]

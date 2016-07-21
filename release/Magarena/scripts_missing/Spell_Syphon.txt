@@ -1,9 +1,0 @@
-name=Spell Syphon
-image=http://mtgimage.com/card/spell%20syphon.jpg
-value=2.500
-rarity=C
-type=Instant
-cost={1}{U}
-effect=Counter target spell unless its controller pays {1} for each blue permanent you control.
-timing=removal
-oracle=Counter target spell unless its controller pays {1} for each blue permanent you control.

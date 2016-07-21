@@ -1,11 +1,11 @@
 name=Marisi's Twinclaws
-image=http://mtgimage.com/card/marisi%27s%20twinclaws.jpg
+image=http://magiccards.info/scans/en/ddh/17.jpg
 value=3.000
 rarity=U
 type=Creature
 subtype=Cat,Warrior
 cost={2}{R/W}{G}
 pt=2/4
-ability=double strike
+ability=Double strike
 timing=main
 oracle=Double strike

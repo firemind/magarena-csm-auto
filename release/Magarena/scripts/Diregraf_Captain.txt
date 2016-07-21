@@ -1,13 +1,14 @@
 name=Diregraf Captain
-image=http://mtgimage.com/card/diregraf%20captain.jpg
+image=http://magiccards.info/scans/en/dka/135.jpg
 value=3.861
 rarity=U
 type=Creature
 subtype=Zombie,Soldier
 cost={1}{U}{B}
 pt=2/2
-ability=deathtouch;other zombie creatures you control get +1/+1;\
+ability=Deathtouch;\
+        Other Zombie creatures you control get +1/+1.;\
         Whenever another Zombie you control dies, target opponent loses 1 life.
 static=player
 timing=main
-oracle=Deathtouch. Other Zombie creatures you control get +1/+1. Whenever another Zombie you control dies, target opponent loses 1 life.
+oracle=Deathtouch\nOther Zombie creatures you control get +1/+1.\nWhenever another Zombie you control dies, target opponent loses 1 life.

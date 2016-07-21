@@ -1,11 +1,11 @@
 name=Lawbringer
-image=http://mtgimage.com/card/lawbringer.jpg
+image=http://magiccards.info/scans/en/ne/10.jpg
 value=2.629
 rarity=C
 type=Creature
 subtype=Kor,Rebel
 cost={2}{W}
 pt=2/2
-ability={T},Sacrifice SN:Exile target red creature.
+ability={T}, Sacrifice SN: Exile target red creature.
 timing=main
 oracle={T}, Sacrifice Lawbringer: Exile target red creature.

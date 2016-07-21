@@ -1,11 +1,11 @@
 name=Manriki-Gusari
-image=http://mtgimage.com/card/manriki%2Dgusari.jpg
+image=http://magiccards.info/scans/en/sok/156.jpg
 value=3.833
 rarity=U
 type=Artifact
 subtype=Equipment
 cost={2}
-ability=Equipped creature gets +1/+2 and has "{T}: Destroy target equipment.";\
+ability=Equipped creature gets +1/+2 and has "{T}: Destroy target Equipment.";\
         Equip {1}
 timing=equipment
-oracle=Equipped creature gets +1/+2 and has "{T}: Destroy target Equipment.". Equip {1}
+oracle=Equipped creature gets +1/+2 and has "{T}: Destroy target Equipment."\nEquip {1}

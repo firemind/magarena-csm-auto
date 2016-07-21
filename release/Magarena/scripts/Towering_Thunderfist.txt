@@ -1,11 +1,11 @@
 name=Towering Thunderfist
-image=http://mtgimage.com/card/towering%20thunderfist.jpg
+image=http://magiccards.info/scans/en/gtc/109.jpg
 value=2.775
 rarity=C
 type=Creature
 subtype=Giant,Soldier
-ability={W}: SN gains vigilance until end of turn.
 cost={4}{R}
 pt=4/4
+ability={W}: SN gains vigilance until end of turn.
 timing=main
 oracle={W}: Towering Thunderfist gains vigilance until end of turn.

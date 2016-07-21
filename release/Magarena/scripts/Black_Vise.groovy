@@ -1,5 +1,5 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return upkeepPlayer == permanent.getChosenPlayer() ?
@@ -15,12 +15,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();
             final int amount = player.getHandSize() - 4;
-            final MagicDamage damage = new MagicDamage(
-                event.getPermanent(),
-                player,
-                amount
-            );
-            game.doAction(new MagicDealDamageAction(damage));
+            game.doAction(new DealDamageAction(event.getPermanent(),player,amount));
         }
     }
 ]

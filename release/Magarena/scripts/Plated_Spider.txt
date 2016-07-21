@@ -1,11 +1,11 @@
 name=Plated Spider
-image=http://mtgimage.com/card/plated%20spider.jpg
+image=http://magiccards.info/scans/en/bd/59.jpg
 value=3.611
 rarity=C
 type=Creature
 subtype=Spider
 cost={4}{G}
 pt=4/4
-ability=reach
+ability=Reach
 timing=main
 oracle=Reach

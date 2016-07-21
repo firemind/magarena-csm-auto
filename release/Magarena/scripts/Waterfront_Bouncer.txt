@@ -1,11 +1,11 @@
 name=Waterfront Bouncer
-image=http://mtgimage.com/card/waterfront%20bouncer.jpg
+image=http://magiccards.info/scans/en/vma/102.jpg
 value=4.500
 rarity=C
 type=Creature
 subtype=Merfolk,Spellshaper
 cost={1}{U}
 pt=1/1
-ability={U},{T},Discard a card:Return target creature to its owner's hand.
+ability={U}, {T}, Discard a card: Return target creature to its owner's hand.
 timing=main
 oracle={U}, {T}, Discard a card: Return target creature to its owner's hand.

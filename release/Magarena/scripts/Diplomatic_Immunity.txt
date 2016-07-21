@@ -1,12 +1,13 @@
 name=Diplomatic Immunity
-image=http://mtgimage.com/card/diplomatic%20immunity.jpg
+image=http://magiccards.info/scans/en/mm/75.jpg
 value=4.277
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{U}
-ability=Shroud;\
+ability=Enchant creature;\
+        Shroud;\
         Enchanted creature has shroud.
 timing=aura
 enchant=shroud,pos creature
-oracle=Enchant creature. Shroud. Enchanted creature has shroud.
+oracle=Enchant creature\nShroud\nEnchanted creature has shroud.

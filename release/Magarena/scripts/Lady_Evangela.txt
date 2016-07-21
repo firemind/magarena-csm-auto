@@ -1,7 +1,7 @@
 name=Lady Evangela
-image=http://mtgimage.com/card/lady%20evangela.jpg
+image=http://magiccards.info/scans/en/me3/158.jpg
 value=3.136
-rarity=R
+rarity=U
 type=Legendary,Creature
 subtype=Human,Cleric
 cost={W}{U}{B}

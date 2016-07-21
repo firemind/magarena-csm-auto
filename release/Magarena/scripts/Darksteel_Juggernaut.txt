@@ -1,13 +1,13 @@
 name=Darksteel Juggernaut
-image=http://mtgimage.com/card/darksteel%20juggernaut.jpg
+image=http://magiccards.info/scans/en/som/150.jpg
 value=3.942
 rarity=R
 type=Artifact,Creature
 subtype=Juggernaut
 cost={5}
-ability=indestructible;\
+pt=*/*
+ability=Indestructible;\
         SN's power and toughness are each equal to the number of artifacts you control.;\
         SN attacks each turn if able.
-pt=*/*
 timing=main
-oracle=Indestructible. Darksteel Juggernaut's power and toughness are each equal to the number of artifacts you control. Darksteel Juggernaut attacks each turn if able.
+oracle=Indestructible\nDarksteel Juggernaut's power and toughness are each equal to the number of artifacts you control.\nDarksteel Juggernaut attacks each turn if able.

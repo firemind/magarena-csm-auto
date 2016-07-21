@@ -1,9 +1,0 @@
-name=Singe
-image=http://mtgimage.com/card/singe.jpg
-value=2.500
-rarity=C
-type=Instant
-cost={R}
-effect=SN deals 1 damage to target creature. That creature becomes black until end of turn.
-timing=removal
-oracle=Singe deals 1 damage to target creature. That creature becomes black until end of turn.

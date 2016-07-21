@@ -1,13 +1,12 @@
 name=Groundbreaker
-image=http://mtgimage.com/card/groundbreaker.jpg
+image=http://magiccards.info/scans/en/pc/148.jpg
 value=4.211
 rarity=R
 type=Creature
 subtype=Elemental
 cost={G}{G}{G}
 pt=6/1
-ability=trample;\
-        haste;\
+ability=Trample, haste;\
         At the beginning of the end step, sacrifice SN.
 timing=fmain
-oracle=Trample, haste. At the beginning of the end step, sacrifice Groundbreaker.
+oracle=Trample, haste\nAt the beginning of the end step, sacrifice Groundbreaker.

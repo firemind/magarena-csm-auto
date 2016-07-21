@@ -8,7 +8,7 @@ def HAS_EXILED_BEFORE_CONDITION = new MagicCondition() {
 def ExileCard = {
     final MagicGame game, final MagicEvent event ->
     event.processTargetCard(game, {
-        game.doAction(new MagicExileLinkAction(
+        game.doAction(new ExileLinkAction(
             event.getPermanent(),
             it,
             MagicLocationType.OwnersHand
@@ -34,20 +34,20 @@ def ExileCard = {
             return new MagicEvent(
                 source,
                 this,
-                "PN draws a card, then exiles a card from his or her hand."
+                "PN draws a card, then exiles a card from his or her hand face down."
             );
-        }       
+        }
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-           game.doAction(new MagicDrawAction(event.getPlayer(),1));
-           game.addEvent(new MagicEvent(
+            game.doAction(new DrawAction(event.getPlayer(),1));
+            game.addEvent(new MagicEvent(
                 event.getSource(),
-                MagicTargetChoice.A_CARD_FROM_HAND,
+                A_CARD_FROM_HAND,
                 MagicGraveyardTargetPicker.ExileOwn,
                 ExileCard,
-                "PN exiles a card\$ from his or her hand."
-           ));
+                "PN exiles a card from his or her hand face down."
+            ));
         }
     },
     new MagicPermanentActivation(
@@ -68,13 +68,13 @@ def ExileCard = {
                 permanent,
                 new MagicFromCardListChoice(permanent.getExiledCards(),1),
                 this,
-                "PN returns a card\$ exiled with Bane Alley Broker to its owner's hand."
+                "PN returns a card exiled with Bane Alley Broker to its owner's hand."
             );
-        }       
+        }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processChosenCards(game, {
-                game.doAction(new MagicReclaimExiledCardAction(event.getPermanent(),it));
+                game.doAction(new ReclaimExiledCardAction(event.getPermanent(),it));
             });
         }
     }

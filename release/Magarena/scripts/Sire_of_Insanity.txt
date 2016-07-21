@@ -1,11 +1,11 @@
 name=Sire of Insanity
-image=http://mtgimage.com/card/sire%20of%20insanity.jpg
+image=http://magiccards.info/scans/en/dgm/104.jpg
 value=3.815
 rarity=R
 type=Creature
 subtype=Demon
 cost={4}{B}{R}
 pt=6/4
+ability=At the beginning of each end step, each player discards his or her hand.
 timing=main
-requires_groovy_code
 oracle=At the beginning of each end step, each player discards his or her hand.

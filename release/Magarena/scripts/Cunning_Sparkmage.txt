@@ -1,11 +1,12 @@
 name=Cunning Sparkmage
-image=http://mtgimage.com/card/cunning%20sparkmage.jpg
+image=http://magiccards.info/scans/en/wwk/79.jpg
 value=3.834
 rarity=U
 type=Creature
 subtype=Human,Shaman
 cost={2}{R}
 pt=0/1
-ability=haste;{T}: SN deals 1 damage to target creature or player.
+ability=Haste;\
+        {T}: SN deals 1 damage to target creature or player.
 timing=fmain
-oracle=Haste. {T}: Cunning Sparkmage deals 1 damage to target creature or player.
+oracle=Haste\n{T}: Cunning Sparkmage deals 1 damage to target creature or player.

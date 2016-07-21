@@ -1,11 +1,12 @@
 name=Lifelink
-image=http://mtgimage.com/card/lifelink.jpg
+image=http://magiccards.info/scans/en/m12/24.jpg
 value=2.762
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={W}
-ability=Enchanted creature has lifelink.
+ability=Enchant creature;\
+        Enchanted creature has lifelink.
 timing=aura
 enchant=lifelink,pos creature
-oracle=Enchant creature. Enchanted creature has lifelink.
+oracle=Enchant creature\nEnchanted creature has lifelink.

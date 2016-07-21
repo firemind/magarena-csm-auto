@@ -1,12 +1,13 @@
 name=Krovikan Fetish
-image=http://mtgimage.com/card/krovikan%20fetish.jpg
+image=http://magiccards.info/scans/en/me2/100.jpg
 value=2.231
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{B}
-ability=When SN enters the battlefield, draw a card at the beginning of the next turn's upkeep.;\
+ability=Enchant creature;\
+        When SN enters the battlefield, draw a card at the beginning of the next turn's upkeep.;\
         Enchanted creature gets +1/+1.
-timing=enchantment
+timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. When Krovikan Fetish enters the battlefield, draw a card at the beginning of the next turn's upkeep. Enchanted creature gets +1/+1.
+oracle=Enchant creature\nWhen Krovikan Fetish enters the battlefield, draw a card at the beginning of the next turn's upkeep.\nEnchanted creature gets +1/+1.

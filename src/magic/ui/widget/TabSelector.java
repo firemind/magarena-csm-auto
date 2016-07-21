@@ -1,5 +1,12 @@
 package magic.ui.widget;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -7,20 +14,9 @@ import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
+@SuppressWarnings("serial")
 public class TabSelector extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
-
-    private static final Dimension HORIZONTAL_BUTTON_DIMENSION=new Dimension(28,20);
     private static final Dimension VERTICAL_BUTTON_DIMENSION=new Dimension(24,24);
 
     private final JPanel buttonPanel;
@@ -31,7 +27,7 @@ public class TabSelector extends JPanel implements ActionListener {
     private final Color backgroundColor;
     private boolean isUserClick = false;
 
-    public TabSelector(final ChangeListener listener, final boolean vertical, final Color backgroundColor0) {
+    public TabSelector(final ChangeListener listener, final Color backgroundColor0) {
 
         this.listener=listener;
         this.backgroundColor = (backgroundColor0 == null ? getBackground() : backgroundColor0);
@@ -40,25 +36,18 @@ public class TabSelector extends JPanel implements ActionListener {
         setOpaque(false);
         setLayout(new BorderLayout());
 
-        buttonPanel=new JPanel();
-        buttonPanel.setBackground(backgroundColor0);
+        buttonPanel = new TexturedPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        if (vertical) {
-            buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.Y_AXIS));
-            add(buttonPanel,BorderLayout.NORTH);
-            buttonDimension=VERTICAL_BUTTON_DIMENSION;
-        } else {
-            buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-            add(buttonPanel,BorderLayout.WEST);
-            buttonDimension=HORIZONTAL_BUTTON_DIMENSION;
-        }
+        add(buttonPanel, BorderLayout.NORTH);
+        buttonDimension = VERTICAL_BUTTON_DIMENSION;
 
-        buttons=new ArrayList<JToggleButton>();
+        buttons=new ArrayList<>();
 
     }
 
-    public TabSelector(final ChangeListener listener,final boolean vertical) {
-        this(listener, vertical, null);
+    public TabSelector(final ChangeListener listener) {
+        this(listener, null);
     }
 
     public int getSelectedTab() {
@@ -66,18 +55,19 @@ public class TabSelector extends JPanel implements ActionListener {
         return selectedTab;
     }
 
-    public void setSelectedTab(final int selectedTab) {
-
+    public void setSelectedTab(final int selectedTab, final boolean showFullScreen) {
         this.selectedTab=selectedTab;
-        showTab(buttons.get(selectedTab));
+        showTab(buttons.get(selectedTab), showFullScreen);
+    }
+
+    public void setSelectedTab(final int selectedTab) {
+        setSelectedTab(selectedTab, false);
     }
 
     public void addTab(final ImageIcon icon,final String toolTip) {
 
         final JToggleButton button=new JToggleButton(icon);
-        if (toolTip!=null) {
-            button.setToolTipText(toolTip);
-        }
+        button.setToolTipText(null);
         button.setBackground(this.backgroundColor);
         button.setFocusable(false);
         button.setPreferredSize(buttonDimension);
@@ -91,18 +81,12 @@ public class TabSelector extends JPanel implements ActionListener {
         }
     }
 
-//    public void addTab(final ImageIcon icon) {
-//
-//        addTab(icon,null);
-//    }
-
     private void showTab(final JToggleButton selectedButton) {
         showTab(selectedButton, false);
     }
     private void showTab(final JToggleButton selectedButton, final boolean userClick) {
         this.isUserClick = userClick;
         for (final JToggleButton button : buttons) {
-
             button.setSelected(button==selectedButton);
         }
 
@@ -117,6 +101,10 @@ public class TabSelector extends JPanel implements ActionListener {
 
     public boolean isUserClick() {
         return isUserClick;
+    }
+
+    public void setIsUserClick(final boolean b) {
+        this.isUserClick = b;
     }
 
 }

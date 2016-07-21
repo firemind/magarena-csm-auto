@@ -1,11 +1,12 @@
 name=Illusionary Wall
-image=http://mtgimage.com/card/illusionary%20wall.jpg
+image=http://magiccards.info/scans/en/med/39.jpg
 value=3.750
 rarity=C
 type=Creature
 subtype=Illusion,Wall
 cost={4}{U}
 pt=7/4
-ability=defender;flying;first strike;cumulative upkeep {U}
-timing=main
-oracle=Defender, flying, first strike. Cumulative upkeep {U}
+ability=Defender, flying, first strike;\
+        Cumulative upkeep {U}
+timing=smain
+oracle=Defender, flying, first strike\nCumulative upkeep {U}

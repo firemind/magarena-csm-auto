@@ -1,11 +1,11 @@
 name=Wild Cantor
-image=http://mtgimage.com/card/wild%20cantor.jpg
+image=http://magiccards.info/scans/en/gp/149.jpg
 value=4.180
 rarity=C
 type=Creature
 subtype=Human,Druid
 cost={R/G}
-ability=Sacrifice SN: Add one mana of any color to your mana pool.
 pt=1/1
+ability=Sacrifice SN: Add one mana of any color to your mana pool.
 timing=main
 oracle=Sacrifice Wild Cantor: Add one mana of any color to your mana pool.

@@ -1,11 +1,12 @@
 name=Balshan Collaborator
-image=http://mtgimage.com/card/balshan%20collaborator.jpg
+image=http://magiccards.info/scans/en/tr/25.jpg
 value=3.045
 rarity=U
 type=Creature
 subtype=Bird,Soldier
 cost={3}{U}
 pt=2/2
-ability=flying;{B}: SN gets +1/+1 until end of turn.
+ability=Flying;\
+        {B}: SN gets +1/+1 until end of turn.
 timing=main
-oracle=Flying. {B}: Balshan Collaborator gets +1/+1 until end of turn.
+oracle=Flying\n{B}: Balshan Collaborator gets +1/+1 until end of turn.

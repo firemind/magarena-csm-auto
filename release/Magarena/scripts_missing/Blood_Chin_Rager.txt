@@ -1,0 +1,11 @@
+name=Blood-Chin Rager
+image=http://magiccards.info/scans/en/dtk/89.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Human,Warrior
+cost={1}{B}
+pt=2/2
+ability=Whenever SN attacks, Warrior creatures you control gain menace until end of turn.
+timing=main
+oracle=Whenever Blood-Chin Rager attacks, Warrior creatures you control gain menace until end of turn.

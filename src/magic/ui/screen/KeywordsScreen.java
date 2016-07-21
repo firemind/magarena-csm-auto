@@ -1,32 +1,34 @@
 package magic.ui.screen;
 
-import magic.data.KeywordDefinitions;
-import magic.data.KeywordDefinitions.KeywordDefinition;
-import magic.ui.screen.interfaces.IActionBar;
-import magic.ui.screen.interfaces.IStatusBar;
-import magic.ui.screen.widget.MenuButton;
-import magic.ui.theme.Theme;
-import magic.ui.widget.FontsAndBorders;
-import magic.ui.widget.TexturedPanel;
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.Scrollable;
-import javax.swing.SwingUtilities;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.List;
-import magic.ui.MagicStyle;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.Scrollable;
+import javax.swing.SwingUtilities;
+import magic.data.KeywordDefinitions.KeywordDefinition;
+import magic.data.KeywordDefinitions;
+import magic.translate.UiString;
+import magic.ui.screen.interfaces.IActionBar;
+import magic.ui.screen.interfaces.IStatusBar;
+import magic.ui.screen.widget.MenuButton;
+import magic.ui.theme.Theme;
+import magic.ui.utility.MagicStyle;
+import magic.ui.widget.FontsAndBorders;
+import magic.ui.widget.TexturedPanel;
+import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class KeywordsScreen extends AbstractScreen implements IStatusBar, IActionBar {
+
+    // translatable strings
+    private static final String _S1 = "Keywords Glossary";
+    private static final String _S2 = "Close";
 
     private static JScrollPane scrollPane;
     private static MyScrollablePanel scrollablePanel;
@@ -88,7 +90,7 @@ public class KeywordsScreen extends AbstractScreen implements IStatusBar, IActio
 
         scrollablePanel.removeAll();
 
-        for (final KeywordDefinition keywordDefinition : KeywordDefinitions.getInstance().getKeywordDefinitions()) {
+        for (final KeywordDefinition keywordDefinition : KeywordDefinitions.getKeywordDefinitions()) {
 
             final JPanel keywordPanel = new JPanel(new MigLayout("insets 0, gap 0, flowy"));
             keywordPanel.setOpaque(false);
@@ -98,11 +100,8 @@ public class KeywordsScreen extends AbstractScreen implements IStatusBar, IActio
             nameLabel.setFont(FontsAndBorders.FONT2);
             keywordPanel.add(nameLabel, "w 100%");
 
-            final JTextArea descriptionLabel = new JTextArea(keywordDefinition.description.replace("<br>", " "));
-            descriptionLabel.setBackground(FontsAndBorders.TEXTAREA_TRANSPARENT_COLOR_HACK);
-            descriptionLabel.setBorder(null);
-            descriptionLabel.setLineWrap(true);
-            descriptionLabel.setWrapStyleWord(true);
+            final JLabel descriptionLabel = new JLabel();
+            descriptionLabel.setText("<html>" + keywordDefinition.description.replace("<br>", " ") + "</html>");
             descriptionLabel.setForeground(textColor);
             keywordPanel.add(descriptionLabel, "w 10:100%");
 
@@ -115,75 +114,58 @@ public class KeywordsScreen extends AbstractScreen implements IStatusBar, IActio
 
     protected static final class MyScrollablePanel extends JPanel implements Scrollable {
 
+        @Override
         public Dimension getPreferredScrollableViewportSize() {
             return getPreferredSize();
         }
 
+        @Override
         public int getScrollableUnitIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
             return getFont().getSize();
         }
 
+        @Override
         public int getScrollableBlockIncrement(final Rectangle visibleRect, final int orientation, final int direction) {
             return getFont().getSize();
         }
 
+        @Override
         public boolean getScrollableTracksViewportWidth() {
             return true;
         }
 
         // we don't want to track the height, because we want to scroll vertically.
+        @Override
         public boolean getScrollableTracksViewportHeight() {
             return false;
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see magic.ui.IMagScreenStatusBar#getScreenCaption()
-     */
     @Override
     public String getScreenCaption() {
-        return "Keywords Glossary";
+        return UiString.get(_S1);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see magic.ui.IMagActionBar#getLeftAction()
-     */
     @Override
     public MenuButton getLeftAction() {
-        return MenuButton.getCloseScreenButton("Close");
+        return MenuButton.getCloseScreenButton(UiString.get(_S2));
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getRightAction()
-     */
     @Override
     public MenuButton getRightAction() {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.IMagActionBar#getMiddleActions()
-     */
     @Override
     public List<MenuButton> getMiddleActions() {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.MagScreen#isScreenReadyToClose(magic.ui.MagScreen)
-     */
     @Override
     public boolean isScreenReadyToClose(final AbstractScreen nextScreen) {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see magic.ui.screen.interfaces.IStatusBar#getStatusPanel()
-     */
     @Override
     public JPanel getStatusPanel() {
         return null;

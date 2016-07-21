@@ -1,11 +1,12 @@
 name=Daraja Griffin
-image=http://mtgimage.com/card/daraja%20griffin.jpg
+image=http://magiccards.info/scans/en/6e/15.jpg
 value=3.347
 rarity=U
 type=Creature
 subtype=Griffin
 cost={3}{W}
 pt=2/2
-ability=flying;Sacrifice SN:Destroy target black creature.
+ability=Flying;\
+        Sacrifice SN: Destroy target black creature.
 timing=main
-oracle=Flying. Sacrifice Daraja Griffin: Destroy target black creature.
+oracle=Flying\nSacrifice Daraja Griffin: Destroy target black creature.

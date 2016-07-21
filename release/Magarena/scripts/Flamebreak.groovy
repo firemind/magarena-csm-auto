@@ -5,22 +5,20 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "SN deals 3 damage to each creature without flying and each player. " + 
+                "SN deals 3 damage to each creature without flying and each player. " +
                 "Creatures dealt damage this way can't be regenerated this turn."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets = game.filterPermanents(MagicTargetFilterFactory.CREATURE_WITHOUT_FLYING);
             final MagicSource source = event.getSource();
-            for (final MagicPermanent target : targets) {
-                final MagicDamage damage=new MagicDamage(source,target,3);
+            CREATURE_WITHOUT_FLYING.filter(event) each {
+                final MagicDamage damage=new MagicDamage(source,it,3);
                 damage.setNoRegeneration();
-                game.doAction(new MagicDealDamageAction(damage));
+                game.doAction(new DealDamageAction(damage));
             }
-            for (final MagicPlayer player : game.getAPNAP()) {
-                final MagicDamage damage=new MagicDamage(source,player,3);
-                game.doAction(new MagicDealDamageAction(damage));
+            game.getAPNAP() each {
+                game.doAction(new DealDamageAction(source,it,3));
             }
         }
     }

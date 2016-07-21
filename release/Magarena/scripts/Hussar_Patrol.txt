@@ -1,11 +1,12 @@
 name=Hussar Patrol
-image=http://mtgimage.com/card/hussar%20patrol.jpg
+image=http://magiccards.info/scans/en/ddn/55.jpg
 value=3.219
 rarity=C
 type=Creature
 subtype=Human,Knight
-ability=flash;vigilance
 cost={2}{W}{U}
 pt=2/4
-timing=main
-oracle=Flash. Vigilance
+ability=Flash;\
+        Vigilance
+timing=flash
+oracle=Flash\nVigilance

@@ -1,11 +1,11 @@
 name=Marhault Elsdragon
-image=http://mtgimage.com/card/marhault%20elsdragon.jpg
+image=http://magiccards.info/scans/en/me3/161.jpg
 value=2.455
 rarity=U
 type=Legendary,Creature
 subtype=Elf,Warrior
 cost={3}{R}{R}{G}
 pt=4/6
-ability=rampage 1
+ability=Rampage 1
 timing=main
 oracle=Rampage 1

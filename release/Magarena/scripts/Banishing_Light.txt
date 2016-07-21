@@ -1,10 +1,11 @@
 name=Banishing Light
-image=http://mtgimage.com/card/banishing%20light.jpg
+image=http://magiccards.info/scans/en/c15/61.jpg
+image_updated=2016-02-29
 value=3.829
 rarity=U
 type=Enchantment
 cost={2}{W}
-ability=Cast SN with AI only if an opponent controls a nonland permanent.
-timing=main
-requires_groovy_code
+ability=Cast SN with AI only if an opponent controls a nonland permanent.;\
+        When SN enters the battlefield, exile target nonland permanent an opponent controls until SN leaves the battlefield.
+timing=enchantment
 oracle=When Banishing Light enters the battlefield, exile target nonland permanent an opponent controls until Banishing Light leaves the battlefield.

@@ -1,12 +1,12 @@
 name=Battle Squadron
-image=http://mtgimage.com/card/battle%20squadron.jpg
+image=http://magiccards.info/scans/en/mm/174.jpg
 value=4.044
 rarity=R
 type=Creature
 subtype=Goblin
 cost={3}{R}{R}
 pt=*/*
-ability=flying;\
+ability=Flying;\
         SN's power and toughness are each equal to the number of creatures you control.
 timing=main
-oracle=Flying. Battle Squadron's power and toughness are each equal to the number of creatures you control.
+oracle=Flying\nBattle Squadron's power and toughness are each equal to the number of creatures you control.

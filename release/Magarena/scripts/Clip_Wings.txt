@@ -1,0 +1,10 @@
+name=Clip Wings
+image=http://magiccards.info/scans/en/soi/197.jpg
+value=2.500
+rarity=C
+type=Instant
+cost={1}{G}
+ability=Cast SN with AI only if an opponent controls a creature with flying.
+effect=Each opponent sacrifices a creature with flying.
+timing=removal
+oracle=Each opponent sacrifices a creature with flying.

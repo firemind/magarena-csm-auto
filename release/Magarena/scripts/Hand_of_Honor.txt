@@ -1,11 +1,12 @@
 name=Hand of Honor
-image=http://mtgimage.com/card/hand%20of%20honor.jpg
+image=http://magiccards.info/scans/en/sok/12.jpg
 value=3.918
 rarity=U
 type=Creature
 subtype=Human,Samurai
 cost={W}{W}
 pt=2/2
-ability=protection from black;bushido 1
+ability=Protection from black;\
+        Bushido 1
 timing=main
-oracle=Protection from black. Bushido 1
+oracle=Protection from black\nBushido 1

@@ -1,11 +1,11 @@
 name=Ronin Cavekeeper
-image=http://mtgimage.com/card/ronin%20cavekeeper.jpg
+image=http://magiccards.info/scans/en/sok/111.jpg
 value=2.156
 rarity=C
 type=Creature
 subtype=Human,Samurai
 cost={5}{R}
 pt=4/3
-ability=bushido 2
+ability=Bushido 2
 timing=main
 oracle=Bushido 2

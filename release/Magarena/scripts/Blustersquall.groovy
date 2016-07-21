@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{3}{U}")
+                MagicPayManaCostEvent.Cast(source,"{3}{U}")
             ];
         }
         @Override
@@ -11,17 +11,13 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Tap each creature\$ you don't control."
+                "Tap each creature\$ PN doesn't control."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets = game.filterPermanents(
-                event.getPlayer(),
-                MagicTargetFilterFactory.CREATURE_YOUR_OPPONENT_CONTROLS
-            );
-            for (final MagicPermanent target : targets) {
-                game.doAction(new MagicTapAction(target));
+            CREATURE_YOUR_OPPONENT_CONTROLS.filter(event) each {
+                game.doAction(new TapAction(it));
             }
         }
     }

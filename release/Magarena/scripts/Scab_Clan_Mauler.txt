@@ -1,11 +1,12 @@
 name=Scab-Clan Mauler
-image=http://mtgimage.com/card/scab%2Dclan%20mauler.jpg
+image=http://magiccards.info/scans/en/gp/128.jpg
 value=4.099
 rarity=C
 type=Creature
 subtype=Human,Berserker
 cost={R}{G}
 pt=1/1
-ability=bloodthirst 2;trample
+ability=Bloodthirst 2;\
+        Trample
 timing=main
-oracle=Bloodthirst 2. Trample
+oracle=Bloodthirst 2\nTrample

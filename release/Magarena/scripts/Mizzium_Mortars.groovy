@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{3}{R}{R}{R}")
+                MagicPayManaCostEvent.Cast(source,"{3}{R}{R}{R}")
             ];
         }
         @Override
@@ -11,16 +11,13 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "SN deals 4 damage to each creature\$ you don't control."
+                "SN deals 4 damage to each creature\$ PN doesn't control."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets=
-                game.filterPermanents(event.getPlayer(),MagicTargetFilterFactory.CREATURE_YOUR_OPPONENT_CONTROLS);
-            for (final MagicPermanent target : targets) {
-                final MagicDamage damage=new MagicDamage(event.getSource(),target,4);
-                game.doAction(new MagicDealDamageAction(damage));
+            CREATURE_YOUR_OPPONENT_CONTROLS.filter(event.getPlayer()) each {
+                game.doAction(new DealDamageAction(event.getSource(),it,4));
             }
         }
     }

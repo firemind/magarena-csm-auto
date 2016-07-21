@@ -1,11 +1,11 @@
 name=Selesnya Guildgate
-image=http://mtgimage.com/card/selesnya%20guildgate.jpg
+image=http://magiccards.info/scans/en/c13/321.jpg
 value=3.688
 rarity=C
 type=Land
 subtype=Gate
 mana=g3w3
-ability={T}: Add {G} or {W} to your mana pool.;\
-        SN enters the battlefield tapped.
+ability=SN enters the battlefield tapped.;\
+        {T}: Add {G} or {W} to your mana pool.
 timing=tapland
-oracle=Selesnya Guildgate enters the battlefield tapped. {T}: Add {G} or {W} to your mana pool.
+oracle=Selesnya Guildgate enters the battlefield tapped.\n{T}: Add {G} or {W} to your mana pool.

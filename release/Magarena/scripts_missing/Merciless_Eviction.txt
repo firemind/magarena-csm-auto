@@ -1,9 +1,0 @@
-name=Merciless Eviction
-image=http://mtgimage.com/card/merciless%20eviction.jpg
-value=2.500
-rarity=R
-type=Sorcery
-cost={4}{W}{B}
-effect=Choose one — • Exile all artifacts. • Exile all creatures. • Exile all enchantments. • Exile all planeswalkers.
-timing=main
-oracle=Choose one — • Exile all artifacts. • Exile all creatures. • Exile all enchantments. • Exile all planeswalkers.

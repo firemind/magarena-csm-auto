@@ -1,5 +1,6 @@
 name=Spitting Hydra
-image=http://mtgimage.com/card/spitting%20hydra.jpg
+image=http://magiccards.info/scans/en/tpr/161.jpg
+image_updated=2015-11-14
 value=2.631
 rarity=R
 type=Creature
@@ -9,4 +10,4 @@ pt=0/0
 ability=SN enters the battlefield with four +1/+1 counters on it.;\
         {1}{R}, Remove a +1/+1 counter from SN: SN deals 1 damage to target creature.
 timing=main
-oracle=Spitting Hydra enters the battlefield with four +1/+1 counters on it. {1}{R}, Remove a +1/+1 counter from Spitting Hydra: Spitting Hydra deals 1 damage to target creature.
+oracle=Spitting Hydra enters the battlefield with four +1/+1 counters on it.\n{1}{R}, Remove a +1/+1 counter from Spitting Hydra: Spitting Hydra deals 1 damage to target creature.

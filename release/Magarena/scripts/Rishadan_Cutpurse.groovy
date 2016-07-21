@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             new MagicEvent(
@@ -17,9 +17,9 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isNo()) {
                 game.addEvent(new MagicSacrificePermanentEvent(
-                    event.getSource(), 
+                    event.getSource(),
                     event.getPlayer(),
-                    MagicTargetChoice.SACRIFICE_PERMANENT
+                    SACRIFICE_PERMANENT
                 ));
             }
         }

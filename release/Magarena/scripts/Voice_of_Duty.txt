@@ -1,11 +1,11 @@
 name=Voice of Duty
-image=http://mtgimage.com/card/voice%20of%20duty.jpg
+image=http://magiccards.info/scans/en/ud/23.jpg
 value=3.429
 rarity=U
 type=Creature
 subtype=Angel
 cost={3}{W}
 pt=2/2
-ability=protection from green;flying
+ability=Flying, protection from green
 timing=main
 oracle=Flying, protection from green

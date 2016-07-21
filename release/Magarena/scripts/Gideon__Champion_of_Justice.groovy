@@ -18,12 +18,9 @@ def ST = new MagicStatic(MagicLayer.Type, MagicStatic.UntilEOT) {
     }
 };
 
-def PreventAllDamage = new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.PREVENT_DAMAGE) {
+def PreventAllDamage = new PreventDamageTrigger() {
     @Override
-    public MagicEvent executeTrigger(
-            final MagicGame game,
-            final MagicPermanent permanent,
-            final MagicDamage damage) {
+    public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
         if (permanent == damage.getTarget()) {
             // Replacement effect. Generates no event or action.
             damage.prevent();
@@ -38,7 +35,7 @@ def PreventAllDamage = new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.PREVENT
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                MagicTargetChoice.TARGET_OPPONENT,
+                TARGET_OPPONENT,
                 this,
                 "Put a loyalty counter on SN for each creature target opponent\$ controls."
             );
@@ -46,7 +43,7 @@ def PreventAllDamage = new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.PREVENT
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int amt = event.getPlayer().getOpponent().getNrOfPermanents(MagicType.Creature);
-            game.doAction(new MagicChangeCountersAction(event.getPermanent(),MagicCounterType.Loyalty,amt));
+            game.doAction(new ChangeCountersAction(event.getPermanent(),MagicCounterType.Loyalty,amt));
         }
     },
     new MagicPlaneswalkerActivation(0) {
@@ -70,32 +67,8 @@ def PreventAllDamage = new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.PREVENT
                 }
             };
 
-            game.doAction(new MagicBecomesCreatureAction(event.getPermanent(),PT,AB,ST));
-            game.doAction(new MagicAddTurnTriggerAction(event.getPermanent(), PreventAllDamage));
-        }
-    },
-    new MagicPlaneswalkerActivation(-15) {
-        @Override
-        public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
-            return new MagicEvent(
-                source,
-                this,
-                "Exile all other permanents."
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicTargetFilter<MagicPermanent> AllOtherPermanent = new MagicOtherPermanentTargetFilter(
-                MagicTargetFilterFactory.PERMANENT,
-                event.getPermanent()
-            );
-            final Collection<MagicPermanent> targets = game.filterPermanents(event.getPlayer(), AllOtherPermanent);
-            for (final MagicPermanent target : targets) {
-                game.doAction(new MagicRemoveFromPlayAction(
-                    target,
-                    MagicLocationType.Exile
-                ));
-            }
+            game.doAction(new BecomesCreatureAction(event.getPermanent(),PT,AB,ST));
+            game.doAction(new AddTurnTriggerAction(event.getPermanent(), PreventAllDamage));
         }
     }
 ]

@@ -1,11 +1,12 @@
 name=Dega Disciple
-image=http://mtgimage.com/card/dega%20disciple.jpg
+image=http://magiccards.info/scans/en/ap/4.jpg
 value=3.750
 rarity=C
 type=Creature
 subtype=Human,Wizard
 cost={W}
 pt=1/1
-ability={B},{T}:Target creature gets -2/-0 until end of turn.;{R},{T}:Target creature gets +2/+0 until end of turn.
+ability={B}, {T}: Target creature gets -2/-0 until end of turn.;\
+        {R}, {T}: Target creature gets +2/+0 until end of turn.
 timing=main
-oracle={B}, {T}: Target creature gets -2/-0 until end of turn. {R}, {T}: Target creature gets +2/+0 until end of turn.
+oracle={B}, {T}: Target creature gets -2/-0 until end of turn.\n{R}, {T}: Target creature gets +2/+0 until end of turn.

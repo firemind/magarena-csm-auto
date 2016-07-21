@@ -1,11 +1,11 @@
 name=Scalebane's Elite
-image=http://mtgimage.com/card/scalebane%27s%20elite.jpg
+image=http://magiccards.info/scans/en/vi/135.jpg
 value=3.042
 rarity=U
 type=Creature
 subtype=Human,Soldier
 cost={3}{G}{W}
 pt=4/4
-ability=protection from black
+ability=Protection from black
 timing=main
 oracle=Protection from black

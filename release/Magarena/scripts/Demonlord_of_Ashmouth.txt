@@ -1,12 +1,13 @@
 name=Demonlord of Ashmouth
-image=http://mtgimage.com/card/demonlord%20of%20ashmouth.jpg
+image=http://magiccards.info/scans/en/avr/96.jpg
 value=3.815
 rarity=R
 type=Creature
 subtype=Demon
 cost={2}{B}{B}
 pt=5/4
-ability=flying;undying
+ability=Flying;\
+        When SN enters the battlefield, you may sacrifice another creature. If you don't, exile SN.;\
+        Undying
 timing=main
-requires_groovy_code
-oracle=Flying. When Demonlord of Ashmouth enters the battlefield, exile it unless you sacrifice another creature. Undying
+oracle=Flying\nWhen Demonlord of Ashmouth enters the battlefield, exile it unless you sacrifice another creature.\nUndying

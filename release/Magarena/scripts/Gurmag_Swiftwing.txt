@@ -1,11 +1,11 @@
 name=Gurmag Swiftwing
-image=http://mtgimage.com/card/gurmag%20swiftwing.jpg
+image=http://magiccards.info/scans/en/ktk/74.jpg
 value=4.000
 rarity=U
 type=Creature
 subtype=Bat
 cost={1}{B}
 pt=1/2
-ability=Flying;first strike;haste
+ability=Flying, first strike, haste
 timing=main
 oracle=Flying, first strike, haste

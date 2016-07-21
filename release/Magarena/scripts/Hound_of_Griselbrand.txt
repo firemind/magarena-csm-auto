@@ -1,11 +1,12 @@
 name=Hound of Griselbrand
-image=http://mtgimage.com/card/hound%20of%20griselbrand.jpg
+image=http://magiccards.info/scans/en/avr/141.jpg
 value=3.891
 rarity=R
 type=Creature
 subtype=Elemental,Hound
 cost={2}{R}{R}
 pt=2/2
-ability=double strike;undying
+ability=Double strike;\
+        Undying
 timing=main
-oracle=Double strike. Undying
+oracle=Double strike\nUndying

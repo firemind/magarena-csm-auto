@@ -1,11 +1,12 @@
 name=Blood Ogre
-image=http://mtgimage.com/card/blood%20ogre.jpg
+image=http://magiccards.info/scans/en/mm2/106.jpg
 value=3.700
 rarity=C
 type=Creature
 subtype=Ogre,Warrior
 cost={2}{R}
 pt=2/2
-ability=bloodthirst 1;first strike
+ability=Bloodthirst 1;\
+        First strike
 timing=main
-oracle=Bloodthirst 1. First strike
+oracle=Bloodthirst 1\nFirst strike

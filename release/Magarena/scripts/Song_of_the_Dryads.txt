@@ -1,0 +1,12 @@
+name=Song of the Dryads
+image=http://magiccards.info/scans/en/c14/47.jpg
+value=2.500
+rarity=R
+type=Enchantment
+subtype=Aura
+cost={2}{G}
+ability=Enchant permanent
+timing=aura
+enchant=default,permanent
+requires_groovy_code
+oracle=Enchant permanent\nEnchanted permanent is a colorless Forest land.

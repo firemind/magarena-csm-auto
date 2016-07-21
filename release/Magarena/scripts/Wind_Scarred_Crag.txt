@@ -1,5 +1,6 @@
 name=Wind-Scarred Crag
-image=http://mtgimage.com/card/wind-scarred%20crag.jpg
+image=http://magiccards.info/scans/en/c15/321.jpg
+image_updated=2016-02-29
 value=3.000
 rarity=C
 type=Land
@@ -8,4 +9,4 @@ ability=SN enters the battlefield tapped.;\
         When SN enters the battlefield, you gain 1 life.;\
         {T}: Add {R} or {W} to your mana pool.
 timing=tapland
-oracle=Wind-Scarred Crag enters the battlefield tapped. When Wind-Scarred Crag enters the battlefield, you gain 1 life. {T}: Add {R} or {W} to your mana pool.
+oracle=Wind-Scarred Crag enters the battlefield tapped.\nWhen Wind-Scarred Crag enters the battlefield, you gain 1 life.\n{T}: Add {R} or {W} to your mana pool.

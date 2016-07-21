@@ -1,11 +1,12 @@
 name=Faerie Invaders
-image=http://mtgimage.com/card/faerie%20invaders.jpg
+image=http://magiccards.info/scans/en/ddn/57.jpg
 value=2.962
 rarity=C
 type=Creature
 subtype=Faerie,Rogue
 cost={4}{U}
 pt=3/3
-ability=flash;flying
+ability=Flash;\
+        Flying
 timing=flash
-oracle=Flash. Flying
+oracle=Flash\nFlying

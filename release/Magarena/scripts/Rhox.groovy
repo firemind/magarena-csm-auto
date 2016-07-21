@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfBecomesBlockedTrigger() {
+    new ThisBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent attacker) {
             return new MagicEvent(
@@ -19,8 +19,8 @@
                     game.getDefendingPlayer(),
                     permanent.getPower()
                 );
-                game.doAction(new MagicDealDamageAction(damage));
-                game.doAction(MagicChangeStateAction.Set(
+                game.doAction(new DealDamageAction(damage));
+                game.doAction(ChangeStateAction.Set(
                     permanent,
                     MagicPermanentState.NoCombatDamage
                 ));

@@ -1,6 +1,7 @@
 name=Biomantic Mastery
-image=http://mtgimage.com/card/biomantic%20mastery.jpg
-value=2.500
+image=http://magiccards.info/scans/en/c15/239.jpg
+image_updated=2016-02-29
+value=3.404
 rarity=R
 type=Sorcery
 cost={4}{G/U}{G/U}{G/U}

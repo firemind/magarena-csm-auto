@@ -1,11 +1,12 @@
 name=Thunderous Might
-image=http://mtgimage.com/card/thunderous%20might.jpg
+image=http://magiccards.info/scans/en/bng/114.jpg
 value=3.660
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={1}{R}
+ability=Enchant creature;\
+        Whenever enchanted creature attacks, enchanted creature gets +X/+0 until end of turn, where X is your devotion to red.
 enchant=pump,pos creature
 timing=main
-requires_groovy_code
-oracle=Enchant creature. Whenever enchanted creature attacks, it gets +X/+0 until end of turn, where X is your devotion to red.
+oracle=Enchant creature\nWhenever enchanted creature attacks, it gets +X/+0 until end of turn, where X is your devotion to red.

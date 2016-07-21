@@ -1,0 +1,13 @@
+name=Angel of Renewal
+image=http://magiccards.info/scans/en/bfz/18.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=U
+type=Creature
+subtype=Angel,Ally
+cost={5}{W}
+pt=4/4
+ability=Flying;\
+        When SN enters the battlefield, you gain 1 life for each creature you control.
+timing=main
+oracle=Flying\nWhen Angel of Renewal enters the battlefield, you gain 1 life for each creature you control.

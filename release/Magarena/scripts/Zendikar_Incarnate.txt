@@ -1,0 +1,12 @@
+name=Zendikar Incarnate
+image=http://magiccards.info/scans/en/ori/219.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=U
+type=Creature
+subtype=Elemental
+cost={2}{R}{G}
+pt=*/4
+ability=SN's power is equal to the number of lands you control.
+timing=main
+oracle=Zendikar Incarnate's power is equal to the number of lands you control.

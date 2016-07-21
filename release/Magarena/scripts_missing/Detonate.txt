@@ -1,6 +1,7 @@
 name=Detonate
-image=http://mtgimage.com/card/detonate.jpg
-value=2.500
+image=http://magiccards.info/scans/en/mi/88.jpg
+image_updated=2015-11-13
+value=3.688
 rarity=U
 type=Sorcery
 cost={X}{R}

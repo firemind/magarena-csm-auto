@@ -1,11 +1,11 @@
 name=Lightning Hounds
-image=http://mtgimage.com/card/lightning%20hounds.jpg
+image=http://magiccards.info/scans/en/mm/201.jpg
 value=3.160
 rarity=C
 type=Creature
 subtype=Hound
 cost={2}{R}{R}
 pt=3/2
-ability=first strike
+ability=First strike
 timing=main
 oracle=First strike

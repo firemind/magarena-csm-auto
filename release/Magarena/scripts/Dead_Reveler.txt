@@ -1,11 +1,11 @@
 name=Dead Reveler
-image=http://mtgimage.com/card/dead%20reveler.jpg
+image=http://magiccards.info/scans/en/rtr/62.jpg
 value=2.755
 rarity=C
 type=Creature
 subtype=Zombie
 cost={2}{B}
 pt=2/3
-ability=unleash
+ability=Unleash
 timing=main
 oracle=Unleash

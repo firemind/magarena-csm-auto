@@ -1,11 +1,11 @@
 name=Silver Erne
-image=http://mtgimage.com/card/silver%20erne.jpg
+image=http://magiccards.info/scans/en/ia/98.jpg
 value=2.580
 rarity=U
 type=Creature
 subtype=Bird
 cost={3}{U}
 pt=2/2
-ability=flying;trample
+ability=Flying, trample
 timing=main
 oracle=Flying, trample

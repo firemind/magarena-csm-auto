@@ -1,11 +1,12 @@
 name=Sigiled Paladin
-image=http://mtgimage.com/card/sigiled%20paladin.jpg
+image=http://magiccards.info/scans/en/ala/27.jpg
 value=3.722
 rarity=U
 type=Creature
 subtype=Human,Knight
 cost={W}{W}
 pt=2/2
-ability=first strike;exalted
-timing=fmain
-oracle=First strike. Exalted
+ability=First strike;\
+        Exalted
+timing=main
+oracle=First strike\nExalted

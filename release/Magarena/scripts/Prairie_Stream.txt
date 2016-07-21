@@ -1,0 +1,11 @@
+name=Prairie Stream
+image=http://magiccards.info/scans/en/bfz/241.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=M
+type=Land
+subtype=Plains,Island
+mana=w3u3
+ability=SN enters the battlefield tapped unless you control two or more basic lands.
+timing=land
+oracle=Prairie Stream enters the battlefield tapped unless you control two or more basic lands.

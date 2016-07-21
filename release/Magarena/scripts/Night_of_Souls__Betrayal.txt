@@ -1,10 +1,10 @@
 name=Night of Souls' Betrayal
-image=http://mtgimage.com/card/night%20of%20souls%27%20betrayal.jpg
+image=http://magiccards.info/scans/en/chk/133.jpg
 value=3.911
 rarity=R
 type=Legendary,Enchantment
 cost={2}{B}{B}
-ability=all creatures get -1/-1
+ability=All creatures get -1/-1.
 static=all
 timing=enchantment
 oracle=All creatures get -1/-1.

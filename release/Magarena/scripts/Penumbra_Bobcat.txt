@@ -1,11 +1,11 @@
 name=Penumbra Bobcat
-image=http://mtgimage.com/card/penumbra%20bobcat.jpg
+image=http://magiccards.info/scans/en/ap/82.jpg
 value=3.596
 rarity=C
 type=Creature
 subtype=Cat
 cost={2}{G}
-ability=When SN dies, put a 2/1 black Cat creature token onto the battlefield.
 pt=2/1
+ability=When SN dies, put a 2/1 black Cat creature token onto the battlefield.
 timing=main
 oracle=When Penumbra Bobcat dies, put a 2/1 black Cat creature token onto the battlefield.

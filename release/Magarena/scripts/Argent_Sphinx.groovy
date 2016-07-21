@@ -3,7 +3,7 @@
         [
             MagicCondition.METALCRAFT_CONDITION
         ],
-        new MagicActivationHints(MagicTiming.Removal,1),
+        new MagicActivationHints(MagicTiming.Removal),
         "Exile"
     ) {
         @Override
@@ -19,12 +19,12 @@
                 source,
                 this,
                 "Exile SN. Return it to the battlefield " +
-                "under your control at the beginning of the next end step."
+                "under PN's control at the beginning of the next end step."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicExileUntilEndOfTurnAction(event.getPermanent()));
+            game.doAction(new ExileUntilEndOfTurnAction(event.getPermanent()));
         }
     }
 ]

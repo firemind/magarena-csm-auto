@@ -1,11 +1,12 @@
 name=Mothrider Samurai
-image=http://mtgimage.com/card/mothrider%20samurai.jpg
+image=http://magiccards.info/scans/en/chk/34.jpg
 value=2.906
 rarity=C
 type=Creature
 subtype=Human,Samurai
 cost={3}{W}
 pt=2/2
-ability=flying;bushido 1
+ability=Flying;\
+        Bushido 1
 timing=main
-oracle=Flying. Bushido 1
+oracle=Flying\nBushido 1

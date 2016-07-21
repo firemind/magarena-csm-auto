@@ -1,11 +1,11 @@
 name=Apprentice Wizard
-image=http://mtgimage.com/card/apprentice%20wizard.jpg
-value=2.500
-rarity=R
+image=http://magiccards.info/scans/en/med/30.jpg
+value=3.940
+rarity=C
 type=Creature
 subtype=Human,Wizard
 cost={1}{U}{U}
 pt=0/1
-ability={U}, {T}: Add {3} to your mana pool.
+ability={U}, {T}: Add {C}{C}{C} to your mana pool.
 timing=main
-oracle={U}, {T}: Add {3} to your mana pool.
+oracle={U}, {T}: Add {C}{C}{C} to your mana pool.

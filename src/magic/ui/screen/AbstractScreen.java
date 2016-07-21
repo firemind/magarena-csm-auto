@@ -3,15 +3,10 @@ package magic.ui.screen;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import magic.data.MagicIcon;
-import magic.ui.IconImages;
-import magic.data.URLUtils;
+import magic.ui.URLUtils;
 import magic.ui.MagicFrame;
 import magic.ui.ScreenController;
 import magic.ui.screen.interfaces.IActionBar;
@@ -20,6 +15,7 @@ import magic.ui.screen.interfaces.IStatusBar;
 import magic.ui.screen.interfaces.IWikiPage;
 import magic.ui.screen.widget.ActionBar;
 import magic.ui.screen.widget.StatusBar;
+import magic.utility.WikiPage;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -36,7 +32,6 @@ public abstract class AbstractScreen extends JPanel {
     // CTR
     public AbstractScreen() {
         this.frame = ScreenController.getMainFrame();
-        setBusy(true);
         setOpaque(false);
         setEscapeKeyInputMap();
         setF1KeyInputMap();
@@ -51,7 +46,6 @@ public abstract class AbstractScreen extends JPanel {
         doMigLayout();
         revalidate();
         repaint();
-        setBusy(false);
     }
 
     private void doMigLayout() {
@@ -64,14 +58,14 @@ public abstract class AbstractScreen extends JPanel {
 
     private void layoutMagStatusBar() {
         if (hasStatusBar()) {
-            add(new StatusBar(this), "w 100%");
+            add(new StatusBar(this), "w 100%, h 50!");
         }
     }
 
     private void layoutMagActionBar() {
         if (hasActionBar()) {
             this.actionbar = new ActionBar((IActionBar)this);
-            add(actionbar, "w 100%");
+            add(actionbar, "w 100%, h 50!");
         }
     }
 
@@ -97,7 +91,7 @@ public abstract class AbstractScreen extends JPanel {
 
     public void showWikiHelpPage() {
         if (this.hasWikiPage()) {
-            URLUtils.openURL(URLUtils.URL_WIKI + ((IWikiPage)this).getWikiPageName());
+            URLUtils.openURL(WikiPage.getUrl(((IWikiPage)this).getWikiPageName()));
         }
     }
 
@@ -110,7 +104,7 @@ public abstract class AbstractScreen extends JPanel {
     }
 
     public boolean hasOptionsMenu() {
-       return this instanceof IOptionsMenu;
+        return this instanceof IOptionsMenu;
     };
 
     private boolean hasActionBar() {
@@ -132,23 +126,6 @@ public abstract class AbstractScreen extends JPanel {
 
     protected MagicFrame getFrame() {
         return frame;
-    }
-
-    public void setBusy(final boolean isBusy) {
-        if (isBusy) {
-          final ImageIcon ii = IconImages.getIcon(MagicIcon.BUSY);
-          final JPanel pnl = new JPanel(new MigLayout("insets 0, gap 0"));
-          pnl.setOpaque(false);
-          final JLabel lbl = new JLabel(ii);
-          lbl.setHorizontalAlignment(SwingConstants.CENTER);
-          lbl.setOpaque(false);
-          pnl.add(lbl, "w 100%, h 100%");
-          frame.setGlassPane(pnl);
-          pnl.setVisible(true);
-      } else {
-          frame.getGlassPane().setVisible(false);
-      }
-
     }
 
 }

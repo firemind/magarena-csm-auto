@@ -1,11 +1,11 @@
 name=Quagmire Druid
-image=http://mtgimage.com/card/quagmire%20druid.jpg
+image=http://magiccards.info/scans/en/c13/90.jpg
 value=3.000
 rarity=C
 type=Creature
 subtype=Zombie,Druid
 cost={2}{B}
 pt=2/2
-ability={G},{T},Sacrifice a creature:Destroy target enchantment.
+ability={G}, {T}, Sacrifice a creature: Destroy target enchantment.
 timing=main
 oracle={G}, {T}, Sacrifice a creature: Destroy target enchantment.

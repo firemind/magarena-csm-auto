@@ -1,11 +1,11 @@
 name=Rootwater Diver
-image=http://mtgimage.com/card/rootwater%20diver.jpg
+image=http://magiccards.info/scans/en/tp/81.jpg
 value=3.833
 rarity=U
 type=Creature
 subtype=Merfolk
 cost={U}
 pt=1/1
-ability={T},Sacrifice SN:Return target artifact card from your graveyard to your hand.
+ability={T}, Sacrifice SN: Return target artifact card from your graveyard to your hand.
 timing=main
 oracle={T}, Sacrifice Rootwater Diver: Return target artifact card from your graveyard to your hand.

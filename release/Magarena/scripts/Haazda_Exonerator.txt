@@ -1,11 +1,11 @@
 name=Haazda Exonerator
-image=http://mtgimage.com/card/haazda%20exonerator.jpg
+image=http://magiccards.info/scans/en/di/11.jpg
 value=2.141
 rarity=C
 type=Creature
 subtype=Human,Cleric
 cost={W}
 pt=1/1
-ability={T},Sacrifice SN:Destroy target Aura.
+ability={T}, Sacrifice SN: Destroy target Aura.
 timing=main
 oracle={T}, Sacrifice Haazda Exonerator: Destroy target Aura.

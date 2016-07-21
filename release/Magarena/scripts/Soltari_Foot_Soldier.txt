@@ -1,11 +1,11 @@
 name=Soltari Foot Soldier
-image=http://mtgimage.com/card/soltari%20foot%20soldier.jpg
+image=http://magiccards.info/scans/en/br/74.jpg
 value=4.043
 rarity=C
 type=Creature
 subtype=Soltari,Soldier
 cost={W}
 pt=1/1
-ability=shadow
+ability=Shadow
 timing=main
 oracle=Shadow

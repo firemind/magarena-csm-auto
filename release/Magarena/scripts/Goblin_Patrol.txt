@@ -1,11 +1,11 @@
 name=Goblin Patrol
-image=http://mtgimage.com/card/goblin%20patrol.jpg
+image=http://magiccards.info/scans/en/vma/169.jpg
 value=3.424
 rarity=C
 type=Creature
 subtype=Goblin
 cost={R}
 pt=2/1
-ability=echo {R}
+ability=Echo {R}
 timing=main
 oracle=Echo {R}

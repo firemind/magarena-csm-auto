@@ -1,5 +1,5 @@
 [
-   new MagicPermanentActivation(
+    new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Removal),
         "-Life"
     ) {
@@ -21,8 +21,8 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicPlayer player : game.getAPNAP()) {
-                game.doAction(new MagicChangeLifeAction(
-                    player, 
+                game.doAction(new ChangeLifeAction(
+                    player,
                     -1 * player.getNrOfPermanents(MagicSubType.Swamp)
                 ));
             }

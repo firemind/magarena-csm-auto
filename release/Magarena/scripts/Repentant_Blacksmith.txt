@@ -1,11 +1,11 @@
 name=Repentant Blacksmith
-image=http://mtgimage.com/card/repentant%20blacksmith.jpg
+image=http://magiccards.info/scans/en/5e/330.jpg
 value=2.982
 rarity=C
 type=Creature
 subtype=Human
 cost={1}{W}
 pt=1/2
-ability=protection from red
+ability=Protection from red
 timing=main
 oracle=Protection from red

@@ -1,10 +1,10 @@
 name=Glissa's Scorn
-image=http://mtgimage.com/card/glissa%27s%20scorn.jpg
+image=http://magiccards.info/scans/en/nph/110.jpg
 value=3.301
 removal=1
 rarity=C
 type=Instant
 cost={1}{G}
+effect=Destroy target artifact.~Its controller loses 1 life.
 timing=removal
-requires_groovy_code
 oracle=Destroy target artifact. Its controller loses 1 life.

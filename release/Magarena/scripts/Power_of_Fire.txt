@@ -1,11 +1,12 @@
 name=Power of Fire
-image=http://mtgimage.com/card/power%20of%20fire.jpg
+image=http://magiccards.info/scans/en/cns/150.jpg
 value=2.500
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{R}
-ability=Enchanted creature has "{T}: SN deals 1 damage to target creature or player."
+ability=Enchant creature;\
+        Enchanted creature has "{T}: This creature deals 1 damage to target creature or player."
 enchant=pump,pos creature
 timing=aura
-oracle=Enchant creature. Enchanted creature has "{T}: This creature deals 1 damage to target creature or player."
+oracle=Enchant creature\nEnchanted creature has "{T}: This creature deals 1 damage to target creature or player."

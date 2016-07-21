@@ -1,5 +1,5 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             final MagicPermanent enchanted = permanent.getEnchantedPermanent();
@@ -19,7 +19,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isNo()) {
-                game.doAction(new MagicChangeLifeAction(event.getPlayer(),-2));
+                game.doAction(new ChangeLifeAction(event.getPlayer(),-2));
             }
         }
     }

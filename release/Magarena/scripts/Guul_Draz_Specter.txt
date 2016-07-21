@@ -1,13 +1,13 @@
 name=Guul Draz Specter
-image=http://mtgimage.com/card/guul%20draz%20specter.jpg
+image=http://magiccards.info/scans/en/zen/92.jpg
 value=3.867
 rarity=R
 type=Creature
 subtype=Specter
 cost={2}{B}{B}
 pt=2/2
-ability=flying;\
+ability=Flying;\
         SN gets +3/+3 as long as an opponent has no cards in hand.;\
         Whenever SN deals combat damage to a player, that player discards a card.
 timing=main
-oracle=Flying. Guul Draz Specter gets +3/+3 as long as an opponent has no cards in hand. Whenever Guul Draz Specter deals combat damage to a player, that player discards a card.
+oracle=Flying\nGuul Draz Specter gets +3/+3 as long as an opponent has no cards in hand.\nWhenever Guul Draz Specter deals combat damage to a player, that player discards a card.

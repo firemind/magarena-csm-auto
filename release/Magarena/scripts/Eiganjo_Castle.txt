@@ -1,10 +1,10 @@
 name=Eiganjo Castle
-image=http://mtgimage.com/card/eiganjo%20castle.jpg
+image=http://magiccards.info/scans/en/chk/275.jpg
 value=4.047
 rarity=R
 type=Legendary,Land
-mana=w2
+mana=w3
 ability={T}: Add {W} to your mana pool.;\
-        {W},{T}:Prevent the next 2 damage that would be dealt to target legendary creature this turn.
+        {W}, {T}: Prevent the next 2 damage that would be dealt to target legendary creature this turn.
 timing=land
-oracle={T}: Add {W} to your mana pool. {W}, {T}: Prevent the next 2 damage that would be dealt to target legendary creature this turn.
+oracle={T}: Add {W} to your mana pool.\n{W}, {T}: Prevent the next 2 damage that would be dealt to target legendary creature this turn.

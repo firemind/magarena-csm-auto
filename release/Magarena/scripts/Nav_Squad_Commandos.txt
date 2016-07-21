@@ -1,11 +1,11 @@
 name=Nav Squad Commandos
-image=http://mtgimage.com/card/nav%20squad%20commandos.jpg
+image=http://magiccards.info/scans/en/gtc/22.jpg
 value=2.120
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={4}{W}
 pt=3/5
+ability=Whenever SN and at least two other creatures attack, SN gets +1/+1 until end of turn.~Untap it.
 timing=main
-requires_groovy_code
 oracle=Battalion — Whenever Nav Squad Commandos and at least two other creatures attack, Nav Squad Commandos gets +1/+1 until end of turn. Untap it.

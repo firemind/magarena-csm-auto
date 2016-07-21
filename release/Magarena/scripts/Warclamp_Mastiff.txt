@@ -1,11 +1,11 @@
 name=Warclamp Mastiff
-image=http://mtgimage.com/card/warclamp%20mastiff.jpg
+image=http://magiccards.info/scans/en/m13/40.jpg
 value=2.943
 rarity=C
 type=Creature
 subtype=Hound
 cost={W}
 pt=1/1
-ability=first strike
+ability=First strike
 timing=main
 oracle=First strike

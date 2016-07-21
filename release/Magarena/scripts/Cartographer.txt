@@ -1,11 +1,11 @@
 name=Cartographer
-image=http://mtgimage.com/card/cartographer.jpg
+image=http://magiccards.info/scans/en/od/232.jpg
 value=3.456
 rarity=C
 type=Creature
 subtype=Human
 cost={2}{G}
 pt=2/2
-ability=When SN enters the battlefield, return target land card from your graveyard to your hand.
+ability=When SN enters the battlefield, you may return target land card from your graveyard to your hand.
 timing=main
 oracle=When Cartographer enters the battlefield, you may return target land card from your graveyard to your hand.

@@ -1,8 +1,8 @@
 [
-    new MagicWhenOtherSpellIsCastTrigger() {
+    new OtherSpellIsCastTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicCardOnStack cardOnStack) {
-            return cardOnStack.isEnemy(permanent) ? 
+            return cardOnStack.isEnemy(permanent) ?
                 new MagicEvent(
                     permanent,
                     cardOnStack.getController(),
@@ -19,7 +19,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                game.doAction(new MagicChangeLifeAction(event.getPlayer(),-5));
+                game.doAction(new ChangeLifeAction(event.getPlayer(),-5));
             } else {
                 game.addEvent(new MagicDiscardEvent(event.getSource(), event.getPlayer()));
             }

@@ -1,10 +1,10 @@
 name=Serra's Blessing
-image=http://mtgimage.com/card/serra%27s%20blessing.jpg
+image=http://magiccards.info/scans/en/9e/44.jpg
 value=4.377
 rarity=U
 type=Enchantment
 cost={1}{W}
-ability=creatures you control have vigilance
+ability=Creatures you control have vigilance.
 static=player
 timing=enchantment
 oracle=Creatures you control have vigilance.

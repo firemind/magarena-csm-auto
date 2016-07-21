@@ -1,11 +1,11 @@
 name=Linvala, Keeper of Silence
-image=http://mtgimage.com/card/linvala%2C%20keeper%20of%20silence.jpg
+image=http://magiccards.info/scans/en/roe/33.jpg
 value=4.396
 rarity=M
 type=Legendary,Creature
 subtype=Angel
 cost={2}{W}{W}
 pt=3/4
-ability=flying;creatures your opponents control can't activate abilities
+ability=Flying;creatures your opponents control can't activate abilities
 timing=main
-oracle=Flying. Activated abilities of creatures your opponents control can't be activated.
+oracle=Flying\nActivated abilities of creatures your opponents control can't be activated.

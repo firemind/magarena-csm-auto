@@ -1,13 +1,13 @@
 name=Phantom Flock
-image=http://mtgimage.com/card/phantom%20flock.jpg
+image=http://magiccards.info/scans/en/ju/16.jpg
 value=2.981
 rarity=U
 type=Creature
 subtype=Bird,Soldier,Spirit
 cost={3}{W}{W}
 pt=0/0
-ability=flying;\
+ability=Flying;\
         SN enters the battlefield with three +1/+1 counters on it.
 timing=main
 requires_groovy_code=Phantom Nomad
-oracle=Flying. Phantom Flock enters the battlefield with three +1/+1 counters on it. If damage would be dealt to Phantom Flock, prevent that damage. Remove a +1/+1 counter from Phantom Flock.
+oracle=Flying\nPhantom Flock enters the battlefield with three +1/+1 counters on it.\nIf damage would be dealt to Phantom Flock, prevent that damage. Remove a +1/+1 counter from Phantom Flock.

@@ -1,11 +1,12 @@
 name=Arashi, the Sky Asunder
-image=http://mtgimage.com/card/arashi%2C%20the%20sky%20asunder.jpg
+image=http://magiccards.info/scans/en/sok/121.jpg
 value=3.931
 rarity=R
 type=Legendary,Creature
 subtype=Spirit
 cost={3}{G}{G}
 pt=5/5
+ability={X}{G}, {T}: SN deals X damage to target creature with flying.;\
+        {X}{G}{G}, Discard SN: SN deals X damage to each creature with flying.
 timing=main
-requires_groovy_code
-oracle={X}{G}, {T}: Arashi, the Sky Asunder deals X damage to target creature with flying. Channel — {X}{G}{G}, Discard Arashi: Arashi deals X damage to each creature with flying.
+oracle={X}{G}, {T}: Arashi, the Sky Asunder deals X damage to target creature with flying.\nChannel — {X}{G}{G}, Discard Arashi: Arashi deals X damage to each creature with flying.

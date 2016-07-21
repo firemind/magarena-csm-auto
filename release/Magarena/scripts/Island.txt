@@ -1,9 +1,10 @@
 name=Island
-image=http://mtgimage.com/set/ZEN/island1.jpg
+image=http://magiccards.info/scans/en/bfz/259b.jpg
+image_updated=2016-02-29
 value=3.500
-rarity=L
+rarity=B
 type=Basic,Land
 subtype=Island
 mana=u4
 timing=land
-oracle=U
+oracle=NONE

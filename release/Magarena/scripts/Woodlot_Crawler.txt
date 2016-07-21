@@ -1,11 +1,12 @@
 name=Woodlot Crawler
-image=http://mtgimage.com/card/woodlot%20crawler.jpg
+image=http://magiccards.info/scans/en/dgm/118.jpg
 value=3.761
 rarity=U
 type=Creature
 subtype=Insect
 cost={U}{B}
 pt=2/1
-ability=forestwalk;protection from green
+ability=Forestwalk;\
+        Protection from green
 timing=main
-oracle=Forestwalk, protection from green
+oracle=Forestwalk\nProtection from green

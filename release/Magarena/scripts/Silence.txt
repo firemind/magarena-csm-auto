@@ -1,9 +1,9 @@
 name=Silence
-image=http://mtgimage.com/card/silence.jpg
+image=http://magiccards.info/scans/en/m14/35.jpg
 value=4.250
 rarity=R
 type=Instant
 cost={W}
+effect=Your opponents can't cast spells this turn.
 timing=fmain
-requires_groovy_code
 oracle=Your opponents can't cast spells this turn.

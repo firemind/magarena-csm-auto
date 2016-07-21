@@ -1,5 +1,5 @@
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             final MagicPermanent enchanted = permanent.getEnchantedPermanent();
@@ -17,7 +17,7 @@
             final MagicPermanent permanent=event.getPermanent();
             final MagicPermanent enchanted=permanent.getEnchantedPermanent();
             if (enchanted.isValid()) {
-                game.doAction(new MagicChangeCountersAction(enchanted,MagicCounterType.MinusOne,1));
+                game.doAction(new ChangeCountersAction(enchanted,MagicCounterType.MinusOne,1));
             }
         }
     }

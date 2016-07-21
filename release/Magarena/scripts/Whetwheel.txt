@@ -1,10 +1,10 @@
 name=Whetwheel
-image=http://mtgimage.com/card/whetwheel.jpg
+image=http://magiccards.info/scans/en/fut/168.jpg
 value=3.048
 rarity=R
 type=Artifact
 cost={4}
-ability=Morph {3}
+ability={X}{X}, {T}: Target player puts the top X cards of his or her library into his or her graveyard.;\
+        Morph {3}
 timing=main
-requires_groovy_code
-oracle={X}{X}, {T}: Target player puts the top X cards of his or her library into his or her graveyard. Morph {3}
+oracle={X}{X}, {T}: Target player puts the top X cards of his or her library into his or her graveyard.\nMorph {3}

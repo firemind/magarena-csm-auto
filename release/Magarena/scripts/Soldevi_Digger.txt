@@ -1,7 +1,7 @@
 name=Soldevi Digger
-image=http://mtgimage.com/card/soldevi%20digger.jpg
-value=2.500
-rarity=R
+image=http://magiccards.info/scans/en/me2/221.jpg
+value=3.339
+rarity=U
 type=Artifact
 cost={2}
 timing=artifact

@@ -1,11 +1,11 @@
 name=Quirion Trailblazer
-image=http://mtgimage.com/card/quirion%20trailblazer.jpg
+image=http://magiccards.info/scans/en/in/205.jpg
 value=2.411
 rarity=C
 type=Creature
 subtype=Elf,Scout
 cost={3}{G}
 pt=1/2
-ability=When SN enters the battlefield, you may search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.
+ability=When SN enters the battlefield, you may search your library for a basic land card and put that card onto the battlefield tapped. If you do, shuffle your library.
 timing=main
 oracle=When Quirion Trailblazer enters the battlefield, you may search your library for a basic land card and put that card onto the battlefield tapped. If you do, shuffle your library.

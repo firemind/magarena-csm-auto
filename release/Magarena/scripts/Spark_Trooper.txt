@@ -1,14 +1,12 @@
 name=Spark Trooper
-image=http://mtgimage.com/card/spark%20trooper.jpg
+image=http://magiccards.info/scans/en/gtc/199.jpg
 value=3.780
 rarity=R
 type=Creature
 subtype=Elemental,Soldier
 cost={1}{R}{R}{W}
 pt=6/1
-ability=trample;\
-        haste;\
-        lifelink;\
+ability=Trample, lifelink, haste;\
         At the beginning of the end step, sacrifice SN.
 timing=fmain
-oracle=Trample, lifelink, haste. At the beginning of the end step, sacrifice Spark Trooper.
+oracle=Trample, lifelink, haste\nAt the beginning of the end step, sacrifice Spark Trooper.

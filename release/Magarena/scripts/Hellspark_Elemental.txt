@@ -1,13 +1,13 @@
 name=Hellspark Elemental
-image=http://mtgimage.com/card/hellspark%20elemental.jpg
+image=http://magiccards.info/scans/en/ddk/46.jpg
 value=3.519
 rarity=U
 type=Creature
 subtype=Elemental
 cost={1}{R}
 pt=3/1
-ability=trample;haste;\
+ability=Trample, haste;\
         At the beginning of the end step, sacrifice SN.;\
         Unearth {1}{R}
 timing=fmain
-oracle=Trample, haste. At the beginning of the end step, sacrifice Hellspark Elemental. Unearth {1}{R}
+oracle=Trample, haste\nAt the beginning of the end step, sacrifice Hellspark Elemental.\nUnearth {1}{R}

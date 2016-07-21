@@ -1,11 +1,11 @@
 name=Drakewing Krasis
-image=http://mtgimage.com/card/drakewing%20krasis.jpg
+image=http://magiccards.info/scans/en/gtc/157.jpg
 value=3.301
 rarity=C
 type=Creature
 subtype=Lizard,Drake
 cost={1}{G}{U}
 pt=3/1
-ability=flying;trample
+ability=Flying, trample
 timing=main
 oracle=Flying, trample

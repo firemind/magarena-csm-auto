@@ -1,11 +1,11 @@
 name=Uktabi Efreet
-image=http://mtgimage.com/card/uktabi%20efreet.jpg
+image=http://magiccards.info/scans/en/wl/85.jpg
 value=2.351
 rarity=C
 type=Creature
 subtype=Efreet
 cost={2}{G}{G}
 pt=5/4
-ability=cumulative upkeep {G}
+ability=Cumulative upkeep {G}
 timing=main
 oracle=Cumulative upkeep {G}

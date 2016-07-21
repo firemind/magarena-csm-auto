@@ -1,9 +1,10 @@
 name=Stand
-image=http://mtgimage.com/card/standdeliver.jpg
-value=2.500
+image=http://magiccards.info/scans/en/in/292a.jpg
+value=3.219
 rarity=U
 type=Instant
 cost={W}
 effect=Prevent the next 2 damage that would be dealt to target creature this turn.
-timing=removal
+split=Deliver
+timing=pump
 oracle=Prevent the next 2 damage that would be dealt to target creature this turn.

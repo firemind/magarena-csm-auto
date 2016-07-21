@@ -1,32 +1,34 @@
 package magic.ui.screen.widget;
 
-import magic.ui.widget.FontsAndBorders;
-import magic.ui.MagicStyle;
-
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import magic.ui.ScreenController;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.utility.MagicStyle;
+import magic.ui.widget.FontsAndBorders;
 
 @SuppressWarnings("serial")
 public class MenuButton extends JButton {
 
     private final static Color COLOR_NORMAL = Color.WHITE;
-    private final static Color COLOR_DISABLED = Color.GRAY;
+    private final static Color COLOR_DISABLED = Color.DARK_GRAY;
 
-    private final boolean isRunnable;
-    private final boolean showSeparator;
+    private boolean isRunnable;
+    private boolean hasSeparator;
 
     public MenuButton(final String caption, final AbstractAction action, final String tooltip, final boolean showSeparator) {
         super(caption);
         this.isRunnable = (action != null);
-        this.showSeparator = showSeparator;
+        this.hasSeparator = showSeparator;
         setFont(FontsAndBorders.FONT_MENU_BUTTON);
         setHorizontalAlignment(SwingConstants.CENTER);
         setForeground(COLOR_NORMAL);
@@ -47,7 +49,7 @@ public class MenuButton extends JButton {
     }
     protected MenuButton() {
         isRunnable = false;
-        showSeparator = false;
+        hasSeparator = false;
     }
 
     public boolean isRunnable() {
@@ -67,22 +69,30 @@ public class MenuButton extends JButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                setForeground(MagicStyle.HIGHLIGHT_COLOR);
+                if (isEnabled()) {
+                    setForeground(MagicStyle.getRolloverColor());
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                setForeground(Color.WHITE);
+                if (isEnabled()) {
+                    setForeground(Color.WHITE);
+                }
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                setForeground(MagicStyle.HIGHLIGHT_COLOR.darker());
-                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                if (isEnabled() && SwingUtilities.isLeftMouseButton(e)) {
+                    setForeground(MagicStyle.getPressedColor());
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                }
 
             }
             @Override
             public void mouseReleased(MouseEvent e) {
-                setForeground(Color.WHITE);
-                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                if (isEnabled()) {
+                    setForeground(Color.WHITE);
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                }
             }
         });
     }
@@ -90,11 +100,16 @@ public class MenuButton extends JButton {
     @Override
     public void setEnabled(boolean b) {
         super.setEnabled(b);
+        isRunnable = b;
         setForeground(b ? COLOR_NORMAL : COLOR_DISABLED);
     }
 
-    public boolean showSeparator() {
-        return showSeparator;
+    public boolean hasSeparator() {
+        return hasSeparator;
+    }
+
+    public void setSeparator(boolean b) {
+        hasSeparator = b;
     }
 
 
@@ -111,6 +126,23 @@ public class MenuButton extends JButton {
 
     public static MenuButton getCloseScreenButton(final String caption) {
         return new MenuButton(caption, closeScreenAction);
+    }
+
+    @Override
+    public void setIcon(final Icon defaultIcon) {
+        super.setIcon(defaultIcon);
+        setRolloverIcon(GraphicsUtils.getRecoloredIcon(
+                (ImageIcon) defaultIcon,
+                MagicStyle.getRolloverColor())
+        );
+        setPressedIcon(GraphicsUtils.getRecoloredIcon(
+                (ImageIcon) defaultIcon,
+                MagicStyle.getPressedColor())
+        );
+        setDisabledIcon(GraphicsUtils.getRecoloredIcon(
+                (ImageIcon) defaultIcon,
+                COLOR_DISABLED)
+        );
     }
 
 }

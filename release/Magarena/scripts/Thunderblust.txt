@@ -1,5 +1,5 @@
 name=Thunderblust
-image=http://mtgimage.com/card/thunderblust.jpg
+image=http://magiccards.info/scans/en/mm2/131.jpg
 value=3.973
 rarity=R
 type=Creature
@@ -9,5 +9,5 @@ pt=7/2
 ability=Haste;\
         SN has trample as long as it has a -1/-1 counter on it.;\
         Persist
-timing=main
-oracle=Haste. Thunderblust has trample as long as it has a -1/-1 counter on it. Persist
+timing=fmain
+oracle=Haste\nThunderblust has trample as long as it has a -1/-1 counter on it.\nPersist

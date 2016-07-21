@@ -1,6 +1,7 @@
 name=Angel of Serenity
-image=http://mtgimage.com/card/angel%20of%20serenity.jpg
-value=2.500
+image=http://magiccards.info/scans/en/c15/58.jpg
+image_updated=2016-02-29
+value=3.990
 rarity=M
 type=Creature
 subtype=Angel
@@ -10,4 +11,4 @@ ability=Flying;\
         When SN enters the battlefield, you may exile up to three other target creatures from the battlefield and/or creature cards from graveyards.;\
         When SN leaves the battlefield, return the exiled cards to their owners' hands.
 timing=main
-oracle=Flying. When Angel of Serenity enters the battlefield, you may exile up to three other target creatures from the battlefield and/or creature cards from graveyards. When Angel of Serenity leaves the battlefield, return the exiled cards to their owners' hands.
+oracle=Flying\nWhen Angel of Serenity enters the battlefield, you may exile up to three other target creatures from the battlefield and/or creature cards from graveyards.\nWhen Angel of Serenity leaves the battlefield, return the exiled cards to their owners' hands.

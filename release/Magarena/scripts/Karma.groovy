@@ -1,5 +1,5 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
@@ -11,10 +11,10 @@
         }
         @Override
         public void executeEvent(final MagicGame game,final MagicEvent event) {
-            final int amount = event.getPlayer().getNrOfPermanents(MagicTargetFilterFactory.SWAMP_YOU_CONTROL);
-            final MagicDamage damage = new MagicDamage(event.getSource(),event.getPlayer(),amount);
-            game.doAction(new MagicDealDamageAction(damage));
-            game.logAppendMessage(event.getPlayer(),"("+amount+")");
+            final MagicPlayer player = event.getPlayer();
+            final int amount = player.getNrOfPermanents(SWAMP_YOU_CONTROL);
+            game.doAction(new DealDamageAction(event.getSource(),player,amount));
+            game.logAppendValue(player,amount);
         }
     }
 ]

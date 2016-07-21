@@ -1,11 +1,11 @@
 name=Kami of Empty Graves
-image=http://mtgimage.com/card/kami%20of%20empty%20graves.jpg
+image=http://magiccards.info/scans/en/sok/75.jpg
 value=1.557
 rarity=C
 type=Creature
 subtype=Spirit
 cost={3}{B}
 pt=4/1
-ability=soulshift 3
+ability=Soulshift 3
 timing=main
 oracle=Soulshift 3

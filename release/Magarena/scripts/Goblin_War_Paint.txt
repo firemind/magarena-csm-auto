@@ -1,11 +1,13 @@
 name=Goblin War Paint
-image=http://mtgimage.com/card/goblin%20war%20paint.jpg
+image=http://magiccards.info/scans/en/bfz/146.jpg
+image_updated=2015-11-08
 value=3.141
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{R}
-ability=Enchanted creature gets +2/+2 and has haste.
+ability=Enchant creature;\
+        Enchanted creature gets +2/+2 and has haste.
 timing=aura
 enchant=haste,pos creature
-oracle=Enchant creature. Enchanted creature gets +2/+2 and has haste.
+oracle=Enchant creature\nEnchanted creature gets +2/+2 and has haste.

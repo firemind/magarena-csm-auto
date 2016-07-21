@@ -1,9 +1,9 @@
 name=Shivan Harvest
-image=http://mtgimage.com/card/shivan%20harvest.jpg
+image=http://magiccards.info/scans/en/in/167.jpg
 value=3.431
 rarity=U
 type=Enchantment
 cost={1}{R}
-ability={1}{R},Sacrifice a creature:Destroy target nonbasic land.
+ability={1}{R}, Sacrifice a creature: Destroy target nonbasic land.
 timing=enchantment
 oracle={1}{R}, Sacrifice a creature: Destroy target nonbasic land.

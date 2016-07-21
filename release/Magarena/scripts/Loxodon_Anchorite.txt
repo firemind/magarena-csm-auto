@@ -1,11 +1,11 @@
 name=Loxodon Anchorite
-image=http://mtgimage.com/card/loxodon%20anchorite.jpg
+image=http://magiccards.info/scans/en/5dn/10.jpg
 value=2.486
 rarity=C
 type=Creature
 subtype=Elephant,Cleric
 cost={2}{W}{W}
 pt=2/3
-ability={T}:Prevent the next 2 damage that would be dealt to target creature or player this turn.
+ability={T}: Prevent the next 2 damage that would be dealt to target creature or player this turn.
 timing=main
 oracle={T}: Prevent the next 2 damage that would be dealt to target creature or player this turn.

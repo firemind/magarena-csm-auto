@@ -1,10 +1,10 @@
 name=Tresserhorn Sinks
-image=http://mtgimage.com/card/tresserhorn%20sinks.jpg
+image=http://magiccards.info/scans/en/cs/150.jpg
 value=3.476
 rarity=U
 type=Snow,Land
 mana=b3r3
-ability={T}: Add {B} or {R} to your mana pool.;\
-        SN enters the battlefield tapped.
+ability=SN enters the battlefield tapped.;\
+        {T}: Add {B} or {R} to your mana pool.
 timing=tapland
-oracle=Tresserhorn Sinks enters the battlefield tapped. {T}: Add {B} or {R} to your mana pool.
+oracle=Tresserhorn Sinks enters the battlefield tapped.\n{T}: Add {B} or {R} to your mana pool.

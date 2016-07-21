@@ -1,11 +1,11 @@
 name=Marsh Boa
-image=http://mtgimage.com/card/marsh%20boa.jpg
+image=http://magiccards.info/scans/en/pr/118.jpg
 value=3.083
 rarity=C
 type=Creature
 subtype=Snake
 cost={G}
 pt=1/1
-ability=swampwalk
+ability=Swampwalk
 timing=main
 oracle=Swampwalk

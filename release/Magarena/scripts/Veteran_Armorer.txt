@@ -1,12 +1,12 @@
 name=Veteran Armorer
-image=http://mtgimage.com/card/veteran%20armorer.jpg
+image=http://magiccards.info/scans/en/mma/34.jpg
 value=3.839
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={1}{W}
 pt=2/2
-ability=other creatures you control get +0/+1
+ability=Other creatures you control get +0/+1.
 static=player
 timing=main
 oracle=Other creatures you control get +0/+1.

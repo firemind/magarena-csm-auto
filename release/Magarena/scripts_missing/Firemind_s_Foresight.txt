@@ -1,6 +1,7 @@
 name=Firemind's Foresight
-image=http://mtgimage.com/card/firemind%27s%20foresight.jpg
-value=2.500
+image=http://magiccards.info/scans/en/c15/218.jpg
+image_updated=2016-02-29
+value=2.492
 rarity=R
 type=Instant
 cost={5}{U}{R}

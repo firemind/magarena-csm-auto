@@ -5,9 +5,8 @@ import magic.model.MagicGame;
 import magic.model.MagicLocationType;
 import magic.model.MagicManaCost;
 import magic.model.MagicPayedCost;
-import magic.model.action.MagicPlayCardAction;
 import magic.model.action.MagicPlayMod;
-import magic.model.action.MagicRemoveCardAction;
+import magic.model.action.ReturnCardAction;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.condition.MagicCondition;
 
@@ -49,13 +48,12 @@ public class MagicNinjutsuActivation extends MagicCardAbilityActivation {
             "Put SN onto the battlefield from your hand tapped and attacking."
         );
     }
-                
+
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
-        final MagicCard card = event.getCard();
-        game.doAction(new MagicRemoveCardAction(card,MagicLocationType.OwnersHand));
-        game.doAction(new MagicPlayCardAction(
-            card,
+        game.doAction(new ReturnCardAction(
+            MagicLocationType.OwnersHand,
+            event.getCard(),
             event.getPlayer(),
             MagicPlayMod.TAPPED, MagicPlayMod.ATTACKING
         ));

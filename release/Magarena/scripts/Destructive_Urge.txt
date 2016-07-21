@@ -1,0 +1,12 @@
+name=Destructive Urge
+image=http://magiccards.info/scans/en/us/180.jpg
+value=3.986
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={1}{R}{R}
+ability=Enchant creature;\
+        Whenever enchanted creature deals combat damage to a player, that player sacrifices a land.
+timing=aura
+enchant=power,pos creature
+oracle=Enchant creature\nWhenever enchanted creature deals combat damage to a player, that player sacrifices a land.

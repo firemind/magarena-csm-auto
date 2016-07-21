@@ -1,10 +1,9 @@
 name=Intangible Virtue
-image=http://mtgimage.com/card/intangible%20virtue.jpg
+image=http://magiccards.info/scans/en/cns/72.jpg
 value=4.214
 rarity=U
 type=Enchantment
 cost={1}{W}
-ability=creature tokens you control get +1/+1;\
-        creature tokens you control have vigilance
+ability=Creature tokens you control get +1/+1 and have vigilance.
 timing=enchantment
 oracle=Creature tokens you control get +1/+1 and have vigilance.

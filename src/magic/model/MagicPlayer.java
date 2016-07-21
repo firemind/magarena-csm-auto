@@ -1,6 +1,11 @@
 package magic.model;
 
-import magic.model.action.MagicLoseGameAction;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import magic.model.action.LoseGameAction;
 import magic.model.choice.MagicBuilderManaCost;
 import magic.model.event.MagicActivationPriority;
 import magic.model.event.MagicSourceActivation;
@@ -8,19 +13,14 @@ import magic.model.event.MagicSourceManaActivation;
 import magic.model.mstatic.MagicLayer;
 import magic.model.mstatic.MagicPermanentStatic;
 import magic.model.mstatic.MagicStatic;
+import magic.model.player.AiProfile;
 import magic.model.target.MagicTarget;
-import magic.model.target.MagicTargetType;
 import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTarget, MagicMappable<MagicPlayer> {
 
-public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMappable<MagicPlayer> {
-
-    public static final MagicPlayer NONE = new MagicPlayer(-1, new MagicPlayerDefinition(), -1) {
+    public static final MagicPlayer NONE = new MagicPlayer(-1, null, -1) {
         @Override
         public String toString() {
             return "";
@@ -50,17 +50,19 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     private static final int LOSING_POISON=10;
     private static final long ID_FACTOR=31;
 
-    private final MagicPlayerDefinition playerDefinition;
+    private final DuelPlayerConfig playerDefinition;
     private final int index;
 
-    private int life;
     private int stateFlags;
+    private int life;
     private int lifeLossThisTurn;
     private int lifeGainThisTurn;
     private int poison;
+    private int experience;
     private int preventDamage;
     private int extraTurns;
     private int drawnCards;
+    private int startingHandSize;
     private int maxHandSize;
     private int spellsCast;
     private int spellsCastLastTurn;
@@ -77,7 +79,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
     private long[] keys;
 
-    MagicPlayer(final int aLife,final MagicPlayerDefinition aPlayerDefinition,final int aIndex) {
+    MagicPlayer(final int aLife,final DuelPlayerConfig aPlayerDefinition,final int aIndex) {
         playerDefinition = aPlayerDefinition;
         index = aIndex;
         life = aLife;
@@ -100,6 +102,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         lifeGainThisTurn = sourcePlayer.lifeGainThisTurn;
         lifeLossThisTurn = sourcePlayer.lifeLossThisTurn;
         poison=sourcePlayer.poison;
+        experience=sourcePlayer.experience;
         stateFlags=sourcePlayer.stateFlags;
         preventDamage=sourcePlayer.preventDamage;
         extraTurns=sourcePlayer.extraTurns;
@@ -142,6 +145,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
             lifeLossThisTurn,
             lifeGainThisTurn,
             poison,
+            experience,
             stateFlags,
             preventDamage,
             extraTurns,
@@ -178,6 +182,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         long playerId=id;
         playerId=playerId*ID_FACTOR+life;
         playerId=playerId*ID_FACTOR+poison;
+        playerId=playerId*ID_FACTOR+experience;
         playerId=playerId*ID_FACTOR+builderCost.getMinimumAmount();
         playerId=playerId*ID_FACTOR+permanents.getStateId();
         playerId=playerId*ID_FACTOR+hand.getStateId();
@@ -204,7 +209,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         return set;
     }
 
-    public MagicPlayerDefinition getPlayerDefinition() {
+    public DuelPlayerConfig getPlayerDefinition() {
         return playerDefinition;
     }
 
@@ -243,37 +248,45 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     public int getLife() {
         return life;
     }
-    
+
     public int getLifeGainThisTurn() {
         return lifeGainThisTurn;
     }
-    
+
     public void setLifeGainThisTurn(final int lifeGainThisTurn) {
         this.lifeGainThisTurn=lifeGainThisTurn;
     }
-    
+
     public void changeLifeGainThisTurn(final int lifeGainThisTurn) {
         this.lifeGainThisTurn+=lifeGainThisTurn;
     }
-    
+
     public int getLifeLossThisTurn() {
         return lifeLossThisTurn;
     }
-    
-    public void setLifeLossThisTurn(final int lifeLossThisTurn) {
-        this.lifeLossThisTurn=lifeLossThisTurn;
-    }
-    
-    public void changeLifeLossThisTurn(final int lifeLossThisTurn) {
-        this.lifeLossThisTurn+=lifeLossThisTurn;
+
+    public void setLifeLossThisTurn(final int life) {
+        lifeLossThisTurn = life;
     }
 
-    public void setPoison(final int poison) {
-        this.poison=poison;
+    public void changeLifeLossThisTurn(final int life) {
+        lifeLossThisTurn += life;
+    }
+
+    public void setPoison(final int p) {
+        poison = p;
     }
 
     public int getPoison() {
         return poison;
+    }
+
+    public void setExperience(final int e) {
+        experience = e;
+    }
+
+    public int getExperience() {
+        return experience;
     }
 
     public void changeExtraTurns(final int amount) {
@@ -288,6 +301,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         return hand.size();
     }
 
+    public int getStartingHandSize() {
+        return startingHandSize;
+    }
+
     public int getNumExcessCards() {
         return Math.max(0, getHandSize() - maxHandSize);
     }
@@ -295,43 +312,55 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     public void noMaxHandSize() {
         maxHandSize = Integer.MAX_VALUE;
     }
-    
+
+    public void setMaxHandSize(final int amount) {
+        maxHandSize = amount;
+    }
+
+    public void reduceMaxHandSize(final int amount) {
+        maxHandSize -= amount;
+    }
+
+    public void increaseMaxHandSize(final int amount) {
+        maxHandSize += amount;
+    }
+
     public int getCreaturesAttackedThisTurn() {
         return creaturesAttackedThisTurn;
     }
-    
+
     public void setCreaturesAttackedThisTurn(final int count) {
-        creaturesAttackedThisTurn=count; 
+        creaturesAttackedThisTurn=count;
     }
-    
-    public void incCreatuesAttacked() {
+
+    public void incCreaturesAttacked() {
         creaturesAttackedThisTurn++;
     }
-    
+
     public void decCreaturesAttacked() {
         creaturesAttackedThisTurn--;
     }
-    
+
     public int getSpellsCastLastTurn() {
         return spellsCastLastTurn;
     }
-    
+
     public void setSpellsCastLastTurn(final int count) {
         spellsCastLastTurn=count;
     }
-    
+
     public int getSpellsCast() {
         return spellsCast;
     }
-    
+
     public void incSpellsCast() {
         spellsCast++;
     }
-    
+
     public void setSpellsCast(final int count) {
         spellsCast=count;
     }
-    
+
     public MagicCardList getPrivateHand() {
         return hand;
     }
@@ -369,11 +398,11 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
                 library.addToTop(card);
             }
         }
-        
+
         // shuffle library
-        library.shuffle(MagicRandom.nextRNGInt(999999));
+        library.shuffle(MagicRandom.nextRNGInt());
         library.setAIKnown(true);
-        
+
         // put cards into hand
         for (int i = 0; i < handSize - knownCards.size(); i++) {
             addCardToHand(library.removeCardAtTop());
@@ -383,22 +412,19 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         }
     }
 
+    // creating the MagicCard is potentially slow due to card ability loading,
+    // check for thread.isInterrupted to terminate early when interrupted
     void createHandAndLibrary(final int handSize) {
-        for (final MagicCardDefinition cardDefinition : playerDefinition.getDeck()) {
+        startingHandSize = handSize;
+        final MagicDeck deck = playerDefinition.getDeck();
+        Thread thread = Thread.currentThread();
+        for (int i = 0; i < deck.size() && thread.isInterrupted() == false; i++) {
+            final MagicCardDefinition cardDefinition = deck.get(i);
             final long id = currGame.getUniqueId();
             library.add(new MagicCard(cardDefinition,this,id));
         }
 
-        //library order depends on player index, game no, random seed
-        final long seed = magic.model.MurmurHash3.hash(new long[] {
-            2 * index - 1,
-            MagicGame.getCount(),
-            (System.getProperty("rndSeed") != null) ?
-                Long.parseLong(System.getProperty("rndSeed")) :
-                System.currentTimeMillis()
-        });
-
-        library.initialShuffle(seed);
+        library.initialShuffle(MagicRandom.nextRNGInt());
 
         for (int count = handSize; count > 0 && !library.isEmpty(); count--) {
             addCardToHand(library.removeCardAtTop());
@@ -423,7 +449,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
     public List<MagicCard> filterCards(final MagicTargetFilter<MagicCard> filter) {
         final List<MagicCard> targets = new ArrayList<MagicCard>();
-        
+
         // Cards in graveyard
         if (filter.acceptType(MagicTargetType.Graveyard)) {
             addCards(targets, graveyard, filter);
@@ -433,7 +459,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         if (filter.acceptType(MagicTargetType.Hand)) {
             addCards(targets, hand, filter);
         }
-        
+
         // Cards in library
         if (filter.acceptType(MagicTargetType.Library)) {
             addCards(targets, library, filter);
@@ -441,10 +467,16 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
         return targets;
     }
-            
-    private void addCards(final List<MagicCard> targets, final MagicCardList list, final MagicTargetFilter<MagicCard> filter) {
+
+    public MagicCardList filterCards(final List<MagicCard> list, final MagicTargetFilter<MagicCard> filter) {
+        final MagicCardList targets = new MagicCardList();
+        addCards(targets, list, filter);
+        return targets;
+    }
+
+    private void addCards(final List<MagicCard> targets, final List<MagicCard> list, final MagicTargetFilter<MagicCard> filter) {
         for (final MagicCard card : list) {
-            if (filter.accept(currGame, this, card)) {
+            if (filter.accept(MagicSource.NONE, this, card)) {
                 targets.add(card);
             }
         }
@@ -517,19 +549,21 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     }
 
     public int getNrOfAttackers() {
-        int count=0;
-        for (final MagicPermanent permanent : permanents) {
-            if (permanent.hasState(MagicPermanentState.Attacking)) {
-                count++;
-            }
-        }
-        return count;
+        return getNrOfPermanents(MagicPermanentState.Attacking);
     }
 
     public int getNrOfBlockers() {
+        return getNrOfPermanents(MagicPermanentState.Blocking);
+    }
+
+    public int getNrOfPermanents() {
+        return permanents.size();
+    }
+
+    public int getNrOfPermanents(final MagicPermanentState state) {
         int count=0;
         for (final MagicPermanent permanent : permanents) {
-            if (permanent.hasState(MagicPermanentState.Blocking)) {
+            if (permanent.hasState(state)) {
                 count++;
             }
         }
@@ -555,7 +589,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         }
         return count;
     }
-    
+
     public int getNrOfPermanents(final MagicColor color) {
         int count=0;
         for (final MagicPermanent permanent : permanents) {
@@ -566,10 +600,24 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         return count;
     }
 
-    public int getNrOfPermanents(final MagicTargetFilter<MagicPermanent> filter) {
+    public int getNrOfPermanents(final MagicType type, final MagicColor color) {
         int count = 0;
         for (final MagicPermanent permanent : permanents) {
-            if (filter.accept(currGame, this, permanent)) {
+            if (permanent.hasColor(color) && permanent.hasType(type)){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getNrOfPermanents(final MagicTargetFilter<MagicPermanent> filter) {
+        return getNrOfPermanents(MagicSource.NONE, filter);
+    }
+
+    public int getNrOfPermanents(final MagicSource source, final MagicTargetFilter<MagicPermanent> filter) {
+        int count = 0;
+        for (final MagicPermanent permanent : permanents) {
+            if (filter.accept(source, this, permanent)) {
                 count++;
             }
         }
@@ -577,8 +625,12 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     }
 
     public boolean controlsPermanent(final MagicTargetFilter<MagicPermanent> filter) {
+        return controlsPermanent(MagicSource.NONE, filter);
+    }
+
+    public boolean controlsPermanent(final MagicSource source, final MagicTargetFilter<MagicPermanent> filter) {
         for (final MagicPermanent permanent : permanents) {
-            if (filter.accept(currGame, this, permanent)) {
+            if (filter.accept(source, this, permanent)) {
                 return true;
             }
         }
@@ -624,7 +676,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         }
         return false;
     }
-    
+
     public int getDomain() {
         int domain = 0;
         for (final MagicSubType basicLandType : MagicSubType.ALL_BASIC_LANDS) {
@@ -633,10 +685,6 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
             }
         }
         return domain;
-    }
-    
-    public List<MagicPermanent> filterPermanents(final MagicTargetFilter<MagicPermanent> targetFilter) {
-        return currGame.filterPermanents(this, targetFilter);
     }
 
     public int getDevotion(final MagicColor... colors) {
@@ -666,7 +714,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     public boolean isPlayer() {
         return true;
     }
-    
+
     @Override
     public boolean isSpell() {
         return false;
@@ -686,12 +734,12 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
     public MagicPlayer getController() {
         return this;
     }
-    
+
     @Override
     public MagicPlayer getOpponent() {
         return currGame.getOpponent(this);
     }
-    
+
     public boolean isValid() {
         return true;
     }
@@ -731,7 +779,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
         if (hasAbility(MagicAbility.Hexproof) && isEnemy(source)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -758,10 +806,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
 
     public void generateStateBasedActions() {
         if (getLife() <= 0) {
-            currGame.addDelayedAction(new MagicLoseGameAction(this,MagicLoseGameAction.LIFE_REASON));
+            currGame.addDelayedAction(new LoseGameAction(this,LoseGameAction.LIFE_REASON));
         }
         if (getPoison() >= LOSING_POISON) {
-            currGame.addDelayedAction(new MagicLoseGameAction(this,MagicLoseGameAction.POISON_REASON));
+            currGame.addDelayedAction(new LoseGameAction(this,LoseGameAction.POISON_REASON));
         }
     }
 
@@ -797,18 +845,44 @@ public class MagicPlayer extends MagicObjectImpl implements MagicTarget, MagicMa
             final MagicPermanent source = mpstatic.getPermanent();
             for (final MagicPlayer player : game.getPlayers()) {
                 if (mstatic.accept(game, source, source)) {
-                   player.apply(source, mstatic);
+                    player.apply(source, mstatic);
                 }
             }
         }
     }
 
     @Override
-    public boolean hasCounters(MagicCounterType counterType) {
-        return (counterType == MagicCounterType.Poison && getPoison()>0) ? true:false;
+    public int getCounters(final MagicCounterType counterType) {
+        switch (counterType) {
+            case Poison:
+                return getPoison();
+            case Experience:
+                return getExperience();
+            default:
+                return 0;
+        }
+    }
+
+    @Override
+    public void changeCounters(final MagicCounterType counterType,final int amount) {
+        if (counterType == MagicCounterType.Poison) {
+            poison += amount;
+        } else if (counterType == MagicCounterType.Experience) {
+            experience += amount;
+        } else {
+            throw new RuntimeException(counterType + " cannot be modified on player");
+        }
     }
 
     public boolean isHuman() {
-        return !getPlayerDefinition().isArtificial();
+        return playerDefinition.getProfile().isHuman();
+    }
+
+    public boolean isArtificial() {
+        return playerDefinition.getProfile().isArtificial();
+    }
+
+    public AiProfile getAiProfile() {
+        return (AiProfile)playerDefinition.getProfile();
     }
 }

@@ -1,12 +1,12 @@
 name=Earsplitting Rats
-image=http://mtgimage.com/card/earsplitting%20rats.jpg
+image=http://magiccards.info/scans/en/ju/65.jpg
 value=1.776
 rarity=C
 type=Creature
 subtype=Rat
 cost={3}{B}
 pt=2/1
-ability=Discard a card: Regenerate SN.
+ability=When SN enters the battlefield, each player discards a card.;\
+        Discard a card: Regenerate SN.
 timing=main
-requires_groovy_code=Marsh Crocodile
-oracle=When Earsplitting Rats enters the battlefield, each player discards a card. Discard a card: Regenerate Earsplitting Rats.
+oracle=When Earsplitting Rats enters the battlefield, each player discards a card.\nDiscard a card: Regenerate Earsplitting Rats.

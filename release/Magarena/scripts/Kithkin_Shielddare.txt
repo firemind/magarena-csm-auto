@@ -1,11 +1,11 @@
 name=Kithkin Shielddare
-image=http://mtgimage.com/card/kithkin%20shielddare.jpg
+image=http://magiccards.info/scans/en/shm/10.jpg
 value=2.210
 rarity=C
 type=Creature
 subtype=Kithkin,Soldier
 cost={1}{W}
 pt=1/1
-ability={W},{T}:Target blocking creature gets +2/+2 until end of turn.
+ability={W}, {T}: Target blocking creature gets +2/+2 until end of turn.
 timing=main
 oracle={W}, {T}: Target blocking creature gets +2/+2 until end of turn.

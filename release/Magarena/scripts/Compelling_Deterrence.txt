@@ -1,0 +1,10 @@
+name=Compelling Deterrence
+image=http://magiccards.info/scans/en/soi/52.jpg
+image_updated=2016-06-04
+value=2.500
+rarity=U
+type=Instant
+cost={1}{U}
+timing=removal
+requires_groovy_code
+oracle=Return target nonland permanent to its owner's hand. Then that player discards a card if you control a Zombie.

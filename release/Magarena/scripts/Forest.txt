@@ -1,9 +1,10 @@
 name=Forest
-image=http://mtgimage.com/set/ZEN/forest1.jpg
+image=http://magiccards.info/scans/en/bfz/274b.jpg
+image_updated=2016-02-29
 value=4.250
-rarity=L
+rarity=B
 type=Basic,Land
 subtype=Forest
 mana=g4
 timing=land
-oracle=G
+oracle=NONE

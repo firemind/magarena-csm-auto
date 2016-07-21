@@ -1,12 +1,12 @@
 name=Plated Sliver
-image=http://mtgimage.com/card/plated%20sliver.jpg
+image=http://magiccards.info/scans/en/le/19.jpg
 value=3.939
 rarity=C
 type=Creature
 subtype=Sliver
 cost={W}
 pt=1/1
-ability=all sliver creatures get +0/+1
+ability=All Sliver creatures get +0/+1.
 static=all
 timing=main
 oracle=All Sliver creatures get +0/+1.

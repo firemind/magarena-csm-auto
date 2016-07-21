@@ -1,11 +1,11 @@
 name=Gustcloak Sentinel
-image=http://mtgimage.com/card/gustcloak%20sentinel.jpg
+image=http://magiccards.info/scans/en/ddo/12.jpg
 value=3.389
 rarity=U
 type=Creature
 subtype=Human,Soldier
 cost={2}{W}{W}
 pt=3/3
+ability=Whenever SN becomes blocked, you may untap SN~and remove it from combat.
 timing=main
-requires_groovy_code=Gustcloak Skirmisher
 oracle=Whenever Gustcloak Sentinel becomes blocked, you may untap it and remove it from combat.

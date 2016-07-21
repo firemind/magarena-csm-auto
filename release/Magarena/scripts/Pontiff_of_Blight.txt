@@ -1,11 +1,12 @@
 name=Pontiff of Blight
-image=http://mtgimage.com/card/pontiff%20of%20blight.jpg
+image=http://magiccards.info/scans/en/c14/155.jpg
 value=3.791
 rarity=R
 type=Creature
 subtype=Zombie,Cleric
 cost={4}{B}{B}
-ability=extort;other creatures you control have extort
 pt=2/7
+ability=Extort;\
+        Other creatures you control have extort.
 timing=main
-oracle=Extort. Other creatures you control have extort.
+oracle=Extort\nOther creatures you control have extort.

@@ -1,11 +1,11 @@
 name=Child of Thorns
-image=http://mtgimage.com/card/child%20of%20thorns.jpg
+image=http://magiccards.info/scans/en/bok/123.jpg
 value=3.112
 rarity=C
 type=Creature
 subtype=Spirit
 cost={G}
 pt=1/1
-ability=Sacrifice SN:Target creature gets +1/+1 until end of turn.
+ability=Sacrifice SN: Target creature gets +1/+1 until end of turn.
 timing=main
 oracle=Sacrifice Child of Thorns: Target creature gets +1/+1 until end of turn.

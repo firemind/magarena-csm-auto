@@ -1,12 +1,12 @@
 name=Battering Sliver
-image=http://mtgimage.com/card/battering%20sliver.jpg
+image=http://magiccards.info/scans/en/pc/95.jpg
 value=2.856
 rarity=C
 type=Creature
 subtype=Sliver
 cost={5}{R}
 pt=4/4
-ability=all sliver creatures have trample
+ability=All Sliver creatures have trample.
 static=all
 timing=main
 oracle=All Sliver creatures have trample.

@@ -1,5 +1,7 @@
 package magic.ui.duel.viewer;
 
+import magic.ui.utility.ImageDrawingUtils;
+import magic.ui.IChoiceViewer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,20 +25,22 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import magic.ui.CachedImagesProvider;
-import magic.ui.CardImagesProvider;
 import magic.data.GeneralConfig;
+import magic.model.MagicType;
 import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicCardList;
-import magic.ui.SwingGameController;
+import magic.ui.MagicImages;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.duel.SwingGameController;
+import magic.ui.duel.viewer.info.CardViewerInfo;
 import magic.ui.theme.Theme;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.FontsAndBorders;
-import magic.ui.MagicStyle;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
-public class ImageCardListViewer extends JPanel implements ChoiceViewer {
+public class ImageCardListViewer extends JPanel implements IChoiceViewer {
 
     private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final MagicCardList EMPTY_CARD_LIST=new MagicCardList();
@@ -44,7 +48,7 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
     private static final int CARD_HEIGHT=140;
     private static final int SPACING=10;
     private static final BasicStroke MOUSE_OVER_STROKE = new BasicStroke(2);
-    private static final Color MOUSE_OVER_COLOR = MagicStyle.HIGHLIGHT_COLOR;
+    private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
     private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 20);
 
     private final SwingGameController controller;
@@ -56,7 +60,7 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
     private int cardStep = 0;
 
     public ImageCardListViewer(final SwingGameController controller) {
-        
+
         setOpaque(false);
 
         this.controller=controller;
@@ -166,7 +170,7 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
         final Point point=cardPoints.get(index);
         final Rectangle rect=
                 new Rectangle(pointOnScreen.x+point.x,pointOnScreen.y+point.y,CARD_WIDTH,CARD_HEIGHT);
-        controller.viewCardPopup(card, 0, rect, true);
+        controller.viewCardPopup(card, rect, true);
     }
 
     private int getCardIndexAt(final int x,final int y) {
@@ -220,37 +224,47 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         final Stroke defaultStroke = g2d.getStroke();
 
-        final Dimension imageSize = CONFIG.getMaxCardImageSize();
         final Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(mousePoint, this);
         Rectangle mouseOverRect = new Rectangle();
-        final CardImagesProvider imageCache = CachedImagesProvider.getInstance();
-        
+
         for (int index=0; index < cardList.size(); index++) {
             final MagicCard card=cardList.get(index);
             final MagicCardDefinition cardDefinition=card.getCardDefinition();
             final Point point=cardPoints.get(index);
-            final BufferedImage image = imageCache.getImage(cardDefinition, card.getImageIndex(), false);
             final int x1=point.x;
             final int y1=point.y;
             final int x2=point.x+CARD_WIDTH;
             final int y2=point.y+CARD_HEIGHT;
 
-            //draw the card image
-            g.drawImage(image, x1, y1, x2, y2, 0, 0, imageSize.width, imageSize.height, this);
+            final BufferedImage image = GraphicsUtils.scale(
+                MagicImages.getCardImage(cardDefinition),
+                CARD_WIDTH,
+                CARD_HEIGHT
+            );
+            g2d.drawImage(image, x1, y1, this);
+
+            ImageDrawingUtils.drawCardId(g, card.getId(), x1, 0);
 
             //draw the overlay icons
             if (showInfo) {
                 if (cardDefinition.isLand()) {
-                    ImageDrawingUtils.drawManaInfo(g,this,cardDefinition,x1+1,y2-17);
+                    ImageDrawingUtils.drawManaInfo(
+                        g,
+                        this,
+                        cardDefinition.getManaActivations(),
+                        card.hasType(MagicType.Snow),
+                        x1+1,
+                        y2-17
+                    );
                 } else {
-                    ImageDrawingUtils.drawCostInfo(g,this,card.getCost(),x1,x2-1,y1+2);
+                    ImageDrawingUtils.drawCostInfo(g,this,card.getGameCost(),x1,x2-1,y1+2);
                 }
                 if (cardDefinition.isCreature()) {
                     ImageDrawingUtils.drawAbilityInfo(g,this,cardDefinition.genAbilityFlags(),x1+2,y2-18);
                     final String pt = card.genPowerToughness().toString();
                     final int ptWidth=metrics.stringWidth(pt);
-                    ImageDrawingUtils.drawCreatureInfo(g,metrics,pt,ptWidth,"",x2-ptWidth-4,y2-18,false);
+                    ImageDrawingUtils.drawCreatureInfo(g,metrics,pt,ptWidth,"","",x2-ptWidth-4,y2-18,false);
                 }
             }
 
@@ -297,13 +311,12 @@ public class ImageCardListViewer extends JPanel implements ChoiceViewer {
         repaint();
     }
 
-    public Point getCardPosition(final MagicCardDefinition cardDef) {
+    public Point getCardPosition(final CardViewerInfo cardInfo) {
         Point cardPosition = null;
         for (int index=0; index < cardList.size(); index++) {
             final MagicCard card = cardList.get(index);
-            if (card.getName().equals(cardDef.getName())) {
+            if (card.getId() == cardInfo.getId()) {
                 cardPosition = cardPoints.get(index);
-//                System.out.println("cardPosition = " + cardPosition);
                 break;
             }
         }

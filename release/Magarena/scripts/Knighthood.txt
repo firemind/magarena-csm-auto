@@ -1,10 +1,10 @@
 name=Knighthood
-image=http://mtgimage.com/card/knighthood.jpg
+image=http://magiccards.info/scans/en/7e/25.jpg
 value=4.011
 rarity=U
 type=Enchantment
 cost={2}{W}
-ability=creatures you control have first strike
+ability=Creatures you control have first strike.
 static=player
 timing=enchantment
 oracle=Creatures you control have first strike.

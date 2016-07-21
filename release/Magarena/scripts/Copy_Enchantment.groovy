@@ -9,19 +9,17 @@ def choice = new MagicTargetChoice("an enchantment");
                 new MagicMayChoice(choice),
                 MagicCopyPermanentPicker.create(),
                 this,
-                "You may\$ have SN enter the battlefield as a copy of any enchantment\$ on the battlefield."
+                "PN may\$ have SN enter the battlefield as a copy of any enchantment on the battlefield.\$"
             );
         }
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                event.processTargetPermanent(game, {
-                    game.doAction(new MagicEnterAsCopyAction(event.getCardOnStack(), it))
-                });
+                game.doAction(new EnterAsCopyAction(event.getCardOnStack(), event.getTarget()))
             } else {
                 game.logAppendMessage(event.getPlayer(), "Put ${event.getCardOnStack()} onto the battlefield.");
-                game.doAction(new MagicPlayCardFromStackAction(
+                game.doAction(new PlayCardFromStackAction(
                     event.getCardOnStack()
                 ));
             }

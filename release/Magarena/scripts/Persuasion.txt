@@ -1,11 +1,12 @@
 name=Persuasion
-image=http://mtgimage.com/card/persuasion.jpg
+image=http://magiccards.info/scans/en/10e/95.jpg
 value=3.811
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={3}{U}{U}
+ability=Enchant creature;\
+        You control enchanted creature.
 timing=aura
-ability=You control enchanted creature.
 enchant=gain control,neg creature
-oracle=Enchant creature. You control enchanted creature.
+oracle=Enchant creature\nYou control enchanted creature.

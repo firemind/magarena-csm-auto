@@ -1,5 +1,5 @@
 name=Sunblast Angel
-image=http://mtgimage.com/card/sunblast%20angel.jpg
+image=http://magiccards.info/scans/en/c14/92.jpg
 value=3.974
 removal=2
 rarity=R
@@ -7,7 +7,7 @@ type=Creature
 subtype=Angel
 cost={4}{W}{W}
 pt=4/5
-ability=flying;\
+ability=Flying;\
         When SN enters the battlefield, destroy all tapped creatures.
 timing=fmain
-oracle=Flying. When Sunblast Angel enters the battlefield, destroy all tapped creatures.
+oracle=Flying\nWhen Sunblast Angel enters the battlefield, destroy all tapped creatures.

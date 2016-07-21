@@ -1,11 +1,11 @@
 name=Ostiary Thrull
-image=http://mtgimage.com/card/ostiary%20thrull.jpg
+image=http://magiccards.info/scans/en/gp/55.jpg
 value=1.486
 rarity=C
 type=Creature
 subtype=Thrull
 cost={3}{B}
 pt=2/2
-ability={W},{T}:Tap target creature.
+ability={W}, {T}: Tap target creature.
 timing=main
 oracle={W}, {T}: Tap target creature.

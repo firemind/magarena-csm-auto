@@ -1,10 +1,10 @@
 name=Copy Artifact
-image=http://mtgimage.com/set/me4/copy%20artifact.jpg
+image=http://magiccards.info/scans/en/me4/44.jpg
 value=4.540
 rarity=R
 type=Enchantment
 cost={1}{U}
 ability=Cast SN with AI only if there is an artifact on the battlefield.
-timing=main
+timing=enchantment
 requires_groovy_code
 oracle=You may have Copy Artifact enter the battlefield as a copy of any artifact on the battlefield, except it's an enchantment in addition to its other types.

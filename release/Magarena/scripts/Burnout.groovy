@@ -4,7 +4,7 @@
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_INSTANT_SPELL,
+                NEG_TARGET_INSTANT_SPELL,
                 this,
                 "Counter target instant spell\$ if it's blue. " +
                 "PN draws a card at the beginning of the next turn's upkeep."
@@ -14,13 +14,10 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetCardOnStack(game, {
                 if (it.hasColor(MagicColor.Blue)) {
-                    game.addEvent(new MagicCounterUnlessEvent(event.getSource(),it,MagicManaCost.create("{1}")));
+                    game.doAction(new CounterItemOnStackAction(it));
                 }
-                game.doAction(new MagicAddTriggerAction(
-                    MagicAtUpkeepTrigger.YouDraw(
-                        event.getSource(), 
-                        event.getPlayer()
-                    )
+                game.doAction(new AddTriggerAction(
+                    AtUpkeepTrigger.YouDraw(event.getSource(), event.getPlayer())
                 ));
             });
         }

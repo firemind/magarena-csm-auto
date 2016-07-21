@@ -1,12 +1,12 @@
 name=Sinew Sliver
-image=http://mtgimage.com/card/sinew%20sliver.jpg
+image=http://magiccards.info/scans/en/pc/30.jpg
 value=4.253
 rarity=C
 type=Creature
 subtype=Sliver
 cost={1}{W}
 pt=1/1
-ability=all sliver creatures get +1/+1
+ability=All Sliver creatures get +1/+1.
 static=all
 timing=main
 oracle=All Sliver creatures get +1/+1.

@@ -1,25 +1,33 @@
 package magic.model.condition;
 
 import magic.model.MagicAbility;
+import magic.model.MagicCard;
+import magic.model.MagicColor;
 import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicManaCost;
 import magic.model.MagicPermanent;
+import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
-import magic.model.MagicColor;
-import magic.model.MagicCard;
-import magic.model.MagicPlayer;
-import magic.model.choice.MagicTargetChoice;
 import magic.model.event.MagicPermanentActivation;
-import magic.model.target.MagicTargetType;
-import magic.model.target.MagicTargetFilter;
-import magic.model.target.MagicTargetFilterFactory;
 import magic.model.target.MagicOtherCardTargetFilter;
 import magic.model.target.MagicOtherPermanentTargetFilter;
+import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetFilterFactory;
+import magic.model.target.MagicTargetType;
 
 public class MagicConditionFactory {
-    
+
+    public static MagicCondition CounterAtMost(final MagicCounterType counterType, final int n) {
+        return new MagicCondition() {
+            public boolean accept(final MagicSource source) {
+                final MagicPermanent permanent = (MagicPermanent)source;
+                return permanent.getCounters(counterType) <= n;
+            }
+        };
+    }
+
     public static MagicCondition CounterAtLeast(final MagicCounterType counterType, final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -28,7 +36,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition CounterEqual(final MagicCounterType counterType, final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -42,15 +50,6 @@ public class MagicConditionFactory {
         return MagicManaCost.create(manaCost).getCondition();
     }
 
-    public static MagicCondition HasOptions(final MagicPlayer player, final MagicTargetChoice targetChoice) {
-        return new MagicCondition() {
-            public boolean accept(final MagicSource source) {
-                final MagicGame game = source.getGame();
-                return targetChoice.hasOptions(game, player.map(game), source, false);
-            }
-        };
-    }
-
     public static MagicCondition HasSubType(final MagicSubType subtype) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -58,7 +57,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition NotSubType(final MagicSubType subtype) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -66,7 +65,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition HasAbility(final MagicAbility ability) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -74,7 +73,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition NoAbility(final MagicAbility ability) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -90,7 +89,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition LibraryAtLeast(final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -98,7 +97,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition GraveyardAtLeast(final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -106,7 +105,42 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
+    public static MagicCondition DevotionAtLeast(final MagicColor color, final int n) {
+        return new MagicCondition() {
+            public boolean accept(final MagicSource source) {
+                return source.getController().getDevotion(color) >= n;
+            }
+        };
+    }
+
+    public static MagicCondition EnchantedIs(final MagicTargetFilter<MagicPermanent> filter) {
+        return new MagicCondition() {
+            public boolean accept(final MagicSource source) {
+                final MagicPermanent permanent = (MagicPermanent)source;
+                return filter.accept(source, source.getController(), permanent.getEnchantedPermanent());
+            }
+        };
+    }
+
+    public static MagicCondition EquippedIs(final MagicTargetFilter<MagicPermanent> filter) {
+        return new MagicCondition() {
+            public boolean accept(final MagicSource source) {
+                final MagicPermanent permanent = (MagicPermanent)source;
+                return filter.accept(source, source.getController(), permanent.getEquippedCreature());
+            }
+        };
+    }
+
+    public static MagicCondition SelfIs(final MagicTargetFilter<MagicPermanent> filter) {
+        return new MagicCondition() {
+            public boolean accept(final MagicSource source) {
+                final MagicPermanent permanent = (MagicPermanent)source;
+                return filter.accept(source, source.getController(), permanent);
+            }
+        };
+    }
+
     public static MagicCondition YouLifeAtLeast(final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -114,7 +148,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition YouLifeOrLess(final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -130,7 +164,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition OpponentGainLifeOrMore(final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -138,7 +172,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition OpponentLoseLifeOrMore(final int n) {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
@@ -146,7 +180,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition SingleActivation(final MagicPermanentActivation act) {
         return new MagicCondition() {
             @Override
@@ -156,61 +190,98 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition YouControl(final MagicTargetFilter<MagicPermanent> filter) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getController().controlsPermanent(filter);
+                return source.getController().controlsPermanent(source, filter);
             }
         };
     }
-    
+
+    public static MagicCondition YouControlOr(final MagicTargetFilter<MagicPermanent> filter1,final MagicTargetFilter<MagicPermanent> filter2) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicSource source) {
+                return source.getController().controlsPermanent(source, filter1) || source.getController().controlsPermanent(source, filter2);
+            }
+        };
+    }
+
+    public static MagicCondition PlayerControlsSource(final MagicPlayer player) {
+        final long id = player.getId();
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicSource source) {
+                return source.getController().getId() == id;
+            }
+        };
+    }
+
     public static MagicCondition YouHaveAtLeast(final MagicTargetFilter<MagicCard> filter, final int amt) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getController().filterCards(filter).size() >= amt;
+                return filter.filter(source.getController()).size() >= amt;
             }
         };
     }
-    
+
     public static MagicCondition YouControlAtLeast(final MagicTargetFilter<MagicPermanent> filter, final int amt) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getController().getNrOfPermanents(filter) >= amt;
+                return source.getController().getNrOfPermanents(source, filter) >= amt;
             }
         };
     }
-    
+
+    public static MagicCondition YouControlAtMost(final MagicTargetFilter<MagicPermanent> filter, final int amt) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicSource source) {
+                return source.getController().getNrOfPermanents(source, filter) <= amt;
+            }
+        };
+    }
+
+    public static MagicCondition OppControlAtLeast(final MagicTargetFilter<MagicPermanent> filter, final int amt) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicSource source) {
+                return source.getOpponent().getNrOfPermanents(source, filter) >= amt;
+            }
+        };
+    }
+
     public static MagicCondition YouControlNone(final MagicTargetFilter<MagicPermanent> filter) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getController().getNrOfPermanents(filter) == 0;
+                return source.getController().getNrOfPermanents(source, filter) == 0;
             }
         };
     }
-    
+
     public static MagicCondition BattlefieldEqual(final MagicTargetFilter<MagicPermanent> filter, final int amt) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getGame().getNrOfPermanents(filter) == amt;
+                return source.getGame().getNrOfPermanents(source, filter) == amt;
             }
         };
     }
-    
+
     public static MagicCondition BattlefieldAtLeast(final MagicTargetFilter<MagicPermanent> filter, final int amt) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getGame().getNrOfPermanents(filter) >= amt;
+                return source.getGame().getNrOfPermanents(source, filter) >= amt;
             }
         };
     }
-    
+
     public static MagicCondition YouControlAnother(final MagicTargetFilter<MagicPermanent> filter) {
         return new MagicCondition() {
             @Override
@@ -221,7 +292,7 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition YouControlAnotherAtLeast(final MagicTargetFilter<MagicPermanent> filter, final int amt) {
         return new MagicCondition() {
             @Override
@@ -232,16 +303,16 @@ public class MagicConditionFactory {
             }
         };
     }
-    
+
     public static MagicCondition OpponentControl(final MagicTargetFilter<MagicPermanent> filter) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return source.getOpponent().controlsPermanent(filter);
+                return source.getOpponent().controlsPermanent(source, filter);
             }
         };
     }
-    
+
     public static MagicCondition OtherCardInHand(final MagicColor color, final int amt) {
         return new MagicCondition() {
             @Override
@@ -252,7 +323,7 @@ public class MagicConditionFactory {
                 );
                 final MagicGame game = source.getGame();
                 final MagicPlayer player = source.getController();
-                return game.filterCards(player, filter).size() >= amt;
+                return filter.filter(player).size() >= amt;
             }
         };
     }

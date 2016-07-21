@@ -1,11 +1,11 @@
 name=Elvish Pathcutter
-image=http://mtgimage.com/card/elvish%20pathcutter.jpg
+image=http://magiccards.info/scans/en/on/256.jpg
 value=0.963
 rarity=C
 type=Creature
 subtype=Elf,Scout
 cost={3}{G}
 pt=1/2
-ability={2}{G}:Target Elf creature gains forestwalk until end of turn.
+ability={2}{G}: Target Elf creature gains forestwalk until end of turn.
 timing=main
 oracle={2}{G}: Target Elf creature gains forestwalk until end of turn.

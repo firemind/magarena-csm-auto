@@ -1,11 +1,12 @@
 name=Xira Arien
-image=http://mtgimage.com/card/xira%20arien.jpg
+image=http://magiccards.info/scans/en/me3/187.jpg
 value=3.598
 rarity=R
 type=Legendary,Creature
 subtype=Insect,Wizard
 cost={B}{R}{G}
 pt=1/2
-ability=flying;{B}{R}{G},{T}:Target player draws a card.
+ability=Flying;\
+        {B}{R}{G}, {T}: Target player draws a card.
 timing=main
-oracle=Flying. {B}{R}{G}, {T}: Target player draws a card.
+oracle=Flying\n{B}{R}{G}, {T}: Target player draws a card.

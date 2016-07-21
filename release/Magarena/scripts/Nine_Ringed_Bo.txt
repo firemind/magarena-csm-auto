@@ -1,9 +1,9 @@
 name=Nine-Ringed Bo
-image=http://mtgimage.com/card/nine-ringed%20bo.jpg
+image=http://magiccards.info/scans/en/chk/263.jpg
 value=1.028
 rarity=U
 type=Artifact
 cost={3}
+ability={T}: SN deals 1 damage to target Spirit creature. If that creature would die this turn, exile it instead.
 timing=artifact
-requires_groovy_code
 oracle={T}: Nine-Ringed Bo deals 1 damage to target Spirit creature. If that creature would die this turn, exile it instead.

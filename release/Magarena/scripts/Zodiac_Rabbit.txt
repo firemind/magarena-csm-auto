@@ -1,11 +1,11 @@
 name=Zodiac Rabbit
-image=http://mtgimage.com/card/zodiac%20rabbit.jpg
+image=http://magiccards.info/scans/en/p3k/162.jpg
 value=3.016
 rarity=C
 type=Creature
 subtype=Rabbit
 cost={G}
 pt=1/1
-ability=forestwalk
+ability=Forestwalk
 timing=main
 oracle=Forestwalk

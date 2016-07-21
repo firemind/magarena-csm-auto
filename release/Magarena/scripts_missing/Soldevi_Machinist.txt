@@ -1,11 +1,11 @@
 name=Soldevi Machinist
-image=http://mtgimage.com/card/soldevi%20machinist.jpg
-value=2.500
+image=http://magiccards.info/scans/en/me4/63.jpg
+value=2.658
 rarity=U
 type=Creature
 subtype=Human,Wizard,Artificer
 cost={1}{U}
 pt=1/1
-ability={T}: Add {2} to your mana pool. Spend this mana only to activate abilities of artifacts.
+ability={T}: Add {C}{C} to your mana pool. Spend this mana only to activate abilities of artifacts.
 timing=main
-oracle={T}: Add {2} to your mana pool. Spend this mana only to activate abilities of artifacts.
+oracle={T}: Add {C}{C} to your mana pool. Spend this mana only to activate abilities of artifacts.

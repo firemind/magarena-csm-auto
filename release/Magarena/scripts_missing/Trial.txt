@@ -1,9 +1,10 @@
 name=Trial
-image=http://mtgimage.com/card/trialerror.jpg
-value=2.500
+image=http://magiccards.info/scans/en/di/158a.jpg
+value=3.196
 rarity=U
 type=Instant
 cost={W}{U}
 effect=Return all creatures blocking or blocked by target creature to their owner's hand.
-timing=removal
+split=Error
+timing=block
 oracle=Return all creatures blocking or blocked by target creature to their owner's hand.

@@ -1,12 +1,13 @@
 name=Talons of Falkenrath
-image=http://mtgimage.com/card/talons%20of%20falkenrath.jpg
+image=http://magiccards.info/scans/en/dka/105.jpg
 value=1.663
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{R}
 ability=Flash;\
-        Enchanted creature has "{1}{R}: SN gets +2/+0 until end of turn."
+        Enchant creature;\
+        Enchanted creature has "{1}{R}: This creature gets +2/+0 until end of turn."
 timing=pumpFlash
 enchant=pump,pos creature
-oracle=Flash. Enchant creature. Enchanted creature has "{1}{R}: This creature gets +2/+0 until end of turn."
+oracle=Flash\nEnchant creature\nEnchanted creature has "{1}{R}: This creature gets +2/+0 until end of turn."

@@ -1,11 +1,11 @@
 name=Sea Sprite
-image=http://mtgimage.com/card/sea%20sprite.jpg
+image=http://magiccards.info/scans/en/med/48.jpg
 value=3.303
 rarity=C
 type=Creature
 subtype=Faerie
 cost={1}{U}
 pt=1/1
-ability=protection from red;flying
+ability=Flying, protection from red
 timing=main
 oracle=Flying, protection from red

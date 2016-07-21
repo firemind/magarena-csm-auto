@@ -4,15 +4,16 @@
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 cardOnStack,
-                MagicTargetChoice.NEG_TARGET_SPELL,
+                NEG_TARGET_SPELL,
                 this,
-                "Counter target spell\$. If you do, put it on top of its owner's library."
+                "Counter target spell\$. If that spell is countered this way, "+
+                "put it on top of its owner's library instead of into that player's graveyard."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetCardOnStack(game, {
-                game.doAction(new MagicCounterItemOnStackAction(it,MagicLocationType.TopOfOwnersLibrary));
+                game.doAction(new CounterItemOnStackAction(it,MagicLocationType.TopOfOwnersLibrary));
             });
         }
     }

@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{1}{U}{U}{R}")
+                MagicPayManaCostEvent.Cast(source,"{1}{U}{U}{R}")
             ];
         }
         @Override
@@ -11,15 +11,13 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Counter each spell you don't control."
+                "Counter each spell PN doesn't control."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicItemOnStack> targets=
-                game.filterItemOnStack(event.getPlayer(),MagicTargetFilterFactory.SPELL_YOU_DONT_CONTROL);
-            for (final MagicItemOnStack targetSpell : targets) {
-                game.doAction(new MagicCounterItemOnStackAction(targetSpell));
+            SPELL_YOU_DONT_CONTROL.filter(event) each {
+                game.doAction(new CounterItemOnStackAction(it));
             }
         }
     }

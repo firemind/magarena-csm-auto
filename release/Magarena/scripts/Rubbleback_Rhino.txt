@@ -1,11 +1,11 @@
 name=Rubbleback Rhino
-image=http://mtgimage.com/card/rubbleback%20rhino.jpg
+image=http://magiccards.info/scans/en/rtr/132.jpg
 value=2.239
 rarity=C
 type=Creature
 subtype=Rhino
-ability=hexproof
 cost={4}{G}
 pt=3/4
+ability=Hexproof
 timing=main
 oracle=Hexproof

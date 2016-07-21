@@ -1,10 +1,10 @@
 name=Minamo, School at Water's Edge
-image=http://mtgimage.com/card/minamo,%20school%20at%20water's%20edge.jpg
+image=http://magiccards.info/scans/en/chk/279.jpg
 value=4.317
 rarity=R
 type=Legendary,Land
-mana=u2
+mana=u3
 ability={T}: Add {U} to your mana pool.;\
-        {U},{T}:Untap target legendary creature.
+        {U}, {T}: Untap target legendary permanent.
 timing=land
-oracle={T}: Add {U} to your mana pool. {U}, {T}: Untap target legendary permanent.
+oracle={T}: Add {U} to your mana pool.\n{U}, {T}: Untap target legendary permanent.

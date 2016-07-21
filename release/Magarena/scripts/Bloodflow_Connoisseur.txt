@@ -1,11 +1,11 @@
 name=Bloodflow Connoisseur
-image=http://mtgimage.com/card/bloodflow%20connoisseur.jpg
+image=http://magiccards.info/scans/en/avr/87.jpg
 value=2.971
 rarity=C
 type=Creature
 subtype=Vampire
 cost={2}{B}
 pt=1/1
-ability=Sacrifice a creature: Put a +1/+1 counter on SN.
+ability=Sacrifice a creature: Put a +1/+1 counter on SN. Activate this ability with AI only if you control another creature.
 timing=main
 oracle=Sacrifice a creature: Put a +1/+1 counter on Bloodflow Connoisseur.

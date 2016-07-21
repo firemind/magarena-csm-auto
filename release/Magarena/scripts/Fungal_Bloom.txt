@@ -1,9 +1,9 @@
 name=Fungal Bloom
-image=http://mtgimage.com/set/me2/fungal%20bloom.jpg
+image=http://magiccards.info/scans/en/me2/165.jpg
 value=3.861
 rarity=R
 type=Enchantment
 cost={G}{G}
 ability={G}{G}: Put a spore counter on target Fungus.
-timing=main
+timing=enchantment
 oracle={G}{G}: Put a spore counter on target Fungus.

@@ -1,5 +1,5 @@
 [
-     new MagicPermanentActivation(
+    new MagicPermanentActivation(
         new MagicActivationHints(MagicTiming.Pump),
         "Pump"
     ) {
@@ -15,23 +15,19 @@
             return new MagicEvent(
                 source,
                 this,
-                "Exile the top card of PN's library. If that card is a land card, SN gets -4/-0 until end of turn. " + 
+                "Exile the top card of PN's library. If that card is a land card, SN gets -4/-0 until end of turn. " +
                 "Otherwise, SN gets +2/+0 until end of turn."
             );
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicCard card : event.getPlayer().getLibrary().getCardsFromTop(1)) {
-                game.doAction(new MagicRemoveCardAction(
-                    card,
-                    MagicLocationType.OwnersLibrary
-                ));
-                game.doAction(new MagicMoveCardAction(
+                game.doAction(new ShiftCardAction(
                     card,
                     MagicLocationType.OwnersLibrary,
                     MagicLocationType.Exile
                 ));
-                game.doAction(new MagicChangeTurnPTAction(
+                game.doAction(new ChangeTurnPTAction(
                     event.getPermanent(),
                     card.hasType(MagicType.Land) ? -4 : +2,
                     0

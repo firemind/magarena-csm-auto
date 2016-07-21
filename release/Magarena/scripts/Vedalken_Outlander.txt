@@ -1,11 +1,11 @@
 name=Vedalken Outlander
-image=http://mtgimage.com/card/vedalken%20outlander.jpg
+image=http://magiccards.info/scans/en/cfx/132.jpg
 value=2.991
 rarity=C
 type=Artifact,Creature
 subtype=Vedalken,Scout
 cost={W}{U}
 pt=2/2
-ability=protection from red
-timing=smain
+ability=Protection from red
+timing=main
 oracle=Protection from red

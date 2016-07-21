@@ -1,11 +1,12 @@
 name=Stormwatch Eagle
-image=http://mtgimage.com/card/stormwatch%20eagle.jpg
+image=http://magiccards.info/scans/en/pr/50.jpg
 value=1.348
 rarity=C
 type=Creature
 subtype=Bird
 cost={3}{U}
 pt=2/1
-ability=flying;Sacrifice a land:Return SN to its owner's hand.
+ability=Flying;\
+        Sacrifice a land: Return SN to its owner's hand.
 timing=main
-oracle=Flying. Sacrifice a land: Return Stormwatch Eagle to its owner's hand.
+oracle=Flying\nSacrifice a land: Return Stormwatch Eagle to its owner's hand.

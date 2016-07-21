@@ -1,12 +1,13 @@
 name=Green Scarab
-image=http://mtgimage.com/card/green%20scarab.jpg
+image=http://magiccards.info/scans/en/ia/252.jpg
 value=2.190
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={W}
-ability=Enchanted creature can't be blocked by green creatures.
+ability=Enchant creature;\
+        Enchanted creature can't be blocked by green creatures.;\
+        Enchanted creature gets +2/+2 as long as an opponent controls a green permanent.
 enchant=pump,pos creature
 timing=aura
-requires_groovy_code
-oracle=Enchant creature. Enchanted creature can't be blocked by green creatures. Enchanted creature gets +2/+2 as long as an opponent controls a green permanent.
+oracle=Enchant creature\nEnchanted creature can't be blocked by green creatures.\nEnchanted creature gets +2/+2 as long as an opponent controls a green permanent.

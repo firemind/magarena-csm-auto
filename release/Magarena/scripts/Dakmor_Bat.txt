@@ -1,11 +1,11 @@
 name=Dakmor Bat
-image=http://mtgimage.com/card/dakmor%20bat.jpg
+image=http://magiccards.info/scans/en/po2/8.jpg
 value=1.870
 rarity=C
 type=Creature
 subtype=Bat
 cost={1}{B}
 pt=1/1
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

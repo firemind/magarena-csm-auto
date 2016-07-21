@@ -1,12 +1,13 @@
 name=Bonehoard
-image=http://mtgimage.com/card/bonehoard.jpg
+image=http://magiccards.info/scans/en/c15/245.jpg
+image_updated=2016-02-29
 value=3.812
 rarity=R
 type=Artifact
 subtype=Equipment
 cost={4}
 ability=Living weapon;\
+        Equipped creature gets +X/+X, where X is the number of creature cards in all graveyards.;\
         Equip {2}
 timing=equipment
-requires_groovy_code
-oracle=Living weapon. Equipped creature gets +X/+X, where X is the number of creature cards in all graveyards. Equip {2}
+oracle=Living weapon\nEquipped creature gets +X/+X, where X is the number of creature cards in all graveyards.\nEquip {2}

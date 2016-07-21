@@ -1,7 +1,7 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     if (event.getPlayer().controlsPermanent(MagicSubType.Demon) == false) {
-        game.doAction(new MagicChangeLifeAction(event.getPlayer(),-1));
+        game.doAction(new ChangeLifeAction(event.getPlayer(),-1));
     }
 }
 
@@ -15,15 +15,15 @@ def event = {
 }
 
 [
-    new MagicWhenSelfAttacksTrigger() {
+    new ThisAttacksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent attacker) {
             return permanent.getController().controlsPermanent(MagicSubType.Demon) == false ?
                 event(permanent):
                 MagicEvent.NONE;
         }
-    },    
-    new MagicWhenSelfBlocksTrigger() {
+    },
+    new ThisBlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             return permanent.getController().controlsPermanent(MagicSubType.Demon) == false ?

@@ -1,10 +1,10 @@
 name=Hinterland Harbor
-image=http://mtgimage.com/card/hinterland%20harbor.jpg
+image=http://magiccards.info/scans/en/isd/241.jpg
 value=3.887
 rarity=R
 type=Land
 mana=g3u3
-ability={T}: Add {G} or {U} to your mana pool.;\
-        SN enters the battlefield tapped unless you control a Forest or an Island.
+ability=SN enters the battlefield tapped unless you control a Forest or an Island.;\
+        {T}: Add {G} or {U} to your mana pool.
 timing=land
-oracle=Hinterland Harbor enters the battlefield tapped unless you control a Forest or an Island. {T}: Add {G} or {U} to your mana pool.
+oracle=Hinterland Harbor enters the battlefield tapped unless you control a Forest or an Island.\n{T}: Add {G} or {U} to your mana pool.

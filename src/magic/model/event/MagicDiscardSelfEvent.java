@@ -2,7 +2,7 @@ package magic.model.event;
 
 import magic.model.MagicCard;
 import magic.model.MagicGame;
-import magic.model.action.MagicDiscardCardAction;
+import magic.model.action.DiscardCardAction;
 
 public class MagicDiscardSelfEvent extends MagicEvent {
 
@@ -14,10 +14,6 @@ public class MagicDiscardSelfEvent extends MagicEvent {
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION = new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDiscardCardAction(event.getPlayer(), event.getCard()));
-        }
-    };
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) ->
+        game.doAction(new DiscardCardAction(event.getPlayer(), event.getCard()));
 }

@@ -1,11 +1,11 @@
 name=Rakdos Ickspitter
-image=http://mtgimage.com/card/rakdos%20ickspitter.jpg
+image=http://magiccards.info/scans/en/di/128.jpg
 value=3.552
 rarity=C
 type=Creature
 subtype=Thrull
 cost={1}{B}{R}
 pt=1/1
+ability={T}: SN deals 1 damage to target creature.~That creature's controller loses 1 life.
 timing=main
-requires_groovy_code
 oracle={T}: Rakdos Ickspitter deals 1 damage to target creature and that creature's controller loses 1 life.

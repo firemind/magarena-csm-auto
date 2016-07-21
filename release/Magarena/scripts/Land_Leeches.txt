@@ -1,11 +1,11 @@
 name=Land Leeches
-image=http://mtgimage.com/card/land%20leeches.jpg
+image=http://magiccards.info/scans/en/4e/139.jpg
 value=3.076
 rarity=C
 type=Creature
 subtype=Leech
 cost={1}{G}{G}
 pt=2/2
-ability=first strike
+ability=First strike
 timing=main
 oracle=First strike

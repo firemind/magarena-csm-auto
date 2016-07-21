@@ -1,11 +1,11 @@
 name=Filigree Sages
-image=http://mtgimage.com/card/filigree%20sages.jpg
+image=http://magiccards.info/scans/en/ala/44.jpg
 value=2.991
 rarity=U
 type=Artifact,Creature
 subtype=Vedalken,Wizard
 cost={3}{U}
 pt=2/3
-ability={2}{U}:Untap target artifact.
-timing=artifact
+ability={2}{U}: Untap target artifact.
+timing=main
 oracle={2}{U}: Untap target artifact.

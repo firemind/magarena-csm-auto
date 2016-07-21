@@ -1,9 +1,0 @@
-name=Harmless Assault
-image=http://mtgimage.com/card/harmless%20assault.jpg
-value=2.500
-rarity=C
-type=Instant
-cost={2}{W}{W}
-effect=Prevent all combat damage that would be dealt this turn by attacking creatures.
-timing=removal
-oracle=Prevent all combat damage that would be dealt this turn by attacking creatures.

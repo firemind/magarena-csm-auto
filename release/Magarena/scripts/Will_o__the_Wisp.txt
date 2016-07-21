@@ -1,12 +1,12 @@
 name=Will-o'-the-Wisp
-image=http://mtgimage.com/card/will%2Do%27%2Dthe%2Dwisp.jpg
+image=http://magiccards.info/scans/en/9e/169.jpg
 value=4.549
 rarity=R
 type=Creature
 subtype=Spirit
 cost={B}
 pt=0/1
-ability=flying;\
+ability=Flying;\
         {B}: Regenerate SN.
 timing=main
-oracle=Flying. {B}: Regenerate Will-o'-the-Wisp.
+oracle=Flying\n{B}: Regenerate Will-o'-the-Wisp.

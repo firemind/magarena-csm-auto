@@ -1,8 +1,8 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
-            return (otherPermanent.isCreature() && 
+            return (otherPermanent.isCreature() &&
                     otherPermanent.isFriend(permanent) &&
                     otherPermanent.getPower() == 1 &&
                     otherPermanent.getToughness() == 1) ?
@@ -19,7 +19,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPermanent creature = event.getRefPermanent();
             if (creature.getPower() == 1 && creature.getToughness() == 1) {
-                game.doAction(new MagicChangeCountersAction(creature,MagicCounterType.PlusOne,2));
+                game.doAction(new ChangeCountersAction(creature,MagicCounterType.PlusOne,2));
             }
         }
     }

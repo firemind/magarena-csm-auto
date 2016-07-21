@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
             return new MagicEvent(
@@ -12,8 +12,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicCard card : event.getRefPlayer().getLibrary().getCardsFromTop(10)) {
-                game.doAction(new MagicRemoveCardAction(card, MagicLocationType.OwnersLibrary));
-                game.doAction(new MagicMoveCardAction(card, MagicLocationType.OwnersLibrary, MagicLocationType.Exile));
+                game.doAction(new ShiftCardAction(card, MagicLocationType.OwnersLibrary, MagicLocationType.Exile));
             }
         }
     }

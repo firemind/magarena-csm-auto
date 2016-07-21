@@ -1,11 +1,11 @@
 name=Crypt Cobra
-image=http://mtgimage.com/card/crypt%20cobra.jpg
+image=http://magiccards.info/scans/en/mr/12.jpg
 value=3.219
 rarity=U
 type=Creature
 subtype=Snake
 cost={3}{B}
 pt=3/3
+ability=Whenever SN attacks and isn't blocked, defending player gets a poison counter.
 timing=main
-requires_groovy_code
 oracle=Whenever Crypt Cobra attacks and isn't blocked, defending player gets a poison counter.

@@ -1,11 +1,11 @@
 name=Icatian Scout
-image=http://mtgimage.com/card/icatian%20scout.jpg
+image=http://magiccards.info/scans/en/me2/17.jpg
 value=3.056
 rarity=C
 type=Creature
 subtype=Human,Soldier,Scout
 cost={W}
 pt=1/1
-ability={1},{T}:Target creature gains first strike until end of turn.
+ability={1}, {T}: Target creature gains first strike until end of turn.
 timing=main
 oracle={1}, {T}: Target creature gains first strike until end of turn.

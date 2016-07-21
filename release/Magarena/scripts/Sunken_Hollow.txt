@@ -1,0 +1,11 @@
+name=Sunken Hollow
+image=http://magiccards.info/scans/en/bfz/249.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=M
+type=Land
+subtype=Island,Swamp
+mana=u3b3
+ability=SN enters the battlefield tapped unless you control two or more basic lands.
+timing=land
+oracle=Sunken Hollow enters the battlefield tapped unless you control two or more basic lands.

@@ -1,13 +1,13 @@
 name=Purphoros's Emissary
-image=http://mtgimage.com/card/purphoros%27s%20emissary.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ths/136.jpg
+value=3.538
 rarity=U
 type=Enchantment,Creature
 subtype=Ox
 cost={3}{R}
 pt=3/3
 ability=Bestow {6}{R};\
-        SN can't be blocked except by two or more creatures.;\
-        Enchanted creature gets +3/+3 and can't be blocked except by two or more creatures.
+        Menace;\
+        Enchanted creature gets +3/+3 and has menace.
 timing=main
-oracle=Bestow {6}{R}. Purphoros's Emissary can't be blocked except by two or more creatures. Enchanted creature gets +3/+3 and can't be blocked except by two or more creatures.
+oracle=Bestow {6}{R}\nMenace\nEnchanted creature gets +3/+3 and has menace.

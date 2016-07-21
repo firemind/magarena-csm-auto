@@ -2,12 +2,12 @@ package magic.game.state;
 
 import java.util.ArrayList;
 import java.util.List;
-import magic.model.MagicPlayerDefinition;
+import magic.model.DuelPlayerConfig;
 
 public class GamePlayerState {
     GamePlayerState() {}
 
-    private MagicPlayerDefinition player;
+    private DuelPlayerConfig player;
     private final List<GameCardState> library = new ArrayList<>();
     private final List<GameCardState> hand = new ArrayList<>();
     private final List<GameCardState> permanents = new ArrayList<>();
@@ -19,11 +19,11 @@ public class GamePlayerState {
     private String aiType = "";
     private String deckProfileColors = "";
 
-    public void setPlayerDefinition(MagicPlayerDefinition magicPlayerDefinition) {
+    public void setPlayerDefinition(DuelPlayerConfig magicPlayerDefinition) {
         this.player = magicPlayerDefinition;
     }
 
-    public MagicPlayerDefinition getPlayerDefinition() {
+    public DuelPlayerConfig getPlayerDefinition() {
         return player;
     }
 
@@ -40,7 +40,7 @@ public class GamePlayerState {
     }
 
     public List<GameCardState> getPermanents() {
-        return permanents;                
+        return permanents;
     }
 
     public void addToHand(String cardName, int quantity) {
@@ -65,7 +65,7 @@ public class GamePlayerState {
 
     public List<GameCardState> getExiled() {
         return exiled;
-    }    
+    }
 
     public void setLife(int i) {
         this.life = i;

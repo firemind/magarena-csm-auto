@@ -1,11 +1,11 @@
 name=Gladecover Scout
-image=http://mtgimage.com/card/gladecover%20scout.jpg
+image=http://magiccards.info/scans/en/m14/176.jpg
 value=3.402
 rarity=C
 type=Creature
 subtype=Elf,Scout
 cost={G}
 pt=1/1
-ability=hexproof
+ability=Hexproof
 timing=main
 oracle=Hexproof

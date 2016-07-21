@@ -1,11 +1,11 @@
 name=Sylvan Ranger
-image=http://mtgimage.com/card/sylvan%20ranger.jpg
+image=http://magiccards.info/scans/en/c14/216.jpg
 value=3.525
 rarity=C
 type=Creature
 subtype=Elf,Scout
 cost={1}{G}
 pt=1/1
-ability=When SN enters the battlefield, you may search your library for a basic land card, reveal it, and put it into your hand. Then shuffle your library.
+ability=When SN enters the battlefield, you may search your library for a basic land card, reveal it, put it into your hand, then shuffle your library.
 timing=main
 oracle=When Sylvan Ranger enters the battlefield, you may search your library for a basic land card, reveal it, put it into your hand, then shuffle your library.

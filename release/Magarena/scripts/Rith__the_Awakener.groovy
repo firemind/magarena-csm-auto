@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -9,8 +9,8 @@
                     MagicColorChoice.MOST_INSTANCE
                 ),
                 this,
-                "You may\$ pay {2}{G}\$. If you do, choose a color\$. "+
-                "Put a 1/1 green Saproling creature token onto the battlefield for each permanent of that color."
+                "PN may\$ pay {2}{G}\$. If PN does, he or she chooses a color\$, "+
+                "then puts a 1/1 green Saproling creature token onto the battlefield for each permanent of that color."
             );
         }
         @Override
@@ -18,11 +18,9 @@
             if (event.isYes()) {
                 final MagicPlayer player=event.getPlayer();
                 final MagicColor color=event.getChosenColor();
-                final Collection<MagicPermanent> targets=
-                    game.filterPermanents(player,MagicTargetFilterFactory.PERMANENT);
-                for (final MagicPermanent permanent : targets) {
-                    if (permanent.hasColor(color)) {
-                        game.doAction(new MagicPlayTokenAction(player,TokenCardDefinitions.get("1/1 green Saproling creature token")));
+                PERMANENT.filter(event) each {
+                    if (it.hasColor(color)) {
+                        game.doAction(new PlayTokenAction(player,CardDefinitions.getToken("1/1 green Saproling creature token")));
                     }
                 }
             }

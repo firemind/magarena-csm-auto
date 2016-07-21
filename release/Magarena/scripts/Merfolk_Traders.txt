@@ -1,11 +1,11 @@
 name=Merfolk Traders
-image=http://mtgimage.com/card/merfolk%20traders.jpg
+image=http://magiccards.info/scans/en/wl/43.jpg
 value=2.818
 rarity=C
 type=Creature
 subtype=Merfolk
 cost={1}{U}
 pt=1/2
-ability=When SN enters the battlefield, draw a card, then discards a card.
+ability=When SN enters the battlefield, draw a card, then discard a card.
 timing=main
 oracle=When Merfolk Traders enters the battlefield, draw a card, then discard a card.

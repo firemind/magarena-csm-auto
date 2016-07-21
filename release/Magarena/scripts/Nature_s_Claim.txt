@@ -1,10 +1,10 @@
 name=Nature's Claim
-image=http://mtgimage.com/card/nature%27s%20claim.jpg
+image=http://magiccards.info/scans/en/cns/171.jpg
 value=4.706
 removal=1
 rarity=C
 type=Instant
 cost={G}
+effect=Destroy target artifact or enchantment.~Its controller gains 4 life.
 timing=removal
-requires_groovy_code
 oracle=Destroy target artifact or enchantment. Its controller gains 4 life.

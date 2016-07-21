@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfBecomesBlockedTrigger() {
+    new ThisBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent attacker) {
             final MagicPermanentList plist = permanent.getBlockingCreatures();
@@ -20,19 +20,18 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeTurnPTAction(
+            game.doAction(new ChangeTurnPTAction(
                 event.getPermanent(),
                 0,
                 2
             ));
         }
     },
-    new MagicWhenBlocksTrigger() {
+    new ThisBlocksTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocker) {
             final MagicPermanent blocked = permanent.getBlockedCreature();
-            return (permanent == blocker &&
-                    blocked.isValid() &&
+            return (blocked.isValid() &&
                     (blocked.hasSubType(MagicSubType.Orc))) ?
                 new MagicEvent(
                     permanent,
@@ -43,7 +42,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicChangeTurnPTAction(
+            game.doAction(new ChangeTurnPTAction(
                 event.getPermanent(),
                 0,
                 2

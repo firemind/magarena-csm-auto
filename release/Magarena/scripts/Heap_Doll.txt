@@ -1,11 +1,11 @@
 name=Heap Doll
-image=http://mtgimage.com/card/heap%20doll.jpg
+image=http://magiccards.info/scans/en/shm/253.jpg
 value=3.647
 rarity=U
 type=Artifact,Creature
 subtype=Scarecrow
 cost={1}
 pt=1/1
-ability=Sacrifice SN:Exile target card from a graveyard.
-timing=artifact
+ability=Sacrifice SN: Exile target card from a graveyard.
+timing=main
 oracle=Sacrifice Heap Doll: Exile target card from a graveyard.

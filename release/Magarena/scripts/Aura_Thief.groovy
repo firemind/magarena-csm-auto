@@ -1,5 +1,5 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
@@ -9,12 +9,11 @@
             )
         }
 
-       @Override
+        @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets =
-                game.filterPermanents(event.getPlayer(),MagicTargetFilterFactory.ENCHANTMENT);
-            for (final MagicPermanent target : targets) {
-                game.doAction(new MagicGainControlAction(event.getPlayer(), target));
+            final MagicPlayer player = event.getPlayer();
+            ENCHANTMENT.filter(event) each {
+                game.doAction(new GainControlAction(player, it));
             }
         }
     }

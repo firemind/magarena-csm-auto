@@ -1,0 +1,11 @@
+name=Devout Harpist
+image=http://magiccards.info/scans/en/ul/6.jpg
+value=3.305
+rarity=C
+type=Creature
+subtype=Human
+cost={W}
+pt=1/1
+ability={T}: Destroy target Aura attached to a creature.
+timing=main
+oracle={T}: Destroy target Aura attached to a creature.

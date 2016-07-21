@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -15,7 +15,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer player = event.getPlayer();
-            game.doAction(new MagicChangeLifeAction(
+            game.doAction(new ChangeLifeAction(
                 player,
                 -player.getGraveyard().size()
             ));

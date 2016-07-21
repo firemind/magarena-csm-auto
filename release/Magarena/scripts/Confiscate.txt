@@ -1,11 +1,12 @@
 name=Confiscate
-image=http://mtgimage.com/card/confiscate.jpg
+image=http://magiccards.info/scans/en/9e/68.jpg
 value=4.246
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={4}{U}{U}
+ability=Enchant permanent;\
+        You control enchanted permanent.
 timing=aura
-ability=You control enchanted permanent.
 enchant=gain control,neg permanent
-oracle=Enchant permanent. You control enchanted permanent.
+oracle=Enchant permanent\nYou control enchanted permanent.

@@ -1,6 +1,7 @@
 name=Blightcaster
-image=http://mtgimage.com/card/blightcaster.jpg
-value=3.468
+image=http://magiccards.info/scans/en/ori/85.jpg
+image_updated=2015-11-05
+value=2.500
 rarity=U
 type=Creature
 subtype=Human,Wizard

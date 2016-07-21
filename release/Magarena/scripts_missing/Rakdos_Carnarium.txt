@@ -1,10 +1,11 @@
 name=Rakdos Carnarium
-image=http://mtgimage.com/card/rakdos%20carnarium.jpg
+image=http://magiccards.info/scans/en/mm2/247.jpg
+image_updated=2015-11-05
 value=2.500
-rarity=C
+rarity=U
 type=Land
 ability=SN enters the battlefield tapped.;\
         When SN enters the battlefield, return a land you control to its owner's hand.;\
         {T}: Add {B}{R} to your mana pool.
-timing=main
-oracle=Rakdos Carnarium enters the battlefield tapped. When Rakdos Carnarium enters the battlefield, return a land you control to its owner's hand. {T}: Add {B}{R} to your mana pool.
+timing=land
+oracle=Rakdos Carnarium enters the battlefield tapped.\nWhen Rakdos Carnarium enters the battlefield, return a land you control to its owner's hand.\n{T}: Add {B}{R} to your mana pool.

@@ -1,12 +1,12 @@
 name=Thunder Dragon
-image=http://mtgimage.com/card/thunder%20dragon.jpg
+image=http://magiccards.info/scans/en/ddg/61.jpg
 value=4.190
 rarity=R
 type=Creature
 subtype=Dragon
 cost={5}{R}{R}
 pt=5/5
-ability=flying;\
+ability=Flying;\
         When SN enters the battlefield, SN deals 3 damage to each creature without flying.
 timing=main
-oracle=Flying. When Thunder Dragon enters the battlefield, it deals 3 damage to each creature without flying.
+oracle=Flying\nWhen Thunder Dragon enters the battlefield, it deals 3 damage to each creature without flying.

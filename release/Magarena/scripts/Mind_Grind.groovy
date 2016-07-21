@@ -7,7 +7,7 @@
                 cardOnStack.getOpponent(),
                 payedCost.getX(),
                 this,
-                "PN reveals cards from the top of his or her library until he or she reveals RN land cards, " + 
+                "PN reveals cards from the top of his or her library until he or she reveals RN land cards, " +
                 "then puts all cards revealed this way into his or her graveyard."
             );
         }
@@ -21,7 +21,7 @@
                 if (library.getCardAtTop().hasType(MagicType.Land)) {
                     landCards++;
                 }
-                game.doAction(new MagicMillLibraryAction(player,1));
+                game.doAction(new MillLibraryAction(player,1));
             }
         }
     }

@@ -2,7 +2,7 @@ def action = {
     final MagicGame game, final MagicEvent event ->
     final int cmc = event.getRefInt();
     final MagicTargetFilter filter = new MagicCMCCardFilter(
-        MagicTargetFilterFactory.CREATURE_CARD_FROM_LIBRARY,
+        CREATURE_CARD_FROM_LIBRARY,
         Operator.EQUAL,
         cmc
     );
@@ -27,7 +27,7 @@ def event = {
         source,
         cmc,
         action,
-        "PN searches PN's library for a creature card with converted mana cost RN, put that card onto the battlefield, then shuffle your library."
+        "PN searches his or her library for a creature card with converted mana cost RN, puts that card onto the battlefield, then shuffles his or her library."
     );
 }
 
@@ -42,8 +42,8 @@ def event = {
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
                 new MagicPayManaCostEvent(source, "{1}{G/P}"),
-                new MagicTapEvent(source), 
-                new MagicSacrificePermanentEvent(source, MagicTargetChoice.SACRIFICE_CREATURE),
+                new MagicTapEvent(source),
+                new MagicSacrificePermanentEvent(source, SACRIFICE_CREATURE),
             ];
         }
 
@@ -63,11 +63,11 @@ def event = {
             return [
                 new MagicPayManaCostEvent(source, "{1}"),
                 new MagicPayLifeEvent(source, 2),
-                new MagicTapEvent(source), 
-                new MagicSacrificePermanentEvent(source, MagicTargetChoice.SACRIFICE_CREATURE),
+                new MagicTapEvent(source),
+                new MagicSacrificePermanentEvent(source, SACRIFICE_CREATURE),
             ];
         }
-    
+
         @Override
         public MagicEvent getPermanentEvent(final MagicPermanent source, final MagicPayedCost payedCost) {
             return event(source, payedCost);

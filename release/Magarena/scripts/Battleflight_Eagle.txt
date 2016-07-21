@@ -1,12 +1,12 @@
 name=Battleflight Eagle
-image=http://mtgimage.com/card/battleflight%20eagle.jpg
+image=http://magiccards.info/scans/en/m13/7.jpg
 value=1.784
 rarity=C
 type=Creature
 subtype=Bird
 cost={4}{W}
 pt=2/2
-ability=flying;\
+ability=Flying;\
         When SN enters the battlefield, target creature gets +2/+2 and gains flying until end of turn.
 timing=main
-oracle=Flying. When Battleflight Eagle enters the battlefield, target creature gets +2/+2 and gains flying until end of turn.
+oracle=Flying\nWhen Battleflight Eagle enters the battlefield, target creature gets +2/+2 and gains flying until end of turn.

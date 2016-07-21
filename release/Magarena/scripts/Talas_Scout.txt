@@ -1,11 +1,11 @@
 name=Talas Scout
-image=http://mtgimage.com/card/talas%20scout.jpg
+image=http://magiccards.info/scans/en/po2/52.jpg
 value=3.037
 rarity=C
 type=Creature
 subtype=Human,Pirate,Scout
 cost={1}{U}
 pt=1/2
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

@@ -1,11 +1,12 @@
 name=Epiphany Storm
-image=http://mtgimage.com/card/epiphany%20storm.jpg
+image=http://magiccards.info/scans/en/bng/91.jpg
 value=2.652
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={R}
-ability=Enchanted creature has "{R}, {T}, Discard a card: Draw a card."
-enchant=pump,pos creature
+ability=Enchant creature;\
+        Enchanted creature has "{R}, {T}, Discard a card: Draw a card."
 timing=aura
-oracle=Enchant creature. Enchanted creature has "{R}, {T}, Discard a card: Draw a card."
+enchant=pump,pos creature
+oracle=Enchant creature\nEnchanted creature has "{R}, {T}, Discard a card: Draw a card."

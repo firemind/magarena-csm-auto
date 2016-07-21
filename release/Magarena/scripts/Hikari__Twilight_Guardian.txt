@@ -1,7 +1,8 @@
 name=Hikari, Twilight Guardian
-image=http://mtgimage.com/card/hikari%2C%20twilight%20guardian.jpg
+image=http://magiccards.info/scans/en/mm2/18.jpg
+image_updated=2015-11-05
 value=3.042
-rarity=R
+rarity=U
 type=Legendary,Creature
 subtype=Spirit
 cost={3}{W}{W}
@@ -9,4 +10,4 @@ pt=4/4
 ability=Flying;\
         Whenever you cast a Spirit or Arcane spell, you may exile SN. If you do, return it to the battlefield under its owner's control at the beginning of the next end step.
 timing=main
-oracle=Flying. Whenever you cast a Spirit or Arcane spell, you may exile Hikari, Twilight Guardian. If you do, return it to the battlefield under its owner's control at the beginning of the next end step.
+oracle=Flying\nWhenever you cast a Spirit or Arcane spell, you may exile Hikari, Twilight Guardian. If you do, return it to the battlefield under its owner's control at the beginning of the next end step.

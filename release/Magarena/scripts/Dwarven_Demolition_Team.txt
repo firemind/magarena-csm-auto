@@ -1,11 +1,11 @@
 name=Dwarven Demolition Team
-image=http://mtgimage.com/card/dwarven%20demolition%20team.jpg
+image=http://magiccards.info/scans/en/8e/184.jpg
 value=2.100
 rarity=U
 type=Creature
 subtype=Dwarf
 cost={2}{R}
 pt=1/1
-ability={T}:Destroy target Wall.
+ability={T}: Destroy target Wall.
 timing=main
 oracle={T}: Destroy target Wall.

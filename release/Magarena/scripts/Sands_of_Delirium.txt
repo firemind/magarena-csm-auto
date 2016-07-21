@@ -1,9 +1,9 @@
 name=Sands of Delirium
-image=http://mtgimage.com/card/sands%20of%20delirium.jpg
+image=http://magiccards.info/scans/en/m13/216.jpg
 value=3.831
 rarity=R
 type=Artifact
 cost={3}
+ability={X}, {T}: Target player puts the top X cards of his or her library into his or her graveyard.
 timing=artifact
-requires_groovy_code
 oracle={X}, {T}: Target player puts the top X cards of his or her library into his or her graveyard.

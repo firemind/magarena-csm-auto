@@ -1,11 +1,11 @@
 name=Zodiac Goat
-image=http://mtgimage.com/card/zodiac%20goat.jpg
+image=http://magiccards.info/scans/en/p3k/132.jpg
 value=3.595
 rarity=C
 type=Creature
 subtype=Goat
 cost={R}
 pt=1/1
-ability=mountainwalk
+ability=Mountainwalk
 timing=main
 oracle=Mountainwalk

@@ -1,6 +1,6 @@
 
 [
-    new MagicWhenOtherDiesTrigger() {
+    new OtherDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isCreature() &&
@@ -8,8 +8,8 @@
                 new MagicEvent(
                     permanent,
                     this,
-                    "Sacrifice SN. If you do, " +
-                    "put four 1/1 colorless Spirit creature tokens onto the battlefield."
+                    "Sacrifice SN. If PN does, " +
+                    "he or she puts four 1/1 colorless Spirit creature tokens onto the battlefield."
                 ):
                 MagicEvent.NONE;
         }
@@ -19,10 +19,10 @@
             final MagicPermanent permanent=event.getPermanent();
             final MagicPlayer player=event.getPlayer();
             if (player.controlsPermanent(permanent)) {
-                game.doAction(new MagicSacrificeAction(permanent));
-                game.doAction(new MagicPlayTokensAction(
+                game.doAction(new SacrificeAction(permanent));
+                game.doAction(new PlayTokensAction(
                     player,
-                    TokenCardDefinitions.get("1/1 colorless Spirit creature token"),
+                    CardDefinitions.getToken("1/1 colorless Spirit creature token"),
                     4
                 ));
             }

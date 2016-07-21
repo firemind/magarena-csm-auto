@@ -1,9 +1,11 @@
 name=Inspired Charge
-image=http://mtgimage.com/card/inspired%20charge.jpg
+image=http://magiccards.info/scans/en/bfz/32.jpg
+image_updated=2015-11-08
 value=1.750
 rarity=C
 type=Instant
 cost={2}{W}{W}
+ability=Cast SN with AI only if you control a creature.
 effect=Creatures you control get +2/+1 until end of turn.
 timing=pump
 oracle=Creatures you control get +2/+1 until end of turn.

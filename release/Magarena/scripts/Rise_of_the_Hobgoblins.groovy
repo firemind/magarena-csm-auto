@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -8,16 +8,16 @@
                     new MagicPayManaCostChoice(MagicManaCost.create("{X}"))
                 ),
                 this,
-                "You may pay\$ {X}\$. If you do, put X 1/1 red and white Goblin Soldier creature tokens onto the battlefield."
+                "PN may pay\$ {X}\$. If PN does, he or she puts X 1/1 red and white Goblin Soldier creature tokens onto the battlefield."
             );
         }
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                game.doAction(new MagicPlayTokensAction(
+                game.doAction(new PlayTokensAction(
                     event.getPlayer(),
-                    TokenCardDefinitions.get("1/1 red and white Goblin Soldier creature token"),
+                    CardDefinitions.getToken("1/1 red and white Goblin Soldier creature token"),
                     event.getPaidMana().getX()
                 ));
             }

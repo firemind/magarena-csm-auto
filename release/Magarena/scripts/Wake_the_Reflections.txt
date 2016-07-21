@@ -1,9 +1,10 @@
 name=Wake the Reflections
-image=http://mtgimage.com/card/wake%20the%20reflections.jpg
+image=http://magiccards.info/scans/en/dgm/10.jpg
 value=3.510
 rarity=C
 type=Sorcery
 cost={W}
+ability=Cast SN with AI only if you control a creature token.
 effect=Populate.
 timing=main
 oracle=Populate.

@@ -1,12 +1,13 @@
 name=Jolrael's Favor
-image=http://mtgimage.com/card/jolrael's%20favor.jpg
+image=http://magiccards.info/scans/en/pr/116.jpg
 value=2.625
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{G}
-ability=flash
-enchant=pump,pos creature
+ability=Flash;\
+        Enchant creature;\
+        {1}{G}: Regenerate enchanted creature.
+enchant=regen,pos creature
 timing=pumpFlash
-requires_groovy_code
-oracle=Flash. Enchant creature. {1}{G}: Regenerate enchanted creature.
+oracle=Flash\nEnchant creature\n{1}{G}: Regenerate enchanted creature.

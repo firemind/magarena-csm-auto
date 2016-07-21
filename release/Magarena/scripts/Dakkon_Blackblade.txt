@@ -1,11 +1,11 @@
 name=Dakkon Blackblade
-image=http://mtgimage.com/set/med/dakkon%20blackblade.jpg
+image=http://magiccards.info/scans/en/med/143.jpg
 value=3.908
 rarity=R
 type=Legendary,Creature
 subtype=Human,Warrior
 cost={2}{W}{U}{U}{B}
-ability=SN's power and toughness are each equal to the number of lands you control.
 pt=*/*
+ability=SN's power and toughness are each equal to the number of lands you control.
 timing=main
 oracle=Dakkon Blackblade's power and toughness are each equal to the number of lands you control.

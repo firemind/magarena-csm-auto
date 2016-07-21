@@ -1,11 +1,11 @@
 name=Deadly Insect
-image=http://mtgimage.com/card/deadly%20insect.jpg
+image=http://magiccards.info/scans/en/cstd/39.jpg
 value=3.198
 rarity=C
 type=Creature
 subtype=Insect
 cost={4}{G}
 pt=6/1
-ability=shroud
+ability=Shroud
 timing=main
 oracle=Shroud

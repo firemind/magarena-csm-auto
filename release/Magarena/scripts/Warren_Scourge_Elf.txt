@@ -1,11 +1,11 @@
 name=Warren-Scourge Elf
-image=http://mtgimage.com/card/warren%2Dscourge%20elf.jpg
+image=http://magiccards.info/scans/en/lw/241.jpg
 value=1.947
 rarity=C
 type=Creature
 subtype=Elf,Warrior
 cost={1}{G}
 pt=1/1
-ability=protection from Goblins
+ability=Protection from Goblins
 timing=main
 oracle=Protection from Goblins

@@ -1,11 +1,11 @@
 name=Abbey Griffin
-image=http://mtgimage.com/card/abbey%20griffin.jpg
+image=http://magiccards.info/scans/en/isd/1.jpg
 value=2.165
 rarity=C
 type=Creature
 subtype=Griffin
 cost={3}{W}
 pt=2/2
-ability=flying;vigilance
+ability=Flying, vigilance
 timing=main
 oracle=Flying, vigilance

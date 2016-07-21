@@ -1,11 +1,11 @@
 name=Voltaic Construct
-image=http://mtgimage.com/card/voltaic%20construct.jpg
+image=http://magiccards.info/scans/en/ds/156.jpg
 value=4.156
 rarity=U
 type=Artifact,Creature
 subtype=Golem,Construct
 cost={4}
 pt=2/2
-ability={2}:Untap target artifact creature.
-timing=artifact
+ability={2}: Untap target artifact creature.
+timing=main
 oracle={2}: Untap target artifact creature.

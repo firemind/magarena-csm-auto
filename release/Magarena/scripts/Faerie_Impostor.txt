@@ -1,12 +1,12 @@
 name=Faerie Impostor
-image=http://mtgimage.com/card/faerie%20impostor.jpg
+image=http://magiccards.info/scans/en/ddn/43.jpg
 value=3.301
 rarity=U
 type=Creature
 subtype=Faerie,Rogue
 cost={U}
 pt=2/1
-ability=flying
+ability=Flying;\
+        When SN enters the battlefield, you may return another creature you control to its owner's hand. If you don't, sacrifice SN.
 timing=main
-requires_groovy_code
-oracle=Flying. When Faerie Impostor enters the battlefield, sacrifice it unless you return another creature you control to its owner's hand.
+oracle=Flying\nWhen Faerie Impostor enters the battlefield, sacrifice it unless you return another creature you control to its owner's hand.

@@ -1,5 +1,6 @@
 name=Magma Giant
-image=http://mtgimage.com/card/magma%20giant.jpg
+image=http://magiccards.info/scans/en/c15/161.jpg
+image_updated=2016-02-29
 value=3.904
 rarity=R
 type=Creature

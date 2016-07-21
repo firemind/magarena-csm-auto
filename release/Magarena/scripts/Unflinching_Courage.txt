@@ -1,11 +1,12 @@
 name=Unflinching Courage
-image=http://mtgimage.com/card/unflinching%20courage.jpg
+image=http://magiccards.info/scans/en/dgm/111.jpg
 value=3.835
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={1}{G}{W}
-ability=Enchanted creature gets +2/+2 and has trample and lifelink.
+ability=Enchant creature;\
+        Enchanted creature gets +2/+2 and has trample and lifelink.
 timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. Enchanted creature gets +2/+2 and has trample and lifelink.
+oracle=Enchant creature\nEnchanted creature gets +2/+2 and has trample and lifelink.

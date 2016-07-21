@@ -1,12 +1,13 @@
 name=Improvised Armor
-image=http://mtgimage.com/card/improvised%20armor.jpg
+image=http://magiccards.info/scans/en/on/40.jpg
 value=3.014
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={3}{W}
-ability=Enchanted creature gets +2/+5.;\
+ability=Enchant creature;\
+        Enchanted creature gets +2/+5.;\
         Cycling {3}
 timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. Enchanted creature gets +2/+5. Cycling {3}
+oracle=Enchant creature\nEnchanted creature gets +2/+5.\nCycling {3}

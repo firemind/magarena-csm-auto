@@ -1,11 +1,11 @@
 name=Face of Fear
-image=http://mtgimage.com/card/face%20of%20fear.jpg
+image=http://magiccards.info/scans/en/od/134.jpg
 value=0.814
 rarity=U
 type=Creature
 subtype=Horror
 cost={5}{B}
 pt=3/4
-ability={2}{B},Discard a card:SN gains fear until end of turn.
+ability={2}{B}, Discard a card: SN gains fear until end of turn.
 timing=main
 oracle={2}{B}, Discard a card: Face of Fear gains fear until end of turn.

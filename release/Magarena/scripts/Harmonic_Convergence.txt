@@ -1,9 +1,9 @@
 name=Harmonic Convergence
-image=http://mtgimage.com/card/harmonic%20convergence.jpg
+image=http://magiccards.info/scans/en/ul/103.jpg
 value=3.500
 rarity=U
 type=Instant
 cost={2}{G}
+effect=Put all enchantments on top of their owners' libraries.
 timing=removal
-requires_groovy_code
 oracle=Put all enchantments on top of their owners' libraries.

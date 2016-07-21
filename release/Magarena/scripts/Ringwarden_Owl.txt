@@ -1,0 +1,13 @@
+name=Ringwarden Owl
+image=http://magiccards.info/scans/en/ori/68.jpg
+image_updated=2015-11-05
+value=2.500
+rarity=C
+type=Creature
+subtype=Bird
+cost={3}{U}{U}
+pt=3/3
+ability=Flying;\
+        Prowess
+timing=main
+oracle=Flying\nProwess

@@ -1,13 +1,14 @@
 name=Colossus of Sardia
-image=http://mtgimage.com/card/colossus%20of%20sardia.jpg
+image=http://magiccards.info/scans/en/10e/317.jpg
+image_updated=2015-11-13
 value=3.120
 rarity=R
 type=Artifact,Creature
 subtype=Golem
 cost={9}
 pt=9/9
-ability=trample;\
+ability=Trample;\
         SN doesn't untap during your untap step.;\
         {9}: Untap SN. Activate this ability only during your upkeep.
 timing=main
-oracle=Trample. Colossus of Sardia doesn't untap during your untap step. {9}: Untap Colossus of Sardia. Activate this ability only during your upkeep.
+oracle=Trample\nColossus of Sardia doesn't untap during your untap step.\n{9}: Untap Colossus of Sardia. Activate this ability only during your upkeep.

@@ -1,10 +1,10 @@
 name=Favorable Winds
-image=http://mtgimage.com/card/favorable%20winds.jpg
+image=http://magiccards.info/scans/en/cns/98.jpg
 value=4.000
 rarity=U
 type=Enchantment
 cost={1}{U}
-ability=creatures you control with flying get +1/+1
+ability=Creatures you control with flying get +1/+1.
 static=player
 timing=enchantment
 oracle=Creatures you control with flying get +1/+1.

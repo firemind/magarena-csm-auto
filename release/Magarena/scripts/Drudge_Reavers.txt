@@ -1,12 +1,12 @@
 name=Drudge Reavers
-image=http://mtgimage.com/card/drudge%20reavers.jpg
+image=http://magiccards.info/scans/en/ts/105.jpg
 value=2.760
 rarity=C
 type=Creature
 subtype=Skeleton
 cost={3}{B}
 pt=2/1
-ability=flash;\
+ability=Flash;\
         {B}: Regenerate SN.
 timing=flash
-oracle=Flash. {B}: Regenerate Drudge Reavers.
+oracle=Flash\n{B}: Regenerate Drudge Reavers.

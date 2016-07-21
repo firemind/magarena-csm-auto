@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return (damage.getTarget() == permanent) ?
@@ -13,11 +13,8 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-           final MagicSource source=event.getSource();
             for (final MagicPlayer player : game.getAPNAP()) {
-                final int amount = event.getRefInt();
-                final MagicDamage damage=new MagicDamage(source,player,amount);
-                game.doAction(new MagicDealDamageAction(damage));
+                game.doAction(new DealDamageAction(event.getSource(),player,event.getRefInt()));
             }
         }
     }

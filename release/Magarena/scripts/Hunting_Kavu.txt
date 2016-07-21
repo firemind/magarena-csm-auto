@@ -1,11 +1,11 @@
 name=Hunting Kavu
-image=http://mtgimage.com/card/hunting%20kavu.jpg
+image=http://magiccards.info/scans/en/in/252.jpg
 value=3.294
 rarity=U
 type=Creature
 subtype=Kavu
 cost={1}{R}{G}
 pt=2/3
+ability={1}{R}{G}, {T}: Exile target attacking creature without flying an opponent controls~and exile SN.
 timing=main
-requires_groovy_code=Giant Trap Door Spider
 oracle={1}{R}{G}, {T}: Exile Hunting Kavu and target creature without flying that's attacking you.

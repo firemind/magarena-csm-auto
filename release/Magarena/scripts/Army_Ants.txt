@@ -1,11 +1,11 @@
 name=Army Ants
-image=http://mtgimage.com/card/army%20ants.jpg
+image=http://magiccards.info/scans/en/vi/126.jpg
 value=4.197
 rarity=U
 type=Creature
 subtype=Insect
 cost={1}{B}{R}
 pt=1/1
-ability={T},Sacrifice a land: Destroy target land.
+ability={T}, Sacrifice a land: Destroy target land.
 timing=main
 oracle={T}, Sacrifice a land: Destroy target land.

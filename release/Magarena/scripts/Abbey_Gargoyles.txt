@@ -1,11 +1,11 @@
 name=Abbey Gargoyles
-image=http://mtgimage.com/card/abbey%20gargoyles.jpg
+image=http://magiccards.info/scans/en/me2/1.jpg
 value=2.760
 rarity=U
 type=Creature
 subtype=Gargoyle
 cost={2}{W}{W}{W}
 pt=3/4
-ability=flying;protection from red
+ability=Flying, protection from red
 timing=main
 oracle=Flying, protection from red

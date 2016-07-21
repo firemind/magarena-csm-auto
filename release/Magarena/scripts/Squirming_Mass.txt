@@ -1,11 +1,11 @@
 name=Squirming Mass
-image=http://mtgimage.com/card/squirming%20mass.jpg
+image=http://magiccards.info/scans/en/ud/73.jpg
 value=2.258
 rarity=C
 type=Creature
 subtype=Horror
 cost={1}{B}
 pt=1/1
-ability=fear
+ability=Fear
 timing=main
 oracle=Fear

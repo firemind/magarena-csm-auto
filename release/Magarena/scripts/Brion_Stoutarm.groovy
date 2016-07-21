@@ -6,18 +6,10 @@
 
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
-            final MagicTargetChoice targetChoice=new MagicTargetChoice(
-                new MagicOtherPermanentTargetFilter(
-                    MagicTargetFilterFactory.CREATURE_YOU_CONTROL,
-                    source
-                ),
-                MagicTargetHint.None,
-                "a creature other than " + source + " to sacrifice"
-            );
             return [
-                new MagicTapEvent(source), 
+                new MagicTapEvent(source),
                 new MagicPayManaCostEvent(source, "{R}"),
-                new MagicSacrificePermanentEvent(source,targetChoice)
+                new MagicSacrificePermanentEvent(source, MagicTargetChoice.ANOTHER_CREATURE_YOU_CONTROL)
             ];
         }
 
@@ -25,10 +17,10 @@
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                MagicTargetChoice.NEG_TARGET_PLAYER,
+                NEG_TARGET_PLAYER,
                 payedCost.getTarget(),
                 this,
-                "SN deals damage equal to the power of RN to target player\$."
+                "SN deals damage equal to RN's power to target player\$."
             );
         }
 
@@ -36,8 +28,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
                 final MagicPermanent sacrificed=event.getRefPermanent();
-                final MagicDamage damage=new MagicDamage(event.getSource(),it,sacrificed.getPower());
-                game.doAction(new MagicDealDamageAction(damage));
+                game.doAction(new DealDamageAction(event.getSource(),it,sacrificed.getPower()));
             });
         }
     }

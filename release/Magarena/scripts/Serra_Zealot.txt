@@ -1,11 +1,11 @@
 name=Serra Zealot
-image=http://mtgimage.com/card/serra%20zealot.jpg
+image=http://magiccards.info/scans/en/us/46.jpg
 value=3.325
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={W}
 pt=1/1
-ability=first strike
+ability=First strike
 timing=main
 oracle=First strike

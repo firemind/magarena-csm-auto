@@ -1,11 +1,11 @@
 name=Spiked Baloth
-image=http://mtgimage.com/card/spiked%20baloth.jpg
+image=http://magiccards.info/scans/en/m13/192.jpg
 value=2.533
 rarity=C
 type=Creature
 subtype=Beast
 cost={3}{G}
 pt=4/2
-ability=trample
+ability=Trample
 timing=main
 oracle=Trample

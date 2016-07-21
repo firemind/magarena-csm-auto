@@ -1,11 +1,12 @@
 name=Soratami Mindsweeper
-image=http://mtgimage.com/card/soratami%20mindsweeper.jpg
+image=http://magiccards.info/scans/en/bok/52.jpg
 value=2.773
 rarity=U
 type=Creature
 subtype=Moonfolk,Wizard
 cost={3}{U}
 pt=1/4
-ability=flying;{2},Return a land you control to its owner's hand:Target player puts the top two cards of his or her library into his or her graveyard.
+ability=Flying;\
+        {2}, Return a land you control to its owner's hand: Target player puts the top two cards of his or her library into his or her graveyard.
 timing=main
-oracle=Flying. {2}, Return a land you control to its owner's hand: Target player puts the top two cards of his or her library into his or her graveyard.
+oracle=Flying\n{2}, Return a land you control to its owner's hand: Target player puts the top two cards of his or her library into his or her graveyard.

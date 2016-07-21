@@ -1,11 +1,11 @@
 name=Typhoid Rats
-image=http://mtgimage.com/card/typhoid%20rats.jpg
+image=http://magiccards.info/scans/en/frf/89.jpg
 value=3.400
 rarity=C
 type=Creature
 subtype=Rat
 cost={B}
 pt=1/1
-ability=deathtouch
+ability=Deathtouch
 timing=main
 oracle=Deathtouch

@@ -1,11 +1,12 @@
 name=Pixie Queen
-image=http://mtgimage.com/card/pixie%20queen.jpg
+image=http://magiccards.info/scans/en/lg/110.jpg
 value=2.021
 rarity=R
 type=Creature
 subtype=Faerie
 cost={2}{G}{G}
 pt=1/1
-ability=flying;{G}{G}{G},{T}:Target creature gains flying until end of turn.
+ability=Flying;\
+        {G}{G}{G}, {T}: Target creature gains flying until end of turn.
 timing=main
-oracle=Flying. {G}{G}{G}, {T}: Target creature gains flying until end of turn.
+oracle=Flying\n{G}{G}{G}, {T}: Target creature gains flying until end of turn.

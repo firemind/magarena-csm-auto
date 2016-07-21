@@ -1,9 +1,9 @@
 name=The Hive
-image=http://mtgimage.com/card/the%20hive.jpg
+image=http://magiccards.info/scans/en/10e/324.jpg
 value=1.735
 rarity=R
 type=Artifact
 cost={5}
-ability={5},{T}: Put a 1/1 colorless Insect artifact creature token with flying named Wasp onto the battlefield.
+ability={5}, {T}: Put a 1/1 colorless Insect artifact creature token with flying named Wasp onto the battlefield.
 timing=artifact
 oracle={5}, {T}: Put a 1/1 colorless Insect artifact creature token with flying named Wasp onto the battlefield.

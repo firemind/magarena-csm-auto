@@ -1,11 +1,11 @@
 name=Midnight Duelist
-image=http://mtgimage.com/card/midnight%20duelist.jpg
+image=http://magiccards.info/scans/en/avr/27.jpg
 value=3.138
 rarity=C
 type=Creature
 subtype=Human,Soldier
 cost={W}
 pt=1/2
-ability=protection from Vampires
+ability=Protection from Vampires
 timing=main
 oracle=Protection from Vampires

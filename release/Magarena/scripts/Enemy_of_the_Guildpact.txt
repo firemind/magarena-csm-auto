@@ -1,0 +1,11 @@
+name=Enemy of the Guildpact
+image=http://magiccards.info/scans/en/di/44.jpg
+value=2.708
+rarity=C
+type=Creature
+subtype=Spirit
+cost={4}{B}
+pt=4/2
+ability=Protection from multicolored
+timing=main
+oracle=Protection from multicolored

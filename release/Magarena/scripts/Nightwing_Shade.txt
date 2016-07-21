@@ -1,11 +1,12 @@
 name=Nightwing Shade
-image=http://mtgimage.com/card/nightwing%20shade.jpg
+image=http://magiccards.info/scans/en/m14/109.jpg
 value=1.710
 rarity=C
 type=Creature
 subtype=Shade
 cost={4}{B}
 pt=2/2
-ability=flying;{1}{B}: SN gets +1/+1 until end of turn.
+ability=Flying;\
+        {1}{B}: SN gets +1/+1 until end of turn.
 timing=main
-oracle=Flying. {1}{B}: Nightwing Shade gets +1/+1 until end of turn.
+oracle=Flying\n{1}{B}: Nightwing Shade gets +1/+1 until end of turn.

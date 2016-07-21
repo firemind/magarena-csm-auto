@@ -6,7 +6,7 @@ import magic.model.condition.MagicCondition;
 
 import java.util.Arrays;
 
-public class MagicEvokeActivation extends MagicCardActivation {
+public class MagicEvokeActivation extends MagicHandCastActivation {
 
     final MagicManaCost cost;
 
@@ -24,7 +24,7 @@ public class MagicEvokeActivation extends MagicCardActivation {
     @Override
     public Iterable<? extends MagicEvent> getCostEvent(final MagicCard source) {
         return Arrays.asList(
-            new MagicPayManaCostEvent(
+            MagicPayManaCostEvent.Cast(
                 source,
                 cost
             ),

@@ -1,6 +1,10 @@
 package magic.ui.duel.viewer;
 
-import magic.ui.SwingGameController;
+import magic.ui.duel.viewer.info.GameViewerInfo;
+import magic.ui.duel.viewer.info.PlayerViewerInfo;
+import magic.ui.duel.viewer.info.PermanentViewerInfo;
+import magic.ui.IChoiceViewer;
+import magic.ui.duel.SwingGameController;
 import magic.ui.theme.Theme;
 import magic.ui.widget.FontsAndBorders;
 
@@ -12,17 +16,17 @@ import java.awt.Dimension;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import magic.ui.MagicStyle;
+import magic.ui.duel.viewer.info.CardViewerInfo;
+import magic.ui.utility.MagicStyle;
 
-public class ImageCombatViewer extends JPanel implements ChoiceViewer {
+@SuppressWarnings("serial")
+public class ImageCombatViewer extends JPanel implements IChoiceViewer {
 
-    private static final long serialVersionUID = 1L;
-
-    private final ViewerInfo viewerInfo;
+    private final SwingGameController controller;
     private final ImagePermanentsViewer permanentsViewer;
 
-    public ImageCombatViewer(final SwingGameController controller) {
-        viewerInfo = controller.getViewerInfo();
+    public ImageCombatViewer(final SwingGameController aController) {
+        controller = aController;
         controller.registerChoiceViewer(this);
 
         setLayout(new BorderLayout(6,0));
@@ -32,12 +36,14 @@ public class ImageCombatViewer extends JPanel implements ChoiceViewer {
         leftPanel.setOpaque(false);
         add(leftPanel,BorderLayout.WEST);
 
-        final JLabel combatLabel=new JLabel(MagicStyle.getTheme().getIcon(Theme.ICON_SMALL_COMBAT));
-        combatLabel.setOpaque(true);
-        combatLabel.setBackground(MagicStyle.getTheme().getColor(Theme.COLOR_ICON_BACKGROUND));
-        combatLabel.setPreferredSize(new Dimension(24,24));
-        combatLabel.setBorder(FontsAndBorders.BLACK_BORDER);
-        leftPanel.add(combatLabel,BorderLayout.NORTH);
+        if (MagicStyle.getTheme().hasValue(Theme.ICON_SMALL_COMBAT)) {
+            final JLabel combatLabel = new JLabel(MagicStyle.getTheme().getIcon(Theme.ICON_SMALL_COMBAT));
+            combatLabel.setOpaque(true);
+            combatLabel.setBackground(MagicStyle.getTheme().getColor(Theme.COLOR_ICON_BACKGROUND));
+            combatLabel.setPreferredSize(new Dimension(24, 24));
+            combatLabel.setBorder(FontsAndBorders.BLACK_BORDER);
+            leftPanel.add(combatLabel, BorderLayout.NORTH);
+        }
 
         permanentsViewer=new ImagePermanentsViewer(controller);
         add(permanentsViewer,BorderLayout.CENTER);
@@ -46,6 +52,8 @@ public class ImageCombatViewer extends JPanel implements ChoiceViewer {
     public void update() {
         final SortedSet<PermanentViewerInfo> creatures =
             new TreeSet<>(PermanentViewerInfo.BLOCKED_NAME_COMPARATOR);
+
+        final GameViewerInfo viewerInfo = controller.getViewerInfo();
 
         final PlayerViewerInfo attackingPlayerInfo=viewerInfo.getAttackingPlayerInfo();
         for (final PermanentViewerInfo permanentInfo : attackingPlayerInfo.permanents) {
@@ -68,5 +76,11 @@ public class ImageCombatViewer extends JPanel implements ChoiceViewer {
     @Override
     public void showValidChoices(final Set<?> validChoices) {
         permanentsViewer.showValidChoices(validChoices);
+    }
+
+    public boolean highlightCard(CardViewerInfo cardInfo, boolean b) {
+        final ImagePermanentViewer viewer = permanentsViewer.getViewer(cardInfo);
+        permanentsViewer.highlightCard(viewer, b ? cardInfo.getId() : 0);
+        return viewer != null;
     }
 }

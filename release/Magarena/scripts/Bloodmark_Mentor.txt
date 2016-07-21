@@ -1,12 +1,12 @@
 name=Bloodmark Mentor
-image=http://mtgimage.com/card/bloodmark%20mentor.jpg
+image=http://magiccards.info/scans/en/ddg/50.jpg
 value=3.770
 rarity=U
 type=Creature
 subtype=Goblin,Warrior
 cost={1}{R}
 pt=1/1
-ability=red creatures you control have first strike
+ability=Red creatures you control have first strike.
 static=player
 timing=main
 oracle=Red creatures you control have first strike.

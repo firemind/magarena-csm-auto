@@ -1,11 +1,11 @@
 name=Tar Pitcher
-image=http://mtgimage.com/card/tar%20pitcher.jpg
+image=http://magiccards.info/scans/en/mma/134.jpg
 value=3.455
 rarity=U
 type=Creature
 subtype=Goblin,Shaman
 cost={3}{R}
 pt=2/2
-ability={T},Sacrifice a Goblin:SN deals 2 damage to target creature or player.
+ability={T}, Sacrifice a Goblin: SN deals 2 damage to target creature or player.
 timing=main
 oracle={T}, Sacrifice a Goblin: Tar Pitcher deals 2 damage to target creature or player.

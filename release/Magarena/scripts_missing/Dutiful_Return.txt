@@ -1,5 +1,6 @@
 name=Dutiful Return
-image=http://mtgimage.com/card/dutiful%20return.jpg
+image=http://magiccards.info/scans/en/bfz/110.jpg
+image_updated=2015-11-08
 value=2.500
 rarity=C
 type=Sorcery

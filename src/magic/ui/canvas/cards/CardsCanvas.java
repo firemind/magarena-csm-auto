@@ -1,5 +1,6 @@
 package magic.ui.canvas.cards;
 
+import java.awt.BasicStroke;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -10,15 +11,21 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import magic.model.MagicCard;
+import magic.ui.prefs.ImageSizePresets;
+import magic.ui.utility.GraphicsUtils;
+import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class CardsCanvas extends JPanel {
@@ -26,6 +33,10 @@ public class CardsCanvas extends JPanel {
     public enum LayoutMode {
         SCALE_TO_FIT
     }
+
+    private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
+    private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 20);
+    private static final Color MOUSE_OVER_BORDER_COLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 160);
 
     private int dealCardDelay = 80; // milliseconds
     private int removeCardDelay = 50; // millseconds
@@ -43,17 +54,82 @@ public class CardsCanvas extends JPanel {
     private final double aspectRatio;
     private boolean stackDuplicateCards = true;
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private Dimension canvasSize;
+    private int currentCardIndex = -1;
+    private boolean refreshLayout = false;
+    private ICardsCanvasListener listener = new NullCardsCanvasListener();
 
-    // CTR
-    public CardsCanvas(final Dimension preferredCardSize) {
+    public CardsCanvas() {
 
         setOpaque(false);
 
-        this.preferredCardSize = preferredCardSize;
+        this.preferredCardSize = ImageSizePresets.getDefaultSize();
         aspectRatio = (double)this.preferredCardSize.width / this.preferredCardSize.height;
 
         this.imageHandler = new ImageHandler(null);
 
+        setMouseListener();
+        setMouseMotionListener();
+
+    }
+
+    public void setListener(ICardsCanvasListener aListener) {
+        this.listener = aListener;
+    }
+
+    private void setMouseListener() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                clearCardHighlight();
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!isAnimateThreadRunning) {
+                    GraphicsUtils.setBusyMouseCursor(true);
+                    final int cardIndex = getCardIndexAt(e.getPoint());
+                    if (cardIndex >= 0) {
+                        new CardImageOverlay(cards.get(cardIndex).getMagicCard());
+                    }
+                    GraphicsUtils.setBusyMouseCursor(false);
+                }
+            }
+        });
+    }
+
+    private void clearCardHighlight() {
+        currentCardIndex = -1;
+        repaint();
+    }
+
+    private void setMouseMotionListener() {
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(final MouseEvent event) {
+                final int cardIndex = getCardIndexAt(event.getX(), event.getY());
+                if (currentCardIndex != cardIndex) {
+                    if (cardIndex >= 0) {
+                        listener.cardSelected(cards.get(cardIndex).getMagicCard());
+                    }
+                    currentCardIndex = cardIndex;
+                    repaint();
+                }
+            }
+        });
+    }
+
+    private int getCardIndexAt(final Point aPoint) {
+        return getCardIndexAt(aPoint.x, aPoint.y);
+    }
+
+    private int getCardIndexAt(final int x, final int y) {
+        for (int i = 0; i < cards.size(); i++) {
+            final Rectangle rect = cards.get(i).getBounds();
+            if (x >= rect.x && y >= rect.y && x < rect.x + rect.width && y < rect.y + rect.height) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private Runnable getDealCardsRunnable(final List<CardCanvas> newCards) {
@@ -142,9 +218,11 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    public void refresh(final List<MagicCard> newCards, final Dimension preferredCardSize) {
+    public void refresh(final List<MagicCard> newCards, final Dimension aSize) {
         final List<CardCanvas> canvasCards = getCanvasCards(newCards);
-        this.preferredCardSize = preferredCardSize;
+        this.preferredCardSize = aSize;
+        refreshLayout = true;
+        currentCardIndex = -1;
         if (useAnimation && newCards != null) {
             executor.execute(getDealCardsRunnable(canvasCards));
         } else {
@@ -154,12 +232,14 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    private List<CardCanvas> getCanvasCards(final List<MagicCard> magicCards) {
-        final List <CardCanvas> canvasCards = new ArrayList<>();
-        for (MagicCard magicCard : magicCards) {
-            canvasCards.add(new CardCanvas(magicCard));
-        }
-        return canvasCards;
+    public void refresh(final List<MagicCard> newCards) {
+        refresh(newCards, preferredCardSize);
+    }
+
+    private List<CardCanvas> getCanvasCards(List<MagicCard> cards) {
+        return cards.stream()
+            .map(card -> new CardCanvas(card))
+            .collect(Collectors.toList());
     }
 
     public void setScale(final double newScale) {
@@ -180,13 +260,43 @@ public class CardsCanvas extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        drawCards(g);
+    }
+
+    private void drawCards(final Graphics g) {
         if (this.getWidth() > 0) {
-            setScaleToFitLayout();
+            if (!getSize().equals(canvasSize) || refreshLayout || isAnimateThreadRunning) {
+                refreshLayout = false;
+                canvasSize = new Dimension(getSize());
+                setScaleToFitLayout();
+            }
             for (int i = 0; i < maxCardsVisible; i++) {
                 final CardCanvas card = cards.get(i);
                 drawCard(g, card);
             }
+            highlightCardUnderMousePointer(g);
         }
+    }
+
+    private void highlightCardUnderMousePointer(final Graphics g) {
+        if (currentCardIndex >= 0 && !isAnimateThreadRunning) {
+            final Rectangle rect = cards.get(currentCardIndex).getBounds();
+            final Graphics2D g2d = (Graphics2D) g;
+            drawHighlightOverlay(g2d, rect);
+//            drawHighlightBorder(g2d, rect);
+        }
+    }
+
+    private void drawHighlightBorder(Graphics2D g2d, Rectangle rect) {
+        final int w = 4;
+        g2d.setStroke(new BasicStroke(w));
+        g2d.setPaint(MOUSE_OVER_BORDER_COLOR);
+        g2d.drawRect(rect.x + (w / 2), rect.y + (w / 2), rect.width - w, rect.height - w);
+    }
+
+    private void drawHighlightOverlay(Graphics2D g2d, Rectangle rect) {
+        g2d.setPaint(MOUSE_OVER_TCOLOR);
+        g2d.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
     }
 
     public void incrementCardWidth() {
@@ -198,18 +308,12 @@ public class CardsCanvas extends JPanel {
 
     private void drawCard(final Graphics g, final CardCanvas canvasCard) {
 
-        final int X = canvasCard.getPosition().x;
-        final int Y = canvasCard.getPosition().y;
-        final int W = (int)(preferredCardSize.width * cardCanvasScale);
-        final int H = (int)(preferredCardSize.height * cardCanvasScale);
+        final int X = canvasCard.getBounds().x;
+        final int Y = canvasCard.getBounds().y;
+        final int W = canvasCard.getBounds().width;
+        final int H = canvasCard.getBounds().height;
 
-        final boolean isScalingRequired =
-                !canvasCard.getSize().equals(preferredCardSize) || (cardCanvasScale != 1);
-        final BufferedImage unscaledImage = canvasCard.getFrontImage();
-        final BufferedImage image =
-                isScalingRequired ? imageHandler.getScaledImage(unscaledImage, W) : unscaledImage;
-
-        g.drawImage(image, X, Y, W, H, null);
+        g.drawImage(GraphicsUtils.scale(canvasCard.getFrontImage(), W, H), X, Y, null);
 
         if (stackDuplicateCards) {
             drawCardCount(g, X, Y, W, H, canvasCard);
@@ -310,6 +414,7 @@ public class CardsCanvas extends JPanel {
             int xPoint = xStart + (col * cardWidth);
             int yPoint = yStart + (row * (cardHeight-1));
             card.setPosition(new Point(xPoint, yPoint));
+            card.setSize(cardWidth, cardHeight);
             col++;
             if (col >= grid.width) {
                 col = 0;
@@ -318,10 +423,6 @@ public class CardsCanvas extends JPanel {
         }
 
         cardCanvasScale = (double)cardWidth / preferredCardSize.width;
-    }
-
-    public int getCardsCount() {
-        return cards.size();
     }
 
     public void setAnimationDelay(final int dealCardDelay, final int removeCardDelay) {

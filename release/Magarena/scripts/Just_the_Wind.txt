@@ -1,0 +1,10 @@
+name=Just the Wind
+image=http://magiccards.info/scans/en/soi/71.jpg
+value=2.500
+rarity=C
+type=Instant
+cost={1}{U}
+ability=Madness {U}
+effect=Return target creature to its owner's hand.
+timing=removal
+oracle=Return target creature to its owner's hand.\nMadness {U}

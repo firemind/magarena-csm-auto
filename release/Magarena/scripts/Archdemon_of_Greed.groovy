@@ -1,13 +1,13 @@
 def choice = new MagicTargetChoice("a Human to sacrifice");
 
 [
-    new MagicAtYourUpkeepTrigger() {
+    new AtYourUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             return new MagicEvent(
                 permanent,
                 this,
-                "PN sacrifices a human. If you can't, tap SN and it deals 9 damage to you."
+                "Sacrifice a human. If PN can't, tap SN and it deals 9 damage to him or her."
             );
         }
 
@@ -23,10 +23,8 @@ def choice = new MagicTargetChoice("a Human to sacrifice");
             if (sac.isSatisfied()) {
                 game.addEvent(sac);
             } else {
-                game.doAction(new MagicTapAction(permanent));
-                game.doAction(new MagicDealDamageAction(
-                    new MagicDamage(permanent, player, 9)
-                ));
+                game.doAction(new TapAction(permanent));
+                game.doAction(new DealDamageAction(permanent, player, 9));
             }
         }
     }

@@ -1,12 +1,12 @@
 name=Calcite Snapper
-image=http://mtgimage.com/card/calcite%20snapper.jpg
+image=http://magiccards.info/scans/en/wwk/25.jpg
 value=3.791
 rarity=C
 type=Creature
 subtype=Turtle
 cost={1}{U}{U}
 pt=1/4
-ability=shroud;\
+ability=Shroud;\
         Whenever a land enters the battlefield under your control, you may switch SN's power and toughness until end of turn.
 timing=main
-oracle=Shroud. Landfall — Whenever a land enters the battlefield under your control, you may switch Calcite Snapper's power and toughness until end of turn.
+oracle=Shroud\nLandfall — Whenever a land enters the battlefield under your control, you may switch Calcite Snapper's power and toughness until end of turn.

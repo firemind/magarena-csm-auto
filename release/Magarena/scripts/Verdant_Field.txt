@@ -1,11 +1,12 @@
 name=Verdant Field
-image=http://mtgimage.com/card/verdant%20field.jpg
+image=http://magiccards.info/scans/en/pr/130.jpg
 value=2.479
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={2}{G}
-ability=Enchanted land has "{T}: Target creature gets +1/+1 until end of turn."
-enchant=pump,pos land
+ability=Enchant land;\
+        Enchanted land has "{T}: Target creature gets +1/+1 until end of turn."
 timing=aura
-oracle=Enchant land. Enchanted land has "{T}: Target creature gets +1/+1 until end of turn."
+enchant=pump,pos land
+oracle=Enchant land\nEnchanted land has "{T}: Target creature gets +1/+1 until end of turn."

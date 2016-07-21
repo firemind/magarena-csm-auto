@@ -1,10 +1,10 @@
 name=Wipe Clean
-image=http://mtgimage.com/card/wipe%20clean.jpg
+image=http://magiccards.info/scans/en/sc/26.jpg
 value=3.273
 rarity=C
 type=Instant
 cost={1}{W}
+ability=Cycling {3}
 effect=Exile target enchantment.
-ability=cycling {3}
 timing=removal
-oracle=Exile target enchantment. Cycling {3}
+oracle=Exile target enchantment.\nCycling {3}

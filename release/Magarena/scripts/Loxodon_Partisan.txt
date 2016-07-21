@@ -1,11 +1,11 @@
 name=Loxodon Partisan
-image=http://mtgimage.com/card/loxodon%20partisan.jpg
+image=http://magiccards.info/scans/en/ddo/17.jpg
 value=2.579
 rarity=C
 type=Creature
 subtype=Elephant,Soldier
 cost={4}{W}
 pt=3/4
-ability=battle cry
+ability=Battle cry
 timing=main
 oracle=Battle cry

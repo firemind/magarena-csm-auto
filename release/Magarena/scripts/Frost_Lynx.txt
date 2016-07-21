@@ -1,11 +1,11 @@
 name=Frost Lynx
-image=http://mtgimage.com/card/frost%20lynx.jpg
+image=http://magiccards.info/scans/en/m15/55.jpg
 value=3.286
 rarity=C
 type=Creature
 subtype=Elemental,Cat
 cost={2}{U}
 pt=2/2
-ability=When SN enters the battlefield, tap target creature an opponent controls. It doesn't untap during its controller's next untap step.
+ability=When SN enters the battlefield, tap target creature an opponent controls. That creature doesn't untap during its controller's next untap step.
 timing=main
 oracle=When Frost Lynx enters the battlefield, tap target creature an opponent controls. That creature doesn't untap during its controller's next untap step.

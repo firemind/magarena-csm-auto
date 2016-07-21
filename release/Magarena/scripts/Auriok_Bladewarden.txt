@@ -1,0 +1,11 @@
+name=Auriok Bladewarden
+image=http://magiccards.info/scans/en/mi/3.jpg
+value=3.266
+rarity=U
+type=Creature
+subtype=Human,Soldier
+cost={1}{W}
+pt=1/1
+ability={T}: Target creature gets +X/+X until end of turn, where X is SN's power.
+timing=main
+oracle={T}: Target creature gets +X/+X until end of turn, where X is Auriok Bladewarden's power.

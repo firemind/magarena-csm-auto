@@ -1,11 +1,11 @@
 name=Vulshok Replica
-image=http://mtgimage.com/card/vulshok%20replica.jpg
+image=http://magiccards.info/scans/en/som/221.jpg
 value=2.962
 rarity=C
 type=Artifact,Creature
 subtype=Berserker
 cost={3}
 pt=3/1
-ability={1}{R},Sacrifice SN:SN deals 3 damage to target player.
-timing=artifact
+ability={1}{R}, Sacrifice SN: SN deals 3 damage to target player.
+timing=main
 oracle={1}{R}, Sacrifice Vulshok Replica: Vulshok Replica deals 3 damage to target player.

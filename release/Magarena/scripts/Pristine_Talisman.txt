@@ -1,9 +1,9 @@
 name=Pristine Talisman
-image=http://mtgimage.com/card/pristine%20talisman.jpg
+image=http://magiccards.info/scans/en/c14/264.jpg
 value=3.053
 rarity=C
 type=Artifact
 cost={3}
 timing=artifact
 requires_groovy_code
-oracle={T}: Add {1} to your mana pool. You gain 1 life.
+oracle={T}: Add {C} to your mana pool. You gain 1 life.

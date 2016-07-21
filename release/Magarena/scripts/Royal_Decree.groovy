@@ -1,5 +1,5 @@
 [
-    new MagicWhenBecomesTappedTrigger() {
+    new BecomesTappedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent tapped) {
             return (tapped.hasSubType(MagicSubType.Swamp) ||
@@ -16,8 +16,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicDamage damage=new MagicDamage(event.getSource(),event.getPlayer(),1);
-            game.doAction(new MagicDealDamageAction(damage));
+            game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),1));
         }
     }
 ]

@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfBecomesBlockedTrigger() {
+    new ThisBecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocked) {
             return new MagicEvent(
@@ -14,7 +14,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                game.doAction(new MagicChangeTurnPTAction(event.getPermanent(),2,0));
+                game.doAction(new ChangeTurnPTAction(event.getPermanent(),2,0));
             }
         }
     }

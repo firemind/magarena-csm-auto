@@ -1,11 +1,11 @@
 name=Pygmy Allosaurus
-image=http://mtgimage.com/card/pygmy%20allosaurus.jpg
+image=http://magiccards.info/scans/en/ia/145.jpg
 value=2.587
 rarity=R
 type=Creature
 subtype=Lizard
 cost={2}{G}
 pt=2/2
-ability=swampwalk
+ability=Swampwalk
 timing=main
 oracle=Swampwalk

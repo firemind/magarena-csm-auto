@@ -2,6 +2,7 @@ package magic.model.event;
 
 import magic.model.MagicCard;
 import magic.model.MagicGame;
+import magic.model.MagicSource;
 import magic.model.MagicManaCost;
 import magic.model.MagicPlayer;
 import magic.model.MagicLocationType;
@@ -16,10 +17,10 @@ import java.util.Arrays;
 public class MagicTransmuteActivation extends MagicCardAbilityActivation {
 
     final MagicManaCost cost;
-        
+
     private static MagicTargetChoice getTransmuteChoice(final int cmc) {
         final MagicCardFilterImpl transmuteFilter = new MagicCardFilterImpl() {
-            public boolean accept(final MagicGame game,final MagicPlayer player,final MagicCard target) {
+            public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
                 return target.getConvertedCost() == cmc;
             }
             public boolean acceptType(final MagicTargetType targetType) {
@@ -28,7 +29,7 @@ public class MagicTransmuteActivation extends MagicCardAbilityActivation {
         };
         return new MagicTargetChoice(transmuteFilter,"a card with converted mana cost of " + cmc);
     }
-    
+
     public MagicTransmuteActivation(final MagicManaCost aCost) {
         super(
             new MagicCondition[]{MagicCondition.SORCERY_CONDITION},
@@ -45,7 +46,7 @@ public class MagicTransmuteActivation extends MagicCardAbilityActivation {
             new MagicDiscardSelfEvent(source)
         );
     }
-    
+
     @Override
     public MagicEvent getCardEvent(final MagicCard card, final MagicPayedCost payedCost) {
         return new MagicEvent(
@@ -60,7 +61,7 @@ public class MagicTransmuteActivation extends MagicCardAbilityActivation {
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
         game.addEvent(new MagicSearchToLocationEvent(
-            event, 
+            event,
             getTransmuteChoice(event.getRefInt()),
             MagicLocationType.OwnersHand
         ));

@@ -1,11 +1,11 @@
 name=Elite Cat Warrior
-image=http://mtgimage.com/card/elite%20cat%20warrior.jpg
+image=http://magiccards.info/scans/en/me4/151.jpg
 value=3.315
 rarity=C
 type=Creature
 subtype=Cat,Warrior
 cost={2}{G}
 pt=2/3
-ability=forestwalk
+ability=Forestwalk
 timing=main
 oracle=Forestwalk

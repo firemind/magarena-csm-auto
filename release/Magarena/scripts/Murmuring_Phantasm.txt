@@ -1,11 +1,11 @@
 name=Murmuring Phantasm
-image=http://mtgimage.com/card/murmuring%20phantasm.jpg
+image=http://magiccards.info/scans/en/dgm/15.jpg
 value=2.756
 rarity=C
 type=Creature
 subtype=Spirit
 cost={1}{U}
 pt=0/5
-ability=defender
-timing=main
+ability=Defender
+timing=smain
 oracle=Defender

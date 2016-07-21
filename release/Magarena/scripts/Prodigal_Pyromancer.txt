@@ -1,5 +1,5 @@
 name=Prodigal Pyromancer
-image=http://mtgimage.com/card/prodigal%20pyromancer.jpg
+image=http://magiccards.info/scans/en/m11/152.jpg
 value=3.428
 rarity=U
 type=Creature
@@ -7,5 +7,5 @@ subtype=Human,Wizard
 cost={2}{R}
 pt=1/1
 ability={T}: SN deals 1 damage to target creature or player.
-timing=fmain
+timing=main
 oracle={T}: Prodigal Pyromancer deals 1 damage to target creature or player.

@@ -1,120 +1,133 @@
 package magic.model;
 
-import magic.data.EnglishToInt;
-import magic.model.event.*;
-import magic.model.mstatic.MagicCDA;
-import magic.model.mstatic.MagicStatic;
-import magic.model.target.MagicTargetFilter;
-import magic.model.target.MagicTargetFilterFactory;
-import magic.model.trigger.*;
-import magic.model.condition.MagicCondition;
-import magic.model.condition.MagicConditionFactory;
-import magic.model.condition.MagicConditionParser;
-import magic.model.trigger.MagicThiefTrigger.Player;
-import magic.model.trigger.MagicThiefTrigger.Type;
-
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import magic.data.EnglishToInt;
+import magic.exception.ScriptParseException;
+import magic.model.condition.MagicCondition;
+import magic.model.condition.MagicConditionFactory;
+import magic.model.condition.MagicConditionParser;
+import magic.model.event.*;
+import magic.model.mstatic.MagicCDA;
+import magic.model.mstatic.MagicStatic;
+import magic.model.target.MagicTargetFilter;
+import magic.model.target.MagicTargetFilterFactory;
+import magic.model.trigger.*;
+
 public enum MagicAbility {
-  
-    AttacksEachTurnIfAble("(SN )?attacks each (turn|combat) if able(\\.)?",-10),
-    CannotBlock("(SN )?can't block(\\.)?",-50),
-    CannotAttack("(SN )?can't attack(\\.)?",-50),
-    CannotAttackOrBlock("(SN )?can't attack or block(\\.)?",-200),
+
+    // intrinsic abilities (implemented directly in the game engine)
+    AttacksEachTurnIfAble("(SN )?attack(s)? (each|this) (turn|combat) if able",-10),
+    CannotBlock("(SN )?can't block",-50),
+    CannotAttack("(SN )?can't attack",-50),
+    CannotAttackOrBlock("(SN )?can't attack or block",-200),
     CannotBlockWithoutFlying("(SN )?can block only creatures with flying\\.",-40),
-    CanBlockShadow("(SN )?can block creatures with shadow as though (they didn't have shadow|SN had shadow)\\.",10),
     CannotBeCountered("(SN )?can't be countered( by spells or abilities)?\\.",0),
-    Hexproof("hexproof(\\.)?",80),
     CannotBeTheTarget0("can't be the target of spells or abilities your opponents control",80),
     CannotBeTheTarget1("can't be the target of spells or abilities your opponents control",80),
     CannotBeTheTargetOfNonGreen("(SN )?can't be the target of nongreen spells or abilities from nongreen sources\\.",10),
     CannotBeTheTargetOfBlackOrRedOpponentSpell("(SN )?can't be the target of black or red spells your opponents control\\.",10),
-    Deathtouch("deathtouch(\\.)?",60),
-    Defender("defender(\\.)?",-100),
-    DoesNotUntap("(SN )?(doesn't|don't) untap during (your|its controller's|their controllers') untap step(s)?(\\.)?",-30),
-    DoubleStrike("double strike(\\.)?",100),
-    Fear("fear(\\.)?",50),
-    Flash("flash(\\.)?",0),
-    Flying("flying(\\.)?",50),
-    FirstStrike("first strike(\\.)?",50),
-    Plainswalk("plainswalk(\\.)?",10),
-    Islandwalk("islandwalk(\\.)?",10),
-    Swampwalk("swampwalk(\\.)?",10),
-    Mountainwalk("mountainwalk(\\.)?",10),
-    Forestwalk("forestwalk(\\.)?",10),
-    NonbasicLandwalk("nonbasic landwalk(\\.)?",10),
-    LegendaryLandwalk("legendary landwalk(\\.)?",10),
-    Indestructible("indestructible(\\.)?",150),
-    Haste("haste(\\.)?",0),
-    Lifelink("lifelink(\\.)?",40),
-    Reach("reach(\\.)?",20),
-    Shadow("shadow(\\.)?",30),
-    Shroud("shroud(\\.)?",60),
-    Trample("trample(\\.)?",30),
-    Unblockable("(SN )?can't be blocked(\\.)?",100),
-    Vigilance("vigilance(\\.)?",20),
-    Wither("wither(\\.)?",30),
+    CanBlockShadow("(SN )?can block creatures with shadow as though (they didn't have shadow|SN had shadow)\\.",10),
+    CanAttackWithDefender("can attack as though (it|they) didn't have defender", 10),
+    Hexproof("hexproof",80),
+    Deathtouch("deathtouch",60),
+    Defender("defender",-100),
+    DoesNotUntap("(SN )?(doesn't|don't) untap during (your|its controller's|their controllers') untap step(s)?",-30),
+    DoubleStrike("double strike",100),
+    Fear("fear",50),
+    WhiteFear("(SN )?can't be blocked except by artifact creatures and/or white creatures",50),
+    RedFear("(SN )?can't be blocked except by artifact creatures and/or red creatures",50),
+    Flash("flash",0),
+    Flying("flying",50),
+    FirstStrike("first strike",50),
+    Plainswalk("plainswalk",10),
+    Islandwalk("islandwalk",10),
+    Swampwalk("swampwalk",10),
+    Mountainwalk("mountainwalk",10),
+    Forestwalk("forestwalk",10),
+    NonbasicLandwalk("nonbasic landwalk",10),
+    LegendaryLandwalk("legendary landwalk",10),
+    Indestructible("indestructible",150),
+    Haste("haste",0),
+    Lifelink("lifelink",40),
+    Reach("reach",20),
+    Shadow("shadow",30),
+    Shroud("shroud",60),
+    Trample("trample",30),
+    Unblockable("(SN )?can't be blocked",100),
+    Vigilance("vigilance",20),
+    Wither("wither",30),
     TotemArmor("totem armor",0),
-    Intimidate("intimidate(\\.)?",45),
-    Infect("infect(\\.)?",35),
-    Horsemanship("horsemanship(\\.)?",60),
+    Intimidate("intimidate",45),
+    Infect("infect",35),
+    Horsemanship("horsemanship",60),
     Soulbond("soulbond",30),
-    CantActivateAbilities("can't activate abilities(\\.)?|its activated abilities can't be activated(\\.)?",-20),
-    ProtectionFromBlack("(protection )?from black(\\.)?",20),
-    ProtectionFromBlue("(protection )?from blue(\\.)?",20),
-    ProtectionFromGreen("(protection )?from green(\\.)?",20),
-    ProtectionFromRed("(protection )?from red(\\.)?",20),
-    ProtectionFromWhite("(protection )?from white(\\.)?",20),
+    SplitSecond("split second",10),
+    CantActivateAbilities("(can't activate abilities|its activated abilities can't be activated)",-20),
+    ProtectionFromBlack("(protection )?from black",20),
+    ProtectionFromBlue("(protection )?from blue",20),
+    ProtectionFromGreen("(protection )?from green",20),
+    ProtectionFromRed("(protection )?from red",20),
+    ProtectionFromWhite("(protection )?from white",20),
     ProtectionFromMonoColored("protection from monocolored",50),
-    ProtectionFromAllColors("protection from all colors(\\.)?",150),
+    ProtectionFromMultiColored("protection from multicolored",50),
+    ProtectionFromAllColors("protection from all colors",150),
     ProtectionFromColoredSpells("protection from colored spells",100),
     ProtectionFromEverything("protection from everything",200),
 
-    ProtectionFromPermanent("protection from " + ARG.WORDRUN + "(\\.)?", 10) {
+    // generalize intrinsic abilities (store a filter inside a trigger)
+    ProtectionFromPermanent("protection from " + ARG.WORDRUN, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicProtectionTrigger.create(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg))
+            card.add(ProtectionTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
     },
-    CannotBeBlockedByPermanent("(SN )?can't be blocked by " + ARG.WORDRUN + "(\\.)?", 10) {
+    CannotBeBlockedByPermanent("(SN )?can't be blocked by " + ARG.WORDRUN, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCannotBeBlockedTrigger.create(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg))
+            card.add(CantBeBlockedTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
     },
-    CannotBeBlockedExceptByPermanent("(SN )?can't be blocked except by " + ARG.WORDRUN + "(\\.)?", 10) {
+    CannotBeBlockedExceptByPermanent("(SN )?can't be blocked except by " + ARG.WORDRUN, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCannotBeBlockedTrigger.createExcept(
-                MagicTargetFilterFactory.multiple(ARG.wordrun(arg))
+            card.add(CantBeBlockedTrigger.createExcept(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
     },
+    Skulk("skulk", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(CantBeBlockedTrigger.Skulk);
+        }
+    },
+
+    // keyword abilities
     Undying("undying",60) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicUndyingTrigger.create());
+            card.add(UndyingTrigger.create());
         }
     },
     Persist("persist",60) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPersistTrigger.create());
+            card.add(PersistTrigger.create());
         }
     },
     Modular("modular " + ARG.NUMBER, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.PlusOne,n));
-            card.add(MagicModularTrigger.create());
+            card.add(new EntersWithCounterTrigger(MagicCounterType.PlusOne,n));
+            card.add(ModularTrigger.create());
         }
     },
-    Flanking("flanking(\\.)?",10) {
+    Flanking("flanking",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicFlankingTrigger.create());
+            card.add(FlankingTrigger.create());
         }
     },
     Changeling("changeling",10) {
@@ -122,54 +135,64 @@ public enum MagicAbility {
             card.add(MagicCDA.Changeling);
         }
     },
+    Devoid("devoid",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicCDA.Devoid);
+        }
+    },
+    Ingest("ingest",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisCombatDamagePlayerTrigger.Ingest);
+        }
+    },
     Exalted("exalted",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicExaltedTrigger.create());
+            card.add(ExaltedTrigger.create());
         }
     },
     BattleCry("battle cry",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicBattleCryTrigger.create());
+            card.add(BattleCryTrigger.create());
         }
     },
     LivingWeapon("living weapon", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicLivingWeaponTrigger.create());
+            card.add(LivingWeaponTrigger.create());
         }
     },
     Bushido("bushido " + ARG.NUMBER,20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicBecomesBlockedPumpTrigger(n,n,false));
-            card.add(new MagicWhenBlocksPumpTrigger(n,n));
+            card.add(new BecomesBlockedPumpTrigger(n,n));
+            card.add(new BlocksPumpTrigger(n,n));
         }
     },
     Soulshift("soulshift " + ARG.NUMBER,20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicSoulshiftTrigger(n));
+            card.add(new SoulshiftTrigger(n));
         }
     },
     Fading("fading " + ARG.NUMBER,-20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.Fade,n));
-            card.add(new MagicFadeVanishCounterTrigger(MagicCounterType.Fade));
+            card.add(new EntersWithCounterTrigger(MagicCounterType.Fade,n));
+            card.add(FadeVanishCounterTrigger.Fade);
         }
     },
     Vanishing("vanishing " + ARG.NUMBER,-20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
             if (n > 0) {
-                card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.Time,n));
+                card.add(new EntersWithCounterTrigger(MagicCounterType.Time,n));
             }
-            card.add(new MagicFadeVanishCounterTrigger(MagicCounterType.Time));
+            card.add(FadeVanishCounterTrigger.Time);
         }
     },
     CumulativeUpkeep("cumulative upkeep " + ARG.MANACOST,-30) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicCumulativeUpkeepTrigger(manaCost));
+            card.add(new CumulativeUpkeepTrigger(manaCost));
         }
     },
     LevelUp("level up " + ARG.MANACOST + " " + ARG.NUMBER, 10) {
@@ -179,159 +202,998 @@ public enum MagicAbility {
             card.add(new MagicLevelUpActivation(cost, maxLevel));
         }
     },
-    BlockedByPump("Whenever SN becomes blocked, it gets " + ARG.PT + " until end of turn for each creature blocking it\\.", 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            card.add(new MagicBecomesBlockedPumpTrigger(power,toughness,true));
-        }
-    },
-    ShockLand("As SN enters the battlefield, you may pay 2 life\\. If you don't, SN enters the battlefield tapped\\.", -10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicRavnicaLandTrigger.create());
-        }
-    },
     Devour("devour " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicDevourTrigger(n));
+            card.add(new DevourTrigger(n));
         }
     },
     Rampage("rampage " + ARG.NUMBER,20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicRampageTrigger(n));
+            card.add(new RampageTrigger(n));
         }
     },
-    AttacksEffect("When(ever)? SN attacks, " + ARG.EFFECT, 10) {
+    Champion("champion (a |an )?" + ARG.ANY,-10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfAttacksTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            card.add(new ChampionTrigger(ARG.any(arg)));
+            card.add(LeavesReturnExiledTrigger.create());
         }
     },
-    AttacksAnyEffect("Whenever a creature attacks, " + ARG.EFFECT, 10) {
+    Echo("echo( |—)" + ARG.COST,-20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenAttacksTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            card.add(new EchoTrigger(new MagicRegularCostEvent(ARG.cost(arg))));
         }
     },
-    BlocksEffect("When(ever)? SN blocks, " + ARG.EFFECT, 10) {
+    Bloodthirst("bloodthirst " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfBlocksTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            final int n = ARG.number(arg);
+            card.add(new BloodthirstTrigger(n));
         }
     },
-    AttacksOrBlocksEffect("When(ever)? SN attacks or blocks, " + ARG.EFFECT, 10) {
+    Storm("storm", 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(StormTrigger.create());
+        }
+    },
+    Annihilator("annihilator " + ARG.NUMBER, 80) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            card.add(new AnnihilatorTrigger(n));
+        }
+    },
+    Miracle("miracle " + ARG.MANACOST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MiracleTrigger(manaCost));
+        }
+    },
+    Kicker("kicker( |—)" + ARG.COST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(new MagicKickerCost(new MagicRegularCostEvent(ARG.cost(arg))));
+        }
+    },
+    Buyback("buyback( |—)" + ARG.COST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicKickerCost.Buyback(new MagicRegularCostEvent(ARG.cost(arg))));
+        }
+    },
+    Entwine("entwine( |—)" + ARG.COST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicKickerCost.Entwine(new MagicRegularCostEvent(ARG.cost(arg))));
+        }
+    },
+    Multikicker("multikicker " + ARG.MANACOST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicMultikickerCost(cost));
+        }
+    },
+    Replicate("replicate " + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(MagicMultikickerCost.Replicate(cost));
+            card.add(ReplicateTrigger.create());
+        }
+    },
+    Evoke("evoke " + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicEvokeActivation(manaCost));
+            card.add(EntersBattlefieldTrigger.Evoke);
+        }
+    },
+    Transmute("transmute " + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicTransmuteActivation(manaCost));
+        }
+    },
+    Evolve("evolve", 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherEntersBattlefieldTrigger.Evolve);
+        }
+    },
+    Extort("extort", 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ExtortTrigger.create());
+        }
+    },
+    Cycling("cycling( |—)" + ARG.COST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(new MagicCyclingActivation(new MagicRegularCostEvent(ARG.cost(arg))));
+        }
+    },
+    TypeCycling(ARG.WORDRUN + "cycling( |—)" + ARG.COST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicMatchedCostEvent matchedCost = new MagicRegularCostEvent(ARG.cost(arg));
+            final String type = ARG.wordrun(arg);
+            card.add(new MagicTypeCyclingActivation(matchedCost,type));
+        }
+    },
+    Reinforce("reinforce " + ARG.NUMBER + "—" + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicReinforceActivation(n, manaCost));
+        }
+    },
+    Unleash("unleash", 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(UnleashTrigger.create());
+            card.add(MagicStatic.Unleash);
+        }
+    },
+    Ninjutsu("ninjutsu " + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicNinjutsuActivation(manaCost));
+        }
+    },
+    Dash("dash " + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicDashActivation(manaCost));
+        }
+    },
+    Surge("surge " + ARG.MANACOST, 20) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicSurgeActivation(cardDef, manaCost));
+        }
+    },
+    Cascade("cascade", 50) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(CascadeTrigger.create());
+        }
+    },
+    Graft("graft " + ARG.NUMBER,10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            card.add(new EntersWithCounterTrigger(MagicCounterType.PlusOne,n));
+            card.add(OtherEntersBattlefieldTrigger.Graft);
+        }
+    },
+    Retrace("retrace",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(new MagicRetraceActivation(cardDef));
+        }
+    },
+    Flashback("flashback( |—)" + ARG.COST,10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.buildCast(ARG.cost(arg));
+            card.add(new MagicFlashbackActivation(cardDef, matchedCostEvents));
+        }
+    },
+    Scavenge("scavenge " + ARG.MANACOST,10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(new MagicScavengeActivation(cardDef, manaCost));
+        }
+    },
+    Unearth("unearth " + ARG.MANACOST,10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicUnearthActivation(manaCost));
+        }
+    },
+    EquipCond("Equip( |—)" + ARG.COST + " to a " + ARG.WORDRUN, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            card.add(new MagicEquipActivation(matchedCostEvents, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))));
+        }
+    },
+    Equip("Equip( |—)" + ARG.COST, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            card.add(new MagicEquipActivation(matchedCostEvents));
+        }
+    },
+    Megamorph("megamorph " + ARG.COST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            card.add(new MagicMegamorphActivation(matchedCostEvents));
+            card.add(MagicMorphCastActivation.Megamorph);
+        }
+    },
+    Affinity("affinity for " + ARG.WORDRUN, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicHandCastActivation.affinity(cardDef, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))));
+        }
+    },
+    Outlast("outlast "+ARG.COST,10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            card.add(new MagicOutlastActivation(matchedCostEvents));
+        }
+    },
+    Prowess("prowess",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ProwessTrigger.create());
+        }
+    },
+    Exploit("exploit", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(EntersBattlefieldTrigger.Exploit);
+        }
+    },
+    Poisonous("poisonous " + ARG.NUMBER, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            card.add(DamageIsDealtTrigger.Poisonous(n));
+        }
+    },
+    Tribute("tribute " + ARG.NUMBER + " " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            final String effect  = ARG.effect(arg).replaceFirst("^effect ", "");
+            card.add(TributeTrigger.create(n, MagicRuleEventAction.create(effect)));
+        }
+    },
+    Bestow("bestow " + ARG.MANACOST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicBestowActivation(manaCost));
+        }
+    },
+    Dethrone("dethrone",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DethroneTrigger.create());
+        }
+    },
+    Madness("madness " + ARG.MANACOST,0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(new MadnessTrigger(MagicManaCost.create(ARG.manacost(arg))));
+        }
+    },
+    Morph("morph( |—)" + ARG.COST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            card.add(new MagicMorphActivation(matchedCostEvents));
+            card.add(MagicMorphCastActivation.Morph);
+        }
+    },
+    Myriad("myriad", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            //do nothing there is only one opponent
+        }
+    },
+
+    // abilities that involve SN
+    ShockLand("As SN enters the battlefield, you may pay 2 life\\. If you don't, SN enters the battlefield tapped\\.", -10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(RavnicaLandTrigger.create());
+        }
+    },
+    BlocksOrBlockedByEffect("Whenever SN blocks or becomes blocked by " + ARG.WORDRUN + ", " + ARG.EFFECT, 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
-            card.add(MagicWhenSelfAttacksTrigger.create(sourceEvent));
-            card.add(MagicWhenSelfBlocksTrigger.create(sourceEvent));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(ThisBlocksTrigger.create(filter, sourceEvent));
+            card.add(ThisBecomesBlockedByTrigger.create(filter, sourceEvent));
         }
     },
-    BecomesBlockedEffect("Whenever SN becomes blocked( by a creature)?, " + ARG.EFFECT, 10) {
+    BecomesBlockedByEffect("Whenever SN becomes blocked by " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfBecomesBlockedTrigger.create(
+            card.add(ThisBecomesBlockedByTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    BlocksOrBlockedEffect("Whenever SN blocks or becomes blocked, " + ARG.EFFECT, 20) {
+    EntersKickedEffect("When SN enters the battlefield, if it was kicked, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(EntersBattlefieldTrigger.createKicked(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    EntersSurgeEffect("When SN enters the battlefield, if its surge cost was paid, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            EntersKickedEffect.addAbilityImpl(card, arg);
+        }
+    },
+    EntersEffect("When SN enters the battlefield, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(EntersBattlefieldTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    EntersAttackEffect("Whenever SN enters the battlefield or attacks, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(EntersBattlefieldTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+            card.add(ThisAttacksTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    BattalionEffect("Whenever SN and at least two other creatures attack, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BattalionTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    LeavesReturnExile("When SN leaves the battlefield, (each player returns|return) (the exiled card(s)? |all cards exiled with it )?to the battlefield (under (its|their) owner('s|s') control|all cards he or she owns exiled with SN).", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(LeavesReturnExiledTrigger.create());
+        }
+    },
+    OpponentDiscardOntoBattlefield("If a spell or ability an opponent controls causes you to discard SN, put it onto the battlefield instead of putting it into your graveyard\\.",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisPutIntoGraveyardTrigger.OpponentDiscardOntoBattlefield);
+        }
+    },
+    RecoverGraveyard("When SN is put into a graveyard from anywhere, its owner shuffles his or her graveyard into his or her library\\.",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisPutIntoGraveyardTrigger.RecoverGraveyard);
+        }
+    },
+    GraveyardToLibrary("When SN is put into a graveyard from anywhere, shuffle it into its owner's library\\.",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(FromGraveyardIntoLibraryTrigger.create());
+        }
+    },
+    LibraryInteadOfGraveyard("If SN would be put into a graveyard from anywhere, reveal SN and shuffle it into its owner's library instead\\.",10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisPutIntoGraveyardTrigger.LibraryInsteadOfGraveyard);
+        }
+    },
+    EntersChooseOpponent("As SN enters the battlefield, choose an opponent\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(EntersBattlefieldTrigger.ChooseOpponent);
+        }
+    },
+    EntersTapped("SN enters the battlefield tapped\\.", -10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(EntersTappedTrigger.create());
+        }
+    },
+    EntersWithCounter("SN enters the battlefield with " + ARG.WORD1 + " " + ARG.WORD2 + " counter(s)? on it( for each " + ARG.WORDRUN + ")?\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final String amount = ARG.word1(arg);
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word2(arg));
+            final String each = ARG.wordrun(arg);
+            if ("a".equalsIgnoreCase(amount) && "time it was kicked".equalsIgnoreCase(each)) {
+                card.add(EntersWithCounterTrigger.MultiKicker(counterType));
+            } else if (amount.equalsIgnoreCase("X")) {
+                card.add(EntersWithCounterTrigger.XCounters(counterType));
+            } else {
+                final int n = EnglishToInt.convert(amount);
+                final MagicAmount count = MagicAmountParser.build(each);
+                card.add(new EntersWithCounterTrigger(counterType,n,count));
+            }
+        }
+    },
+    EntersTappedUnless("SN enters the battlefield tapped unless "+ARG.COND+"\\.", -10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCondition condition = MagicConditionParser.build(ARG.cond(arg));
+            card.add(new EntersTappedUnlessTrigger(MagicConditionFactory.Unless(condition)));
+        }
+    },
+    WhenMonstrous("When SN becomes monstrous, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesStateTrigger.createSelf(
+                MagicPermanentState.Monstrous,
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenTransform("When this creature transforms into SN, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesStateTrigger.createSelf(
+                MagicPermanentState.Transformed,
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenRenowned("When SN becomes renowned, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesStateTrigger.createSelf(
+                MagicPermanentState.Renowned,
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AlternateCost("alt cost " + ARG.ANY, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher matcher) {
+            final String arg = matcher.group("any");
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            final String[] tokens = arg.split(" named ");
+            card.add(MagicHandCastActivation.create(cardDef, tokens[0], tokens[1]));
+        }
+    },
+    AlternateCost2("You may " + ARG.ANY + " rather than pay SN's mana cost\\.", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher matcher) {
+            final String arg = matcher.group("any").replace(" and ",", ");
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicHandCastActivation.create(cardDef, arg, "Alt"));
+        }
+    },
+    AlternateCostIf("If " + ARG.COND + ", you may " + ARG.ANY + " rather than pay SN's mana cost\\.", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher matcher) {
+            final MagicCondition condition = MagicConditionParser.build(ARG.cond(matcher));
+            final String arg = matcher.group("any").replace(" and ",", ");
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicHandCastActivation.create(cardDef, condition, arg, "Alt"));
+        }
+    },
+    Awaken("awaken " + ARG.NUMBER + "—" + ARG.COST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicHandCastActivation.awaken(cardDef, ARG.number(arg), ARG.cost(arg)));
+        }
+    },
+    CastRestriction("Cast SN " + ARG.ANY, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            for (final MagicMatchedCostEvent mce : MagicConditionParser.buildCost(ARG.any(arg))) {
+                card.add(MagicAdditionalCost.create(mce));
+            }
+        }
+    },
+    AdditionalCost("As an additional cost to cast SN, " + ARG.COST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicAdditionalCost.create(new MagicRegularCostEvent(ARG.cost(arg))));
+        }
+    },
+    HeroicEffect("Whenever you cast a spell that targets SN, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(HeroicTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    CycleEffect("When you cycle SN, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisCycleTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    Kinship("At the beginning of your upkeep, you may look at the top card of your library. If it shares a creature type with SN, you may reveal it. If you do, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final String effect = ARG.effect(arg);
+            card.add(AtYourUpkeepTrigger.kinship(effect, MagicRuleEventAction.create(effect).getAction()));
+        }
+    },
+    CDAPT("SN's power and toughness are each equal to( " + ARG.NUMBER + " plus)? " + ARG.ANY + "\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int base = (arg.group("number") != null) ? ARG.number(arg) : 0;
+            card.add(MagicCDA.setPT(
+                base,
+                MagicAmountParser.build(ARG.any(arg))
+            ));
+        }
+    },
+    CDAPower("SN's power is equal to( " + ARG.NUMBER + " plus)? " + ARG.ANY + "\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int base = (arg.group("number") != null) ? ARG.number(arg) : 0;
+            card.add(MagicCDA.setPower(
+                base,
+                MagicAmountParser.build(ARG.any(arg))
+            ));
+        }
+    },
+    CDAToughness("SN's toughness is equal to( " + ARG.NUMBER + " plus)? " + ARG.ANY + "\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int base = (arg.group("number") != null) ? ARG.number(arg) : 0;
+            card.add(MagicCDA.setToughness(
+                base,
+                MagicAmountParser.build(ARG.any(arg))
+            ));
+        }
+    },
+    WhenExploit("When SN exploits a creature, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesStateTrigger.createSelf(
+                MagicPermanentState.Exploit,
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    ChooseNotUntap("You may choose not to untap SN during your untap step\\.",0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.addAbility(DoesNotUntap);
+            card.add(AtUntapTrigger.createYour(
+                MagicRuleEventAction.create("If SN is tapped, you may untap SN.")
+            ));
+        }
+    },
+    PairedPump("As long as SN is paired with another creature, each of those creatures gets " + ARG.PT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int[] pt = ARG.pt(arg);
+            card.add(MagicStatic.genPTStatic(pt[0], pt[1]));
+        }
+    },
+    PairedGain("As long as SN is paired with another creature, (both creatures have|each of those creatures has) " + ARG.ANY, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicStatic.linkedABStatic(
+                MagicAbility.getAbilityList(
+                    ARG.any(arg)
+                )
+            ));
+        }
+    },
+
+    // triggered abilities
+    AnyAttacksEffect("When(ever)? " + ARG.WORDRUN + " attacks, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AttacksTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AnyAttacksAloneEffect("When(ever)? " + ARG.WORDRUN + " attacks alone, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AttacksTrigger.createAlone(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AnyAttacksYouEffect("When(ever)? " + ARG.WORDRUN + " attacks you( or a planeswalker you control)?, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AttacksTrigger.createYou(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AnyAttacksNotBlockedEffect("When(ever)? " + ARG.WORDRUN + " attacks and isn't blocked, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AttacksUnblockedTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    BlocksOrBlockedEffect("Whenever " + ARG.WORDRUN + " blocks or becomes blocked, " + ARG.EFFECT, 20) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
-            card.add(MagicWhenSelfBlocksTrigger.create(sourceEvent));
-            card.add(MagicWhenSelfBecomesBlockedTrigger.create(sourceEvent));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(BlocksTrigger.create(filter, sourceEvent));
+            card.add(BecomesBlockedTrigger.create(filter, sourceEvent));
         }
     },
-    UntappedEffect("Whenever SN becomes untapped, " + ARG.EFFECT, 10) {
+    BlocksCreatureEffect("When(ever)? SN blocks " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfBecomesUntappedTrigger.create(
+            card.add(ThisBlocksTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    TappedEffect("Whenever SN becomes tapped, " + ARG.EFFECT, 10) {
+    CreatureAttacksOrBlocksEffect("When(ever)? " + ARG.WORDRUN + " attacks or blocks, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfBecomesTappedTrigger.create(
+            final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(AttacksTrigger.create(filter, sourceEvent));
+            card.add(BlocksTrigger.create(filter, sourceEvent));
+        }
+    },
+    CreatureBlocksEffect("When(ever)? " + ARG.WORDRUN + " blocks, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(BlocksTrigger.create(filter, sourceEvent));
+        }
+    },
+    BecomesBlockedEffect("When(ever)? " + ARG.WORDRUN + " becomes blocked, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesBlockedTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
+        }
+    },
+    UntappedEffect("When(ever)? " + ARG.WORDRUN + " becomes untapped, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesUntappedTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    AnyTappedEffect("When(ever)? " + ARG.WORDRUN + " becomes tapped, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesTappedTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    Haunt("haunt", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            //Does nothing but allows text to be part of ability property
+            //HauntAbility contains actual effects
+            //Not currently compatable with Instants or Sorceries
+        }
+    },
+    HauntAbility("When SN enters the battlefield or the creature it haunts dies, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(MagicAbilityStore card, Matcher arg) {
+            MagicSourceEvent hauntEffect = MagicRuleEventAction.create(ARG.effect(arg));
+            card.add(EntersBattlefieldTrigger.create(hauntEffect));
+            card.add(ThisDiesTrigger.createHaunt(hauntEffect));
+        }
+    },
+    HauntSpell("When the creature SN haunts dies, " + ARG.EFFECT, 0) {
+        @Override
+        protected void addAbilityImpl(MagicAbilityStore card, Matcher arg) {
+            //Does nothing Haunt for spells is determined from MagicSpellEventAction
         }
     },
     SelfOrAnotherYouControlEntersEffect("Whenever SN or another " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.createSelfOrAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg) + " you control"),
+            card.add(OtherEntersBattlefieldTrigger.createSelfOrAnother(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    AnotherYouControlEntersEffect("Whenever another " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
+    OtherYouControlEntersEffect("Whenever " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.createAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg) + " you control"),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    OtherYouControlEntersEffect("Whenever a(n)? " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.create(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg) + " you control"),
+            card.add(OtherEntersBattlefieldTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     SelfOrAnotherEntersEffect("Whenever SN or another " + ARG.WORDRUN + " enters the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.createSelfOrAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
+            card.add(OtherEntersBattlefieldTrigger.createSelfOrAnother(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    AnotherEntersEffect("When(ever)? another " + ARG.WORDRUN + " enters the battlefield, " + ARG.EFFECT, 10) {
+    OtherEntersEffect("When(ever)? " + ARG.WORDRUN + " enters the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.createAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    OtherEntersEffect("Whenever a(n)? " + ARG.WORDRUN + " enters the battlefield, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.create(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
+            card.add(OtherEntersBattlefieldTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
     SelfOrAnotherLeavesEffect("Whenever SN or another " + ARG.WORDRUN + " leaves the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLeavesPlayTrigger.createSelfOrAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
+            card.add(LeavesBattlefieldTrigger.createSelfOrAnother(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    AnotherLeavesEffect("Whenever another " + ARG.WORDRUN + " leaves the battlefield, " + ARG.EFFECT, 10) {
+    LeavesEffect("When(ever)? " + ARG.WORDRUN + " leaves the battlefield, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLeavesPlayTrigger.createAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
+            card.add(LeavesBattlefieldTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
-    LeavesEffect("Whenever a(n)? " + ARG.WORDRUN + " leaves the battlefield, " + ARG.EFFECT, 10) {
+    YouSacrificeEffect("When(ever)? you sacrifice " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLeavesPlayTrigger.create(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
+            card.add(SacrificeTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
     },
+    PlayerSacrificeEffect("When(ever)? a player sacrifices " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(SacrificeTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    DamageToYou("When(ever)? " + ARG.WORDRUN + " deals damage to you, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DamageToYou(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Any
+            ));
+        }
+    },
+    CombatDamageToYou("When(ever)? " + ARG.WORDRUN + " deals combat damage to you, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DamageToYou(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Combat
+            ));
+        }
+    },
+    DamageToTarget("When(ever)? " + ARG.WORDRUN + " deals damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DamageToTarget(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicTargetFilterFactory.Target(ARG.wordrun2(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Any
+            ));
+        }
+    },
+    CombatDamageToTarget("When(ever)? " + ARG.WORDRUN + " deals combat damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DamageToTarget(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicTargetFilterFactory.Target(ARG.wordrun2(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Combat
+            ));
+        }
+    },
+    DamageToAny("When(ever)? " + ARG.WORDRUN + " deals damage, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DamageToAny(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Any
+            ));
+        }
+    },
+    CombatDamageToAny("When(ever)? " + ARG.WORDRUN + " deals combat damage, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DamageToAny(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Combat
+            ));
+        }
+    },
+    DealtDamage("When(ever)? " + ARG.WORDRUN + " is dealt damage, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(DamageIsDealtTrigger.DealtDamage(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg)),
+                MagicDamage.Any
+            ));
+        }
+    },
+    SelfOrAnotherDiesEffect("Whenever SN or another " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherDiesTrigger.createSelfOrAnother(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    OtherDiesEffect("When(ever)? " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherDiesTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    EachUpkeepEffect("At the beginning of each (player's )?upkeep, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtUpkeepTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    YourUpkeepEffect("At the beginning of your upkeep, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtYourUpkeepTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    OppUpkeepEffect("At the beginning of each opponent's upkeep, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtUpkeepTrigger.createOpp(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    EachDrawStepEffect("At the beginning of each player's draw step, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtDrawTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    YourDrawStepEffect("At the beginning of your draw step, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtDrawTrigger.createYour(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    OppDrawStepEffect("At the beginning of each (other player|opponent)'s draw step, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtDrawTrigger.createOpp(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    BeginCombatEffect("At the beginning of combat on your turn, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtBeginOfCombatTrigger.createYour(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    EndStepEffect("At the beginning of (the|each|each player's) end step, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtEndOfTurnTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    YourEndStepEffect("At the beginning of your end step, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtEndOfTurnTrigger.createYour(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    PlayerCastSpellEffect("Whenever a player casts a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherSpellIsCastTrigger.create(
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    YouCastSN("When you cast SN, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisSpellIsCastTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    YouCastSpellEffect("When(ever)? you cast a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherSpellIsCastTrigger.createYou(
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    OpponentCastSpellEffect("When(ever)? an opponent casts a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherSpellIsCastTrigger.createOpponent(
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    SacWhenTargeted("When SN becomes the target of a spell or ability, sacrifice it\\.",-10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisBecomesTargetTrigger.SacWhenTargeted);
+        }
+    },
+    WhenSNTargeted("When(ever)? SN becomes the target of (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesTargetTrigger.createThis(
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenTargeted("When(ever)? " + ARG.WORDRUN2 + " becomes the target of (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesTargetTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg)),
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenGainLife("Whenever you gain life, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(LifeIsGainedTrigger.createYou(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenDrawCard("Whenever you draw a card, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherDrawnTrigger.createYou(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenOppDrawCard("Whenever an opponent draws a card, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherDrawnTrigger.createOpp(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenPlayerDrawCard("Whenever a player draws a card, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherDrawnTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenOtherFaceUpEffect("When(ever)? " + ARG.WORDRUN + " is turned face up, " + ARG.EFFECT,0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(TurnedFaceUpTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    CycleOtherEffect("Whenever a player cycles a card, " + ARG.EFFECT, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OtherCycleTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenYouScry("Whenever you scry, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(YouScryTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WheneverPlayerDiscard("Whenever a player discards a card, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(CardIsDiscardedTrigger.player(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WheneverOpponentDiscard("Whenever an opponent discards a card, " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(CardIsDiscardedTrigger.opponent(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenConditionEffect("When " + ARG.COND + ", " + ARG.EFFECT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicStatic.StateTrigger(
+                MagicConditionParser.build(ARG.cond(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    ControlEnchanted("You control enchanted " + ARG.ANY + "\\.", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicStatic.ControlEnchanted);
+        }
+    },
+    Enchant("Enchant " + ARG.WORDRUN, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            //Cannot implement target pickers
+            //Does nothing but it allows text to be part of ability property
+        }
+    },
+
+    // activated card abilities
+    CardAbility(".*Discard SN:.*", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicCardAbilityActivation.create(arg.group(), MagicLocationType.OwnersHand));
+        }
+    },
+    RecoverSelf(".*: Return SN from your graveyard .*", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicCardAbilityActivation.create(arg.group(), MagicLocationType.Graveyard));
+        }
+    },
+    ExileCardSelf(".*Exile SN from your graveyard:.*", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicCardAbilityActivation.create(arg.group(), MagicLocationType.Graveyard));
+        }
+    },
+
+    // mana abilities
     SacAddMana("Sacrifice SN: Add " + ARG.MANA + " to your mana pool\\.",10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicManaType> manatype = MagicManaType.getList(ARG.mana(arg));
@@ -353,837 +1215,201 @@ public enum MagicAbility {
     ManaActivationEffect("(?<cost>[^\"]+): Add " + ARG.MANA + " to your mana pool\\. " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicManaType> manatype = MagicManaType.getList(ARG.mana(arg));
-            card.add(MagicManaActivation.create(ARG.cost(arg) + "," + ARG.effect(arg), manatype));
+            card.add(MagicManaActivation.create(ARG.cost(arg) + ", " + ARG.effect(arg), manatype));
         }
     },
-    DamageDiscardCard("Whenever SN deals damage to a player, that player discards " + ARG.AMOUNT + " card(s)?\\.",10) {
+
+    // planeswalker loyalty ability
+    PlaneswalkerAbility("[+−]?[0-9]+: " + ARG.ANY, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.amount(arg);
-            card.add(new MagicSpecterTrigger(Type.Any, Player.Any, n));
+            card.add(MagicPlaneswalkerActivation.create(arg.group()));
         }
     },
-    DamageOpponentDiscardCard("Whenever SN deals damage to an opponent, that (opponent|player) discards " + ARG.AMOUNT + " card(s)?\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.amount(arg);
-            card.add(new MagicSpecterTrigger(Type.Any, Player.Opponent, n));
-        }
-    },
-    CombatDamageDiscardCard("Whenever SN deals combat damage to a player, that player discards " + ARG.AMOUNT + " card(s)?\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.amount(arg);
-            card.add(new MagicSpecterTrigger(Type.Combat, Player.Any, n));
-        }
-    },
-    CombatDamageDiscardRandomCard("Whenever SN deals combat damage to a player, that player discards " + ARG.AMOUNT + " card(s)? at random\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.amount(arg);
-            card.add(MagicSpecterTrigger.Random(Type.Combat, Player.Any, n));
-        }
-    },
-    DamageOpponentDiscardRandomCard("Whenever SN deals damage to an opponent, that (opponent|player) discards " + ARG.AMOUNT + " card(s)? at random\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.amount(arg);
-            card.add(MagicSpecterTrigger.Random(Type.Any, Player.Opponent, n));
-        }
-    },
-    DamageCreatureGrow("Whenever SN deals damage to a creature, put a \\+1/\\+1 counter on SN\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicDamageGrowTrigger(false, false));
-        }
-    },
-    CombatDamageCreatureGrow("Whenever SN deals combat damage to a creature, put a \\+1/\\+1 counter on SN\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicDamageGrowTrigger(true, false));
-        }
-    },
-    DamageToOpponent("When(ever)? SN deals damage to an opponent, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToOpponent(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    DamageToPlayer("When(ever)? SN deals damage to a player, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.DamageToPlayer(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    CombatDamageToPlayer("When(ever)? SN deals combat damage to a player, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.CombatDamageToPlayer(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    CombatDamageToAny("When(ever)? SN deals combat damage, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDamageIsDealtTrigger.CombatDamageToAny(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    OpponentDiscardOntoBattlefield("If a spell or ability an opponent controls causes you to discard SN, put it onto the battlefield instead of putting it into your graveyard\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenPutIntoGraveyardTrigger.OpponentDiscardOntoBattlefield);
-        }
-    },
-    RecoverGraveyard("When SN is put into a graveyard from anywhere, its owner shuffles his or her graveyard into his or her library\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenPutIntoGraveyardTrigger.RecoverGraveyard);
-        }
-    },
-    GraveyardToLibrary("When SN is put into a graveyard from anywhere, shuffle it into its owner's library\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicFromGraveyardToLibraryTrigger.create());
-        }
-    },
-    LibraryInteadOfGraveyard("If SN would be put into a graveyard from anywhere, reveal SN and shuffle it into its owner's library instead\\.",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenPutIntoGraveyardTrigger.LibraryInsteadOfGraveyard);
-        }
-    },
-    Champion("champion " + ARG.ANY,-10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicChampionTrigger(ARG.any(arg)));
-            card.add(MagicLeavesReturnExileTrigger.create());
-        }
-    },
-    LeavesReturnExile("When SN leaves the battlefield, (each player returns|return) (the exiled card(s)? |all cards exiled with it )?to the battlefield (under (its|their) owner('s|s') control|all cards he or she owns exiled with SN).", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicLeavesReturnExileTrigger.create());
-        }
-    },
-    EntersChooseOpponent("As SN enters the battlefield, choose an opponent\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.ChooseOpponent);
-        }
-    },
-    EntersTapped("SN enters the battlefield tapped\\.", -10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicTappedIntoPlayTrigger.create());
-        }
-    },
-    EntersWithCounter("SN enters the battlefield with " + ARG.WORD1 + " " + ARG.WORD2 + " counter(s)? on it\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String name = ARG.word2(arg);
-            final String amount = ARG.word1(arg);
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(name);
-            if (amount.equalsIgnoreCase("X")) {
-                card.add(MagicComesIntoPlayWithCounterTrigger.XCounters(counterType));
-            } else {
-                final int n = EnglishToInt.convert(amount);
-                card.add(new MagicComesIntoPlayWithCounterTrigger(counterType,n));
-            }
-        }
-    },
-    EntersWithCounterMultiKick("SN enters the battlefield with a " + ARG.WORDRUN + " counter on it for each time it was kicked\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String name = ARG.wordrun(arg);
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(name);
-            card.add(MagicComesIntoPlayWithCounterTrigger.MultiKicker(counterType));
-        }
-    },
-    EntersTappedUnlessTwo("SN enters the battlefield tapped unless you control two or fewer other lands\\.", -10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicTappedIntoPlayUnlessTwoTrigger.create());
-        }
-    },
-    EntersTappedUnless("SN enters the battlefield tapped unless you control a(n)? " + ARG.WORD1 + " or a(n)? " + ARG.WORD2 + "\\.", -10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicSubType t1 = MagicSubType.getSubType(ARG.word1(arg));
-            final MagicSubType t2 = MagicSubType.getSubType(ARG.word2(arg));
-            card.add(new MagicTappedIntoPlayUnlessTrigger(t1,t2));
-        }
-    },
-    Echo("echo " + ARG.MANACOST,-20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicEchoTrigger(MagicManaCost.create(ARG.manacost(arg))));
-        }
-    },
-    Bloodthirst("bloodthirst " + ARG.NUMBER,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.number(arg);
-            card.add(new MagicBloodthirstTrigger(n));
-        }
-    },
-    Storm("storm", 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicStormTrigger.create());
-        }
-    },
-    Annihilator("annihilator " + ARG.NUMBER + "(\\.)?", 80) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.number(arg);
-            card.add(new MagicAnnihilatorTrigger(n));
-        }
-    },
-    Miracle("miracle " + ARG.MANACOST, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicMiracleTrigger(manaCost));
-        }
-    },
-    Kicker("(kicker |kicker—)" + ARG.COST, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicKickerCost(new MagicRegularCostEvent(ARG.cost(arg))));
-        }
-    },
-    Buyback("buyback " + ARG.COST, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicKickerCost.Buyback(new MagicRegularCostEvent(ARG.cost(arg))));
-            card.add(MagicWhenSpellIsCastTrigger.Buyback);
-        }
-    },
-    Multikicker("multikicker " + ARG.MANACOST, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicMultikickerCost(cost));
-        }
-    },
-    Replicate("replicate " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(MagicMultikickerCost.Replicate(cost));
-            card.add(MagicReplicateTrigger.create());
-        }
-    },
-    EntersKickedEffect("When SN enters the battlefield, if it was kicked, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.createKicked(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    EntersEffect("When(ever)? SN enters the battlefield, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenComesIntoPlayTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    EndStepEffect("At the beginning of (the|each) end step, " + ARG.EFFECT, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtEndOfTurnTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    YourEndStepEffect("At the beginning of your end step, " + ARG.EFFECT, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtEndOfTurnTrigger.createYour(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    SelfDiesEffect("When SN (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenDiesTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    SelfOrAnotherDiesEffect("Whenever SN or another " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDiesTrigger.createSelfOrAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    AnotherDiesEffect("Whenever another " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDiesTrigger.createAnother(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    OtherDiesEffect("Whenever a(n)? " + ARG.WORDRUN + " (dies|is put into a graveyard from the battlefield), " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDiesTrigger.create(
-                MagicTargetFilterFactory.singlePermanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    SelfLeavesEffect("When SN leaves the battlefield, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfLeavesPlayTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    ControlEnchanted("You control enchanted " + ARG.ANY + "\\.", 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicStatic.ControlEnchanted);
-        }
-    },
-    Evoke("evoke " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicEvokeActivation(manaCost));
-            card.add(MagicWhenComesIntoPlayTrigger.Evoke);
-        }
-    },
-    Transmute("transmute " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicTransmuteActivation(manaCost));
-        }
-    },
-    Evolve("evolve", 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherComesIntoPlayTrigger.Evolve);
-        }
-    },
-    Extort("extort", 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicExtortTrigger.create());
-        }
-    },
-    Cycling("cycling " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicCyclingActivation(manaCost));
-        }
-    },
-    TypeCycling(ARG.WORDRUN + "cycling " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            final String type = ARG.wordrun(arg);
-            card.add(new MagicTypeCyclingActivation(manaCost,type));
-        }
-    },
-    Reinforce("reinforce " + ARG.NUMBER + "—" + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.number(arg);
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicReinforceActivation(n, manaCost));
-        }
-    },
-    Unleash("unleash", 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicUnleashTrigger.create());
-            card.add(MagicStatic.Unleash);
-        }
-    },
-    Ninjutsu("ninjutsu " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicNinjutsuActivation(manaCost));
-        }
-    },
-    Dash("dash " + ARG.MANACOST, 20) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicDashActivation(manaCost));
-        }
-    },
-    Cascade("cascade", 50) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCascadeTrigger.create());
-        }
-    },
-    AttachedPumpGain("(Equipped|Enchanted) creature gets " + ARG.PT + "((,)? and (has )?|, has )" + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            card.add(MagicStatic.genPTStatic(power, toughness));
-            card.add(MagicStatic.genABStatic(
-                MagicAbility.getAbilityList(
-                    ARG.any(arg)
-                )
-            ));
-        }
-    },
-    AttachedPump("(Equipped|Enchanted) creature gets " + ARG.PT + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            card.add(MagicStatic.genPTStatic(power, toughness));
-        }
-    },
-    AttachedCreatureGain("(Equipped|Enchanted) (creature|artifact|land|permanent) " + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicStatic.genABStatic(
-                MagicAbility.getAbilityList(
-                    ARG.any(arg)
-                )
-            ));
-        }
-    },
-    PairedPump("As long as SN is paired with another creature, each of those creatures gets " + ARG.PT + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            card.add(MagicStatic.genPTStatic(power, toughness));
-        }
-    },
-    PairedGain("As long as SN is paired with another creature, (both creatures have|each of those creatures has) " + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicStatic.genABStatic(
-                MagicAbility.getAbilityList(
-                    ARG.any(arg)
-                )
-            ));
-        }
-    },
-    ConditionPumpGainUnless("SN (gets " + ARG.PT + " )?(and )?(" + ARG.ANY + " )?unless " + ARG.WORDRUN + "\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCondition condition = MagicConditionFactory.Unless(MagicConditionParser.build(ARG.wordrun(arg)));
-            if (arg.group("pt") != null) {
-                final String[] pt = ARG.pt(arg).replace("+","").split("/");
-                final int power = Integer.parseInt(pt[0]);
-                final int toughness = Integer.parseInt(pt[1]);
-                card.add(MagicStatic.genPTStatic(condition, power, toughness));
-            }
-            if (arg.group("any") != null) {
-                card.add(MagicStatic.genABStatic(
-                    condition,
-                    MagicAbility.getAbilityList(
-                        ARG.any(arg)
-                    )
-                ));
-            }
-        }
-    },
-    ConditionPumpGain("SN (gets " + ARG.PT + " )?(and )?(" + ARG.ANY + " )?as long as " + ARG.WORDRUN + "\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
-            if (arg.group("pt") != null) {
-                final String[] pt = ARG.pt(arg).replace("+","").split("/");
-                final int power = Integer.parseInt(pt[0]);
-                final int toughness = Integer.parseInt(pt[1]);
-                card.add(MagicStatic.genPTStatic(condition, power, toughness));
-            }
-            if (arg.group("any") != null) {
-                card.add(MagicStatic.genABStatic(
-                    condition,
-                    MagicAbility.getAbilityList(
-                        ARG.any(arg)
-                    )
-                ));
-            }
-        }
-    },
-    ConditionPumpGainAlt("As long as (?<wordrun>[^\\,]*), (SN|it) (gets " + ARG.PT + "(.| ))?(and )?(" + ARG.ANY + ")?(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            ConditionPumpGain.addAbilityImpl(card, arg);
-        }
-    },
-    ConditionPumpGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " get " + ARG.PT + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun2(arg));
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            card.add(MagicStatic.genPTStatic(condition, filter, power, toughness));
-        }
-    },
-    ConditionPumpGroupAlt(ARG.WORDRUN2 + " get(s)? " + ARG.PT + " as long as " + ARG.WORDRUN + "(\\.)?", 0){
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            ConditionPumpGroup.addAbilityImpl(card, arg);
-        }
-    },
-    ConditionGainGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " have " + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun2(arg));
-            card.add(MagicStatic.genABStatic(
-                condition,
-                filter,
-                MagicAbility.getAbilityList(
-                    ARG.any(arg)
-                )
-            ));
-        }
-    },
-    ConditionGainGroupAlt(ARG.WORDRUN2 + " have " + ARG.ANY + " as long as " + ARG.WORDRUN + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            ConditionGainGroup.addAbilityImpl(card, arg);
-        }
-    },
-    Equip("Equip " + ARG.MANACOST, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost cost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicEquipActivation(cost));
-        }
-    },
-/*  
-    EnchantDual("Enchant " + ARG.WORD1 + " or "+ ARG.WORD2, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPlayAuraEvent.create("default," + ARG.word1(arg) + " or " + ARG.word2(arg)));
-        }
-    },
-    Enchant("Enchant " + ARG.WORDRUN, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicPlayAuraEvent.create("default," + ARG.wordrun(arg)));
-        }
-    },
-    //Cannot implement target pickers
-*/
-    Poisonous("poisonous " + ARG.NUMBER + "(\\.)?", 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.number(arg);
-            card.add(MagicWhenDamageIsDealtTrigger.Poisonous(n));
-        }
-    },
-    WhenMonstrous("When SN becomes monstrous, " + ARG.EFFECT, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenBecomesStateTrigger.createSelf(
-                MagicPermanentState.Monstrous,
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    Tribute("tribute " + ARG.NUMBER + " " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int n = ARG.number(arg);
-            final String effect  = ARG.effect(arg).replaceFirst("^effect ", "");
-            card.add(MagicTributeTrigger.create(n,  MagicRuleEventAction.create(effect)));
-        }
-    },
-    Bestow("bestow " + ARG.MANACOST, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicBestowActivation(manaCost));
-        }
-    },
-    CardAbility(".*Discard SN:.*", 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicCardAbilityActivation.create(arg.group()));
-        }
-    },
+
+    // activated permanent abilities
     ActivatedAbility("[^\"]+:(?! Add)" + ARG.ANY, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicPermanentActivation.create(arg.group()));
         }
     },
-    AlternateCost("alt cost " + ARG.ANY, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher matcher) {
-            final String arg = matcher.group("any");
-            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
-            final String[] tokens = arg.split(" named ");
-            card.add(MagicCardActivation.create(cardDef, tokens[0], tokens[1]));
-        }
-    },
-    AlternateCost2("You may " + ARG.ANY + " rather than pay SN's mana cost\\.", 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher matcher) {
-            final String arg = matcher.group("any").replace(" and ",", ");
-            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
-            card.add(MagicCardActivation.create(cardDef, arg, "Alt"));
-        }
-    },
-    CastRestriction("Cast SN " + ARG.ANY, 0) {
+
+    // static ability
+    PreventDamageDealtTo("prevent all damage that would be dealt to " + ARG.WORDRUN + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCondition[] conds = MagicConditionParser.buildCast(ARG.any(arg));  
-            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
-            card.add(MagicCardActivation.castOnly(cardDef, conds));
-        }
-    },
-    AdditionalCost("As an additional cost to cast SN, " + ARG.COST, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAdditionalCost.create(new MagicRegularCostEvent(ARG.cost(arg))));
-        }
-    },
-    HeroicEffect("Whenever you cast a spell that targets SN, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicHeroicTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
+            card.add(PreventDamageTrigger.PreventDamageDealtTo(
+                MagicTargetFilterFactory.Target(ARG.wordrun(arg))
             ));
         }
     },
-    CycleEffect("When you cycle SN, " + ARG.EFFECT, 10) {
+    PreventCombatDamageDealtTo("prevent all combat damage that would be dealt to " + ARG.WORDRUN + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenCycleTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
+            card.add(PreventDamageTrigger.PreventCombatDamageDealtTo(
+                MagicTargetFilterFactory.Target(ARG.wordrun(arg))
             ));
         }
     },
-    EachUpkeepEffect("At the beginning of each upkeep, " + ARG.EFFECT, 10) {
+    PreventNonCombatDamageDealtTo("prevent all noncombat damage that would be dealt to " + ARG.WORDRUN + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtUpkeepTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
+            card.add(PreventDamageTrigger.PreventNonCombatDamageDealtTo(
+                MagicTargetFilterFactory.Target(ARG.wordrun(arg))
             ));
         }
     },
-    YourUpkeepEffect("At the beginning of your upkeep, " + ARG.EFFECT, 10) {
+    ConditionPumpGainGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " get " + ARG.PT + " and " + ARG.ANY + "\\.", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicAtYourUpkeepTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
+            final int[] pt = ARG.pt(arg);
+            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
+            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
+            card.add(MagicStatic.genPTStatic(condition, filter, pt[0], pt[1]));
+            card.add(MagicStatic.genABStatic(condition, filter, abList));
+        }
+    },
+    ConditionPumpGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " get " + ARG.PT, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
+            final int[] pt = ARG.pt(arg);
+            card.add(MagicStatic.genPTStatic(condition, filter, pt[0], pt[1]));
+        }
+    },
+    ConditionPumpGroupAlt(ARG.WORDRUN2 + " get(s)? " + ARG.PT + " as long as " + ARG.WORDRUN, 0){
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            ConditionPumpGroup.addAbilityImpl(card, arg);
+        }
+    },
+    ConditionGainGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " have " + ARG.ANY, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
+            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
+            card.add(MagicStatic.genABStatic(condition, filter, abList));
+        }
+    },
+    ConditionGainGroupAlt(ARG.WORDRUN2 + " (?<any>(has|have|can).+) as long as " + ARG.WORDRUN, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            ConditionGainGroup.addAbilityImpl(card, arg);
+        }
+    },
+    ConditionPumpGain(ARG.WORDRUN2 + " (gets " + ARG.PT + " )?(and )?(" + ARG.ANY + " )?as long as " + ARG.WORDRUN + "\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
+            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
+            if (arg.group("pt") != null) {
+                final int[] pt = ARG.pt(arg);
+                card.add(MagicStatic.genPTStatic(condition, filter, pt[0], pt[1]));
+            }
+            if (arg.group("any") != null) {
+                card.add(MagicStatic.genABStatic(
+                    condition,
+                    filter,
+                    MagicAbility.getAbilityList(
+                        ARG.any(arg)
+                    )
+                ));
+            }
+        }
+    },
+    ConditionPumpGainAlt("As long as (?<wordrun>[^\\,]*), " + ARG.WORDRUN2 + " (?=(get|has|can))(gets " + ARG.PT + "(.| ))?(and )?(" + ARG.ANY + ")?", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            ConditionPumpGain.addAbilityImpl(card, arg);
+        }
+    },
+    ConditionPumpGainUnless(ARG.WORDRUN + " (gets " + ARG.PT + " )?(and )?(" + ARG.ANY + " )?unless " + ARG.WORDRUN2 + "\\.", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicCondition condition = MagicConditionFactory.Unless(MagicConditionParser.build(ARG.wordrun2(arg)));
+            if (arg.group("pt") != null) {
+                final int [] pt = ARG.pt(arg);
+                card.add(MagicStatic.genPTStatic(condition, filter, pt[0], pt[1]));
+            }
+            if (arg.group("any") != null) {
+                card.add(MagicStatic.genABStatic(
+                    condition,
+                    filter,
+                    MagicAbility.getAbilityList(
+                        ARG.any(arg)
+                    )
+                ));
+            }
+        }
+    },
+    CantBlockPermanent("(SN )?can't block " + ARG.WORDRUN, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(CantBlockTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))
             ));
         }
     },
-    BattalionEffect("Whenever SN and at least two other creatures attack, " + ARG.EFFECT, 10) {
+    LordPumpGain(ARG.WORDRUN + " get(s)? " + ARG.PT + "(,)? (and|has|and have) " + ARG.ANY, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicBattalionTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            final int[] pt = ARG.pt(arg);
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
+            card.add(MagicStatic.genPTStatic(filter, pt[0], pt[1]));
+            card.add(MagicStatic.genABStatic(filter, abList));
         }
     },
-    PlayerCastSpellEffect("Whenever a player casts a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
+    LordPump(ARG.WORDRUN + " get(s)? " + ARG.PT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherSpellIsCastTrigger.create(
-                MagicTargetFilterFactory.singleItemOnStack(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            final int[] pt = ARG.pt(arg);
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(MagicStatic.genPTStatic(filter, pt[0], pt[1]));
         }
     },
-    YouCastSpellEffect("When(ever)? you cast a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
+    LordPumpEach(ARG.WORDRUN + " get(s)? " + ARG.PT + " for each " + ARG.WORDRUN2 + "\\.", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherSpellIsCastTrigger.createYou(
-                MagicTargetFilterFactory.singleItemOnStack(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            final MagicPowerToughness pt = ARG.mpt(arg);
+            final MagicTargetFilter<MagicPermanent> affected = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicAmount count = MagicAmountParser.build(ARG.wordrun2(arg));
+            card.add(MagicStatic.genPTStatic(affected, count, pt));
         }
     },
-    OpponentCastSpellEffect("When(ever)? an opponent casts a(n)? (?<wordrun>[^\\.]*spell[^,]*), " + ARG.EFFECT, 10) {
+    LordPumpX(ARG.WORDRUN + " get(s)? " + ARG.XPT + ", where X is " + ARG.WORDRUN2 + "\\.", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherSpellIsCastTrigger.createOpponent(
-                MagicTargetFilterFactory.singleItemOnStack(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
+            final String[] ptStr = ARG.ptStr(arg);
+            final MagicPowerToughness pt = new MagicPowerToughness(
+                MagicAmountParser.getX(ptStr[0], 1),
+                MagicAmountParser.getX(ptStr[1], 1)
+            );
+            final MagicTargetFilter<MagicPermanent> affected = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicAmount count = MagicAmountParser.build(ARG.wordrun2(arg));
+            card.add(MagicStatic.genPTStatic(affected, count, pt));
         }
     },
-    Graft("graft " + ARG.NUMBER,10) {
+    LordGain(ARG.WORDRUN + " (have|has) " + ARG.ANY, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
+            card.add(MagicStatic.genABStatic(filter, abList));
+        }
+    },
+    LordGainCan(ARG.WORDRUN + " (?<any>(can|can't|doesn't|attack(s)?) .+)", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
+            card.add(MagicStatic.genABGameStatic(filter, abList));
+        }
+    },
+    Renown("renown " + ARG.NUMBER,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.PlusOne,n));
-            card.add(MagicWhenOtherComesIntoPlayTrigger.Graft);
+            card.add(DamageIsDealtTrigger.Renown(n));
         }
     },
-    Loyalty("loyalty " + ARG.NUMBER,10) {
+    /*
+    Suspend("suspend " + ARG.NUMBER + "( |—)" + ARG.MANACOST, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            card.add(new MagicComesIntoPlayWithCounterTrigger(MagicCounterType.Loyalty,n));
-        }
-    },
-    Retrace("retrace",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
-            card.add(new MagicRetraceActivation(cardDef));
-        }
-    },
-    Flashback("flashback " + ARG.COST,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
-            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
-            card.add(new MagicFlashbackActivation(cardDef, matchedCostEvents));
-        }
-    },
-    Scavenge("scavenge " + ARG.MANACOST,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
-            card.add(new MagicScavengeActivation(cardDef, manaCost));
+            card.add(new MagicSuspendActivation(n, manaCost));
         }
     },
-    Unearth("unearth " + ARG.MANACOST,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicUnearthActivation(manaCost));
-        }
-    },
-    SacWhenTargeted("When SN becomes the target of a spell or ability, sacrifice it\\.",-10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfTargetedTrigger.SacWhenTargeted);
-        }
-    },
-    WhenTargeted("When(ever)? SN becomes the target of a(n)? (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfTargetedTrigger.create(
-                MagicTargetFilterFactory.singleItemOnStack(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    WhenGainLife("Whenever you gain life, " + ARG.EFFECT, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenLifeIsGainedTrigger.createYou(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    WhenDrawCard("Whenever you draw a card, " + ARG.EFFECT, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherDrawnTrigger.createYou(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    LordPumpGain("(?<other>other )?" + ARG.WORDRUN + " get(s)? " + ARG.PT + " and (have|has) " + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            final boolean other = arg.group("other") != null; 
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun(arg));
-            if (other) {
-                card.add(MagicStatic.genPTStaticOther(filter, power, toughness));
-                card.add(MagicStatic.genABStaticOther(
-                    filter,
-                    MagicAbility.getAbilityList(
-                        ARG.any(arg)
-                    )
-                ));
-            } else {
-                card.add(MagicStatic.genPTStatic(filter, power, toughness));
-                card.add(MagicStatic.genABStatic(
-                    filter,
-                    MagicAbility.getAbilityList(
-                        ARG.any(arg)
-                    )
-                ));
-            }
-        }
-    },
-    LordPump("(?<other>other )?" + ARG.WORDRUN + " get(s)? " + ARG.PT + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final String[] pt = ARG.pt(arg).replace("+","").split("/");
-            final int power = Integer.parseInt(pt[0]);
-            final int toughness = Integer.parseInt(pt[1]);
-            final boolean other = arg.group("other") != null; 
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun(arg));
-            if (other) {
-                card.add(MagicStatic.genPTStaticOther(filter, power, toughness));
-            } else {
-                card.add(MagicStatic.genPTStatic(filter, power, toughness));
-            }
-        }
-    },
-    LordGainCant("(?<other>other )?" + ARG.WORDRUN + " can't " + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final boolean other = arg.group("other") != null;
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun(arg));
-            final MagicAbilityList abilityList = MagicAbility.getAbilityList("can't " + ARG.any(arg));
-            if (other) {
-                card.add(MagicStatic.genABGameStaticOther(
-                    filter,
-                    abilityList
-                ));
-            } else {
-                card.add(MagicStatic.genABGameStatic(
-                    filter,
-                    abilityList
-                ));
-            }
-        }
-    },
-    LordGain("(?<other>other )?" + ARG.WORDRUN + " (have|has) " + ARG.ANY + "(\\.)?", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final boolean other = arg.group("other") != null;
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.multiple(ARG.wordrun(arg));
-            if (other) {
-                card.add(MagicStatic.genABStaticOther(
-                    filter,
-                    MagicAbility.getAbilityList(
-                        ARG.any(arg)
-                    )
-                ));
-            } else {
-                card.add(MagicStatic.genABStatic(
-                    filter,
-                    MagicAbility.getAbilityList(
-                        ARG.any(arg)
-                    )
-                ));
-            }
-        }
-    },
-    ChooseNotUntap("You may choose not to untap SN during your untap step\\.",0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.addAbility(DoesNotUntap);
-            card.add(MagicAtUntapTrigger.createYour(
-                MagicRuleEventAction.create("If SN is tapped, you may untap SN.")
-            ));
-        }
-    },
-    Dethrone("dethrone(\\.)?",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicDethroneTrigger.create());
-        }
-    },
-    Madness("madness " + ARG.MANACOST,0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(new MagicMadnessTrigger(MagicManaCost.create(ARG.manacost(arg))));
-        }
-    },
-    Morph("morph " + ARG.COST, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
-            card.add(new MagicMorphActivation(matchedCostEvents));
-            card.add(MagicMorphCastActivation.create());
-        }
-    },
-    TurnedFaceUpEffect("When SN is turned face up, " + ARG.EFFECT,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenSelfTurnedFaceUpTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    WhenOtherFaceUpEffect("Whenever a permanent is turned face up, " + ARG.EFFECT,0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenTurnedFaceUpTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    CDAPT("SN's power and toughness are each equal to (" + ARG.NUMBER + " plus )?the number of " + ARG.ANY + "\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int base = (arg.group("number") != null) ? ARG.number(arg) : 0;
-            card.add(MagicCDA.setPT(
-                base,
-                MagicTargetFilterFactory.multipleTargets(ARG.any(arg))
-            ));
-        }
-    },
-    CDAPower("SN's power is equal to (" + ARG.NUMBER + " plus )?the number of " + ARG.ANY + "\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int base = (arg.group("number") != null) ? ARG.number(arg) : 0;
-            card.add(MagicCDA.setPower(
-                base,
-                MagicTargetFilterFactory.multipleTargets(ARG.any(arg))
-            ));
-        }
-    },
-    CDAToughness("SN's toughness is equal to (" + ARG.NUMBER + " plus )?the number of " + ARG.ANY + "\\.", 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final int base = (arg.group("number") != null) ? ARG.number(arg) : 0;
-            card.add(MagicCDA.setToughness(
-                base,
-                MagicTargetFilterFactory.multipleTargets(ARG.any(arg))
-            ));
-        }
-    },
-    CycleOtherEffect("Whenever a player cycles a card, " + ARG.EFFECT, 10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicWhenOtherCycleTrigger.create(
-                MagicRuleEventAction.create(ARG.effect(arg))
-            ));
-        }
-    },
-    Outlast("outlast "+ARG.COST,10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
-            card.add(new MagicOutlastActivation(matchedCostEvents));
-        }
-    },
-    Prowess("prowess",10) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(MagicProwessTrigger.create());
-        }
-    },
+    */
     ;
 
     public static final Set<MagicAbility> PROTECTION_FLAGS = EnumSet.range(ProtectionFromBlack, ProtectionFromEverything);
-    
+
     public static final Set<MagicAbility> LANDWALK_FLAGS = EnumSet.range(Plainswalk, NonbasicLandwalk);
 
 
@@ -1192,7 +1418,7 @@ public enum MagicAbility {
     private final int score;
 
     private MagicAbility(final String regex,final int aScore) {
-        pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        pattern = Pattern.compile(regex + "(\\.)?", Pattern.CASE_INSENSITIVE);
         name  = regex.replace("\\", "");
         score = aScore;
     }
@@ -1208,7 +1434,7 @@ public enum MagicAbility {
         card.addAbility(this);
         addAbilityImpl(card, matched(ability));
     }
-    
+
     public void addAbility(final MagicAbilityStore card) {
         card.addAbility(this);
         addAbilityImpl(card, null);
@@ -1230,11 +1456,11 @@ public enum MagicAbility {
         }
         return score;
     }
-    
+
     public boolean matches(final String rule) {
         return pattern.matcher(rule).matches();
     }
-    
+
     public Matcher matched(final String rule) {
         final Matcher matcher = pattern.matcher(rule);
         final boolean matches = matcher.matches();
@@ -1250,9 +1476,9 @@ public enum MagicAbility {
                 return ability;
             }
         }
-        throw new RuntimeException("unknown ability \"" + name + "\"");
+        throw new ScriptParseException("unknown ability \"" + name + "\"");
     }
-    
+
     public static MagicAbilityList getAbilityList(final String[] names) {
         final MagicAbilityList abilityList = new MagicAbilityList();
         for (final String name : names) {
@@ -1260,7 +1486,7 @@ public enum MagicAbility {
         }
         return abilityList;
     }
-    
+
     public static MagicAbilityList getAbilityList(final Set<MagicAbility> abilities) {
         final MagicAbilityList abilityList = new MagicAbilityList();
         for (final MagicAbility ability : abilities) {
@@ -1270,23 +1496,23 @@ public enum MagicAbility {
     }
 
     private static final Pattern SUB_ABILITY_LIST = Pattern.compile(
-        "(?:has )?\"([^\"]+)\"(?:, and | and )?|" + 
-        "(?:has )?([A-Za-z][^,]+)(?:, and | and )|" + 
-        "(?:has )?([A-Za-z][^,]+)"
+        "(?:has |have )?\"([^\"]+)\"(?:, and | and )?|" +
+        "(?:has |have )?([A-Za-z][^,]+)(?:, and | and )|" +
+        "(?:has |have )?([A-Za-z][^,]+)"
     );
-    
+
     public static MagicAbilityList getAbilityList(final String names) {
         final MagicAbilityList abilityList = new MagicAbilityList();
         final Matcher m = SUB_ABILITY_LIST.matcher(names);
         while (m.find()) {
-            final String name = m.group(1) != null ? m.group(1) : 
+            final String name = m.group(1) != null ? m.group(1) :
                                 m.group(2) != null ? m.group(2) :
                                 m.group(3);
             getAbility(name).addAbility(abilityList, name);
         }
         return abilityList;
     }
-    
+
     public static Set<MagicAbility> of(final MagicAbility first, MagicAbility... rest) {
         return EnumSet.of(first, rest);
     }
@@ -1294,7 +1520,7 @@ public enum MagicAbility {
     public static Set<MagicAbility> noneOf() {
         return EnumSet.noneOf(MagicAbility.class);
     }
-    
+
     public static MagicAbility CannotBeTheTarget(final MagicPlayer player) {
         return player.getIndex() == 0 ?
             CannotBeTheTarget0 :

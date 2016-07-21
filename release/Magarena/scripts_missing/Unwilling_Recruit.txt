@@ -1,9 +1,0 @@
-name=Unwilling Recruit
-image=http://mtgimage.com/card/unwilling%20recruit.jpg
-value=2.500
-rarity=U
-type=Sorcery
-cost={X}{R}{R}{R}
-effect=Gain control of target creature until end of turn. Untap that creature. It gets +X/+0 and gains haste until end of turn.
-timing=main
-oracle=Gain control of target creature until end of turn. Untap that creature. It gets +X/+0 and gains haste until end of turn.

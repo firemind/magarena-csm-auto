@@ -1,9 +1,9 @@
 name=Putrefaction
-image=http://mtgimage.com/card/putrefaction.jpg
+image=http://magiccards.info/scans/en/mm/153.jpg
 value=2.391
 rarity=U
 type=Enchantment
 cost={4}{B}
+ability=Whenever a player casts a green or white spell, that player discards a card.
 timing=enchantment
-requires_groovy_code
 oracle=Whenever a player casts a green or white spell, that player discards a card.

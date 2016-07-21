@@ -1,11 +1,13 @@
 name=Dimir House Guard
-image=http://mtgimage.com/card/dimir%20house%20guard.jpg
+image=http://magiccards.info/scans/en/rav/83.jpg
 value=3.570
 rarity=C
 type=Creature
 subtype=Skeleton
 cost={3}{B}
 pt=2/3
-ability=fear;Sacrifice a creature: Regenerate SN.;Transmute {1}{B}{B}
+ability=Fear;\
+        Sacrifice a creature: Regenerate SN. Activate this ability with AI only if you control another creature.;\
+        Transmute {1}{B}{B}
 timing=main
-oracle=Fear. Sacrifice a creature: Regenerate Dimir House Guard. Transmute {1}{B}{B}
+oracle=Fear\nSacrifice a creature: Regenerate Dimir House Guard.\nTransmute {1}{B}{B}

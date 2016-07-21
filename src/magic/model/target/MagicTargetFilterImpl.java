@@ -1,22 +1,35 @@
 package magic.model.target;
 
-import magic.model.MagicCard;
-import magic.model.MagicGame;
-import magic.model.MagicPermanent;
-import magic.model.MagicPlayer;
-import magic.model.stack.MagicItemOnStack;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import magic.model.MagicGame;
+import magic.model.MagicPlayer;
+import magic.model.MagicSource;
+import magic.model.event.MagicEvent;
 
 public abstract class MagicTargetFilterImpl implements MagicTargetFilter<MagicTarget> {
-    public List<MagicTarget> filter(final MagicGame game, final MagicPlayer player, final MagicTargetHint targetHint) {
+    public List<MagicTarget> filter(final MagicSource source) {
+        return filter(source, source.getController(), MagicTargetHint.None);
+    }
+
+    public List<MagicTarget> filter(final MagicPlayer player) {
+        return filter(MagicSource.NONE, player, MagicTargetHint.None);
+    }
+
+    public List<MagicTarget> filter(final MagicEvent event) {
+        return filter(event.getSource(), event.getPlayer(), MagicTargetHint.None);
+    }
+
+    public List<MagicTarget> filter(final MagicSource source, final MagicPlayer player, final MagicTargetHint targetHint) {
+        final MagicGame game = player.getGame();
         final List<MagicTarget> targets=new ArrayList<MagicTarget>();
 
         // Players
         if (acceptType(MagicTargetType.Player)) {
             for (final MagicPlayer targetPlayer : game.getPlayers()) {
-                if (accept(game,player,targetPlayer) &&
+                if (accept(source,player,targetPlayer) &&
                     targetHint.accept(player,targetPlayer)) {
                     targets.add(targetPlayer);
                 }
@@ -26,59 +39,35 @@ public abstract class MagicTargetFilterImpl implements MagicTargetFilter<MagicTa
         // Permanents
         if (acceptType(MagicTargetType.Permanent)) {
             for (final MagicPlayer controller : game.getPlayers()) {
-                for (final MagicPermanent targetPermanent : controller.getPermanents()) {
-                    if (accept(game,player,targetPermanent) &&
-                        targetHint.accept(player,targetPermanent)) {
-                        targets.add(targetPermanent);
-                    }
-                }
+                targets.addAll(controller.getPermanents().stream().filter(targetPermanent -> accept(source, player, targetPermanent) &&
+                    targetHint.accept(player, targetPermanent)).collect(Collectors.toList()));
             }
         }
 
         // Items on stack
         if (acceptType(MagicTargetType.Stack)) {
-            for (final MagicItemOnStack targetItemOnStack : game.getStack()) {
-                if (accept(game,player,targetItemOnStack) &&
-                    targetHint.accept(player,targetItemOnStack)) {
-                    targets.add(targetItemOnStack);
-                }
-            }
+            targets.addAll(game.getStack().stream().filter(targetItemOnStack -> accept(source, player, targetItemOnStack) &&
+                targetHint.accept(player, targetItemOnStack)).collect(Collectors.toList()));
         }
 
         // Cards in graveyard
         if (acceptType(MagicTargetType.Graveyard)) {
-            for (final MagicCard targetCard : player.getGraveyard()) {
-                if (accept(game,player,targetCard)) {
-                    targets.add(targetCard);
-                }
-            }
+            targets.addAll(player.getGraveyard().stream().filter(targetCard -> accept(source, player, targetCard)).collect(Collectors.toList()));
         }
 
         // Cards in opponent's graveyard
         if (acceptType(MagicTargetType.OpponentsGraveyard)) {
-            for (final MagicCard targetCard : player.getOpponent().getGraveyard()) {
-                if (accept(game,player,targetCard)) {
-                    targets.add(targetCard);
-                }
-            }
+            targets.addAll(player.getOpponent().getGraveyard().stream().filter(targetCard -> accept(source, player, targetCard)).collect(Collectors.toList()));
         }
 
         // Cards in hand
         if (acceptType(MagicTargetType.Hand)) {
-            for (final MagicCard targetCard : player.getHand()) {
-                if (accept(game,player,targetCard)) {
-                    targets.add(targetCard);
-                }
-            }
+            targets.addAll(player.getHand().stream().filter(targetCard -> accept(source, player, targetCard)).collect(Collectors.toList()));
         }
-        
+
         // Cards in library
         if (acceptType(MagicTargetType.Library)) {
-            for (final MagicCard targetCard : player.getLibrary()) {
-                if (accept(game,player,targetCard)) {
-                    targets.add(targetCard);
-                }
-            }
+            targets.addAll(player.getLibrary().stream().filter(targetCard -> accept(source, player, targetCard)).collect(Collectors.toList()));
         }
 
         return targets;

@@ -1,12 +1,12 @@
 name=Bonescythe Sliver
-image=http://mtgimage.com/card/bonescythe%20sliver.jpg
+image=http://magiccards.info/scans/en/m14/9.jpg
 value=3.623
 rarity=R
 type=Creature
 subtype=Sliver
 cost={3}{W}
 pt=2/2
-ability=sliver creatures you control have double strike
+ability=Sliver creatures you control have double strike.
 static=player
 timing=main
 oracle=Sliver creatures you control have double strike.

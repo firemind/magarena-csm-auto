@@ -1,11 +1,12 @@
 name=Harrier Griffin
-image=http://mtgimage.com/card/harrier%20griffin.jpg
+image=http://magiccards.info/scans/en/gp/9.jpg
 value=2.750
 rarity=U
 type=Creature
 subtype=Griffin
 cost={5}{W}
 pt=3/3
-ability=At the beginning of your upkeep, tap target creature.
+ability=Flying;\
+        At the beginning of your upkeep, tap target creature.
 timing=main
-oracle=Flying. At the beginning of your upkeep, tap target creature.
+oracle=Flying\nAt the beginning of your upkeep, tap target creature.

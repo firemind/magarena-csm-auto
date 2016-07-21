@@ -1,11 +1,11 @@
 name=Millennial Gargoyle
-image=http://mtgimage.com/card/millennial%20gargoyle.jpg
+image=http://magiccards.info/scans/en/gtc/232.jpg
 value=1.803
 rarity=C
 type=Artifact,Creature
 subtype=Gargoyle
 cost={4}
 pt=2/2
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

@@ -1,11 +1,11 @@
 name=Bay Falcon
-image=http://mtgimage.com/card/bay%20falcon.jpg
+image=http://magiccards.info/scans/en/mr/54.jpg
 value=3.061
 rarity=C
 type=Creature
 subtype=Bird
 cost={1}{U}
 pt=1/1
-ability=vigilance;flying
+ability=Flying, vigilance
 timing=main
 oracle=Flying, vigilance

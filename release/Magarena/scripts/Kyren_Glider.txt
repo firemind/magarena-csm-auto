@@ -1,11 +1,12 @@
 name=Kyren Glider
-image=http://mtgimage.com/card/kyren%20glider.jpg
+image=http://magiccards.info/scans/en/mm/196.jpg
 value=1.817
 rarity=C
 type=Creature
 subtype=Goblin
 cost={1}{R}
 pt=1/1
+ability=Flying;\
+        SN can't block.
 timing=main
-ability=SN can't block.;flying
-oracle=Flying. Kyren Glider can't block.
+oracle=Flying\nKyren Glider can't block.

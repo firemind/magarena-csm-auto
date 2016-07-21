@@ -1,11 +1,11 @@
 name=Merfolk of the Depths
-image=http://mtgimage.com/card/merfolk%20of%20the%20depths.jpg
+image=http://magiccards.info/scans/en/gtc/221.jpg
 value=1.140
 rarity=U
 type=Creature
 subtype=Merfolk,Soldier
 cost={4}{G/U}{G/U}
 pt=4/2
-ability=flash
-timing=main
+ability=Flash
+timing=flash
 oracle=Flash

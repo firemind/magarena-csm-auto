@@ -1,11 +1,11 @@
 name=Raging Cougar
-image=http://mtgimage.com/card/raging%20cougar.jpg
+image=http://magiccards.info/scans/en/po/149.jpg
 value=2.786
 rarity=C
 type=Creature
 subtype=Cat
 cost={2}{R}
 pt=2/2
-ability=haste
+ability=Haste
 timing=fmain
 oracle=Haste

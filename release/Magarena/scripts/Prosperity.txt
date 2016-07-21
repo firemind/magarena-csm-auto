@@ -1,9 +1,9 @@
 name=Prosperity
-image=http://mtgimage.com/card/prosperity.jpg
+image=http://magiccards.info/scans/en/c13/54.jpg
 value=4.318
 rarity=U
 type=Sorcery
 cost={X}{U}
+effect=Each player draws X cards.
 timing=main
-requires_groovy_code
 oracle=Each player draws X cards.

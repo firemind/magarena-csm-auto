@@ -1,10 +1,10 @@
 name=Lightning Helix
-image=http://mtgimage.com/card/lightning%20helix.jpg
+image=http://magiccards.info/scans/en/ddn/65.jpg
 value=4.000
 removal=3
 rarity=U
 type=Instant
 cost={R}{W}
-effect=SN deals 3 damage to target creature or player.~You gain 3 life.
+effect=SN deals 3 damage to target creature or player~and you gain 3 life.
 timing=removal
 oracle=Lightning Helix deals 3 damage to target creature or player and you gain 3 life.

@@ -1,11 +1,11 @@
 name=Resplendent Mentor
-image=http://mtgimage.com/card/resplendent%20mentor.jpg
+image=http://magiccards.info/scans/en/shm/19.jpg
 value=2.569
 rarity=U
 type=Creature
 subtype=Kithkin,Cleric
 cost={4}{W}
 pt=2/2
-ability=white creatures you control have "{T}: You gain 1 life."
+ability=White creatures you control have "{T}: You gain 1 life."
 timing=main
 oracle=White creatures you control have "{T}: You gain 1 life."

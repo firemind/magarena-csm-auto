@@ -1,11 +1,11 @@
 name=Barrin, Master Wizard
-image=http://mtgimage.com/card/barrin,%20master%20wizard.jpg
+image=http://magiccards.info/scans/en/us/63.jpg
 value=3.144
 rarity=R
 type=Legendary,Creature
 subtype=Human,Wizard
 cost={1}{U}{U}
 pt=1/1
-ability={2},Sacrifice a permanent:Return target creature to its owner's hand.
+ability={2}, Sacrifice a permanent: Return target creature to its owner's hand.
 timing=main
 oracle={2}, Sacrifice a permanent: Return target creature to its owner's hand.

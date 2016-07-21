@@ -1,11 +1,11 @@
 name=Nearheath Stalker
-image=http://mtgimage.com/card/nearheath%20stalker.jpg
+image=http://magiccards.info/scans/en/dka/100.jpg
 value=1.954
 rarity=C
 type=Creature
 subtype=Vampire,Rogue
 cost={4}{R}
 pt=4/1
-ability=undying
+ability=Undying
 timing=main
 oracle=Undying

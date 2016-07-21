@@ -1,12 +1,12 @@
 name=Rafiq of the Many
-image=http://mtgimage.com/card/rafiq%20of%20the%20many.jpg
+image=http://magiccards.info/scans/en/ala/185.jpg
 value=3.778
 rarity=M
 type=Legendary,Creature
 subtype=Human,Knight
 cost={1}{G}{W}{U}
 pt=3/3
-ability=exalted
+ability=Exalted;\
+        Whenever a creature you control attacks alone, RN gains double strike until end of turn.
 timing=fmain
-requires_groovy_code
-oracle=Exalted. Whenever a creature you control attacks alone, it gains double strike until end of turn.
+oracle=Exalted\nWhenever a creature you control attacks alone, it gains double strike until end of turn.

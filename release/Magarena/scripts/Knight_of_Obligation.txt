@@ -1,11 +1,12 @@
 name=Knight of Obligation
-image=http://mtgimage.com/card/knight%20of%20obligation.jpg
+image=http://magiccards.info/scans/en/gtc/18.jpg
 value=3.105
 rarity=U
 type=Creature
 subtype=Human,Knight
 cost={3}{W}
 pt=2/4
-ability=vigilance;extort
+ability=Vigilance;\
+        Extort
 timing=main
-oracle=Vigilance. Extort
+oracle=Vigilance\nExtort

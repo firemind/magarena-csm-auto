@@ -1,11 +1,11 @@
 name=Blazing Effigy
-image=http://mtgimage.com/card/blazing%20effigy.jpg
-value=2.500
+image=http://magiccards.info/scans/en/lg/134.jpg
+value=3.128
 rarity=C
 type=Creature
 subtype=Elemental
 cost={1}{R}
 pt=0/3
-ability=When SN dies, it deals X damage to target creature, where X is 3 plus the amount of damage dealt to SN this turn by other sources named SN.
+ability=When SN dies, it deals X damage to target creature, where X is 3 plus the amount of damage dealt to SN this turn by other sources named Blazing Effigy.
 timing=main
 oracle=When Blazing Effigy dies, it deals X damage to target creature, where X is 3 plus the amount of damage dealt to Blazing Effigy this turn by other sources named Blazing Effigy.

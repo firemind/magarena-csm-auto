@@ -1,11 +1,12 @@
 name=Flight
-image=http://mtgimage.com/card/flight.jpg
+image=http://magiccards.info/scans/en/m12/53.jpg
 value=2.255
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={U}
-ability=Enchanted creature has flying.
+ability=Enchant creature;\
+        Enchanted creature has flying.
 timing=aura
 enchant=flying,pos creature
-oracle=Enchant creature. Enchanted creature has flying.
+oracle=Enchant creature\nEnchanted creature has flying.

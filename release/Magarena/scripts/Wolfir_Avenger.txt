@@ -1,12 +1,12 @@
 name=Wolfir Avenger
-image=http://mtgimage.com/card/wolfir%20avenger.jpg
+image=http://magiccards.info/scans/en/avr/205.jpg
 value=3.921
 rarity=U
 type=Creature
 subtype=Wolf,Warrior
 cost={1}{G}{G}
 pt=3/3
-ability=flash;\
+ability=Flash;\
         {1}{G}: Regenerate SN.
 timing=flash
-oracle=Flash. {1}{G}: Regenerate Wolfir Avenger.
+oracle=Flash\n{1}{G}: Regenerate Wolfir Avenger.

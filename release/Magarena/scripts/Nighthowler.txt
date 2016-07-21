@@ -1,12 +1,14 @@
 name=Nighthowler
-image=http://mtgimage.com/card/nighthowler.jpg
+image=http://magiccards.info/scans/en/c15/129.jpg
+image_updated=2016-02-29
 value=3.627
 rarity=R
 type=Enchantment,Creature
 subtype=Horror
 cost={1}{B}{B}
 pt=0/0
-ability=Bestow {2}{B}{B}
+ability=Bestow {2}{B}{B};\
+        SN gets +X/+X, where X is the number of creature cards in all graveyards.;\
+        Enchanted creature gets +X/+X, where X is the number of creature cards in all graveyards.
 timing=main
-requires_groovy_code
-oracle=Bestow {2}{B}{B}. Nighthowler and enchanted creature each get +X/+X, where X is the number of creature cards in all graveyards.
+oracle=Bestow {2}{B}{B}\nNighthowler and enchanted creature each get +X/+X, where X is the number of creature cards in all graveyards.

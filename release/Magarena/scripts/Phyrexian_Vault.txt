@@ -1,9 +1,9 @@
 name=Phyrexian Vault
-image=http://mtgimage.com/card/phyrexian%20vault.jpg
+image=http://magiccards.info/scans/en/pvc/21.jpg
 value=2.919
 rarity=U
 type=Artifact
 cost={3}
-ability={2},{T},Sacrifice a creature: Draw a card.
+ability={2}, {T}, Sacrifice a creature: Draw a card.
 timing=artifact
 oracle={2}, {T}, Sacrifice a creature: Draw a card.

@@ -1,12 +1,12 @@
 name=Mudbrawler Cohort
-image=http://mtgimage.com/card/mudbrawler%20cohort.jpg
+image=http://magiccards.info/scans/en/shm/100.jpg
 value=2.833
 rarity=C
 type=Creature
 subtype=Goblin,Warrior
 cost={1}{R}
 pt=1/1
-ability=haste;\
+ability=Haste;\
         SN gets +1/+1 as long as you control another red creature.
 timing=main
-oracle=Haste. Mudbrawler Cohort gets +1/+1 as long as you control another red creature.
+oracle=Haste\nMudbrawler Cohort gets +1/+1 as long as you control another red creature.

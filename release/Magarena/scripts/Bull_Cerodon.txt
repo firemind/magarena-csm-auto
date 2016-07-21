@@ -1,11 +1,11 @@
 name=Bull Cerodon
-image=http://mtgimage.com/card/bull%20cerodon.jpg
+image=http://magiccards.info/scans/en/pch/84.jpg
 value=3.365
 rarity=U
 type=Creature
 subtype=Beast
 cost={4}{R}{W}
 pt=5/5
-ability=vigilance;haste
+ability=Vigilance, haste
 timing=fmain
 oracle=Vigilance, haste

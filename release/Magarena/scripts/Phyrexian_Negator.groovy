@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
             return damage.getTarget() == permanent ?
@@ -21,7 +21,7 @@
                 game.addEvent(new MagicSacrificePermanentEvent(
                     permanent,
                     player,
-                    MagicTargetChoice.SACRIFICE_PERMANENT
+                    SACRIFICE_PERMANENT
                 ));
                 amount--;
             }

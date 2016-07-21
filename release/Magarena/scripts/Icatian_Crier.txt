@@ -1,11 +1,11 @@
 name=Icatian Crier
-image=http://mtgimage.com/card/icatian%20crier.jpg
+image=http://magiccards.info/scans/en/ts/23.jpg
 value=3.062
 rarity=C
 type=Creature
 subtype=Human,Spellshaper
 cost={2}{W}
 pt=1/1
-ability={1}{W},{T},Discard a card: Put two 1/1 white Citizen creature tokens onto the battlefield.
+ability={1}{W}, {T}, Discard a card: Put two 1/1 white Citizen creature tokens onto the battlefield.
 timing=main
 oracle={1}{W}, {T}, Discard a card: Put two 1/1 white Citizen creature tokens onto the battlefield.

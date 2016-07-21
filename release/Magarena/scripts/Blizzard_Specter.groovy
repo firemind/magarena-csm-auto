@@ -1,5 +1,5 @@
 [
-    new MagicWhenSelfCombatDamagePlayerTrigger() {
+    new ThisCombatDamagePlayerTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return new MagicEvent(
@@ -10,7 +10,7 @@
                 ),
                 damage.getTarget(),
                 this,
-                "Choose one\$ - RN discards a card; or RN returns a permanent he or she controls to its owner's hand."
+                "Choose one\$ — (1) RN discards a card; or (2) RN returns a permanent he or she controls to its owner's hand."
             );
         }
         @Override
@@ -22,9 +22,9 @@
                 ));
             } else if (event.isMode(2)) {
                 game.addEvent(new MagicBounceChosenPermanentEvent(
-                    event.getSource(), 
-                    event.getRefPlayer(), 
-                    MagicTargetChoice.PERMANENT_YOU_CONTROL
+                    event.getSource(),
+                    event.getRefPlayer(),
+                    A_PERMANENT_YOU_CONTROL
                 ));
             }
         }

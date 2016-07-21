@@ -1,7 +1,7 @@
 [
-    new MagicWhenSelfDamagePlayerTrigger() {     
+    new ThisDamagePlayerTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {    
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             final MagicPlayer player = damage.getTargetPlayer();
             return new MagicEvent(
                 permanent,
@@ -19,8 +19,8 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
-                game.doAction(new MagicTapAction(it));
-                game.doAction(MagicChangeStateAction.Set(
+                game.doAction(new TapAction(it));
+                game.doAction(ChangeStateAction.Set(
                     it,
                     MagicPermanentState.DoesNotUntapDuringNext
                 ));

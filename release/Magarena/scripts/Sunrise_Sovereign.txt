@@ -1,5 +1,6 @@
 name=Sunrise Sovereign
-image=http://mtgimage.com/card/sunrise%20sovereign.jpg
+image=http://magiccards.info/scans/en/c15/166.jpg
+image_updated=2016-02-29
 value=4.075
 rarity=R
 type=Creature

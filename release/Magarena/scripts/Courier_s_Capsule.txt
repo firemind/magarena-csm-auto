@@ -1,9 +1,9 @@
 name=Courier's Capsule
-image=http://mtgimage.com/card/courier%27s%20capsule.jpg
+image=http://magiccards.info/scans/en/ala/37.jpg
 value=3.940
 rarity=C
 type=Artifact
 cost={1}{U}
-ability={1}{U},{T},Sacrifice SN: Draw two cards.
+ability={1}{U}, {T}, Sacrifice SN: Draw two cards.
 timing=artifact
 oracle={1}{U}, {T}, Sacrifice Courier's Capsule: Draw two cards.

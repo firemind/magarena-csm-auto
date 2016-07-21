@@ -1,11 +1,11 @@
 name=Vulshok War Boar
-image=http://mtgimage.com/card/vulshok%20war%20boar.jpg
+image=http://magiccards.info/scans/en/ds/72.jpg
 value=3.054
 rarity=U
 type=Creature
 subtype=Boar,Beast
 cost={2}{R}{R}
 pt=5/5
+ability=When SN enters the battlefield, you may sacrifice an artifact. If you don't, sacrifice SN.
 timing=main
-requires_groovy_code
 oracle=When Vulshok War Boar enters the battlefield, sacrifice it unless you sacrifice an artifact.

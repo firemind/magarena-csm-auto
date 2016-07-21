@@ -1,9 +1,10 @@
 name=Bound
-image=http://mtgimage.com/card/bounddetermined.jpg
-value=2.500
+image=http://magiccards.info/scans/en/di/149a.jpg
+value=3.971
 rarity=R
 type=Instant
 cost={3}{B}{G}
 effect=Sacrifice a creature. Return up to X cards from your graveyard to your hand, where X is the number of colors that creature was. Exile this card.
-timing=removal
+split=Determined
+timing=draw
 oracle=Sacrifice a creature. Return up to X cards from your graveyard to your hand, where X is the number of colors that creature was. Exile this card.

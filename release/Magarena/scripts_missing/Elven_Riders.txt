@@ -1,7 +1,8 @@
 name=Elven Riders
-image=http://mtgimage.com/card/elven%20riders.jpg
-value=2.500
-rarity=R
+image=http://magiccards.info/scans/en/dpa/59.jpg
+image_updated=2015-11-11
+value=2.941
+rarity=U
 type=Creature
 subtype=Elf
 cost={3}{G}{G}

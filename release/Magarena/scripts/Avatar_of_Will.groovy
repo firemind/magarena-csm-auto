@@ -1,19 +1,19 @@
 [
-     new MagicCardActivation(
+    new MagicHandCastActivation(
         [MagicCondition.CARD_CONDITION],
         new MagicActivationHints(MagicTiming.Main, true),
         "Cast"
     ) {
         @Override
         public void change(final MagicCardDefinition cdef) {
-            cdef.setCardAct(this);
+            cdef.setHandAct(this);
         }
 
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return source.getOpponent().getHandSize() == 0 ?
-                [new MagicPayManaCostEvent(source,"{U}{U}")] :
-                [new MagicPayManaCostEvent(source,"{6}{U}{U}")];
+                [MagicPayManaCostEvent.Cast(source,"{U}{U}")] :
+                [MagicPayManaCostEvent.Cast(source,"{6}{U}{U}")];
         }
     }
 ]

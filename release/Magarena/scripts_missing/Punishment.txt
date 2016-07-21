@@ -1,9 +1,11 @@
 name=Punishment
-image=http://mtgimage.com/card/crimepunishment.jpg
-value=2.500
+image=http://magiccards.info/scans/en/di/150b.jpg
+value=4.217
 rarity=R
 type=Sorcery
 cost={X}{B}{G}
 effect=Destroy each artifact, creature, and enchantment with converted mana cost X.
+split=Crime
 timing=main
+second_half
 oracle=Destroy each artifact, creature, and enchantment with converted mana cost X.

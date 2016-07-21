@@ -1,11 +1,11 @@
 name=Elvish Lookout
-image=http://mtgimage.com/card/elvish%20lookout.jpg
+image=http://magiccards.info/scans/en/ud/103.jpg
 value=2.742
 rarity=C
 type=Creature
 subtype=Elf
 cost={G}
 pt=1/1
-ability=shroud
+ability=Shroud
 timing=main
 oracle=Shroud

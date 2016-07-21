@@ -1,11 +1,12 @@
 name=Cephalid Scout
-image=http://mtgimage.com/card/cephalid%20scout.jpg
+image=http://magiccards.info/scans/en/od/74.jpg
 value=1.554
 rarity=C
 type=Creature
 subtype=Cephalid,Wizard,Scout
 cost={1}{U}
 pt=1/1
-ability=flying;{2}{U},Sacrifice a land: Draw a card.
+ability=Flying;\
+        {2}{U}, Sacrifice a land: Draw a card.
 timing=main
-oracle=Flying. {2}{U}, Sacrifice a land: Draw a card.
+oracle=Flying\n{2}{U}, Sacrifice a land: Draw a card.

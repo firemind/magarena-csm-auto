@@ -1,12 +1,12 @@
 name=Fencer Clique
-image=http://mtgimage.com/card/fencer%20clique.jpg
+image=http://magiccards.info/scans/en/mt/33.jpg
 value=2.950
 rarity=C
 type=Creature
 subtype=Faerie,Soldier
 cost={2}{U}{U}
 pt=3/2
-ability=flying;\
+ability=Flying;\
         {U}: Put SN on top of its owner's library.
 timing=main
-oracle=Flying. {U}: Put Fencer Clique on top of its owner's library.
+oracle=Flying\n{U}: Put Fencer Clique on top of its owner's library.

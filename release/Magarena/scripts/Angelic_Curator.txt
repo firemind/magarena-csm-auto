@@ -1,11 +1,11 @@
 name=Angelic Curator
-image=http://mtgimage.com/card/angelic%20curator.jpg
+image=http://magiccards.info/scans/en/ul/1.jpg
 value=3.033
 rarity=C
 type=Creature
 subtype=Angel,Spirit
 cost={1}{W}
 pt=1/1
-ability=flying;protection from artifacts
+ability=Flying, protection from artifacts
 timing=main
 oracle=Flying, protection from artifacts

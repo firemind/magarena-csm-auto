@@ -1,11 +1,12 @@
 name=Kingpin's Pet
-image=http://mtgimage.com/card/kingpin%27s%20pet.jpg
+image=http://magiccards.info/scans/en/gtc/173.jpg
 value=3.507
 rarity=C
 type=Creature
 subtype=Thrull
 cost={1}{W}{B}
 pt=2/2
-ability=flying;extort
+ability=Flying;\
+        Extort
 timing=main
-oracle=Flying. Extort
+oracle=Flying\nExtort

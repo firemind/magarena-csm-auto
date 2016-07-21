@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -13,10 +13,9 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                final MagicDamage damage=new MagicDamage(event.getSource(),event.getPlayer(),4);
-                game.doAction(new MagicDealDamageAction(damage));
-                game.doAction(new MagicSacrificeAction(event.getPermanent()));
-            } 
+                game.doAction(new DealDamageAction(event.getSource(),event.getPlayer(),4));
+                game.doAction(new SacrificeAction(event.getPermanent()));
+            }
         }
     }
 ]

@@ -1,10 +1,10 @@
 name=Seachrome Coast
-image=http://mtgimage.com/card/seachrome%20coast.jpg
+image=http://magiccards.info/scans/en/som/229.jpg
 value=4.271
 rarity=R
 type=Land
 mana=w3u3
-ability={T}: Add {W} or {U} to your mana pool.;\
-        SN enters the battlefield tapped unless you control two or fewer other lands.
+ability=SN enters the battlefield tapped unless you control two or fewer other lands.;\
+        {T}: Add {W} or {U} to your mana pool.
 timing=land
-oracle=Seachrome Coast enters the battlefield tapped unless you control two or fewer other lands. {T}: Add {W} or {U} to your mana pool.
+oracle=Seachrome Coast enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {W} or {U} to your mana pool.

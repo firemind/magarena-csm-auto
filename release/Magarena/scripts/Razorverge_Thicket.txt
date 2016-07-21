@@ -1,10 +1,10 @@
 name=Razorverge Thicket
-image=http://mtgimage.com/card/razorverge%20thicket.jpg
+image=http://magiccards.info/scans/en/som/228.jpg
 value=4.275
 rarity=R
 type=Land
 mana=g3w3
-ability={T}: Add {G} or {W} to your mana pool.;\
-        SN enters the battlefield tapped unless you control two or fewer other lands.
+ability=SN enters the battlefield tapped unless you control two or fewer other lands.;\
+        {T}: Add {G} or {W} to your mana pool.
 timing=land
-oracle=Razorverge Thicket enters the battlefield tapped unless you control two or fewer other lands. {T}: Add {G} or {W} to your mana pool.
+oracle=Razorverge Thicket enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {G} or {W} to your mana pool.

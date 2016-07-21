@@ -1,11 +1,11 @@
 name=Dross Hopper
-image=http://mtgimage.com/card/dross%20hopper.jpg
+image=http://magiccards.info/scans/en/som/60.jpg
 value=2.022
 rarity=C
 type=Creature
 subtype=Insect,Horror
 cost={1}{B}
 pt=2/1
-ability=Sacrifice a creature: SN gains flying until end of turn.
+ability=Sacrifice a creature: SN gains flying until end of turn. Activate this ability with AI only if you control another creature.
 timing=main
 oracle=Sacrifice a creature: Dross Hopper gains flying until end of turn.

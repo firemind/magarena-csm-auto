@@ -1,9 +1,9 @@
 name=Drag Down
-image=http://mtgimage.com/card/drag%20down.jpg
+image=http://magiccards.info/scans/en/mma/80.jpg
 value=2.200
 rarity=C
 type=Instant
 cost={2}{B}
+effect=Target creature gets -1/-1 until end of turn for each basic land type among lands you control.
 timing=removal
-requires_groovy_code
 oracle=Domain — Target creature gets -1/-1 until end of turn for each basic land type among lands you control.

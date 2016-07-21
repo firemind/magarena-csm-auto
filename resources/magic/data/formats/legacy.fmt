@@ -15,10 +15,12 @@ ARB
 ARN
 ATQ
 AVR
+BFZ
 BNG
 BOK
 C13
 C14
+C15
 CFX
 CHK
 CHR
@@ -30,10 +32,12 @@ DIS
 DKA
 DRK
 DST
+DTK
 EVE
 EXO
 FEM
 FUT
+FRF
 GPT
 GTC
 HML
@@ -63,6 +67,7 @@ NEM
 NPH
 ODY
 ONS
+ORI
 PC2
 PCY
 PLC
@@ -92,6 +97,7 @@ VIS
 WTH
 WWK
 ZEN
+pMEI
 
 # banned: prefix with !
 !Advantageous Proclamation
@@ -101,12 +107,12 @@ ZEN
 !Balance
 !Bazaar of Baghdad
 !Black Lotus
-!Black Vise
-!Brago’s Favor
+!Brago's Favor
 !Bronze Tablet
 !Channel
 !Chaos Orb
 !Contract from Below
+!Dig Through Time
 !Darkpact
 !Demonic Attorney
 !Demonic Consultation
@@ -138,7 +144,7 @@ ZEN
 !Mox Pearl
 !Mox Ruby
 !Mox Sapphire
-!Muzzio’s Preparations
+!Muzzio's Preparations
 !Mystical Tutor
 !Necropotence
 !Oath of Druids
@@ -159,11 +165,11 @@ ZEN
 !Timmerian Fiends
 !Tinker
 !Tolarian Academy
+!Treasure Cruise
 !Unexpected Potential
 !Vampiric Tutor
 !Wheel of Fortune
 !Windfall
-!Worldgorger Dragon
 !Worldknit
 !Yawgmoth's Bargain
 !Yawgmoth's Will

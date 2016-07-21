@@ -1,24 +1,30 @@
 package magic.utility;
 
-import java.awt.Desktop;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
 import magic.data.GeneralConfig;
-import magic.exception.DesktopNotSupportedException;
 import magic.model.MagicCardDefinition;
+import magic.ui.cardBuilder.IRenderableCard;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Utility class for useful or common file-system related tasks.
@@ -34,10 +40,11 @@ public final class MagicFileSystem {
 
     private enum ImagesPath {
 
-        CARDS("cards"),
-        TOKENS("tokens");
+        CARDS(CARD_IMAGE_FOLDER),
+        TOKENS(TOKEN_IMAGE_FOLDER),
+        CUSTOM("custom"),
+        CROPS("crops");
 
-        private final GeneralConfig CONFIG = GeneralConfig.getInstance();
         private final String directoryName;
 
         private ImagesPath(final String directoryName) {
@@ -45,12 +52,12 @@ public final class MagicFileSystem {
         }
 
         public Path getPath() {
-            return CONFIG.getCardImagesPath().resolve(directoryName);
+            return GeneralConfig.getInstance().getCardImagesPath().resolve(directoryName);
         }
     }
 
     // Top level install directory containing exe, etc.
-    private static final Path INSTALL_PATH;
+    public static final Path INSTALL_PATH;
     static {
         if (System.getProperty("magarena.dir", "").isEmpty()) {
             INSTALL_PATH = Paths.get(System.getProperty("user.dir"));
@@ -59,8 +66,7 @@ public final class MagicFileSystem {
         }
     }
 
-    // TODO: rename to "data".
-    public static final String DATA_DIRECTORY_NAME = "Magarena";
+    public static final String DATA_DIRECTORY_NAME = System.getProperty("data.dir", "Magarena");
     private static final Path DATA_PATH = INSTALL_PATH.resolve(DATA_DIRECTORY_NAME);
 
     public enum DataPath {
@@ -69,13 +75,18 @@ public final class MagicFileSystem {
         MODS("mods"),
         SCRIPTS("scripts"),
         SCRIPTS_MISSING("scripts_missing"),
-        SOUNDS("sounds"),
+        SCRIPTS_ORIG("scripts_orig"),
         LOGS("logs"),
         DUELS("duels"),
         PLAYERS("players"),
         AVATARS("avatars"),
         FIREMIND("firemind"),
-        SAVED_GAMES("saved_games");
+        SAVED_GAMES("saved_games"),
+        TRANSLATIONS("translations"),
+        IMAGES("images"),
+        REPORTS("reports"),
+        THEMES("themes")
+        ;
 
         private final Path directoryPath;
 
@@ -87,13 +98,16 @@ public final class MagicFileSystem {
         public Path getPath() {
             return directoryPath;
         }
-        
+
     }
-    
+
+    private static final FileFilter THEME_FILE_FILTER = (final File file) ->
+        file.isDirectory() || (file.isFile() && file.getName().endsWith(".zip"));
+
     /**
      * Returns the main data directory.
      * <p>
-     * Generally, this will contain sub-directories for the 
+     * Generally, this will contain sub-directories for the
      * different categories of data that can be generated.
      */
     public static Path getDataPath() {
@@ -111,33 +125,41 @@ public final class MagicFileSystem {
         return imageType.getPath();
     }
 
-    private static String getImageFilename(final MagicCardDefinition card, final int index) {
-        final int imageIndex = index % card.getImageCount();
-        final String indexPostfix = imageIndex > 0 ? String.valueOf(imageIndex + 1) : "";
-        return card.getImageName() + indexPostfix + CARD_IMAGE_EXT;
-    }
-    
-    /**
-     * Returns a File object representing the given card's image file.
-     */
-    public static File getCardImageFile(final MagicCardDefinition card, final int index) {
-        final Path imageDirectory = card.isToken() ? 
-                getImagesPath(ImagesPath.TOKENS) :
-                getImagesPath(ImagesPath.CARDS);
-        return new File(imageDirectory.toFile(), getImageFilename(card, index));
+    private static String getImageFilename(final MagicCardDefinition card) {
+        return card.getImageName() + CARD_IMAGE_EXT;
     }
 
     /**
      * Returns a File object representing the given card's image file.
      */
     public static File getCardImageFile(final MagicCardDefinition card) {
-        return getCardImageFile(card, 0);
+        final Path imageDirectory = card.isToken() ?
+                getImagesPath(ImagesPath.TOKENS) :
+                getImagesPath(ImagesPath.CARDS);
+        return new File(imageDirectory.toFile(), getImageFilename(card));
     }
+
+    /**
+     * Returns a File object representing the given card's cropped image file.
+     */
+    public static File getCroppedCardImageFile(final IRenderableCard cardDef) {
+        final Path imageDirectory = getImagesPath(ImagesPath.CROPS);
+        return new File(imageDirectory.toFile(), cardDef.getImageName() + ".jpg");
+    }
+
+    public static File getCustomCardImageFile(final IRenderableCard cardDef) {
+        final Path imageDirectory = getImagesPath(ImagesPath.CUSTOM);
+        return new File(imageDirectory.toFile(), cardDef.getImageName() + ".jpg");
+    }
+
 
     /**
      * Deletes all directory contents and then directory itself.
      */
     public static void deleteDirectory(final Path root) {
+        if (Files.exists(root) == false) {
+            return;
+        }
         try {
             Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
                 @Override
@@ -159,45 +181,10 @@ public final class MagicFileSystem {
         }
     }
 
-    public static void openMagicDirectory(final DataPath directory) throws IOException {
-        openDirectory(getDataPath(directory).toString());
-    }
-
-    /**
-     * Opens specified directory in OS file explorer.
-     */
-    public static void openDirectory(final String path) throws IOException {
-        final File imagesPath = new File(path);
-        if (MagicSystem.IS_WINDOWS_OS) {
-            // Specific fix for Windows.
-            // If running Windows and path is the default "Magarena" directory
-            // then Desktop.getDesktop() will start a new instance of Magarena
-            // instead of opening the directory! This is because the "Magarena"
-            // directory and "Magarena.exe" are both at the same level and
-            // Windows incorrectly assumes you mean "Magarena.exe".
-            new ProcessBuilder("explorer.exe", imagesPath.getPath()).start();
-        } else {
-            Desktop.getDesktop().open(imagesPath);
-        }
-    }
-
-    public static void openFileInDefaultOsEditor(final File file) throws IOException, DesktopNotSupportedException {
-        if (Desktop.isDesktopSupported()) {
-            if (MagicSystem.IS_WINDOWS_OS) {
-                // There is an issue in Windows where the open() method of getDesktop()
-                // fails silently. The recommended solution is to use getRuntime().
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.toString());
-            } else {
-                Desktop.getDesktop().open(file);
-            }
-        } else {
-            throw new DesktopNotSupportedException("Sorry, opening this file with the default application is not supported on this operating system.");
-        }
-    }
 
     public static void serializeStringList(final List<String> list, final File targetFile) {
         try (final FileOutputStream fos = new FileOutputStream(targetFile);
-             final ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            final ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(list);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -207,7 +194,7 @@ public final class MagicFileSystem {
     @SuppressWarnings("unchecked")
     public static List<String> deserializeStringList(final File sourceFile) {
         try (final FileInputStream fis = new FileInputStream(sourceFile);
-             final ObjectInputStream ois = new ObjectInputStream(fis)) {
+            final ObjectInputStream ois = new ObjectInputStream(fis)) {
             return (List<String>)ois.readObject();
         } catch (IOException|ClassNotFoundException ex) {
             throw new RuntimeException(ex);
@@ -219,7 +206,7 @@ public final class MagicFileSystem {
             try {
                 Files.createDirectory(path);
             } catch (IOException ex) {
-                throw new RuntimeException("!!! error creating " + path, ex);
+                throw new RuntimeException(String.format("Failed to create '%s'.", path), ex);
             }
         }
     }
@@ -234,5 +221,94 @@ public final class MagicFileSystem {
         Arrays.sort(files);
         return files;
     }
-    
+
+    public static List<String> getTranslationFilenames() {
+        final List<String> filenames = new ArrayList<>();
+        final Path langPath = getDataPath(DataPath.TRANSLATIONS);
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(langPath, "*.txt")) {
+            for (Path p : ds) {
+                filenames.add(FilenameUtils.getBaseName(p.getFileName().toString()));
+            }
+            Collections.sort(filenames);
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+        return filenames;
+    }
+
+    public static void deleteGeneralConfigFile() {
+        getDataPath().resolve(GeneralConfig.CONFIG_FILENAME).toFile().delete();
+    }
+
+    /**
+     * Should return the directory containing the current installation of Magarena.
+     * <p>
+     * The idea being that a new version of Magarena would most likely be
+     * installed to a new directory at the same level as the previous version,
+     * so it would display the previous version all ready to select & import.
+     */
+    public static Path getDefaultImportDirectory() {
+        final Path p = getDataPath().getParent().getParent();
+        if (p == null) {
+            // triggered if using a single relative path for -Dmagarena.dir.
+            return getDataPath().getParent();
+        }
+        return p;
+    }
+
+    /**
+     * Confirms if two paths point to the same location regardless of whether
+     * the path is relative or absolute.
+     */
+    public static boolean isSamePath(Path p1, Path p2) {
+        return p1.toAbsolutePath().equals(p2.toAbsolutePath());
+    }
+
+    /**
+     * Determines whether p2 is the same as or a sub-directory of p1.
+     */
+    public static boolean directoryContains(Path p1, Path p2) {
+        if (p1 == null || p2 == null) {
+            return false;
+        }
+        if (isSamePath(p1, p2)) {
+            return true;
+        } else {
+            return directoryContains(p1, p2.getParent());
+        }
+    }
+
+    public static Path getCustomImagesPath() {
+        return getImagesPath(ImagesPath.CUSTOM);
+    }
+
+    public static Path getGameplayReportDirectory() {
+        return getDataPath(DataPath.REPORTS).resolve("gameplay");
+    }
+
+    public static void clearGameplayReportDirectory() throws IOException {
+        verifyDirectoryPath(getGameplayReportDirectory());
+        FileUtils.cleanDirectory(getGameplayReportDirectory().toFile());
+    }
+
+    public static boolean isCardImageMissing(MagicCardDefinition aCard) {
+        if (getCustomCardImageFile(aCard).exists()) {
+            return false;
+        }
+        if (getCroppedCardImageFile(aCard).exists()) {
+            return false;
+        }
+        if (getCardImageFile(aCard).exists()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static File[] getThemes() {
+        return getDataPath(DataPath.THEMES).toFile().listFiles(THEME_FILE_FILTER);
+    }
+
+    public static Path getThemesPath() {
+        return getDataPath(DataPath.THEMES);
+    }
 }

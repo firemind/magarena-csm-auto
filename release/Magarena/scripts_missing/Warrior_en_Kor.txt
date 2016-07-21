@@ -1,5 +1,6 @@
 name=Warrior en-Kor
-image=http://mtgimage.com/card/warrior%20en-kor.jpg
+image=http://magiccards.info/scans/en/tpr/39.jpg
+image_updated=2015-11-16
 value=2.500
 rarity=U
 type=Creature

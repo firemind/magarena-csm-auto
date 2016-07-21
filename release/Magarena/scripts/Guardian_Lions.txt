@@ -1,11 +1,11 @@
 name=Guardian Lions
-image=http://mtgimage.com/card/guardian%20lions.jpg
+image=http://magiccards.info/scans/en/m13/17.jpg
 value=1.844
 rarity=C
 type=Creature
 subtype=Cat
 cost={4}{W}
 pt=1/6
-ability=vigilance
+ability=Vigilance
 timing=main
 oracle=Vigilance

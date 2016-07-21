@@ -1,9 +1,0 @@
-name=Dangerous Wager
-image=http://mtgimage.com/card/dangerous%20wager.jpg
-value=2.500
-rarity=C
-type=Instant
-cost={1}{R}
-effect=Discard your hand, then draw two cards.
-timing=removal
-oracle=Discard your hand, then draw two cards.

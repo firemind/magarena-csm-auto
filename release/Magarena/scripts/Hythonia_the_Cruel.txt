@@ -1,13 +1,13 @@
 name=Hythonia the Cruel
-image=http://mtgimage.com/card/hythonia%20the%20cruel.jpg
+image=http://magiccards.info/scans/en/ths/91.jpg
 value=3.456
 rarity=M
 type=Legendary,Creature
 subtype=Gorgon
 cost={4}{B}{B}
 pt=4/6
-ability=deathtouch;\
+ability=Deathtouch;\
         {6}{B}{B}: Monstrosity 3.;\
         When SN becomes monstrous, destroy all non-Gorgon creatures.
 timing=main
-oracle=Deathtouch. {6}{B}{B}: Monstrosity 3. When Hythonia the Cruel becomes monstrous, destroy all non-Gorgon creatures.
+oracle=Deathtouch\n{6}{B}{B}: Monstrosity 3.\nWhen Hythonia the Cruel becomes monstrous, destroy all non-Gorgon creatures.

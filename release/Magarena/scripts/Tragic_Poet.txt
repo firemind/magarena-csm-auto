@@ -1,11 +1,11 @@
 name=Tragic Poet
-image=http://mtgimage.com/card/tragic%20poet.jpg
+image=http://magiccards.info/scans/en/ul/24.jpg
 value=3.574
 rarity=C
 type=Creature
 subtype=Human
 cost={W}
 pt=1/1
-ability={T},Sacrifice SN:Return target enchantment card from your graveyard to your hand.
+ability={T}, Sacrifice SN: Return target enchantment card from your graveyard to your hand.
 timing=main
 oracle={T}, Sacrifice Tragic Poet: Return target enchantment card from your graveyard to your hand.

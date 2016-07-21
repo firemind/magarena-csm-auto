@@ -1,13 +1,14 @@
 name=Ghastly Haunting
-image=http://mtgimage.com/card/ghastly%20haunting.jpg
+image=http://magiccards.info/scans/en/dka/50b.jpg
 value=2.288
 rarity=U
 type=Enchantment
 subtype=Aura
 color=u
-ability=You control enchanted creature.
+ability=Enchant creature;\
+        You control enchanted creature.
 transform=Soul Seizer
 timing=aura
 hidden
 enchant=gain control,neg creature
-oracle=Enchant creature. You control enchanted creature.
+oracle=Enchant creature\nYou control enchanted creature.

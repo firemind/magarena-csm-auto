@@ -1,11 +1,11 @@
 name=Noggle Ransacker
-image=http://mtgimage.com/card/noggle%20ransacker.jpg
+image=http://magiccards.info/scans/en/pc2/102.jpg
 value=2.833
 rarity=U
 type=Creature
 subtype=Noggle,Rogue
 cost={2}{U/R}
 pt=2/1
+ability=When SN enters the battlefield, each player draws two cards, then discards a card at random.
 timing=main
-requires_groovy_code
 oracle=When Noggle Ransacker enters the battlefield, each player draws two cards, then discards a card at random.

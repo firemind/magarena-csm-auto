@@ -1,9 +1,9 @@
 name=Obelisk of Grixis
-image=http://mtgimage.com/card/obelisk%20of%20grixis.jpg
+image=http://magiccards.info/scans/en/c13/251.jpg
 value=2.700
 rarity=C
 type=Artifact
 cost={3}
-ability={T}: Add {U} or {B} or {R} to your mana pool.
+ability={T}: Add {U}, {B}, or {R} to your mana pool.
 timing=artifact
 oracle={T}: Add {U}, {B}, or {R} to your mana pool.

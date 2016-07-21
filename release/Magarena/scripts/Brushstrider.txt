@@ -1,11 +1,11 @@
 name=Brushstrider
-image=http://mtgimage.com/card/brushstrider.jpg
+image=http://magiccards.info/scans/en/rtr/117.jpg
 value=3.081
 rarity=U
 type=Creature
 subtype=Beast
-ability=vigilance
 cost={1}{G}
 pt=3/1
+ability=Vigilance
 timing=main
 oracle=Vigilance

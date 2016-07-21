@@ -1,5 +1,6 @@
 name=Elvish Warrior
-image=http://mtgimage.com/card/elvish%20warrior.jpg
+image=http://magiccards.info/scans/en/dpa/64.jpg
+image_updated=2015-11-11
 value=3.527
 rarity=C
 type=Creature
@@ -7,3 +8,4 @@ subtype=Elf,Warrior
 cost={G}{G}
 pt=2/3
 timing=main
+oracle=NONE

@@ -1,5 +1,5 @@
 [
-    new MagicWhenOtherComesIntoPlayTrigger() {
+    new OtherEntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent otherPermanent) {
             return (otherPermanent.isTapped() && otherPermanent.isFriend(permanent)) ?
@@ -14,7 +14,7 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicUntapAction(event.getRefPermanent()));
+            game.doAction(new UntapAction(event.getRefPermanent()));
         }
     }
 ]

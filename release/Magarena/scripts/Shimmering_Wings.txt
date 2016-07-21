@@ -1,12 +1,13 @@
 name=Shimmering Wings
-image=http://mtgimage.com/card/shimmering%20wings.jpg
+image=http://magiccards.info/scans/en/10e/107.jpg
 value=3.842
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={U}
-ability=Enchanted creature has flying.;\
-        {U}:Return SN to its owner's hand.
-enchant=flying,pos creature
+ability=Enchant creature;\
+        Enchanted creature has flying.;\
+        {U}: Return SN to its owner's hand.
 timing=aura
-oracle=Enchant creature. Enchanted creature has flying. {U}: Return Shimmering Wings to its owner's hand.
+enchant=flying,pos creature
+oracle=Enchant creature\nEnchanted creature has flying.\n{U}: Return Shimmering Wings to its owner's hand.

@@ -1,11 +1,11 @@
 [
-    new MagicAtEndOfTurnTrigger() {
+    new AtEndOfTurnTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer eotPlayer) {
             return permanent.isController(eotPlayer) ?
                 new MagicEvent(
                     permanent,
-                    MagicTargetChoice.TARGET_CREATURE_YOU_CONTROL,
+                    TARGET_CREATURE_YOU_CONTROL,
                     MagicPowerTargetPicker.create(),
                     this,
                     "PN gains life equal to the power of target creature\$ he or she controls."
@@ -15,7 +15,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPermanent(game, {
-                game.doAction(new MagicChangeLifeAction(event.getPlayer(),it.getPower()));
+                game.doAction(new ChangeLifeAction(event.getPlayer(),it.getPower()));
             });
         }
     }

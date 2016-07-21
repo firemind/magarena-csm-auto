@@ -1,13 +1,13 @@
-[   
-    new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.PREVENT_DAMAGE) {
+[
+    new PreventDamageTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicDamage damage) {
             if (damage.getTarget() == permanent) {
 
                 // Prevention effect.
                 damage.prevent();
-            
-                game.doAction(new MagicChangeCountersAction(permanent,MagicCounterType.PlusOne,-1));
+
+                game.doAction(new ChangeCountersAction(permanent,MagicCounterType.PlusOne,-1));
             }
             return MagicEvent.NONE;
         }

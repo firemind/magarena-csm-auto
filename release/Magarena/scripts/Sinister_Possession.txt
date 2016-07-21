@@ -1,11 +1,12 @@
 name=Sinister Possession
-image=http://mtgimage.com/card/sinister%20possession.jpg
+image=http://magiccards.info/scans/en/dgm/29.jpg
 value=2.528
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={B}
+ability=Enchant creature;\
+        Whenever enchanted creature attacks or blocks, RN's controller loses 2 life.
 timing=aura
 enchant=can't attack or block,neg creature
-requires_groovy_code
-oracle=Enchant creature. Whenever enchanted creature attacks or blocks, its controller loses 2 life.
+oracle=Enchant creature\nWhenever enchanted creature attacks or blocks, its controller loses 2 life.

@@ -1,9 +1,0 @@
-name=Arcane Melee
-image=http://mtgimage.com/card/arcane%20melee.jpg
-value=2.500
-rarity=R
-type=Enchantment
-cost={4}{U}
-ability=Instant and sorcery spells cost {2} less to cast.
-timing=main
-oracle=Instant and sorcery spells cost {2} less to cast.

@@ -1,11 +1,11 @@
 name=Scarland Thrinax
-image=http://mtgimage.com/card/scarland%20thrinax.jpg
+image=http://magiccards.info/scans/en/c13/209.jpg
 value=3.318
 rarity=U
 type=Creature
 subtype=Lizard
 cost={B}{R}{G}
 pt=2/2
-ability=Sacrifice a creature: Put a +1/+1 counter on SN.
+ability=Sacrifice a creature: Put a +1/+1 counter on SN. Activate this ability with AI only if you control another creature.
 timing=main
 oracle=Sacrifice a creature: Put a +1/+1 counter on Scarland Thrinax.

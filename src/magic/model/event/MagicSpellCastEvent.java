@@ -5,7 +5,7 @@ import magic.model.MagicPermanent;
 import magic.model.stack.MagicCardOnStack;
 import magic.model.stack.MagicItemOnStack;
 import magic.model.trigger.MagicTriggerType;
-import magic.model.trigger.MagicWhenSpellIsCastTrigger;
+import magic.model.trigger.ThisSpellIsCastTrigger;
 
 public class MagicSpellCastEvent extends MagicEvent {
     public MagicSpellCastEvent(final MagicItemOnStack itemOnStack) {
@@ -17,24 +17,21 @@ public class MagicSpellCastEvent extends MagicEvent {
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicItemOnStack itemOnStack = event.getRefItemOnStack();
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        final MagicItemOnStack itemOnStack = event.getRefItemOnStack();
 
-            // execute spell is cast triggers
-            for (final MagicWhenSpellIsCastTrigger trigger : itemOnStack.getSource().getCardDefinition().getSpellIsCastTriggers()) {
-                game.executeTrigger(
-                    trigger,
-                    MagicPermanent.NONE,
-                    itemOnStack.getSource(),
-                    (MagicCardOnStack)itemOnStack
-                );
-            }
-
-            // execute other spell is cast triggers
-            game.executeTrigger(MagicTriggerType.WhenOtherSpellIsCast,itemOnStack);
-            itemOnStack.getController().incSpellsCast();
+        // execute spell is cast triggers
+        for (final ThisSpellIsCastTrigger trigger : itemOnStack.getCardDefinition().getSpellIsCastTriggers()) {
+            game.executeTrigger(
+                trigger,
+                MagicPermanent.NONE,
+                itemOnStack.getSource(),
+                (MagicCardOnStack)itemOnStack
+            );
         }
+
+        // execute other spell is cast triggers
+        game.executeTrigger(MagicTriggerType.WhenOtherSpellIsCast,itemOnStack);
+        itemOnStack.getController().incSpellsCast();
     };
 }

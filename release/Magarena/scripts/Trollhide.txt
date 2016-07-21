@@ -1,11 +1,12 @@
 name=Trollhide
-image=http://mtgimage.com/card/trollhide.jpg
+image=http://magiccards.info/scans/en/m14/197.jpg
 value=3.420
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{G}
+ability=Enchant creature;\
+        Enchanted creature gets +2/+2 and has "{1}{G}: Regenerate this creature."
+timing=aura
 enchant=pump,pos creature
-ability=Enchanted creature gets +2/+2 and has "{1}{G}: Regenerate SN."
-timing=enchantment
-oracle=Enchant creature. Enchanted creature gets +2/+2 and has "{1}{G}: Regenerate this creature."
+oracle=Enchant creature\nEnchanted creature gets +2/+2 and has "{1}{G}: Regenerate this creature."

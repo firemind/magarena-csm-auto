@@ -1,12 +1,12 @@
 name=Defiler of Souls
-image=http://mtgimage.com/card/defiler%20of%20souls.jpg
+image=http://magiccards.info/scans/en/arb/37.jpg
 value=3.617
 rarity=M
 type=Creature
 subtype=Demon
 cost={3}{B}{B}{R}
 pt=5/5
-ability=Flying
+ability=Flying;\
+        At the beginning of each player's upkeep, that player sacrifices a monocolored creature.
 timing=main
-requires_groovy_code
-oracle=Flying. At the beginning of each player's upkeep, that player sacrifices a monocolored creature.
+oracle=Flying\nAt the beginning of each player's upkeep, that player sacrifices a monocolored creature.

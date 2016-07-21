@@ -1,12 +1,13 @@
 name=Hypervolt Grasp
-image=http://mtgimage.com/card/hypervolt%20grasp.jpg
+image=http://magiccards.info/scans/en/gp/67.jpg
 value=2.909
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={2}{R}
-ability=Enchanted creature has "{T}: SN deals 1 damage to target creature or player.";\
-        {1}{U}:Return SN to its owner's hand.
+ability=Enchant creature;\
+        Enchanted creature has "{T}: SN deals 1 damage to target creature or player.";\
+        {1}{U}: Return SN to its owner's hand.
 enchant=pump,pos creature
 timing=aura
-oracle=Enchant creature. Enchanted creature has "{T}: This creature deals 1 damage to target creature or player.". {1}{U}: Return Hypervolt Grasp to its owner's hand.
+oracle=Enchant creature\nEnchanted creature has "{T}: This creature deals 1 damage to target creature or player."\n{1}{U}: Return Hypervolt Grasp to its owner's hand.

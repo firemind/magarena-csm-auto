@@ -1,11 +1,12 @@
 name=Sphinx's Disciple
-image=http://mtgimage.com/card/sphinx's%20disciple.jpg
+image=http://magiccards.info/scans/en/bng/51.jpg
 value=3.161
 rarity=C
 type=Creature
 subtype=Human,Wizard
 cost={3}{U}{U}
 pt=2/2
-ability=flying;Whenever SN becomes untapped, draw a card.
+ability=Flying;\
+        Whenever SN becomes untapped, draw a card.
 timing=main
-oracle=Flying. Inspired — Whenever Sphinx's Disciple becomes untapped, draw a card.
+oracle=Flying\nInspired — Whenever Sphinx's Disciple becomes untapped, draw a card.

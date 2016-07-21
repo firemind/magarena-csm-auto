@@ -1,10 +1,10 @@
 name=City of Brass
-image=http://mtgimage.com/card/city%20of%20brass.jpg
+image=http://magiccards.info/scans/en/md1/15.jpg
 value=4.562
 rarity=R
 type=Land
-mana=b1g1r1u1w1
+mana=b2g2r2u2w2
 ability=Whenever SN becomes tapped, SN deals 1 damage to you.;\
         {T}: Add one mana of any color to your mana pool.
 timing=land
-oracle=Whenever City of Brass becomes tapped, it deals 1 damage to you. {T}: Add one mana of any color to your mana pool.
+oracle=Whenever City of Brass becomes tapped, it deals 1 damage to you.\n{T}: Add one mana of any color to your mana pool.

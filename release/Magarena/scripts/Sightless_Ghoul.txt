@@ -1,11 +1,12 @@
 name=Sightless Ghoul
-image=http://mtgimage.com/card/sightless%20ghoul.jpg
+image=http://magiccards.info/scans/en/dka/73.jpg
 value=2.037
 rarity=C
 type=Creature
 subtype=Zombie,Soldier
 cost={3}{B}
 pt=2/2
-ability=SN can't block.;undying
+ability=SN can't block.;\
+        Undying
 timing=main
-oracle=Sightless Ghoul can't block. Undying
+oracle=Sightless Ghoul can't block.\nUndying

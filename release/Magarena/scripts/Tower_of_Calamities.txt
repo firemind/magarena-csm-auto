@@ -1,9 +1,9 @@
 name=Tower of Calamities
-image=http://mtgimage.com/card/tower%20of%20calamities.jpg
+image=http://magiccards.info/scans/en/som/212.jpg
 value=2.730
 rarity=R
 type=Artifact
 cost={4}
-ability={8},{T}:SN deals 12 damage to target creature.
+ability={8}, {T}: SN deals 12 damage to target creature.
 timing=artifact
 oracle={8}, {T}: Tower of Calamities deals 12 damage to target creature.

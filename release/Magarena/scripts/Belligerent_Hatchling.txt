@@ -1,13 +1,14 @@
 name=Belligerent Hatchling
-image=http://mtgimage.com/card/belligerent%20hatchling.jpg
+image=http://magiccards.info/scans/en/eve/134.jpg
 value=3.440
 rarity=U
 type=Creature
 subtype=Elemental
 cost={3}{R/W}
 pt=6/6
-ability=first strike;SN enters the battlefield with four -1/-1 counters on it.;\
+ability=First strike;\
+        SN enters the battlefield with four -1/-1 counters on it.;\
         Whenever you cast a red spell, remove a -1/-1 counter from SN.;\
         Whenever you cast a white spell, remove a -1/-1 counter from SN.
 timing=main
-oracle=First strike. Belligerent Hatchling enters the battlefield with four -1/-1 counters on it. Whenever you cast a red spell, remove a -1/-1 counter from Belligerent Hatchling. Whenever you cast a white spell, remove a -1/-1 counter from Belligerent Hatchling.
+oracle=First strike\nBelligerent Hatchling enters the battlefield with four -1/-1 counters on it.\nWhenever you cast a red spell, remove a -1/-1 counter from Belligerent Hatchling.\nWhenever you cast a white spell, remove a -1/-1 counter from Belligerent Hatchling.

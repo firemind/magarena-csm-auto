@@ -1,5 +1,5 @@
 [
-    new MagicWhenAttacksUnblockedTrigger() {
+    new AttacksUnblockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent creature) {
             return (creature == permanent) ?
@@ -19,8 +19,8 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             if (event.isYes()) {
-                game.doAction(new MagicDrawAction(event.getPlayer()));
-                game.doAction(MagicChangeStateAction.Set(
+                game.doAction(new DrawAction(event.getPlayer()));
+                game.doAction(ChangeStateAction.Set(
                     event.getPermanent(),
                     MagicPermanentState.NoCombatDamage
                 ));

@@ -1,11 +1,11 @@
 name=Sandbar Merfolk
-image=http://mtgimage.com/card/sandbar%20merfolk.jpg
+image=http://magiccards.info/scans/en/us/94.jpg
 value=2.823
 rarity=C
 type=Creature
 subtype=Merfolk
 cost={U}
 pt=1/1
-ability=cycling {2}
+ability=Cycling {2}
 timing=main
 oracle=Cycling {2}

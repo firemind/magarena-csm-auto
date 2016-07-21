@@ -1,7 +1,5 @@
 [
-    new MagicStatic(
-        MagicLayer.ModPT,
-        MagicTargetFilterFactory.CREATURE_YOU_CONTROL) {
+    new MagicStatic(MagicLayer.ModPT, CREATURE_YOU_CONTROL) {
         @Override
         public void modPowerToughness(final MagicPermanent source,final MagicPermanent permanent,final MagicPowerToughness pt) {
             pt.add(1,1);
@@ -11,7 +9,7 @@
             return target.isEnchanted();
         }
     },
-    new MagicWhenBecomesBlockedTrigger() {
+    new BecomesBlockedTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPermanent blocked) {
             return (blocked.isFriend(permanent) && blocked.isEnchanted()) ?
@@ -28,7 +26,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPermanent blocked = event.getRefPermanent();
             final int amount = blocked.getBlockingCreatures().size();
-            game.doAction(new MagicChangeTurnPTAction(
+            game.doAction(new ChangeTurnPTAction(
                 blocked,
                 amount,
                 amount

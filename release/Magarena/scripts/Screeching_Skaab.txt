@@ -1,6 +1,7 @@
 name=Screeching Skaab
-image=http://mtgimage.com/card/screeching%20skaab.jpg
-value=2.798
+image=http://magiccards.info/scans/en/ori/70.jpg
+image_updated=2015-11-05
+value=2.500
 rarity=C
 type=Creature
 subtype=Zombie

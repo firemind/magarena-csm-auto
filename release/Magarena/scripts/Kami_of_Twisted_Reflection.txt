@@ -1,11 +1,11 @@
 name=Kami of Twisted Reflection
-image=http://mtgimage.com/card/kami%20of%20twisted%20reflection.jpg
+image=http://magiccards.info/scans/en/chk/71.jpg
 value=1.444
 rarity=C
 type=Creature
 subtype=Spirit
 cost={1}{U}{U}
 pt=2/2
-ability=Sacrifice SN:Return target creature you control to its owner's hand.
+ability=Sacrifice SN: Return target creature you control to its owner's hand.
 timing=main
 oracle=Sacrifice Kami of Twisted Reflection: Return target creature you control to its owner's hand.

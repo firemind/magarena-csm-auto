@@ -1,12 +1,12 @@
 name=Glitterfang
-image=http://mtgimage.com/card/glitterfang.jpg
+image=http://magiccards.info/scans/en/sok/100.jpg
 value=3.750
 rarity=C
 type=Creature
 subtype=Spirit
 cost={R}
 pt=1/1
-ability=haste;\
+ability=Haste;\
         At the beginning of the end step, return SN to its owner's hand.
 timing=fmain
-oracle=Haste. At the beginning of the end step, return Glitterfang to its owner's hand.
+oracle=Haste\nAt the beginning of the end step, return Glitterfang to its owner's hand.

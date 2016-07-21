@@ -1,9 +1,9 @@
 name=Obelisk of Naya
-image=http://mtgimage.com/card/obelisk%20of%20naya.jpg
+image=http://magiccards.info/scans/en/ala/216.jpg
 value=2.385
 rarity=C
 type=Artifact
 cost={3}
-ability={T}: Add {R} or {G} or {W} to your mana pool.
+ability={T}: Add {R}, {G}, or {W} to your mana pool.
 timing=artifact
 oracle={T}: Add {R}, {G}, or {W} to your mana pool.

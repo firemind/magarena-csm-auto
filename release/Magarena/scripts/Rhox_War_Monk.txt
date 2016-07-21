@@ -1,11 +1,11 @@
 name=Rhox War Monk
-image=http://mtgimage.com/card/rhox%20war%20monk.jpg
+image=http://magiccards.info/scans/en/ala/188.jpg
 value=4.016
 rarity=U
 type=Creature
 subtype=Rhino,Monk
 cost={G}{W}{U}
 pt=3/4
-ability=lifelink
+ability=Lifelink
 timing=smain
 oracle=Lifelink

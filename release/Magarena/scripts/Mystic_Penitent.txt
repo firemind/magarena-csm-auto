@@ -1,12 +1,12 @@
 name=Mystic Penitent
-image=http://mtgimage.com/card/mystic%20penitent.jpg
+image=http://magiccards.info/scans/en/od/34.jpg
 value=3.763
 rarity=U
 type=Creature
 subtype=Human,Nomad,Mystic
 cost={W}
 pt=1/1
-ability=vigilance;\
+ability=Vigilance;\
         As long as seven or more cards are in your graveyard, SN gets +1/+1 and has flying.
 timing=main
-oracle=Vigilance. Threshold — As long as seven or more cards are in your graveyard, Mystic Penitent gets +1/+1 and has flying.
+oracle=Vigilance\nThreshold — As long as seven or more cards are in your graveyard, Mystic Penitent gets +1/+1 and has flying.

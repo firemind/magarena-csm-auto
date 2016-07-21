@@ -1,10 +1,10 @@
 name=Afterlife
-image=http://mtgimage.com/card/afterlife.jpg
+image=http://magiccards.info/scans/en/c14/64.jpg
 value=3.375
 removal=3
 rarity=U
 type=Instant
 cost={2}{W}
+effect=Destroy target creature. It can't be regenerated.~Its controller puts a 1/1 white Spirit creature token with flying onto the battlefield.
 timing=removal
-requires_groovy_code
 oracle=Destroy target creature. It can't be regenerated. Its controller puts a 1/1 white Spirit creature token with flying onto the battlefield.

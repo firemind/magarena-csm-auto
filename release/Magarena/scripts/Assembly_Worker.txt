@@ -1,11 +1,11 @@
 name=Assembly-Worker
-image=http://mtgimage.com/card/Assembly-Worker.jpg
+image=http://magiccards.info/scans/en/ddf/45.jpg
 value=2.851
 rarity=U
 type=Artifact,Creature
 subtype=Assembly-Worker
 cost={3}
 pt=2/2
-ability={T}:Target Assembly-Worker gets +1/+1 until end of turn.
+ability={T}: Target Assembly-Worker gets +1/+1 until end of turn.
 timing=main
 oracle={T}: Target Assembly-Worker creature gets +1/+1 until end of turn.

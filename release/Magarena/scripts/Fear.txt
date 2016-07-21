@@ -1,11 +1,12 @@
 name=Fear
-image=http://mtgimage.com/card/fear.jpg
+image=http://magiccards.info/scans/en/10e/142.jpg
 value=2.320
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={B}{B}
-ability=Enchanted creature has fear.
+ability=Enchant creature;\
+        Enchanted creature has fear.
 timing=aura
 enchant=unblockable,pos creature
-oracle=Enchant creature. Enchanted creature has fear.
+oracle=Enchant creature\nEnchanted creature has fear.

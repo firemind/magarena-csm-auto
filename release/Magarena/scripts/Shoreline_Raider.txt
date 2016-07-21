@@ -1,11 +1,11 @@
 name=Shoreline Raider
-image=http://mtgimage.com/card/shoreline%20raider.jpg
+image=http://magiccards.info/scans/en/in/73.jpg
 value=2.653
 rarity=C
 type=Creature
 subtype=Merfolk
 cost={2}{U}
 pt=2/2
-ability=protection from Kavu
+ability=Protection from Kavu
 timing=main
 oracle=Protection from Kavu

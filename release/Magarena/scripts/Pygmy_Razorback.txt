@@ -1,11 +1,11 @@
 name=Pygmy Razorback
-image=http://mtgimage.com/card/pygmy%20razorback.jpg
+image=http://magiccards.info/scans/en/pr/120.jpg
 value=2.645
 rarity=C
 type=Creature
 subtype=Boar
 cost={1}{G}
 pt=2/1
-ability=trample
+ability=Trample
 timing=main
 oracle=Trample

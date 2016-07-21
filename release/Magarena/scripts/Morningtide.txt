@@ -1,9 +1,9 @@
 name=Morningtide
-image=http://mtgimage.com/card/morningtide.jpg
+image=http://magiccards.info/scans/en/tr/10.jpg
 value=3.643
 rarity=R
 type=Sorcery
 cost={1}{W}
+effect=Exile all cards from all graveyards.
 timing=main
-requires_groovy_code
 oracle=Exile all cards from all graveyards.

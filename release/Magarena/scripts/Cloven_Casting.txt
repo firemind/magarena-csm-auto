@@ -1,0 +1,9 @@
+name=Cloven Casting
+image=http://magiccards.info/scans/en/arb/86.jpg
+value=2.847
+rarity=R
+type=Enchantment
+cost={5}{U}{R}
+timing=enchantment
+requires_groovy_code
+oracle=Whenever you cast a multicolored instant or sorcery spell, you may pay {1}. If you do, copy that spell. You may choose new targets for the copy.

@@ -1,11 +1,11 @@
 name=Cerulean Wyvern
-image=http://mtgimage.com/card/cerulean%20wyvern.jpg
+image=http://magiccards.info/scans/en/mr/57.jpg
 value=2.941
 rarity=U
 type=Creature
 subtype=Drake
 cost={4}{U}
 pt=3/3
-ability=flying;protection from green
+ability=Flying, protection from green
 timing=main
 oracle=Flying, protection from green

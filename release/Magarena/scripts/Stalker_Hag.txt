@@ -1,11 +1,11 @@
 name=Stalker Hag
-image=http://mtgimage.com/card/stalker%20hag.jpg
+image=http://magiccards.info/scans/en/eve/129.jpg
 value=3.568
 rarity=U
 type=Creature
 subtype=Hag
 cost={B/G}{B/G}{B/G}
 pt=3/2
-ability=swampwalk;forestwalk
+ability=Swampwalk, forestwalk
 timing=main
 oracle=Swampwalk, forestwalk

@@ -1,11 +1,11 @@
 name=Angel of Light
-image=http://mtgimage.com/card/angel%20of%20light.jpg
+image=http://magiccards.info/scans/en/me2/3.jpg
 value=2.362
 rarity=U
 type=Creature
 subtype=Angel
 cost={4}{W}
 pt=3/3
-ability=vigilance;flying
+ability=Flying, vigilance
 timing=main
 oracle=Flying, vigilance

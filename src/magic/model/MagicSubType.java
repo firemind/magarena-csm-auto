@@ -1,15 +1,17 @@
 package magic.model;
 
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public enum MagicSubType {
     //basic land subtypes
-    Forest,
-    Island,
-    Mountain,
     Plains,
+    Island,
     Swamp,
+    Mountain,
+    Forest,
 
     //other land subtypes
     Desert,
@@ -27,6 +29,7 @@ public enum MagicSubType {
     Gate,
 
     //artifact subtypes
+    Clue,
     Contraption,
     Equipment,
     Fortification,
@@ -41,8 +44,8 @@ public enum MagicSubType {
     Trap,
 
     //planeswalker subtypes
-    Ajani, Ashiok, Bolas, Chandra, Dack, Daretti, Domri, Elspeth, Freyalise, Garruk, Gideon, Jace, Karn, Kiora, Koth, Liliana,
-    Nahiri, Nissa, Nixilis, Ral, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Vraska, Xenagos,
+    Ajani, Arlinn, Ashiok, Bolas, Chandra, Dack, Daretti, Domri, Elspeth, Freyalise, Garruk, Gideon, Jace, Karn, Kiora, Koth,
+    Liliana, Nahiri, Narset, Nissa, Nixilis, Ral, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Ugin, Vraska, Xenagos,
 
     //special handling for Assembly_Worker
     Assembly_Worker() {
@@ -66,12 +69,12 @@ public enum MagicSubType {
     Illusion, Imp, Incarnation, Insect, Jellyfish, Juggernaut, Kavu, Kirin,
     Kithkin, Knight, Kobold, Kor, Kraken, Lamia, Lammasu, Leech, Leviathan, Lhurgoyf,
     Licid, Lizard, Manticore, Masticore, Mercenary, Merfolk, Metathran, Minion,
-    Minotaur, Monger, Mongoose, Monk, Moonfolk, Mutant, Myr, Mystic, Naga, Nautilus,
+    Minotaur, Mole, Monger, Mongoose, Monk, Moonfolk, Mutant, Myr, Mystic, Naga, Nautilus,
     Nephilim, Nightmare, Nightstalker, Ninja, Noggle, Nomad, Nymph, Octopus, Ogre, Ooze,
     Orb, Orc, Orgg, Ouphe, Ox, Oyster, Pegasus, Pentavite, Pest, Phelddagrif,
-    Phoenix, Pincher, Pirate, Plant, Praetor, Prism, Rabbit, Rat, Rebel,
+    Phoenix, Pincher, Pirate, Plant, Praetor, Prism, Processor, Rabbit, Rat, Rebel,
     Reflection, Rhino, Rigger, Rogue, Sable, Salamander, Samurai, Sand, Saproling, Satyr,
-    Scarecrow, Scorpion, Scout, Serf, Serpent, Shade, Shaman, Shapeshifter, Sheep,
+    Scarecrow, Scion, Scorpion, Scout, Serf, Serpent, Shade, Shaman, Shapeshifter, Sheep,
     Siren, Skeleton, Slith, Sliver, Slug, Snake, Soldier, Soltari, Spawn, Specter,
     Spellshaper, Sphinx, Spider, Spike, Spirit, Splinter, Sponge, Squid, Squirrel,
     Starfish, Surrakar, Survivor, Tetravite, Thalakos, Thopter, Thrull, Treefolk,
@@ -87,12 +90,12 @@ public enum MagicSubType {
 
     ;
 
-    public static final Set<MagicSubType> ALL_BASIC_LANDS = EnumSet.range(Forest, Swamp);
-    
-    public static final Set<MagicSubType> ALL_LANDS = EnumSet.range(Forest, Gate);
-    
+    public static final Set<MagicSubType> ALL_BASIC_LANDS = EnumSet.range(Plains, Forest);
+
+    public static final Set<MagicSubType> ALL_LANDS = EnumSet.range(Plains, Gate);
+
     public static final Set<MagicSubType> ALL_ARTIFACTS = EnumSet.range(Contraption, Fortification);
-    
+
     public static final Set<MagicSubType> ALL_ENCHANTMENTS = EnumSet.range(Aura, Shrine);
 
     public static final Set<MagicSubType> ALL_CREATURES = EnumSet.range(Assembly_Worker, Zubera);
@@ -135,7 +138,25 @@ public enum MagicSubType {
         }
         return givenSubTypeFlags;
     }
-    
+
+    public static EnumSet<MagicSubType> prefixSubTypes(final List<String> tokens) {
+        final EnumSet<MagicSubType> subTypes = EnumSet.noneOf(MagicSubType.class);
+        boolean matched = true;
+        for (Iterator<String> iterator = tokens.iterator(); iterator.hasNext() && matched;) {
+            final String name = iterator.next();
+            matched = false;
+            for (final MagicSubType type : values()) {
+                if (type.toString().equalsIgnoreCase(name)) {
+                    matched = true;
+                    subTypes.add(type);
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        return subTypes;
+    }
+
     @SuppressWarnings("incomplete-switch")
     public MagicAbility getLandwalkAbility() {
         switch (this) {

@@ -4,8 +4,8 @@ import magic.model.MagicGame;
 import magic.model.MagicSource;
 import magic.model.MagicPermanent;
 import magic.model.choice.MagicMayChoice;
-import magic.model.action.MagicTapAction;
-import magic.model.action.MagicUntapAction;
+import magic.model.action.TapAction;
+import magic.model.action.UntapAction;
 
 public class MagicTapOrUntapEvent extends MagicEvent {
 
@@ -19,16 +19,13 @@ public class MagicTapOrUntapEvent extends MagicEvent {
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicPermanent permanent = event.getRefPermanent();
-            if (event.isYes()) {
-                if (permanent.isTapped()) {
-                    game.doAction(new MagicUntapAction(permanent));
-                } else {
-                    game.doAction(new MagicTapAction(permanent));
-                }
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        final MagicPermanent permanent = event.getRefPermanent();
+        if (event.isYes()) {
+            if (permanent.isTapped()) {
+                game.doAction(new UntapAction(permanent));
+            } else {
+                game.doAction(new TapAction(permanent));
             }
         }
     };

@@ -1,10 +1,11 @@
 name=Mind Stone
-image=http://mtgimage.com/card/mind%20stone.jpg
+image=http://magiccards.info/scans/en/c15/259.jpg
+image_updated=2016-02-29
 value=4.000
 rarity=U
 type=Artifact
 cost={2}
-ability={T}: Add {1} to your mana pool.;\
+ability={T}: Add {C} to your mana pool.;\
         {1}, {T}, Sacrifice SN: Draw a card.
 timing=artifact
-oracle={T}: Add {1} to your mana pool. {1}, {T}, Sacrifice Mind Stone: Draw a card.
+oracle={T}: Add {C} to your mana pool.\n{1}, {T}, Sacrifice Mind Stone: Draw a card.

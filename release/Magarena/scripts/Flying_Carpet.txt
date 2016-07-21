@@ -1,9 +1,9 @@
 name=Flying Carpet
-image=http://mtgimage.com/card/flying%20carpet.jpg
+image=http://magiccards.info/scans/en/me4/201.jpg
 value=2.130
 rarity=C
 type=Artifact
 cost={4}
-ability={2},{T}:Target creature gains flying until end of turn.
+ability={2}, {T}: Target creature gains flying until end of turn.
 timing=artifact
 oracle={2}, {T}: Target creature gains flying until end of turn.

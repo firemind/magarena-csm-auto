@@ -1,11 +1,12 @@
 name=Vulshok Sorcerer
-image=http://mtgimage.com/card/vulshok%20sorcerer.jpg
+image=http://magiccards.info/scans/en/ddi/50.jpg
 value=3.077
 rarity=C
 type=Creature
 subtype=Human,Shaman
 cost={1}{R}{R}
 pt=1/1
-ability=haste;{T}: SN deals 1 damage to target creature or player.
-timing=main
-oracle=Haste. {T}: Vulshok Sorcerer deals 1 damage to target creature or player.
+ability=Haste;\
+        {T}: SN deals 1 damage to target creature or player.
+timing=fmain
+oracle=Haste\n{T}: Vulshok Sorcerer deals 1 damage to target creature or player.

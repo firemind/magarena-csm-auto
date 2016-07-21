@@ -1,9 +1,9 @@
 name=Tower of Eons
-image=http://mtgimage.com/card/tower%20of%20eons.jpg
+image=http://magiccards.info/scans/en/mi/266.jpg
 value=3.026
 rarity=R
 type=Artifact
 cost={4}
-ability={8},{T}: You gain 10 life.
+ability={8}, {T}: You gain 10 life.
 timing=artifact
 oracle={8}, {T}: You gain 10 life.

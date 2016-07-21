@@ -1,11 +1,12 @@
 name=Crippling Blight
-image=http://mtgimage.com/card/crippling%20blight.jpg
+image=http://magiccards.info/scans/en/m15/92.jpg
 value=2.333
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={B}
-ability=Enchanted creature gets -1/-1 and can't block.
+ability=Enchant creature;\
+        Enchanted creature gets -1/-1 and can't block.
 timing=aura
 enchant=weaken -1/-1,neg creature
-oracle=Enchant creature. Enchanted creature gets -1/-1 and can't block.
+oracle=Enchant creature\nEnchanted creature gets -1/-1 and can't block.

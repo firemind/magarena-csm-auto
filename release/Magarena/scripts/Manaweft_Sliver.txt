@@ -1,12 +1,12 @@
 name=Manaweft Sliver
-image=http://mtgimage.com/card/manaweft%20sliver.jpg
+image=http://magiccards.info/scans/en/m14/184.jpg
 value=3.662
 rarity=U
 type=Creature
 subtype=Sliver
 cost={1}{G}
 pt=1/1
-ability=sliver creatures you control have "{T}: Add one mana of any color to your mana pool."
+ability=Sliver creatures you control have "{T}: Add one mana of any color to your mana pool."
 static=player
 timing=main
 oracle=Sliver creatures you control have "{T}: Add one mana of any color to your mana pool."

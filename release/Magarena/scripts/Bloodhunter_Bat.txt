@@ -1,12 +1,12 @@
 name=Bloodhunter Bat
-image=http://mtgimage.com/card/bloodhunter%20bat.jpg
+image=http://magiccards.info/scans/en/m13/82.jpg
 value=2.840
 rarity=C
 type=Creature
 subtype=Bat
 cost={3}{B}
 pt=2/2
-ability=flying;\
-        When SN enters the battlefield, target opponent loses 2 life and you gain 2 life.
+ability=Flying;\
+        When SN enters the battlefield, target player loses 2 life and you gain 2 life.
 timing=main
-oracle=Flying. When Bloodhunter Bat enters the battlefield, target player loses 2 life and you gain 2 life.
+oracle=Flying\nWhen Bloodhunter Bat enters the battlefield, target player loses 2 life and you gain 2 life.

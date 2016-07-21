@@ -1,5 +1,6 @@
 name=Ajani's Chosen
-image=http://mtgimage.com/card/ajani%27s%20chosen.jpg
+image=http://magiccards.info/scans/en/c15/57.jpg
+image_updated=2016-02-29
 value=3.615
 rarity=R
 type=Creature

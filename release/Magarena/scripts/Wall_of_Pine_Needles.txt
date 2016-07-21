@@ -1,12 +1,12 @@
 name=Wall of Pine Needles
-image=http://mtgimage.com/card/wall%20of%20pine%20needles.jpg
+image=http://magiccards.info/scans/en/ia/162.jpg
 value=3.100
 rarity=U
 type=Creature
 subtype=Plant,Wall
 cost={3}{G}
 pt=3/3
-ability=defender;\
+ability=Defender;\
         {G}: Regenerate SN.
 timing=smain
-oracle=Defender. {G}: Regenerate Wall of Pine Needles.
+oracle=Defender\n{G}: Regenerate Wall of Pine Needles.

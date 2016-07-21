@@ -1,11 +1,12 @@
 name=Sakura-Tribe Elder
-image=http://mtgimage.com/card/sakura-tribe%20elder.jpg
+image=http://magiccards.info/scans/en/c15/200.jpg
+image_updated=2016-02-29
 value=4.500
 rarity=C
 type=Creature
 subtype=Snake,Shaman
 cost={1}{G}
 pt=1/1
-ability=Sacrifice SN:Search your library for a basic land card and put it onto the battlefield tapped. Then shuffle your library.
+ability=Sacrifice SN: Search your library for a basic land card, put that card onto the battlefield tapped, then shuffle your library.
 timing=main
 oracle=Sacrifice Sakura-Tribe Elder: Search your library for a basic land card, put that card onto the battlefield tapped, then shuffle your library.

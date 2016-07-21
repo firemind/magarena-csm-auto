@@ -1,0 +1,9 @@
+name=Waylay
+image=http://magiccards.info/scans/en/us/56.jpg
+value=3.990
+rarity=U
+type=Instant
+cost={2}{W}
+effect=Put three 2/2 white Knight creature tokens onto the battlefield. Exile them at the beginning of the next end step.
+timing=token
+oracle=Put three 2/2 white Knight creature tokens onto the battlefield. Exile them at the beginning of the next cleanup step.

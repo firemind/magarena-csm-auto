@@ -1,11 +1,11 @@
 name=Zodiac Rat
-image=http://mtgimage.com/card/zodiac%20rat.jpg
+image=http://magiccards.info/scans/en/p3k/98.jpg
 value=3.037
 rarity=C
 type=Creature
 subtype=Rat
 cost={B}
 pt=1/1
-ability=swampwalk
+ability=Swampwalk
 timing=main
 oracle=Swampwalk

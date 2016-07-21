@@ -1,10 +1,10 @@
 name=Lava Flow
-image=http://mtgimage.com/card/lava%20flow.jpg
+image=http://magiccards.info/scans/en/me4/126.jpg
 value=3.025
 removal=3
 rarity=C
 type=Sorcery
 cost={3}{R}{R}
-timing=main
 effect=Destroy target creature or land.
+timing=main
 oracle=Destroy target creature or land.

@@ -1,11 +1,11 @@
 name=Yoked Plowbeast
-image=http://mtgimage.com/card/yoked%20plowbeast.jpg
+image=http://magiccards.info/scans/en/ala/31.jpg
 value=2.032
 rarity=C
 type=Creature
 subtype=Beast
 cost={5}{W}{W}
 pt=5/5
-ability=cycling {2}
+ability=Cycling {2}
 timing=main
 oracle=Cycling {2}

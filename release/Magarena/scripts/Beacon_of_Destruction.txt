@@ -1,10 +1,10 @@
 name=Beacon of Destruction
-image=http://mtgimage.com/card/beacon%20of%20destruction.jpg
+image=http://magiccards.info/scans/en/10e/189.jpg
 value=4.172
 removal=4
 rarity=R
 type=Instant
 cost={3}{R}{R}
+effect=SN deals 5 damage to target creature or player.~Shuffle SN into its owner's library.
 timing=removal
-requires_groovy_code
 oracle=Beacon of Destruction deals 5 damage to target creature or player. Shuffle Beacon of Destruction into its owner's library.

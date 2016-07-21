@@ -1,11 +1,11 @@
 name=Horizon Drake
-image=http://mtgimage.com/card/horizon%20drake.jpg
+image=http://magiccards.info/scans/en/wwk/30.jpg
 value=3.065
 rarity=U
 type=Creature
 subtype=Drake
 cost={1}{U}{U}
 pt=3/1
-ability=flying;protection from lands
+ability=Flying, protection from lands
 timing=main
 oracle=Flying, protection from lands

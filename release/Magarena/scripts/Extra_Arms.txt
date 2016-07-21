@@ -1,0 +1,12 @@
+name=Extra Arms
+image=http://magiccards.info/scans/en/sc/92.jpg
+value=2.833
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={4}{R}
+ability=Enchant creature;\
+        Whenever enchanted creature attacks, RN deals 2 damage to target creature or player.
+timing=aura
+enchant=default,creature
+oracle=Enchant creature\nWhenever enchanted creature attacks, it deals 2 damage to target creature or player.

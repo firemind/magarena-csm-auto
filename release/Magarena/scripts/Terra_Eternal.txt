@@ -1,10 +1,10 @@
 name=Terra Eternal
-image=http://mtgimage.com/card/terra%20eternal.jpg
+image=http://magiccards.info/scans/en/wwk/22.jpg
 value=3.853
 rarity=R
 type=Enchantment
 cost={2}{W}
-ability=all lands have indestructible
+ability=All lands have indestructible.
 static=all
 timing=enchantment
 oracle=All lands have indestructible.

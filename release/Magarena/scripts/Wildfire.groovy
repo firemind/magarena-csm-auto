@@ -12,15 +12,14 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             for (final MagicPlayer player : game.getAPNAP()) {
                 game.addEvent(new MagicRepeatedPermanentsEvent(
-                    event.getSource(), 
-                    MagicTargetChoice.SACRIFICE_LAND, 
-                    4, 
+                    event.getSource(),
+                    SACRIFICE_LAND,
+                    4,
                     MagicChainEventFactory.Sac
                 ));
             }
-            final Collection<MagicPermanent> targets = game.filterPermanents(MagicTargetFilterFactory.CREATURE);
-            for (final MagicPermanent target : targets) {
-                game.doAction(new MagicDealDamageAction(event.getSource(), target, 4));
+            CREATURE.filter(event) each {
+                game.doAction(new DealDamageAction(event.getSource(), it, 4));
             }
         }
     }

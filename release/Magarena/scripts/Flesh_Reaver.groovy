@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return damage.isSource(permanent) && (damage.isTargetCreature() || permanent.isOpponent(damage.getTarget())) ?
@@ -14,7 +14,7 @@
 
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDealDamageAction(
+            game.doAction(new DealDamageAction(
                 event.getSource(),
                 event.getPlayer(),
                 event.getRefInt()

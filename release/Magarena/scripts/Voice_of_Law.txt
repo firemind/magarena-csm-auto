@@ -1,11 +1,11 @@
 name=Voice of Law
-image=http://mtgimage.com/card/voice%20of%20law.jpg
+image=http://magiccards.info/scans/en/us/55.jpg
 value=3.518
 rarity=U
 type=Creature
 subtype=Angel
 cost={3}{W}
 pt=2/2
-ability=protection from red;flying
+ability=Flying, protection from red
 timing=main
 oracle=Flying, protection from red

@@ -1,9 +1,9 @@
 name=Book of Rass
-image=http://mtgimage.com/card/book%20of%20rass.jpg
+image=http://magiccards.info/scans/en/me4/183.jpg
 value=2.571
 rarity=U
 type=Artifact
 cost={6}
-ability={2},Pay 2 life: Draw a card.
+ability={2}, Pay 2 life: Draw a card.
 timing=artifact
 oracle={2}, Pay 2 life: Draw a card.

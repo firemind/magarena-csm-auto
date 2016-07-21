@@ -1,12 +1,13 @@
 name=Drake Umbra
-image=http://mtgimage.com/card/drake%20umbra.jpg
+image=http://magiccards.info/scans/en/roe/63.jpg
 value=3.475
 rarity=U
 type=Enchantment
 subtype=Aura
 cost={4}{U}
-ability=Enchanted creature gets +3/+3 and has flying.;\
-        totem armor
+ability=Enchant creature;\
+        Enchanted creature gets +3/+3 and has flying.;\
+        Totem armor
 timing=aura
 enchant=pump,pos creature
-oracle=Enchant creature. Enchanted creature gets +3/+3 and has flying. Totem armor
+oracle=Enchant creature\nEnchanted creature gets +3/+3 and has flying.\nTotem armor

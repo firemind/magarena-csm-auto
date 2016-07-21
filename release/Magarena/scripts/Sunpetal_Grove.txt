@@ -1,10 +1,10 @@
 name=Sunpetal Grove
-image=http://mtgimage.com/card/sunpetal%20grove.jpg
+image=http://magiccards.info/scans/en/m13/229.jpg
 value=3.777
 rarity=R
 type=Land
 mana=g3w3
-ability={T}: Add {G} or {W} to your mana pool.;\
-        SN enters the battlefield tapped unless you control a Forest or a Plains.
+ability=SN enters the battlefield tapped unless you control a Forest or a Plains.;\
+        {T}: Add {G} or {W} to your mana pool.
 timing=land
-oracle=Sunpetal Grove enters the battlefield tapped unless you control a Forest or a Plains. {T}: Add {G} or {W} to your mana pool.
+oracle=Sunpetal Grove enters the battlefield tapped unless you control a Forest or a Plains.\n{T}: Add {G} or {W} to your mana pool.

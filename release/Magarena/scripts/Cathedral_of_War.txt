@@ -1,10 +1,10 @@
 name=Cathedral of War
-image=http://mtgimage.com/card/cathedral%20of%20war.jpg
+image=http://magiccards.info/scans/en/m13/221.jpg
 value=3.839
 rarity=R
 type=Land
-ability={T}: Add {1} to your mana pool.;\
-        SN enters the battlefield tapped.;\
-        exalted
+ability=SN enters the battlefield tapped.;\
+        Exalted;\
+        {T}: Add {C} to your mana pool.
 timing=land
-oracle=Cathedral of War enters the battlefield tapped. Exalted. {T}: Add {1} to your mana pool.
+oracle=Cathedral of War enters the battlefield tapped.\nExalted\n{T}: Add {C} to your mana pool.

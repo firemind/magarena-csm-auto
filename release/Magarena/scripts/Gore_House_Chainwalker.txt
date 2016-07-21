@@ -1,11 +1,11 @@
 name=Gore-House Chainwalker
-image=http://mtgimage.com/card/gore%2Dhouse%20chainwalker.jpg
+image=http://magiccards.info/scans/en/rtr/96.jpg
 value=3.270
 rarity=C
 type=Creature
 subtype=Human,Warrior
 cost={1}{R}
 pt=2/1
-ability=unleash
+ability=Unleash
 timing=main
 oracle=Unleash

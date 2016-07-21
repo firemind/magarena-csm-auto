@@ -1,10 +1,10 @@
 name=Darksteel Forge
-image=http://mtgimage.com/card/darksteel%20forge.jpg
+image=http://magiccards.info/scans/en/m14/206.jpg
 value=3.681
 rarity=R
 type=Artifact
 cost={9}
-ability=artifacts you control have indestructible
+ability=Artifacts you control have indestructible.
 static=player
 timing=artifact
 oracle=Artifacts you control have indestructible.

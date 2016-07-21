@@ -1,9 +1,9 @@
 name=Seal of Strength
-image=http://mtgimage.com/card/seal%20of%20strength.jpg
+image=http://magiccards.info/scans/en/ne/115.jpg
 value=4.140
 rarity=C
 type=Enchantment
 cost={G}
-ability=Sacrifice SN:Target creature gets +3/+3 until end of turn.
+ability=Sacrifice SN: Target creature gets +3/+3 until end of turn.
 timing=enchantment
 oracle=Sacrifice Seal of Strength: Target creature gets +3/+3 until end of turn.

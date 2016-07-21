@@ -1,12 +1,11 @@
 name=Caterwauling Boggart
-image=http://mtgimage.com/card/caterwauling%20boggart.jpg
-value=2.500
+image=http://magiccards.info/scans/en/lw/157.jpg
+value=3.000
 rarity=C
 type=Creature
 subtype=Goblin,Shaman
 cost={3}{R}
 pt=2/2
-ability=Each Goblin you control can't be blocked except by two or more creatures.;\
-        Each Elemental you control can't be blocked except by two or more creatures.
+ability=Goblins you control and Elementals you control have menace.
 timing=main
-oracle=Each Goblin you control can't be blocked except by two or more creatures. Each Elemental you control can't be blocked except by two or more creatures.
+oracle=Goblins you control and Elementals you control have menace.

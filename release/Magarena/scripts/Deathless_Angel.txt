@@ -1,12 +1,12 @@
 name=Deathless Angel
-image=http://mtgimage.com/card/deathless%20angel.jpg
+image=http://magiccards.info/scans/en/roe/17.jpg
 value=4.041
 rarity=R
 type=Creature
 subtype=Angel
 cost={4}{W}{W}
 pt=5/7
-ability=flying;\
+ability=Flying;\
         {W}{W}: Target creature gains indestructible until end of turn.
 timing=main
-oracle=Flying. {W}{W}: Target creature gains indestructible until end of turn.
+oracle=Flying\n{W}{W}: Target creature gains indestructible until end of turn.

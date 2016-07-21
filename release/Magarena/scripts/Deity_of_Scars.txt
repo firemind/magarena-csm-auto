@@ -1,13 +1,13 @@
 name=Deity of Scars
-image=http://mtgimage.com/card/deity%20of%20scars.jpg
+image=http://magiccards.info/scans/en/eve/118.jpg
 value=4.081
 rarity=R
 type=Creature
 subtype=Spirit,Avatar
 cost={B/G}{B/G}{B/G}{B/G}{B/G}
 pt=7/7
-ability=trample;\
+ability=Trample;\
         SN enters the battlefield with two -1/-1 counters on it.;\
         {B/G}, Remove a -1/-1 counter from SN: Regenerate SN.
 timing=main
-oracle=Trample. Deity of Scars enters the battlefield with two -1/-1 counters on it. {B/G}, Remove a -1/-1 counter from Deity of Scars: Regenerate Deity of Scars.
+oracle=Trample\nDeity of Scars enters the battlefield with two -1/-1 counters on it.\n{B/G}, Remove a -1/-1 counter from Deity of Scars: Regenerate Deity of Scars.

@@ -1,11 +1,11 @@
 name=Plant Elemental
-image=http://mtgimage.com/card/plant%20elemental.jpg
+image=http://magiccards.info/scans/en/po/107.jpg
 value=3.484
 rarity=U
 type=Creature
 subtype=Plant,Elemental
 cost={1}{G}
 pt=3/4
+ability=When SN enters the battlefield, you may sacrifice a Forest. If you don't, sacrifice SN.
 timing=main
-requires_groovy_code
 oracle=When Plant Elemental enters the battlefield, sacrifice it unless you sacrifice a Forest.

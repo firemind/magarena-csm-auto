@@ -1,12 +1,13 @@
 name=Drifting Djinn
-image=http://mtgimage.com/card/drifting%20djinn.jpg
+image=http://magiccards.info/scans/en/us/71.jpg
 value=2.880
 rarity=R
 type=Creature
 subtype=Djinn
 cost={4}{U}{U}
 pt=5/5
-ability=flying;\
-        cycling {2};At the beginning of your upkeep, you may pay {1}{U}. If you don't, sacrifice SN.
+ability=Flying;\
+        At the beginning of your upkeep, you may pay {1}{U}. If you don't, sacrifice SN.;\
+        Cycling {2}
 timing=main
-oracle=Flying. At the beginning of your upkeep, sacrifice Drifting Djinn unless you pay {1}{U}. Cycling {2}
+oracle=Flying\nAt the beginning of your upkeep, sacrifice Drifting Djinn unless you pay {1}{U}.\nCycling {2}

@@ -1,9 +1,9 @@
 name=Vile Consumption
-image=http://mtgimage.com/card/vile%20consumption.jpg
+image=http://magiccards.info/scans/en/in/285.jpg
 value=4.263
 rarity=R
 type=Enchantment
 cost={1}{U}{B}
+ability=All creatures have "At the beginning of your upkeep, you may pay 1 life. If you don't, sacrifice this creature."
 timing=enchantment
-requires_groovy_code
 oracle=All creatures have "At the beginning of your upkeep, sacrifice this creature unless you pay 1 life."

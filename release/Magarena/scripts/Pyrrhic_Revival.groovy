@@ -5,22 +5,17 @@
             return new MagicEvent(
                 cardOnStack,
                 this,
-                "Each player returns each creature card from his or her graveyard " + 
+                "Each player returns each creature card from his or her graveyard " +
                 "to the battlefield with an additional -1/-1 counter on it."
             );
         }
 
-       @Override
+        @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicPlayer player = event.getPlayer();
-            final Collection<MagicCard> targets = game.filterCards(
-                player,
-                MagicTargetFilterFactory.CREATURE_CARD_FROM_ALL_GRAVEYARDS
-            );
-            for (final MagicCard card : targets) {
-                game.doAction(new MagicReanimateAction(
-                    card, 
-                    card.getController(), 
+            CREATURE_CARD_FROM_ALL_GRAVEYARDS.filter(event) each {
+                game.doAction(new ReanimateAction(
+                    it,
+                    it.getController(),
                     [MagicPlayMod.PERSIST]
                 ));
             }

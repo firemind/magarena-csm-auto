@@ -1,9 +1,9 @@
 name=Condescend
-image=http://mtgimage.com/card/condescend.jpg
+image=http://magiccards.info/scans/en/jvc/28.jpg
 value=2.500
 rarity=C
 type=Instant
 cost={X}{U}
 effect=Counter target spell unless its controller pays {X}. Scry 2.
-timing=removal
+timing=counter
 oracle=Counter target spell unless its controller pays {X}. Scry 2.

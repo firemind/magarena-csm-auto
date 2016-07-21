@@ -1,11 +1,12 @@
 name=Macetail Hystrodon
-image=http://mtgimage.com/card/macetail%20hystrodon.jpg
+image=http://magiccards.info/scans/en/le/106.jpg
 value=2.696
 rarity=C
 type=Creature
 subtype=Beast
 cost={6}{R}
 pt=4/4
-ability=first strike;haste;cycling {3}
+ability=First strike, haste;\
+        Cycling {3}
 timing=main
-oracle=First strike, haste. Cycling {3}
+oracle=First strike, haste\nCycling {3}

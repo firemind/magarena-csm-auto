@@ -1,13 +1,13 @@
 name=Merfolk Sovereign
-image=http://mtgimage.com/card/merfolk%20sovereign.jpg
+image=http://magiccards.info/scans/en/m11/65.jpg
 value=4.151
 rarity=R
 type=Creature
 subtype=Merfolk
 cost={1}{U}{U}
 pt=2/2
-ability=other merfolk creatures you control get +1/+1;\
+ability=Other Merfolk creatures you control get +1/+1.;\
         {T}: Target Merfolk creature can't be blocked this turn.
 static=player
 timing=main
-oracle=Other Merfolk creatures you control get +1/+1. {T}: Target Merfolk creature can't be blocked this turn.
+oracle=Other Merfolk creatures you control get +1/+1.\n{T}: Target Merfolk creature can't be blocked this turn.

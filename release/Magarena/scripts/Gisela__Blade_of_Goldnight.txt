@@ -1,12 +1,13 @@
 name=Gisela, Blade of Goldnight
-image=http://mtgimage.com/card/gisela%2C%20blade%20of%20goldnight.jpg
+image=http://magiccards.info/scans/en/c15/219.jpg
+image_updated=2016-02-29
 value=4.159
 rarity=M
 type=Legendary,Creature
 subtype=Angel
 cost={4}{R}{W}{W}
-ability=flying;first strike
+ability=Flying;first strike
 pt=5/5
 timing=main
 requires_groovy_code
-oracle=Flying, first strike. If a source would deal damage to an opponent or a permanent an opponent controls, that source deals double that damage to that player or permanent instead. If a source would deal damage to you or a permanent you control, prevent half that damage, rounded up.
+oracle=Flying, first strike\nIf a source would deal damage to an opponent or a permanent an opponent controls, that source deals double that damage to that player or permanent instead.\nIf a source would deal damage to you or a permanent you control, prevent half that damage, rounded up.

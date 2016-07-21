@@ -1,11 +1,13 @@
 name=Kithkin Spellduster
-image=http://mtgimage.com/card/kithkin%20spellduster.jpg
+image=http://magiccards.info/scans/en/eve/8.jpg
 value=2.244
 rarity=C
 type=Creature
 subtype=Kithkin,Wizard
 cost={4}{W}
 pt=2/3
-ability=flying;{1}{W},Sacrifice SN:Destroy target enchantment.;persist
+ability=Flying;\
+        {1}{W}, Sacrifice SN: Destroy target enchantment.;\
+        Persist
 timing=main
-oracle=Flying. {1}{W}, Sacrifice Kithkin Spellduster: Destroy target enchantment. Persist
+oracle=Flying\n{1}{W}, Sacrifice Kithkin Spellduster: Destroy target enchantment.\nPersist

@@ -1,9 +1,9 @@
 name=Obelisk of Esper
-image=http://mtgimage.com/card/obelisk%20of%20esper.jpg
+image=http://magiccards.info/scans/en/c13/250.jpg
 value=2.389
 rarity=C
 type=Artifact
 cost={3}
-ability={T}: Add {W} or {U} or {B} to your mana pool.
+ability={T}: Add {W}, {U}, or {B} to your mana pool.
 timing=artifact
 oracle={T}: Add {W}, {U}, or {B} to your mana pool.

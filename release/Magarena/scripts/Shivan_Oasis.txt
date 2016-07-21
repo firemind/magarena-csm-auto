@@ -1,10 +1,10 @@
 name=Shivan Oasis
-image=http://mtgimage.com/card/shivan%20oasis.jpg
+image=http://magiccards.info/scans/en/pvc/65.jpg
 value=3.350
 rarity=U
 type=Land
 mana=r3g3
-ability={T}: Add {R} or {G} to your mana pool.;\
-        SN enters the battlefield tapped.
+ability=SN enters the battlefield tapped.;\
+        {T}: Add {R} or {G} to your mana pool.
 timing=tapland
-oracle=Shivan Oasis enters the battlefield tapped. {T}: Add {R} or {G} to your mana pool.
+oracle=Shivan Oasis enters the battlefield tapped.\n{T}: Add {R} or {G} to your mana pool.

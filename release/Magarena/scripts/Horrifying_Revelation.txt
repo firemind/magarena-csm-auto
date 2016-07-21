@@ -1,9 +1,9 @@
 name=Horrifying Revelation
-image=http://mtgimage.com/card/horrifying%20revelation.jpg
+image=http://magiccards.info/scans/en/mbs/45.jpg
 value=2.961
 rarity=C
 type=Sorcery
 cost={B}
+effect=Target player discards a card.~*That player* puts the top card of his or her library into his or her graveyard.
 timing=main
-requires_groovy_code
 oracle=Target player discards a card, then puts the top card of his or her library into his or her graveyard.

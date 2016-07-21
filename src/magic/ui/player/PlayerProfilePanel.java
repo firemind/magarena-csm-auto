@@ -1,13 +1,11 @@
 package magic.ui.player;
 
-import magic.model.player.PlayerProfile;
-import net.miginfocom.swing.MigLayout;
-
+import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import java.awt.Dimension;
-import magic.ui.IconImages;
+import magic.model.player.PlayerProfile;
+import magic.ui.MagicImages;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Composite JPanel displays player avatar and player details.
@@ -35,7 +33,7 @@ public class PlayerProfilePanel extends JPanel {
     }
 
     public void setPlayer(final PlayerProfile player) {
-        avatarLabel.setIcon(IconImages.getPlayerAvatar(player).getIcon(2));
+        avatarLabel.setIcon(MagicImages.getPlayerAvatar(player).getIcon(2));
         detailsPanel.setPlayer(player);
         refreshLayout();
     }

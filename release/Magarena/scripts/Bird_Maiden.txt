@@ -1,11 +1,11 @@
 name=Bird Maiden
-image=http://mtgimage.com/card/bird%20maiden.jpg
+image=http://magiccards.info/scans/en/me4/110.jpg
 value=2.679
 rarity=C
 type=Creature
 subtype=Human,Bird
 cost={2}{R}
 pt=1/2
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

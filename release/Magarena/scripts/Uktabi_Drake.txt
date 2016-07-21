@@ -1,11 +1,12 @@
 name=Uktabi Drake
-image=http://mtgimage.com/card/uktabi%20drake.jpg
+image=http://magiccards.info/scans/en/pc/141.jpg
 value=3.924
 rarity=C
 type=Creature
 subtype=Drake
 cost={G}
 pt=2/1
-ability=flying;haste;echo {1}{G}{G}
+ability=Flying, haste;\
+        Echo {1}{G}{G}
 timing=fmain
-oracle=Flying, haste. Echo {1}{G}{G}
+oracle=Flying, haste\nEcho {1}{G}{G}

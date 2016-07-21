@@ -1,12 +1,12 @@
 name=Blazing Specter
-image=http://mtgimage.com/card/blazing%20specter.jpg
+image=http://magiccards.info/scans/en/vma/245.jpg
 value=4.500
 rarity=R
 type=Creature
 subtype=Specter
 cost={2}{B}{R}
 pt=2/2
-ability=flying;haste;\
+ability=Flying, haste;\
         Whenever SN deals combat damage to a player, that player discards a card.
 timing=fmain
-oracle=Flying, haste. Whenever Blazing Specter deals combat damage to a player, that player discards a card.
+oracle=Flying, haste\nWhenever Blazing Specter deals combat damage to a player, that player discards a card.

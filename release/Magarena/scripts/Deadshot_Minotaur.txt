@@ -1,11 +1,12 @@
 name=Deadshot Minotaur
-image=http://mtgimage.com/card/deadshot%20minotaur.jpg
+image=http://magiccards.info/scans/en/arb/52.jpg
 value=2.923
 rarity=C
 type=Creature
 subtype=Minotaur
 cost={3}{R}{G}
-ability=When SN enters the battlefield, SN deals 3 damage to target creature with flying.;cycling {R/G}
 pt=3/4
+ability=When SN enters the battlefield, SN deals 3 damage to target creature with flying.;\
+        Cycling {R/G}
 timing=main
-oracle=When Deadshot Minotaur enters the battlefield, it deals 3 damage to target creature with flying. Cycling {R/G}
+oracle=When Deadshot Minotaur enters the battlefield, it deals 3 damage to target creature with flying.\nCycling {R/G}

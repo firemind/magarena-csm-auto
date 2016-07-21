@@ -1,6 +1,6 @@
 name=Crested Craghorn
-image=http://mtgimage.com/card/crested%20craghorn.jpg
-value=2.500
+image=http://magiccards.info/scans/en/le/91.jpg
+value=3.161
 rarity=C
 type=Creature
 subtype=Goat,Beast
@@ -8,5 +8,5 @@ cost={4}{R}
 pt=4/1
 ability=Haste;\
         Provoke
-timing=main
-oracle=Haste. Provoke
+timing=fmain
+oracle=Haste\nProvoke

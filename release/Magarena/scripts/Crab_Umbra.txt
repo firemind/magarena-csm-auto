@@ -1,0 +1,13 @@
+name=Crab Umbra
+image=http://magiccards.info/scans/en/roe/58.jpg
+value=3.556
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={U}
+ability=Enchant creature;\
+        {2}{U}: Untap enchanted creature.;\
+        Totem armor
+timing=aura
+enchant=untap,pos creature
+oracle=Enchant creature\n{2}{U}: Untap enchanted creature.\nTotem armor

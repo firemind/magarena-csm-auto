@@ -1,12 +1,13 @@
 name=Nylea's Presence
-image=http://mtgimage.com/card/nylea's%20presence.jpg
+image=http://magiccards.info/scans/en/ths/169.jpg
 value=3.062
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{G}
-ability=When SN enters the battlefield, draw a card.
+ability=Enchant land;\
+        When SN enters the battlefield, draw a card.
 given_subtype=Plains,Island,Swamp,Mountain,Forest
 enchant=pump,pos land
 timing=aura
-oracle=Enchant land. When Nylea's Presence enters the battlefield, draw a card. Enchanted land is every basic land type in addition to its other types.
+oracle=Enchant land\nWhen Nylea's Presence enters the battlefield, draw a card.\nEnchanted land is every basic land type in addition to its other types.

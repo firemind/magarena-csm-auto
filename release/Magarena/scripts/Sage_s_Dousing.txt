@@ -1,10 +1,10 @@
 name=Sage's Dousing
-image=http://mtgimage.com/card/sage%27s%20dousing.jpg
+image=http://magiccards.info/scans/en/mt/48.jpg
 value=3.533
 rarity=U
 type=Tribal,Instant
 subtype=Wizard
 cost={2}{U}
+effect=Counter target spell unless its controller pays {3}.~If you control a Wizard, draw a card.
 timing=counter
-requires_groovy_code
 oracle=Counter target spell unless its controller pays {3}. If you control a Wizard, draw a card.

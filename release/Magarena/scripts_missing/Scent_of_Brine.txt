@@ -1,9 +1,9 @@
 name=Scent of Brine
-image=http://mtgimage.com/card/scent%20of%20brine.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ud/45.jpg
+value=3.100
 rarity=C
 type=Instant
 cost={1}{U}
 effect=Reveal any number of blue cards in your hand. Counter target spell unless its controller pays {1} for each card revealed this way.
-timing=removal
+timing=counter
 oracle=Reveal any number of blue cards in your hand. Counter target spell unless its controller pays {1} for each card revealed this way.

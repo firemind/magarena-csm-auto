@@ -1,11 +1,11 @@
 name=Ogre Berserker
-image=http://mtgimage.com/card/ogre%20berserker.jpg
+image=http://magiccards.info/scans/en/po2/111.jpg
 value=2.326
 rarity=C
 type=Creature
 subtype=Ogre,Berserker
 cost={4}{R}
 pt=4/2
-ability=haste
+ability=Haste
 timing=fmain
 oracle=Haste

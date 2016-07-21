@@ -1,11 +1,11 @@
 name=Somnomancer
-image=http://mtgimage.com/card/somnomancer.jpg
+image=http://magiccards.info/scans/en/shm/149.jpg
 value=2.545
 rarity=C
 type=Creature
 subtype=Kithkin,Wizard
 cost={1}{W/U}
 pt=2/1
-ability=When SN enters the battlefield, tap target creature.
+ability=When SN enters the battlefield, you may tap target creature.
 timing=main
 oracle=When Somnomancer enters the battlefield, you may tap target creature.

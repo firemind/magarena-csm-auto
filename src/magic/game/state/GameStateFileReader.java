@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import magic.data.FileIO;
-import magic.utility.MagicFileSystem;
+import magic.utility.FileIO;
 
 public final class GameStateFileReader {
     private GameStateFileReader() {}
@@ -15,10 +14,9 @@ public final class GameStateFileReader {
     private static final String PROP_PlayerCount = "players";
     private static final String PROP_Difficulty = "difficulty";
     private static final String PROP_StartPlayerIndex = "startPlayerIndex";
-   
-    public static GameState loadGameStateFromFile(final String filename) {
-        final File propertyFile = MagicFileSystem.getDataPath(MagicFileSystem.DataPath.SAVED_GAMES).resolve(filename).toFile();
-        final Properties prop = FileIO.toProp(propertyFile);
+
+    public static GameState loadGameStateFromFile(final File gameFile) {
+        final Properties prop = FileIO.toProp(gameFile);
         final GameState gameState = new GameState();
         //
         gameState.setDifficulty(Integer.parseInt(prop.getProperty(PROP_Difficulty)));
@@ -47,11 +45,7 @@ public final class GameStateFileReader {
         player.setDeckProfileColors(prop.getProperty(keyPrefix + ".deck.color"));
     }
 
-    private static void setCardsZoneState(
-            final Properties prop,
-            final String zoneName,
-            final List<GameCardState> cards,
-            final int playerIndex) {
+    private static void setCardsZoneState(final Properties prop, final String zoneName, final List<GameCardState> cards, final int playerIndex) {
 
         final List<String> usedKeys = new ArrayList<>();
         for (int i = 0; i < prop.size(); i++) {
@@ -84,5 +78,5 @@ public final class GameStateFileReader {
             prop.remove(usedKey);
         }
     }
-    
+
 }

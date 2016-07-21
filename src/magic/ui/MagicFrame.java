@@ -1,8 +1,6 @@
 package magic.ui;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Toolkit;
+import magic.translate.UiString;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -16,12 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import magic.data.CardDefinitions;
 import magic.data.DuelConfig;
-import magic.data.GeneralConfig;
-import magic.data.MagicIcon;
 import magic.data.OSXAdapter;
 import magic.exception.DesktopNotSupportedException;
 import magic.model.MagicDeck;
@@ -30,42 +25,45 @@ import magic.model.MagicDuel;
 import magic.model.MagicGameLog;
 import magic.ui.screen.AbstractScreen;
 import magic.ui.theme.ThemeFactory;
-import magic.utility.MagicFileSystem;
+import magic.ui.utility.DesktopUtils;
+import magic.ui.utility.GraphicsUtils;
 import magic.utility.MagicFileSystem.DataPath;
-import net.miginfocom.swing.MigLayout;
+import magic.utility.MagicFileSystem;
+import magic.utility.MagicSystem;
 import org.apache.commons.io.FileUtils;
 
 @SuppressWarnings("serial")
-public class MagicFrame extends JFrame implements IImageDragDropListener {
+public class MagicFrame extends MagicStickyFrame implements IImageDragDropListener {
 
-    private boolean ignoreWindowDeactivate;
+    // translatable strings
+    private static final String _S1 = "F11 : full screen";
+    private static final String _S2 = "No saved duel found.";
+    private static final String _S3 = "%s's deck is illegal.";
+    private static final String _S4 = "Are you sure you want to quit Magarena?";
+    private static final String _S5 = "Confirm Quit to Desktop";
+    private static final String _S6 = "Invalid action!";
+
     private boolean confirmQuitToDesktop = true;
-
-    private static final Dimension MIN_SIZE = new Dimension(GeneralConfig.DEFAULT_WIDTH, GeneralConfig.DEFAULT_HEIGHT);
 
     // Check if we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
     public static final boolean MAC_OS_X = System.getProperty("os.name").toLowerCase().startsWith("mac os x");
 
-    private final GeneralConfig config;
-    private final JPanel contentPanel;
+    private final MagicFramePanel contentPanel;
     private MagicDuel duel;
 
     public MagicFrame(final String frameTitle) {
 
         ToolTipManager.sharedInstance().setInitialDelay(400);
-        
-        config = GeneralConfig.getInstance();
 
         // Setup frame.
-        this.setTitle(frameTitle + "  [F11 : full screen]");
-        this.setIconImage(IconImages.getIcon(MagicIcon.ARENA).getImage());
+        this.setTitle(String.format("%s [%s]", frameTitle, UiString.get(_S1)));
+        this.setIconImage(MagicImages.APP_LOGO);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListeners();
         registerForMacOSXEvents();
-        setSizeAndPosition();
 
         // Setup content container with a painted background based on theme.
-        contentPanel = new BackgroundPanel(new MigLayout("insets 0, gap 0"));
+        contentPanel = new MagicFramePanel();
         contentPanel.setOpaque(true);
         setContentPane(contentPanel);
         setF10KeyInputMap();
@@ -84,20 +82,13 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
             public void windowClosing(final WindowEvent event) {
                 onClose();
             }
-            @Override
-            public void windowDeactivated(final WindowEvent e) {
-                if (isFullScreen() && e.getOppositeWindow() == null && !ignoreWindowDeactivate) {
-                    setState(Frame.ICONIFIED);
-                }
-                ignoreWindowDeactivate = false;
-            }
         });
     }
 
     public void showDuel() {
         if (duel!=null) {
             ScreenController.showDuelDecksScreen(duel);
-            if (Boolean.getBoolean("selfMode")) {
+            if (MagicSystem.isAiVersusAi()) {
                 if (!duel.isFinished()) {
                     nextGame();
                 } else {
@@ -114,13 +105,13 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     }
 
     public void loadDuel() {
-        final File duelFile=MagicDuel.getDuelFile();
+        final File duelFile=MagicDuel.getLatestDuelFile();
         if (duelFile.exists()) {
             duel=new MagicDuel();
             duel.load(duelFile);
             showDuel();
         } else {
-            ScreenController.showWarningMessage("No saved duel found.");
+            ScreenController.showWarningMessage(UiString.get(_S2));
         }
     }
 
@@ -136,7 +127,8 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
                 MagicDeckConstructionRule.getRulesText(MagicDeckConstructionRule.checkDeck(deck));
 
         if (brokenRulesText.length() > 0) {
-            ScreenController.showWarningMessage(playerName + "'s deck is illegal.\n\n" + brokenRulesText);
+            ScreenController.showWarningMessage(
+                    String.format("%s\n\n%s", UiString.get(_S3, playerName), brokenRulesText));
             return false;
         }
 
@@ -170,12 +162,12 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         if (!confirmQuitToDesktop) {
             doShutdownMagarena();
         } else {
-            final String message = "Are you sure you want to quit Magarena?\n";
+            final String message = String.format("%s\n", UiString.get(_S4));
             final Object[] params = {message};
             final int n = JOptionPane.showConfirmDialog(
                     contentPanel,
                     params,
-                    "Confirm Quit to Desktop",
+                    UiString.get(_S5),
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 doShutdownMagarena();
@@ -186,22 +178,11 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     }
 
     private void doShutdownMagarena() {
-        if (isFullScreen()) {
-            config.setFullScreen(true);
-        } else {
-            final boolean maximized = (MagicFrame.this.getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH;
-            if (maximized) {
-                config.setMaximized(true);
-            } else {
-                config.setLeft(getX());
-                config.setTop(getY());
-                config.setWidth(getWidth());
-                config.setHeight(getHeight());
-                config.setMaximized(false);
-            }
-        }
+
+        saveSizeAndPosition();
 
         MagicGameLog.close();
+        MagicSound.shutdown();
 
         /*
         if (gamePanel != null) {
@@ -216,60 +197,12 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
-    private void setSizeAndPosition() {
-        setMinimumSize(MIN_SIZE);
-        if (config.isFullScreen()) {
-            setFullScreenMode(true);
-        } else {
-            this.setSize(config.getWidth(),config.getHeight());
-            if (config.getLeft() != -1) {
-                this.setLocation(config.getLeft(),config.getTop());
-            } else {
-                this.setLocationRelativeTo(null);
-            }
-            if (config.isMaximized()) {
-                this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            }
-        }
-    }
-
     /**
      *
      */
     public void closeDuelScreen() {
         ScreenController.closeActiveScreen(false);
         showDuel();
-    }
-
-    public void toggleFullScreenMode() {
-        setFullScreenMode(!config.isFullScreen());
-    }
-
-    private void setFullScreenMode(final boolean isFullScreen) {
-        this.dispose();
-        if (isFullScreen) {
-            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            this.setUndecorated(true);
-            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            this.setSize(screenSize.width, screenSize.height);
-            config.setFullScreen(true);
-        } else {
-            this.setExtendedState(JFrame.NORMAL);
-            this.setUndecorated(false);
-            config.setFullScreen(false);
-            setSizeAndPosition();
-        }
-        setVisible(true);
-        ignoreWindowDeactivate = true;
-        config.save();
-    }
-
-    private boolean isFullScreen() {
-        return isMaximized() && this.isUndecorated();
-    }
-
-    private boolean isMaximized() {
-        return this.getExtendedState() == JFrame.MAXIMIZED_BOTH;
     }
 
     /**
@@ -280,9 +213,9 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         contentPanel.getActionMap().put("Screenshot", new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                GraphicsUtilities.setBusyMouseCursor(true);
+                GraphicsUtils.setBusyMouseCursor(true);
                 doScreenshot();
-                GraphicsUtilities.setBusyMouseCursor(false);
+                GraphicsUtils.setBusyMouseCursor(false);
             }
         });
     }
@@ -314,8 +247,8 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     private void doScreenshot() {
         try {
             final Path filePath = MagicFileSystem.getDataPath(DataPath.LOGS).resolve("screenshot.png");
-            final File imageFile = GraphicsUtilities.doScreenshotToFile(this.getContentPane(), filePath);
-            MagicFileSystem.openFileInDefaultOsEditor(imageFile);
+            final File imageFile = GraphicsUtils.doScreenshotToFile(this.getContentPane(), filePath);
+            DesktopUtils.openFileInDefaultOsEditor(imageFile);
         } catch (IOException | DesktopNotSupportedException e) {
             e.printStackTrace();
             ScreenController.showWarningMessage(e.toString());
@@ -328,15 +261,16 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
         try {
             FileUtils.copyFile(imageFile, path.toFile());
         } catch (IOException ex) {
-            ScreenController.showWarningMessage("Invalid action!\n\n" + ex.getMessage());
+            ScreenController.showWarningMessage(
+                    String.format("%s\n\n%s", UiString.get(_S6), ex.getMessage()));
         }
-        refreshBackground();
         config.setCustomBackground(true);
         config.save();
+        refreshLookAndFeel();
     }
 
     private void refreshBackground() {
-        ((BackgroundPanel)contentPanel).refreshBackground();
+        contentPanel.refreshBackground();
     }
 
 
@@ -348,13 +282,12 @@ public class MagicFrame extends JFrame implements IImageDragDropListener {
     public void refreshUI() {
         config.setIsMissingFiles(false);
         CardDefinitions.checkForMissingFiles();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ThemeFactory.getInstance().loadThemes();
-                refreshLookAndFeel();
-            }
-        });
+        ThemeFactory.getInstance().loadThemes();
+        refreshLookAndFeel();
+    }
+
+    public void setContentPanel(JPanel aPanel) {
+        contentPanel.setContentPanel(aPanel);
     }
 
 }

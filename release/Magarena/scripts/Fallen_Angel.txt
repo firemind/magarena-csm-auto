@@ -1,12 +1,12 @@
 name=Fallen Angel
-image=http://mtgimage.com/card/fallen%20angel.jpg
+image=http://magiccards.info/scans/en/cmd/82.jpg
 value=3.704
 rarity=R
 type=Creature
 subtype=Angel
 cost={3}{B}{B}
 pt=3/3
-ability=flying;\
-        Sacrifice a creature: SN gets +2/+1 until end of turn.
+ability=Flying;\
+        Sacrifice a creature: SN gets +2/+1 until end of turn. Activate this ability with AI only if you control another creature.
 timing=main
-oracle=Flying. Sacrifice a creature: Fallen Angel gets +2/+1 until end of turn.
+oracle=Flying\nSacrifice a creature: Fallen Angel gets +2/+1 until end of turn.

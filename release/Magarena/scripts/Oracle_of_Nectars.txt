@@ -1,11 +1,11 @@
 name=Oracle of Nectars
-image=http://mtgimage.com/card/oracle%20of%20nectars.jpg
+image=http://magiccards.info/scans/en/shm/233.jpg
 value=4.000
 rarity=R
 type=Creature
 subtype=Elf,Cleric
 cost={2}{G/W}
 pt=2/2
-timing=smain
-requires_groovy_code
+ability={X}, {T}: You gain X life.
+timing=main
 oracle={X}, {T}: You gain X life.

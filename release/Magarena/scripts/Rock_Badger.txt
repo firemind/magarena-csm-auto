@@ -1,11 +1,11 @@
 name=Rock Badger
-image=http://mtgimage.com/card/rock%20badger.jpg
+image=http://magiccards.info/scans/en/10e/226.jpg
 value=1.818
 rarity=U
 type=Creature
 subtype=Badger,Beast
 cost={4}{R}
 pt=3/3
-ability=mountainwalk
+ability=Mountainwalk
 timing=main
 oracle=Mountainwalk

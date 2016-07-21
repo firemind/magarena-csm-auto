@@ -1,11 +1,11 @@
 name=Jhovall Rider
-image=http://mtgimage.com/card/jhovall%20rider.jpg
+image=http://magiccards.info/scans/en/mm/26.jpg
 value=2.300
 rarity=U
 type=Creature
 subtype=Human,Rebel
 cost={4}{W}
 pt=3/3
-ability=trample
+ability=Trample
 timing=main
 oracle=Trample

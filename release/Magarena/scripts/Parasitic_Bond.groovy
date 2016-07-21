@@ -1,5 +1,5 @@
 [
-    new MagicAtUpkeepTrigger() {
+    new AtUpkeepTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicPlayer upkeepPlayer) {
             final MagicPermanent enchantedPermanent = permanent.getEnchantedPermanent()
@@ -14,7 +14,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDealDamageAction(
+            game.doAction(new DealDamageAction(
                 event.getSource(),
                 event.getPlayer(),
                 2

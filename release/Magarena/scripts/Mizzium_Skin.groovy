@@ -3,7 +3,7 @@
         @Override
         public Iterable<MagicEvent> getCostEvent(final MagicCard source) {
             return [
-                new MagicPayManaCostEvent(source,"{1}{U}")
+                MagicPayManaCostEvent.Cast(source,"{1}{U}")
             ];
         }
         @Override
@@ -16,11 +16,9 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets=
-                game.filterPermanents(event.getPlayer(),MagicTargetFilterFactory.CREATURE_YOU_CONTROL);
-            for (final MagicPermanent creature : targets) {
-                game.doAction(new MagicChangeTurnPTAction(creature, 0, 1));
-                game.doAction(new MagicGainAbilityAction(creature, MagicAbility.Hexproof));
+            CREATURE_YOU_CONTROL.filter(event) each {
+                game.doAction(new ChangeTurnPTAction(it, 0, 1));
+                game.doAction(new GainAbilityAction(it, MagicAbility.Hexproof));
             }
         }
     }

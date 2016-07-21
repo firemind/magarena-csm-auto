@@ -1,11 +1,11 @@
 name=Slingshot Goblin
-image=http://mtgimage.com/card/slingshot%20goblin.jpg
+image=http://magiccards.info/scans/en/ps/72.jpg
 value=2.673
 rarity=C
 type=Creature
 subtype=Goblin
 cost={2}{R}
 pt=2/2
-ability={R},{T}:SN deals 2 damage to target blue creature.
+ability={R}, {T}: SN deals 2 damage to target blue creature.
 timing=main
 oracle={R}, {T}: Slingshot Goblin deals 2 damage to target blue creature.

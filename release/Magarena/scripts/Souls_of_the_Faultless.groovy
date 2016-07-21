@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             final MagicPlayer attackingPlayer = damage.getSource().getController();
@@ -17,8 +17,8 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final MagicPlayer attackingPlayer = game.getTurnPlayer();
-            game.doAction(new MagicChangeLifeAction(event.getPlayer(), event.getRefInt()));
-            game.doAction(new MagicChangeLifeAction(attackingPlayer, -event.getRefInt()));
+            game.doAction(new ChangeLifeAction(event.getPlayer(), event.getRefInt()));
+            game.doAction(new ChangeLifeAction(attackingPlayer, -event.getRefInt()));
         }
     }
 ]

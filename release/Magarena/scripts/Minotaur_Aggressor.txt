@@ -1,11 +1,11 @@
 name=Minotaur Aggressor
-image=http://mtgimage.com/card/minotaur%20aggressor.jpg
+image=http://magiccards.info/scans/en/rtr/100.jpg
 value=2.395
 rarity=U
 type=Creature
 subtype=Minotaur,Berserker
-ability=first strike;haste
 cost={6}{R}
 pt=6/2
+ability=First strike, haste
 timing=main
 oracle=First strike, haste

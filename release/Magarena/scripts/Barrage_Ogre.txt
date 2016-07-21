@@ -1,11 +1,11 @@
 name=Barrage Ogre
-image=http://mtgimage.com/card/barrage%20ogre.jpg
+image=http://magiccards.info/scans/en/som/83.jpg
 value=2.685
 rarity=U
 type=Creature
 subtype=Ogre,Warrior
 cost={3}{R}{R}
 pt=3/3
-ability={T},Sacrifice an artifact: SN deals 2 damage to target creature or player.
+ability={T}, Sacrifice an artifact: SN deals 2 damage to target creature or player.
 timing=main
 oracle={T}, Sacrifice an artifact: Barrage Ogre deals 2 damage to target creature or player.

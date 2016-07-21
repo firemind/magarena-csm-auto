@@ -1,12 +1,12 @@
 name=Fury Sliver
-image=http://mtgimage.com/card/fury%20sliver.jpg
+image=http://magiccards.info/scans/en/ts/157.jpg
 value=4.341
 rarity=U
 type=Creature
 subtype=Sliver
 cost={5}{R}
 pt=3/3
-ability=all sliver creatures have double strike
+ability=All Sliver creatures have double strike.
 static=all
 timing=main
 oracle=All Sliver creatures have double strike.

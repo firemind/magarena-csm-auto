@@ -1,0 +1,13 @@
+name=Aberrant Researcher
+image=http://magiccards.info/scans/en/soi/49a.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Human,Insect
+cost={3}{U}
+pt=3/2
+ability=Flying
+transform=Perfected Form
+timing=main
+requires_groovy_code
+oracle=Flying\nAt the beginning of your upkeep, put the top card of your library into your graveyard. If it's an instant or sorcery card, transform Aberrant Researcher.

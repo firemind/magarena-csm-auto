@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable {
-
-    private static final long serialVersionUID = 1L;
 
     public MagicCardList() {}
 
@@ -19,7 +18,7 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
             add(copyMap.copy(card));
         }
     }
-    
+
     @Override
     public MagicCardList copy(final MagicCopyMap copyMap) {
         return new MagicCardList(copyMap, this);
@@ -62,7 +61,19 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
         final int size = size();
         return size > 0 ? get(size-1) : MagicCard.NONE;
     }
-    
+
+    public MagicCardList getRandomCards(final int amount) {
+        final MagicRandom rng = new MagicRandom(getStateId());
+        final MagicCardList copy = new MagicCardList(this);
+        final MagicCardList choiceList = new MagicCardList();
+        final int actual = Math.min(amount, copy.size());
+        for (int i = 1; i <= actual; i++) {
+            final int index = rng.nextInt(copy.size());
+            choiceList.add(copy.remove(index));
+        }
+        return choiceList;
+    }
+
     public MagicCardList getCardsFromTop(final int amount) {
         final int size = size();
         final MagicCardList choiceList = new MagicCardList();
@@ -79,7 +90,7 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
         remove(index);
         return card;
     }
-    
+
     public MagicCard removeCardAtBottom() {
         final MagicCard card=get(0);
         remove(0);
@@ -91,7 +102,7 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
         if (index >= 0) {
             remove(index);
         } else {
-            System.err.println("WARNING. Card " + card.getName() + " not found.");
+            throw new RuntimeException("Card " + card.getName() + " not found.");
         }
         return index;
     }
@@ -103,6 +114,24 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
             }
         }
         return MagicCard.NONE;
+    }
+
+    public boolean containsType(final MagicType type) {
+        for (final MagicCard card : this) {
+            if (card.hasType(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean contains(final MagicCard card) {
+        for (final MagicCard cardList : this) {
+            if (cardList.equals(card)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setCards(final MagicCardList cardList) {
@@ -196,12 +225,12 @@ public class MagicCardList extends ArrayList<MagicCard> implements MagicCopyable
                     if (!high||lowLeft==0||highCount==0||blocks==1) {
                         add(card);
                         spells.remove(index);
-                         spellCount++;
-                         if (high) {
-                             highCount++;
-                         } else {
-                             lowLeft--;
-                         }
+                        spellCount++;
+                        if (high) {
+                            highCount++;
+                        } else {
+                            lowLeft--;
+                        }
                     }
                 }
             }

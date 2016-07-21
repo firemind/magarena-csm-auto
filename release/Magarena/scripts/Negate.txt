@@ -1,9 +1,10 @@
 name=Negate
-image=http://mtgimage.com/card/negate.jpg
-value=4.250
+image=http://magiccards.info/scans/en/ogw/59.jpg
+image_updated=2016-02-29
+value=2.500
 rarity=C
 type=Instant
 cost={1}{U}
-timing=counter
 effect=Counter target noncreature spell.
+timing=counter
 oracle=Counter target noncreature spell.

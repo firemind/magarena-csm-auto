@@ -1,9 +1,9 @@
 name=Traveler's Amulet
-image=http://mtgimage.com/card/traveler's%20amulet.jpg
+image=http://magiccards.info/scans/en/ths/221.jpg
 value=3.109
 rarity=C
 type=Artifact
 cost={1}
-ability={1},Sacrifice SN:Search your library for a basic land card, reveal it, and put it into your hand. Then shuffle your library.
+ability={1}, Sacrifice SN: Search your library for a basic land card, reveal it, and put it into your hand. Then shuffle your library.
 timing=artifact
 oracle={1}, Sacrifice Traveler's Amulet: Search your library for a basic land card, reveal it, and put it into your hand. Then shuffle your library.

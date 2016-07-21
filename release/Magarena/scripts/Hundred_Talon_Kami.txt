@@ -1,11 +1,12 @@
 name=Hundred-Talon Kami
-image=http://mtgimage.com/card/hundred%2Dtalon%20kami.jpg
+image=http://magiccards.info/scans/en/chk/16.jpg
 value=1.589
 rarity=C
 type=Creature
 subtype=Spirit
 cost={4}{W}
 pt=2/3
-ability=flying;soulshift 4
+ability=Flying;\
+        Soulshift 4
 timing=main
-oracle=Flying. Soulshift 4
+oracle=Flying\nSoulshift 4

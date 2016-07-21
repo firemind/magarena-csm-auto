@@ -1,9 +1,0 @@
-name=Chain of Acid
-image=http://mtgimage.com/card/chain%20of%20acid.jpg
-value=2.500
-rarity=U
-type=Sorcery
-cost={3}{G}
-effect=Destroy target noncreature permanent. Then that permanent's controller may copy this spell and may choose a new target for that copy.
-timing=main
-oracle=Destroy target noncreature permanent. Then that permanent's controller may copy this spell and may choose a new target for that copy.

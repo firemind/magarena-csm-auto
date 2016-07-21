@@ -1,13 +1,12 @@
 name=Field Marshal
-image=http://mtgimage.com/card/field%20marshal.jpg
+image=http://magiccards.info/scans/en/10e/15.jpg
 value=4.330
 rarity=R
 type=Creature
 subtype=Human,Soldier
 cost={1}{W}{W}
 pt=2/2
-ability=other soldier creatures get +1/+1;\
-        other soldier creatures have first strike
+ability=Other Soldier creatures get +1/+1 and have first strike.
 static=all
 timing=main
 oracle=Other Soldier creatures get +1/+1 and have first strike.

@@ -1,11 +1,11 @@
 name=Slobad, Goblin Tinkerer
-image=http://mtgimage.com/card/slobad,%20goblin%20tinkerer.jpg
+image=http://magiccards.info/scans/en/ds/69.jpg
 value=3.988
 rarity=R
 type=Legendary,Creature
 subtype=Goblin,Artificer
 cost={1}{R}
 pt=1/2
-ability=Sacrifice an artifact:Target artifact gains indestructible until end of turn.
+ability=Sacrifice an artifact: Target artifact gains indestructible until end of turn.
 timing=main
 oracle=Sacrifice an artifact: Target artifact gains indestructible until end of turn.

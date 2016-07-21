@@ -1,11 +1,11 @@
 name=Kitsune Diviner
-image=http://mtgimage.com/card/kitsune%20diviner.jpg
+image=http://magiccards.info/scans/en/chk/26.jpg
 value=1.489
 rarity=C
 type=Creature
 subtype=Fox,Cleric
 cost={W}
 pt=0/1
-ability={T}:Tap target Spirit.
+ability={T}: Tap target Spirit.
 timing=main
 oracle={T}: Tap target Spirit.

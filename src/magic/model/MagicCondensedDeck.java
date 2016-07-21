@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class MagicCondensedDeck extends ArrayList<MagicCondensedCardDefinition> {
-
-    private static final long serialVersionUID = 143L;
 
     private String name = "Unsaved Deck";
 
@@ -34,7 +33,7 @@ public class MagicCondensedDeck extends ArrayList<MagicCondensedCardDefinition> 
     }
 
     private String getKey(final MagicCardDefinition card) {
-        return card.getName();
+        return card.getDistinctName();
     }
 
     public boolean addCard(final MagicCardDefinition card, final boolean ignoreCopiesLimit) {

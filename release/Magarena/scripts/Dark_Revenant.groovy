@@ -1,21 +1,21 @@
 [
-    new MagicWhenDiesTrigger() {
+    new ThisDiesTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPermanent died) {
             return new MagicEvent(
                 permanent,
                 this,
-                "Put SN on the top of your library."
+                "PN puts SN on the top of his or her library."
             );
         }
 
-       @Override
+        @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicCard card = event.getPermanent().getCard();
-            if (card.isInGraveyard()) {
-                game.doAction(new MagicRemoveCardAction(card,MagicLocationType.Graveyard));
-                game.doAction(new MagicMoveCardAction(card,MagicLocationType.Graveyard,MagicLocationType.TopOfOwnersLibrary));
-            }
+            game.doAction(new ShiftCardAction(
+                event.getPermanent().getCard(),
+                MagicLocationType.Graveyard,
+                MagicLocationType.TopOfOwnersLibrary
+            ));
         }
     }
 ]

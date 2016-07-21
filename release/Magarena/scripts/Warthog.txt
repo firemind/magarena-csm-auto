@@ -1,11 +1,11 @@
 name=Warthog
-image=http://mtgimage.com/card/warthog.jpg
+image=http://magiccards.info/scans/en/6e/267.jpg
 value=3.565
 rarity=U
 type=Creature
 subtype=Boar
 cost={1}{G}{G}
 pt=3/2
-ability=swampwalk
+ability=Swampwalk
 timing=main
 oracle=Swampwalk

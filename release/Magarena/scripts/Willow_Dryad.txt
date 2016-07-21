@@ -1,11 +1,11 @@
 name=Willow Dryad
-image=http://mtgimage.com/card/willow%20dryad.jpg
+image=http://magiccards.info/scans/en/po/119.jpg
 value=2.481
 rarity=C
 type=Creature
 subtype=Dryad
 cost={G}
 pt=1/1
-ability=forestwalk
+ability=Forestwalk
 timing=main
 oracle=Forestwalk

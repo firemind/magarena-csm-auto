@@ -1,12 +1,13 @@
 name=Alexi's Cloak
-image=http://mtgimage.com/card/alexi%27s%20cloak.jpg
+image=http://magiccards.info/scans/en/pr/29.jpg
 value=3.969
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{U}
 ability=Flash;\
+        Enchant creature;\
         Enchanted creature has shroud.
 timing=pumpFlash
 enchant=shroud,pos creature
-oracle=Flash. Enchant creature. Enchanted creature has shroud.
+oracle=Flash\nEnchant creature\nEnchanted creature has shroud.

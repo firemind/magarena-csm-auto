@@ -1,12 +1,12 @@
 name=Talon Sliver
-image=http://mtgimage.com/card/talon%20sliver.jpg
+image=http://magiccards.info/scans/en/tp/262.jpg
 value=4.017
 rarity=C
 type=Creature
 subtype=Sliver
 cost={1}{W}
 pt=1/1
-ability=all sliver creatures have first strike
+ability=All Sliver creatures have first strike.
 static=all
 timing=main
 oracle=All Sliver creatures have first strike.

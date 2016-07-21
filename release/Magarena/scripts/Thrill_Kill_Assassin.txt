@@ -1,11 +1,12 @@
 name=Thrill-Kill Assassin
-image=http://mtgimage.com/card/thrill%2Dkill%20assassin.jpg
+image=http://magiccards.info/scans/en/rtr/81.jpg
 value=3.403
 rarity=U
 type=Creature
 subtype=Human,Assassin
 cost={1}{B}
 pt=1/2
-ability=deathtouch;unleash
+ability=Deathtouch;\
+        Unleash
 timing=main
-oracle=Deathtouch. Unleash
+oracle=Deathtouch\nUnleash

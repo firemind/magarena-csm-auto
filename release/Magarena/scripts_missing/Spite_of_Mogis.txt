@@ -1,9 +1,0 @@
-name=Spite of Mogis
-image=http://mtgimage.com/card/spite%20of%20mogis.jpg
-value=2.500
-rarity=U
-type=Sorcery
-cost={R}
-effect=SN deals damage to target creature equal to the number of instant and sorcery cards in your graveyard. Scry 1.
-timing=main
-oracle=Spite of Mogis deals damage to target creature equal to the number of instant and sorcery cards in your graveyard. Scry 1.

@@ -1,13 +1,15 @@
 name=Stratus Walk
-image=http://mtgimage.com/card/stratus%20walk.jpg
-value=3.429
+image=http://magiccards.info/scans/en/ori/77.jpg
+image_updated=2015-11-05
+value=2.500
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={1}{U}
-ability=When SN enters the battlefield, draw a card.;\
+ability=Enchant creature;\
+        When SN enters the battlefield, draw a card.;\
         Enchanted creature has flying.;\
         Enchanted creature can block only creatures with flying.
 timing=aura
 enchant=flying,creature
-oracle=Enchant creature. When Stratus Walk enters the battlefield, draw a card. Enchanted creature has flying. Enchanted creature can block only creatures with flying.
+oracle=Enchant creature\nWhen Stratus Walk enters the battlefield, draw a card.\nEnchanted creature has flying.\nEnchanted creature can block only creatures with flying.

@@ -1,12 +1,12 @@
 name=Shifting Sliver
-image=http://mtgimage.com/card/shifting%20sliver.jpg
+image=http://magiccards.info/scans/en/le/52.jpg
 value=3.989
 rarity=U
 type=Creature
 subtype=Sliver
 cost={3}{U}
 pt=2/2
-ability=all sliver creatures can't be blocked except by Slivers.
+ability=Slivers can't be blocked except by Slivers.
 static=all
 timing=main
 oracle=Slivers can't be blocked except by Slivers.

@@ -1,25 +1,10 @@
 [
-    new MagicPlaneswalkerActivation(1) {
-        @Override
-        public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
-            return new MagicEvent(
-                source,
-                this,
-                "PN draws a card, then discards a card at random."
-            );
-        }
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDrawAction(event.getPlayer()));
-            game.addEvent(MagicDiscardEvent.Random(event.getSource(), event.getPlayer()));
-        }
-    },
     new MagicPlaneswalkerActivation(-4) {
         @Override
         public MagicEvent getPermanentEvent(final MagicPermanent source,final MagicPayedCost payedCost) {
             return new MagicEvent(
                 source,
-                MagicTargetChoice.NEG_TARGET_PLAYER,
+                NEG_TARGET_PLAYER,
                 this,
                 "SN deals damage equal to the number of cards in target player's\$ hand to that player."
             );
@@ -27,8 +12,9 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
-                final MagicDamage damage = new MagicDamage(event.getSource(), it, it.getHandSize());
-                game.doAction(new MagicDealDamageAction(damage));
+                final int amount=it.getHandSize();
+                game.logAppendValue(event.getPlayer(),amount);
+                game.doAction(new DealDamageAction(event.getSource(),it,amount));
             });
         }
     },
@@ -43,12 +29,10 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final Collection<MagicPermanent> targets=
-                game.filterPermanents(event.getPlayer(),MagicTargetFilterFactory.CREATURE);
-            for (final MagicPermanent perm : targets) {
-                game.doAction(new MagicGainControlAction(event.getPlayer(),perm,MagicStatic.UntilEOT));
-                game.doAction(new MagicUntapAction(perm));
-                game.doAction(new MagicGainAbilityAction(perm,MagicAbility.Haste));
+            CREATURE.filter(event) each {
+                game.doAction(new GainControlAction(event.getPlayer(),it,MagicStatic.UntilEOT));
+                game.doAction(new UntapAction(it));
+                game.doAction(new GainAbilityAction(it,MagicAbility.Haste));
             }
         }
     }

@@ -1,9 +1,10 @@
 name=Life
-image=http://mtgimage.com/card/lifedeath.jpg
-value=2.500
+image=http://magiccards.info/scans/en/ddj/77a.jpg
+value=4.368
 rarity=U
 type=Sorcery
 cost={G}
 effect=All lands you control become 1/1 creatures until end of turn. They're still lands.
+split=Death
 timing=main
 oracle=All lands you control become 1/1 creatures until end of turn. They're still lands.

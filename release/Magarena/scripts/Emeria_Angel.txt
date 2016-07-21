@@ -1,12 +1,12 @@
 name=Emeria Angel
-image=http://mtgimage.com/card/emeria%20angel.jpg
+image=http://magiccards.info/scans/en/zen/11.jpg
 value=4.037
 rarity=R
 type=Creature
 subtype=Angel
 cost={2}{W}{W}
 pt=3/3
-ability=flying;\
+ability=Flying;\
         Whenever a land enters the battlefield under your control, you may put a 1/1 white Bird creature token with flying onto the battlefield.
 timing=main
-oracle=Flying. Landfall — Whenever a land enters the battlefield under your control, you may put a 1/1 white Bird creature token with flying onto the battlefield.
+oracle=Flying\nLandfall — Whenever a land enters the battlefield under your control, you may put a 1/1 white Bird creature token with flying onto the battlefield.

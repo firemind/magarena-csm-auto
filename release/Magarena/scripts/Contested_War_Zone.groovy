@@ -1,5 +1,5 @@
 [
-    new MagicWhenDamageIsDealtTrigger() {
+    new DamageIsDealtTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
             return (damage.getSource().hasType(MagicType.Creature) &&
@@ -15,7 +15,7 @@
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicGainControlAction(event.getPlayer(),event.getPermanent()));
+            game.doAction(new GainControlAction(event.getPlayer(),event.getPermanent()));
         }
     }
 ]

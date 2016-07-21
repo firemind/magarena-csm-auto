@@ -1,11 +1,13 @@
 name=Weight of the Underworld
-image=http://mtgimage.com/card/weight%20of%20the%20underworld.jpg
-value=1.886
+image=http://magiccards.info/scans/en/ori/126.jpg
+image_updated=2015-11-05
+value=2.500
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={3}{B}
-enchant=weaken -3/-2,neg creature
-ability=Enchanted creature gets -3/-2.
+ability=Enchant creature;\
+        Enchanted creature gets -3/-2.
 timing=aura
-oracle=Enchant creature. Enchanted creature gets -3/-2.
+enchant=weaken -3/-2,neg creature
+oracle=Enchant creature\nEnchanted creature gets -3/-2.

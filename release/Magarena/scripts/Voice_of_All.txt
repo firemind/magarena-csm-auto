@@ -1,12 +1,12 @@
 name=Voice of All
-image=http://mtgimage.com/card/voice%20of%20all.jpg
+image=http://magiccards.info/scans/en/cmd/35.jpg
 value=4.155
 rarity=R
 type=Creature
 subtype=Angel
 cost={2}{W}{W}
 pt=2/2
-ability=flying
+ability=Flying
 timing=main
 requires_groovy_code=Order of the Stars
-oracle=Flying. As Voice of All enters the battlefield, choose a color. Voice of All has protection from the chosen color.
+oracle=Flying\nAs Voice of All enters the battlefield, choose a color.\nVoice of All has protection from the chosen color.

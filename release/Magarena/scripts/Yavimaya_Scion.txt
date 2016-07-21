@@ -1,11 +1,11 @@
 name=Yavimaya Scion
-image=http://mtgimage.com/card/yavimaya%20scion.jpg
+image=http://magiccards.info/scans/en/ul/119.jpg
 value=3.080
 rarity=C
 type=Creature
 subtype=Treefolk
 cost={4}{G}
 pt=4/4
-ability=protection from artifacts
+ability=Protection from artifacts
 timing=main
 oracle=Protection from artifacts

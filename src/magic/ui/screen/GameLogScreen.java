@@ -8,8 +8,11 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import magic.data.MagicIcon;
-import magic.ui.IconImages;
+import magic.model.MagicGameLog;
+import magic.ui.utility.DesktopUtils;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
+import magic.translate.UiString;
 import magic.ui.screen.interfaces.IStatusBar;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
@@ -19,9 +22,19 @@ import magic.utility.MagicFileSystem.DataPath;
 @SuppressWarnings("serial")
 public class GameLogScreen extends TextFileReaderScreen implements IStatusBar {
 
+    private static boolean isBasicView = true;
+
+    // translatable strings
+    private static final String _S1 = "Logs directory";
+    private static final String _S2 = "Opens the logs directory containing '%s' in the default file explorer.";
+    private static final String _S3 = "Could not open 'logs' directory : %s";
+    private static final String _S4 = "Basic View";
+    private static final String _S5 = "Filters log file to remove AI diagnostics.";
+    private static final String _S6 = "Detailed View";
+    private static final String _S7 = "Full log file, including AI diagnostics.";
+
     private static final Path LOGS_DIRECTORY = MagicFileSystem.getDataPath(DataPath.LOGS);
-    private static final Path TEXT_FILE = LOGS_DIRECTORY.resolve("game.log");
-    private boolean isBasicView = true;
+    private static final Path TEXT_FILE = LOGS_DIRECTORY.resolve(MagicGameLog.LOG_FILE);
 
     public GameLogScreen() {
         reloadTextFile();
@@ -52,23 +65,22 @@ public class GameLogScreen extends TextFileReaderScreen implements IStatusBar {
     public List<MenuButton> getMiddleActions() {
         final List<MenuButton> buttons = new ArrayList<>();
         if (!isBasicView) {
-            buttons.add(
-                new ActionBarButton(
-                        IconImages.getIcon(MagicIcon.OPEN_ICON),
-                        "Logs directory", "Opens the logs directory containing 'game.log' in the default file explorer.",
+            buttons.add(new ActionBarButton(
+                        MagicImages.getIcon(MagicIcon.OPEN_ICON),
+                        UiString.get(_S1), UiString.get(_S2, MagicGameLog.LOG_FILE),
                         new AbstractAction() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try {
-                                    MagicFileSystem.openMagicDirectory(DataPath.LOGS);
+                                    DesktopUtils.openMagicDirectory(DataPath.LOGS);
                                 } catch (IOException ex) {
-                                    ScreenController.showWarningMessage("Could not open 'logs' directory : " + ex.getMessage());
+                                    ScreenController.showWarningMessage(UiString.get(_S3, ex.getMessage()));
                                 }
                             }
                         }));
             buttons.add(
                 new ActionBarButton(
-                        "Basic View", "Filters log file to remove AI diagnostics.",
+                        UiString.get(_S4), UiString.get(_S5),
                         new AbstractAction() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -79,7 +91,7 @@ public class GameLogScreen extends TextFileReaderScreen implements IStatusBar {
         } else {
             buttons.add(
                 new ActionBarButton(
-                        "Detailed View", "Full log file, including AI diagnostics.",
+                        UiString.get(_S6), UiString.get(_S7),
                         new AbstractAction() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -87,7 +99,7 @@ public class GameLogScreen extends TextFileReaderScreen implements IStatusBar {
                                 reloadTextFile();
                             }
                         }));
-        };
+        }
         return buttons;
     }
 

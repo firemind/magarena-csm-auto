@@ -1,22 +1,21 @@
 [
-    new MagicIfDamageWouldBeDealtTrigger(MagicTrigger.PREVENT_DAMAGE) {
+    new IfDamageWouldBeDealtTrigger(MagicTrigger.REPLACE_DAMAGE) {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent,final MagicDamage damage) {
-            if (damage.getTarget() == permanent) {
-                final amt = damage.prevent();
-                return new MagicEvent(
+            final amount = (damage.getTarget() == permanent) ? damage.prevent() : 0;
+            return amount > 0 ?
+                new MagicEvent(
                     permanent,
                     damage.getSource().getController(),
-                    amt,
+                    amount,
                     this,
                     "PN draws RN cards."
-                );
-            }
-            return MagicEvent.NONE;
+                ):
+                MagicEvent.NONE;
         }
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
-            game.doAction(new MagicDrawAction(
+            game.doAction(new DrawAction(
                 event.getPlayer(),
                 event.getRefInt()
             ));

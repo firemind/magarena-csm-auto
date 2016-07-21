@@ -1,9 +1,9 @@
 name=Lay of the Land
-image=http://mtgimage.com/card/lay%20of%20the%20land.jpg
+image=http://magiccards.info/scans/en/m14/183.jpg
 value=2.439
 rarity=C
 type=Sorcery
 cost={G}
-effect=Search your library for a basic land card, reveal it, and put it into your hand. Then shuffle your library.
+effect=Search your library for a basic land card, reveal it, put it into your hand, then shuffle your library.
 timing=main
 oracle=Search your library for a basic land card, reveal it, put it into your hand, then shuffle your library.

@@ -1,13 +1,12 @@
 name=Spark Elemental
-image=http://mtgimage.com/card/spark%20elemental.jpg
+image=http://magiccards.info/scans/en/10e/237.jpg
 value=3.141
 rarity=C
 type=Creature
 subtype=Elemental
 cost={R}
 pt=3/1
-ability=trample;\
-        haste;\
+ability=Trample, haste;\
         At the beginning of the end step, sacrifice SN.
 timing=fmain
-oracle=Trample, haste. At the beginning of the end step, sacrifice Spark Elemental.
+oracle=Trample, haste\nAt the beginning of the end step, sacrifice Spark Elemental.

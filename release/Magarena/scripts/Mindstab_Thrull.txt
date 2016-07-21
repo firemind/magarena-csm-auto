@@ -1,11 +1,11 @@
 name=Mindstab Thrull
-image=http://mtgimage.com/card/mindstab%20thrull.jpg
+image=http://magiccards.info/scans/en/med/76.jpg
 value=3.800
 rarity=C
 type=Creature
 subtype=Thrull
 cost={1}{B}{B}
 pt=2/2
+ability=Whenever SN attacks and isn't blocked, you may sacrifice SN. If you do, defending player discards three cards.
 timing=main
-requires_groovy_code
 oracle=Whenever Mindstab Thrull attacks and isn't blocked, you may sacrifice it. If you do, defending player discards three cards.

@@ -1,11 +1,12 @@
 name=Mountain Yeti
-image=http://mtgimage.com/card/mountain%20yeti.jpg
+image=http://magiccards.info/scans/en/med/105.jpg
 value=3.689
 rarity=C
 type=Creature
 subtype=Yeti
 cost={2}{R}{R}
 pt=3/3
-ability=mountainwalk;protection from white
+ability=Mountainwalk;\
+        Protection from white
 timing=main
-oracle=Mountainwalk, protection from white
+oracle=Mountainwalk\nProtection from white

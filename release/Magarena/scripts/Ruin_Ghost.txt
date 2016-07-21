@@ -1,11 +1,11 @@
 name=Ruin Ghost
-image=http://mtgimage.com/card/ruin%20ghost.jpg
+image=http://magiccards.info/scans/en/wwk/19.jpg
 value=3.641
 rarity=U
 type=Creature
 subtype=Spirit
 cost={1}{W}
-ability={W}, {T}: Exile target land you control, then return it to the battlefield under your control.
 pt=1/1
+ability={W}, {T}: Exile target land you control, then return it to the battlefield under your control.
 timing=main
 oracle={W}, {T}: Exile target land you control, then return it to the battlefield under your control.

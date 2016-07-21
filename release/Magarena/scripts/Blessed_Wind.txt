@@ -1,9 +1,9 @@
 name=Blessed Wind
-image=http://mtgimage.com/card/blessed%20wind.jpg
+image=http://magiccards.info/scans/en/pr/4.jpg
 value=2.763
 rarity=R
 type=Sorcery
 cost={7}{W}{W}
+effect=Target player's life total becomes 20.
 timing=main
-requires_groovy_code
 oracle=Target player's life total becomes 20.

@@ -1,10 +1,11 @@
 name=Blades of Velis Vel
-image=http://mtgimage.com/card/blades%20of%20velis%20vel.jpg
+image=http://magiccards.info/scans/en/mm2/105.jpg
 value=2.500
 rarity=C
 type=Tribal,Instant
 subtype=Shapeshifter
 cost={1}{R}
-effect=Changeling~Up to two target creatures each get +2/+0 and gain all creature types until end of turn.
+ability=Changeling
+effect=Up to two target creatures each get +2/+0 and gain all creature types until end of turn.
 timing=removal
-oracle=Changeling. Up to two target creatures each get +2/+0 and gain all creature types until end of turn.
+oracle=Changeling\nUp to two target creatures each get +2/+0 and gain all creature types until end of turn.

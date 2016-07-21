@@ -1,9 +1,9 @@
 name=Dragonscale Boon
-image=http://mtgimage.com/card/dragonscale%20boon.jpg
+image=http://magiccards.info/scans/en/ktk/131.jpg
 value=3.000
 rarity=C
 type=Instant
 cost={3}{G}
+effect=Put two +1/+1 counters on target creature~and untap *it*.
 timing=pump
-requires_groovy_code
 oracle=Put two +1/+1 counters on target creature and untap it.

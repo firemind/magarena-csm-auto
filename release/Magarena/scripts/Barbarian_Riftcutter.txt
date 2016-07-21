@@ -1,11 +1,11 @@
 name=Barbarian Riftcutter
-image=http://mtgimage.com/card/barbarian%20riftcutter.jpg
+image=http://magiccards.info/scans/en/rav/114.jpg
 value=1.791
 rarity=C
 type=Creature
 subtype=Human,Barbarian
 cost={4}{R}
 pt=3/3
-ability={R},Sacrifice SN: Destroy target land.
+ability={R}, Sacrifice SN: Destroy target land.
 timing=main
 oracle={R}, Sacrifice Barbarian Riftcutter: Destroy target land.

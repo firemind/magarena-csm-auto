@@ -18,21 +18,14 @@ public class MagicStackGetChoicesEvent extends MagicEvent {
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION=new MagicEventAction() {
-        @Override
-        public void executeEvent(final MagicGame game, final MagicEvent event) {
-            final MagicItemOnStack itemOnStack = event.getRefItemOnStack();
-            itemOnStack.setChoiceResults(event.getChosen());
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        final MagicItemOnStack itemOnStack = event.getRefItemOnStack();
+        itemOnStack.setChoiceResults(event.getChosen());
 
-            // pay mana cost when there is one.
-            // such as "you may pay <mana cost>" in triggers
-            event.payManaCost(game);
-
-            // trigger WhenTargeted
-            final MagicTargetChoice tchoice = event.getChoice().getTargetChoice();
-            if (tchoice != null && tchoice.isTargeted()) {
-                game.executeTrigger(MagicTriggerType.WhenTargeted,itemOnStack);
-            }
+        // trigger WhenTargeted
+        final MagicTargetChoice tchoice = event.getTargetChoice();
+        if (tchoice != null && tchoice.isTargeted()) {
+            game.executeTrigger(MagicTriggerType.WhenTargeted,itemOnStack);
         }
     };
 }

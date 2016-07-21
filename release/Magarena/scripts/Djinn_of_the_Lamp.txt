@@ -1,11 +1,11 @@
 name=Djinn of the Lamp
-image=http://mtgimage.com/card/djinn%20of%20the%20lamp.jpg
+image=http://magiccards.info/scans/en/po/54.jpg
 value=2.143
 rarity=R
 type=Creature
 subtype=Djinn
 cost={5}{U}{U}
 pt=5/6
-ability=flying
+ability=Flying
 timing=main
 oracle=Flying

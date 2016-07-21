@@ -1,11 +1,11 @@
 name=Lu Bu, Master-at-Arms
-image=http://mtgimage.com/card/lu%20bu,%20master-at-arms.jpg
+image=http://magiccards.info/scans/en/me3/108.jpg
 value=3.531
 rarity=R
 type=Legendary,Creature
 subtype=Human,Soldier,Warrior
 cost={5}{R}
 pt=4/3
-ability=horsemanship;haste
-timing=main
-oracle=Haste; horsemanship
+ability=Haste; horsemanship
+timing=fmain
+oracle=Haste, horsemanship

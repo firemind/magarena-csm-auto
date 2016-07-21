@@ -1,11 +1,11 @@
 name=Plague Rats
-image=http://mtgimage.com/card/plague%20rats.jpg
+image=http://magiccards.info/scans/en/5e/50.jpg
 value=1.740
 rarity=C
 type=Creature
 subtype=Rat
 cost={2}{B}
 pt=*/*
-ability=SN's power and toughness are each equal to the number of creatures named "Plague Rats" on the battlefield.
+ability=SN's power and toughness are each equal to the number of creatures named `Plague Rats` on the battlefield.
 timing=main
 oracle=Plague Rats's power and toughness are each equal to the number of creatures named Plague Rats on the battlefield.

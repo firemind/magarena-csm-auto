@@ -1,12 +1,12 @@
 name=Steelform Sliver
-image=http://mtgimage.com/card/steelform%20sliver.jpg
+image=http://magiccards.info/scans/en/m14/38.jpg
 value=1.906
 rarity=U
 type=Creature
 subtype=Sliver
 cost={2}{W}
 pt=2/2
-ability=sliver creatures you control get +0/+1
+ability=Sliver creatures you control get +0/+1.
 static=player
 timing=main
 oracle=Sliver creatures you control get +0/+1.

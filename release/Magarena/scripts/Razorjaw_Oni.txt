@@ -1,12 +1,12 @@
 name=Razorjaw Oni
-image=http://mtgimage.com/card/razorjaw%20oni.jpg
+image=http://magiccards.info/scans/en/cmd/94.jpg
 value=2.541
 rarity=U
 type=Creature
 subtype=Demon,Spirit
 cost={3}{B}
 pt=4/5
-ability=black creatures can't block.
+ability=Black creatures can't block.
 static=all
 timing=fmain
 oracle=Black creatures can't block.

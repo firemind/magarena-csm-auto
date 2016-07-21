@@ -1,13 +1,13 @@
 name=Eladamri, Lord of Leaves
-image=http://mtgimage.com/card/eladamri%2C%20lord%20of%20leaves.jpg
+image=http://magiccards.info/scans/en/tp/117.jpg
 value=4.247
 rarity=R
 type=Legendary,Creature
 subtype=Elf,Warrior
 cost={G}{G}
 pt=2/2
-ability=other elf creatures have forestwalk;\
-        other elf creatures have shroud
+ability=Other Elf creatures have forestwalk.;\
+        Other Elves have shroud.
 static=all
 timing=main
-oracle=Other Elf creatures have forestwalk. Other Elves have shroud.
+oracle=Other Elf creatures have forestwalk.\nOther Elves have shroud.

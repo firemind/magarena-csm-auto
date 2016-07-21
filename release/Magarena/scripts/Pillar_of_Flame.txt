@@ -1,10 +1,10 @@
 name=Pillar of Flame
-image=http://mtgimage.com/card/pillar%20of%20flame.jpg
+image=http://magiccards.info/scans/en/avr/149.jpg
 value=3.825
 removal=2
 rarity=C
 type=Sorcery
 cost={R}
+effect=SN deals 2 damage to target creature or player. If a creature dealt damage this way would die this turn, exile it instead.
 timing=removal
-requires_groovy_code
 oracle=Pillar of Flame deals 2 damage to target creature or player. If a creature dealt damage this way would die this turn, exile it instead.

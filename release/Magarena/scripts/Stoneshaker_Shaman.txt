@@ -1,11 +1,11 @@
 name=Stoneshaker Shaman
-image=http://mtgimage.com/card/stoneshaker%20shaman.jpg
+image=http://magiccards.info/scans/en/rav/145.jpg
 value=2.548
 rarity=U
 type=Creature
 subtype=Human,Shaman
 cost={2}{R}
 pt=1/1
+ability=At the beginning of each player's end step, that player sacrifices an untapped land.
 timing=main
-requires_groovy_code
 oracle=At the beginning of each player's end step, that player sacrifices an untapped land.

@@ -1,11 +1,11 @@
 name=Steeple Roc
-image=http://mtgimage.com/card/steeple%20roc.jpg
+image=http://magiccards.info/scans/en/dgm/8.jpg
 value=1.888
 rarity=C
 type=Creature
 subtype=Bird
 cost={4}{W}
 pt=3/1
-ability=flying;first strike
+ability=Flying, first strike
 timing=main
 oracle=Flying, first strike

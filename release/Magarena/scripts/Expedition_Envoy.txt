@@ -1,0 +1,11 @@
+name=Expedition Envoy
+image=http://magiccards.info/scans/en/bfz/24.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=U
+type=Creature
+subtype=Human,Scout,Ally
+cost={W}
+pt=2/1
+timing=main
+oracle=NONE

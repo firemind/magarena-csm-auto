@@ -1,11 +1,12 @@
 name=Knight of Glory
-image=http://mtgimage.com/card/knight%20of%20glory.jpg
+image=http://magiccards.info/scans/en/m13/21.jpg
 value=3.899
 rarity=U
 type=Creature
 subtype=Human,Knight
 cost={1}{W}
 pt=2/1
-ability=exalted;protection from black
+ability=Protection from black;\
+        Exalted
 timing=main
-oracle=Protection from black. Exalted
+oracle=Protection from black\nExalted

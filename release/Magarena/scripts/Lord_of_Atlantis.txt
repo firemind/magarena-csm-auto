@@ -1,13 +1,12 @@
 name=Lord of Atlantis
-image=http://mtgimage.com/card/lord%20of%20atlantis.jpg
+image=http://magiccards.info/scans/en/tsts/24.jpg
 value=4.462
 rarity=R
 type=Creature
 subtype=Merfolk
 cost={U}{U}
 pt=2/2
-ability=other merfolk creatures get +1/+1;\
-        other merfolk creatures have islandwalk
+ability=Other Merfolk creatures get +1/+1 and have islandwalk.
 static=all
 timing=main
 oracle=Other Merfolk creatures get +1/+1 and have islandwalk.

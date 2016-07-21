@@ -1,18 +1,18 @@
 def action = {
     final MagicGame game, final MagicEvent event ->
     event.processTargetCard(game, {
-        game.doAction(new MagicRemoveCardAction(it,MagicLocationType.Graveyard));
-        game.doAction(new MagicMoveCardAction(it,MagicLocationType.Graveyard,MagicLocationType.OwnersHand));
+        game.doAction(new ShiftCardAction(
+            it,
+            MagicLocationType.Graveyard,
+            MagicLocationType.OwnersHand
+        ));
     });
 }
 
 def event = {
     final MagicPermanent permanent ->
     final MagicTargetChoice choice = new MagicTargetChoice(
-        new MagicOtherCardTargetFilter(
-            MagicTargetFilterFactory.CREATURE_CARD_FROM_GRAVEYARD,
-            permanent.getCard()
-        ),
+        CREATURE_CARD_FROM_GRAVEYARD.except(permanent.getCard()),
         MagicTargetHint.None,
         "another target creature card from your graveyard"
     );
@@ -21,21 +21,21 @@ def event = {
         choice,
         MagicGraveyardTargetPicker.ReturnToHand,
         action,
-        "Return another target creature card\$ from your graveyard to your hand."
+        "PN returns another target creature card from his or her graveyard\$ to his or her hand."
     );
 }
 
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return event(permanent);
         }
     },
-    new MagicWhenLeavesPlayTrigger() {
+    new ThisLeavesBattlefieldTrigger() {
         @Override
-        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final MagicRemoveFromPlayAction act) {
-            return act.isPermanent(permanent) ? event(permanent) : MagicEvent.NONE;
+        public MagicEvent executeTrigger(final MagicGame game,final MagicPermanent permanent, final RemoveFromPlayAction act) {
+            return event(permanent);
         }
     }
 ]

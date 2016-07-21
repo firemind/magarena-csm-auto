@@ -1,11 +1,11 @@
 name=Blinding Mage
-image=http://mtgimage.com/card/blinding%20mage.jpg
+image=http://magiccards.info/scans/en/m11/8.jpg
 value=3.260
 rarity=C
 type=Creature
 subtype=Human,Wizard
 cost={1}{W}
 pt=1/2
-ability={W},{T}: Tap target creature.
+ability={W}, {T}: Tap target creature.
 timing=main
 oracle={W}, {T}: Tap target creature.

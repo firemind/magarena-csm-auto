@@ -1,9 +1,9 @@
 name=Ring of Renewal
-image=http://mtgimage.com/set/me4/ring%20of%20renewal.jpg
+image=http://magiccards.info/scans/en/me4/224.jpg
 value=2.423
 rarity=R
 type=Artifact
 cost={5}
-timing=main
+timing=artifact
 requires_groovy_code
 oracle={5}, {T}: Discard a card at random, then draw two cards.

@@ -1,11 +1,11 @@
 name=Benthic Giant
-image=http://mtgimage.com/card/benthic%20giant.jpg
+image=http://magiccards.info/scans/en/ths/41.jpg
 value=3.090
 rarity=C
 type=Creature
 subtype=Giant
 cost={5}{U}
 pt=4/5
-ability=hexproof
+ability=Hexproof
 timing=main
 oracle=Hexproof

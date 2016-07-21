@@ -1,11 +1,11 @@
 name=Aisling Leprechaun
-image=http://mtgimage.com/card/aisling%20leprechaun.jpg
+image=http://magiccards.info/scans/en/lg/87.jpg
 value=2.622
 rarity=C
 type=Creature
 subtype=Faerie
 cost={G}
 pt=1/1
+ability=Whenever SN blocks or becomes blocked by a creature, that creature becomes green.
 timing=main
-requires_groovy_code
 oracle=Whenever Aisling Leprechaun blocks or becomes blocked by a creature, that creature becomes green.

@@ -1,11 +1,12 @@
 name=Unseen Walker
-image=http://mtgimage.com/card/unseen%20walker.jpg
+image=http://magiccards.info/scans/en/6e/262.jpg
 value=2.828
 rarity=U
 type=Creature
 subtype=Dryad
 cost={1}{G}
 pt=1/1
-ability=forestwalk;{1}{G}{G}:Target creature gains forestwalk until end of turn.
+ability=Forestwalk;\
+        {1}{G}{G}: Target creature gains forestwalk until end of turn.
 timing=main
-oracle=Forestwalk. {1}{G}{G}: Target creature gains forestwalk until end of turn.
+oracle=Forestwalk\n{1}{G}{G}: Target creature gains forestwalk until end of turn.

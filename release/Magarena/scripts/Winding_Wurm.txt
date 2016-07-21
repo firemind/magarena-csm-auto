@@ -1,11 +1,11 @@
 name=Winding Wurm
-image=http://mtgimage.com/card/winding%20wurm.jpg
+image=http://magiccards.info/scans/en/us/285.jpg
 value=2.784
 rarity=C
 type=Creature
 subtype=Wurm
 cost={4}{G}
 pt=6/6
-ability=echo {4}{G}
+ability=Echo {4}{G}
 timing=main
 oracle=Echo {4}{G}

@@ -1,11 +1,11 @@
 name=Tireless Tribe
-image=http://mtgimage.com/card/tireless%20tribe.jpg
+image=http://magiccards.info/scans/en/od/56.jpg
 value=3.778
 rarity=C
 type=Creature
 subtype=Human,Nomad
 cost={W}
 pt=1/1
-ability=Discard a card:SN gets +0/+4 until end of turn.
+ability=Discard a card: SN gets +0/+4 until end of turn.
 timing=main
 oracle=Discard a card: Tireless Tribe gets +0/+4 until end of turn.

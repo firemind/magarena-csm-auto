@@ -1,9 +1,0 @@
-name=Hum of the Radix
-image=http://mtgimage.com/card/hum%20of%20the%20radix.jpg
-value=2.500
-rarity=R
-type=Enchantment
-cost={2}{G}{G}
-ability=Each artifact spell costs {1} more to cast for each artifact its controller controls.
-timing=main
-oracle=Each artifact spell costs {1} more to cast for each artifact its controller controls.

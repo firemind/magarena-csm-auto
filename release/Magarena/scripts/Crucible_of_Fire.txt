@@ -1,10 +1,10 @@
 name=Crucible of Fire
-image=http://mtgimage.com/card/crucible%20of%20fire.jpg
+image=http://magiccards.info/scans/en/m15/139.jpg
 value=2.700
 rarity=R
 type=Enchantment
 cost={3}{R}
-ability=dragon creatures you control get +3/+3
+ability=Dragon creatures you control get +3/+3.
 static=player
 timing=enchantment
 oracle=Dragon creatures you control get +3/+3.

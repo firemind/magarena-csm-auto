@@ -6,7 +6,7 @@ import magic.exception.UndoClickedException;
 import magic.model.choice.MagicPlayChoiceResult;
 
 public interface IUIGameController extends IGameController {
-    
+
     <T> T getChoiceClicked();
     boolean isActionClicked();
     void clearCards();
@@ -21,7 +21,8 @@ public interface IUIGameController extends IGameController {
     void showMessage(final MagicSource source,final String message);
     void updateGameView();
     void waitForInput() throws UndoClickedException;
-    
+    void refreshSidebarLayout();
+
     // Choices
     MagicSubType getLandSubTypeChoice(final MagicSource source) throws UndoClickedException;
     boolean getPayBuyBackCostChoice(final MagicSource source, final String costText) throws UndoClickedException;
@@ -33,4 +34,5 @@ public interface IUIGameController extends IGameController {
     int getModeChoice(final MagicSource source, final List<Integer> availableModes) throws UndoClickedException;
     int getPayManaCostXChoice(final MagicSource source, final int maximumX) throws UndoClickedException;
     MagicPlayChoiceResult getPlayChoice(final MagicSource source, final List<MagicPlayChoiceResult> results) throws UndoClickedException;
+
 }

@@ -1,9 +1,9 @@
 name=Strands of Night
-image=http://mtgimage.com/card/strands%20of%20night.jpg
+image=http://magiccards.info/scans/en/7e/165.jpg
 value=4.170
 rarity=U
 type=Enchantment
 cost={2}{B}{B}
-ability={B}{B},Pay 2 life,Sacrifice a Swamp:Return target creature card from your graveyard to the battlefield.
+ability={B}{B}, Pay 2 life, Sacrifice a Swamp: Return target creature card from your graveyard to the battlefield.
 timing=enchantment
 oracle={B}{B}, Pay 2 life, Sacrifice a Swamp: Return target creature card from your graveyard to the battlefield.

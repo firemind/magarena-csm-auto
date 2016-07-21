@@ -1,0 +1,12 @@
+name=Skirk Alarmist
+image=http://magiccards.info/scans/en/le/111.jpg
+value=3.275
+rarity=R
+type=Creature
+subtype=Human,Wizard
+cost={1}{R}
+pt=1/2
+ability=Haste;\
+        {T}: Turn target face-down creature you control face up.~Sacrifice *it* at the beginning of the next end step.
+timing=fmain
+oracle=Haste\n{T}: Turn target face-down creature you control face up. At the beginning of the next end step, sacrifice it.

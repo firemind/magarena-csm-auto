@@ -1,11 +1,11 @@
 name=Sabertooth Nishoba
-image=http://mtgimage.com/card/sabertooth%20nishoba.jpg
+image=http://magiccards.info/scans/en/in/268.jpg
 value=3.981
 rarity=R
 type=Creature
 subtype=Cat,Beast,Warrior
 cost={4}{G}{W}
 pt=5/5
-ability=trample;protection from blue;protection from red
+ability=Trample;protection from blue;protection from red
 timing=main
 oracle=Trample, protection from blue and from red

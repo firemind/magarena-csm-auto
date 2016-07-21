@@ -1,11 +1,11 @@
 name=Gorehorn Minotaurs
-image=http://mtgimage.com/card/gorehorn%20minotaurs.jpg
+image=http://magiccards.info/scans/en/mm2/116.jpg
 value=3.821
 rarity=C
 type=Creature
 subtype=Minotaur,Warrior
 cost={2}{R}{R}
 pt=3/3
-ability=bloodthirst 2
+ability=Bloodthirst 2
 timing=main
 oracle=Bloodthirst 2

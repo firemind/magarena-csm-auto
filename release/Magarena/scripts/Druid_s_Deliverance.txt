@@ -1,9 +1,9 @@
 name=Druid's Deliverance
-image=http://mtgimage.com/card/druid%27s%20deliverance.jpg
+image=http://magiccards.info/scans/en/rtr/123.jpg
 value=3.716
 rarity=C
 type=Instant
 cost={1}{G}
+effect=Prevent all combat damage that would be dealt to you this turn.~Populate.
 timing=block
-requires_groovy_code
 oracle=Prevent all combat damage that would be dealt to you this turn. Populate.

@@ -1,12 +1,12 @@
 name=Necropolis Regent
-image=http://mtgimage.com/card/necropolis%20regent.jpg
+image=http://magiccards.info/scans/en/rtr/71.jpg
 value=4.039
 rarity=M
 type=Creature
 subtype=Vampire
 cost={3}{B}{B}{B}
 pt=6/5
-ability=flying
+ability=Flying
 timing=main
-oracle=Flying. Whenever a creature you control deals combat damage to a player, put that many +1/+1 counters on it.
+oracle=Flying\nWhenever a creature you control deals combat damage to a player, put that many +1/+1 counters on it.
 requires_groovy_code

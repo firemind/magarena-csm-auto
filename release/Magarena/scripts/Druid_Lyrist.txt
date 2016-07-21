@@ -1,11 +1,11 @@
 name=Druid Lyrist
-image=http://mtgimage.com/card/druid%20lyrist.jpg
+image=http://magiccards.info/scans/en/od/238.jpg
 value=3.196
 rarity=C
 type=Creature
 subtype=Human,Druid
 cost={G}
 pt=1/1
-ability={G},{T},Sacrifice SN:Destroy target enchantment.
+ability={G}, {T}, Sacrifice SN: Destroy target enchantment.
 timing=main
 oracle={G}, {T}, Sacrifice Druid Lyrist: Destroy target enchantment.

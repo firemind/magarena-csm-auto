@@ -1,10 +1,10 @@
 name=Fervor
-image=http://mtgimage.com/card/fervor.jpg
+image=http://magiccards.info/scans/en/m13/129.jpg
 value=4.169
 rarity=R
 type=Enchantment
 cost={2}{R}
-ability=creatures you control have haste
+ability=Creatures you control have haste.
 static=player
 timing=enchantment
 oracle=Creatures you control have haste.

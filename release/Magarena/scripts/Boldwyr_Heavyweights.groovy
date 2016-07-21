@@ -1,5 +1,5 @@
 [
-    new MagicWhenComesIntoPlayTrigger() {
+    new EntersBattlefieldTrigger() {
         @Override
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             return new MagicEvent(
@@ -19,9 +19,9 @@
                 game.addEvent(new MagicSearchOntoBattlefieldEvent(
                     event,
                     new MagicFromCardFilterChoice(
-                        MagicTargetFilterFactory.CREATURE_CARD_FROM_LIBRARY,
-                        1, 
-                        true, 
+                        CREATURE_CARD_FROM_LIBRARY,
+                        1,
+                        true,
                         "to put onto the battlefield"
                     ),
                 ));

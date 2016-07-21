@@ -1,11 +1,11 @@
 name=Mogg Raider
-image=http://mtgimage.com/card/mogg%20raider.jpg
+image=http://magiccards.info/scans/en/tp/191.jpg
 value=3.875
 rarity=C
 type=Creature
 subtype=Goblin
 cost={R}
 pt=1/1
-ability=Sacrifice a Goblin:Target creature gets +1/+1 until end of turn.
+ability=Sacrifice a Goblin: Target creature gets +1/+1 until end of turn.
 timing=main
 oracle=Sacrifice a Goblin: Target creature gets +1/+1 until end of turn.

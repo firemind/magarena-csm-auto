@@ -1,11 +1,11 @@
 name=Moor Fiend
-image=http://mtgimage.com/card/moor%20fiend.jpg
+image=http://magiccards.info/scans/en/ia/41.jpg
 value=3.024
 rarity=C
 type=Creature
 subtype=Horror
 cost={3}{B}
 pt=3/3
-ability=swampwalk
+ability=Swampwalk
 timing=main
 oracle=Swampwalk
