@@ -1,0 +1,11 @@
+name=Bold Impaler
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_e8uGtKgoV7.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Vampire,Knight
+cost={R}
+pt=1/2
+ability={2}{R}: SN gets +2/+0 until end of turn.
+timing=main
+oracle={2}{R}: Bold Impaler gets +2/+0 until end of turn.

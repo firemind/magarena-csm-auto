@@ -1,0 +1,9 @@
+name=Take Inventory
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_RjPyXzypC1.png
+value=2.500
+rarity=C
+type=Sorcery
+cost={1}{U}
+effect=Draw a card,~then draw cards equal to the number of cards named Take Inventory in your graveyard.
+timing=main
+oracle=Draw a card, then draw cards equal to the number of cards named Take Inventory in your graveyard.

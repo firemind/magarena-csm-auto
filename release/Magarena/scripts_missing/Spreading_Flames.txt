@@ -1,0 +1,10 @@
+name=Spreading Flames
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_HgbKsCGvA8.png
+value=2.500
+rarity=U
+type=Instant
+cost={6}{R}
+effect=SN deals 6 damage divided as you choose among any number of target creatures.
+timing=removal
+oracle=Spreading Flames deals 6 damage divided as you choose among any number of target creatures.
+status=not supported: any-number-of

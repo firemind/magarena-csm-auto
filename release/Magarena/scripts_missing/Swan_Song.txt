@@ -1,9 +1,0 @@
-name=Swan Song
-image=http://magiccards.info/scans/en/ths/65.jpg
-value=4.079
-rarity=R
-type=Instant
-cost={U}
-effect=Counter target enchantment, instant, or sorcery spell. Its controller puts a 2/2 blue Bird creature token with flying onto the battlefield.
-timing=counter
-oracle=Counter target enchantment, instant, or sorcery spell. Its controller puts a 2/2 blue Bird creature token with flying onto the battlefield.

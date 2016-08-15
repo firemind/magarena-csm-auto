@@ -1,0 +1,10 @@
+name=Clear Shot
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_zoNvmvRI3V.png
+value=2.500
+rarity=U
+type=Instant
+cost={2}{G}
+effect=Target creature you control gets +1/+1 until end of turn. It deals damage equal to its power to target creature you don't control.
+timing=removal
+oracle=Target creature you control gets +1/+1 until end of turn. It deals damage equal to its power to target creature you don't control.
+status=not supported: multiple-targets

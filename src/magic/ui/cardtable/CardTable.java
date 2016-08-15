@@ -192,8 +192,6 @@ public class CardTable extends TexturedPanel implements ListSelectionListener {
     private void setSelectedRow() {
         if (table.getRowCount() > 0) {
             table.setRowSelectionInterval(0, 0);
-        } else {
-            notifyCardSelectionListeners(null);
         }
     }
 
@@ -313,7 +311,7 @@ public class CardTable extends TexturedPanel implements ListSelectionListener {
     }
 
     private void notifyCardSelectionListeners(final MagicCardDefinition card) {
-        if (!(card == null && isDeck)) {
+        if (card != null) {
             for (final ICardSelectionListener listener : cardSelectionListeners) {
                 listener.newCardSelected(card);
             }

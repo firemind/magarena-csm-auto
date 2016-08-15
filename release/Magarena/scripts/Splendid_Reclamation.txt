@@ -1,0 +1,9 @@
+name=Splendid Reclamation
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_N1sdJz75Pk.png
+value=2.500
+rarity=R
+type=Sorcery
+cost={3}{G}
+timing=main
+requires_groovy_code
+oracle=Return all land cards from your graveyard to the battlefield tapped.

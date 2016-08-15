@@ -1,0 +1,10 @@
+name=Displace
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_9H9dk1IwqF.png
+value=2.500
+rarity=C
+type=Instant
+cost={2}{U}
+effect=Exile up to two target creatures you control, then return those cards to the battlefield under their owner's control.
+timing=removal
+oracle=Exile up to two target creatures you control, then return those cards to the battlefield under their owner's control.
+status=not supported: multiple-targets

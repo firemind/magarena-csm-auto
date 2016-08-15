@@ -1,0 +1,12 @@
+name=Swift Spinner
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_8SixgtEjd8.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Spider
+cost={3}{G}
+pt=2/3
+ability=Flash;\
+        Reach
+timing=flash
+oracle=Flash\nReach

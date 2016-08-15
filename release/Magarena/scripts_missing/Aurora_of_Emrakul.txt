@@ -1,0 +1,14 @@
+name=Aurora of Emrakul
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_PM0AMYnLYl.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Eldrazi,Reflection
+color=
+pt=1/4
+ability=Flying, deathtouch;\
+        Whenever SN attacks, each opponent loses 3 life.
+transform=Cryptolith Fragment
+timing=main
+hidden
+oracle=Flying, deathtouch\nWhenever Aurora of Emrakul attacks, each opponent loses 3 life.

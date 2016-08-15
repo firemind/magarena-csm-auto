@@ -1,0 +1,12 @@
+name=Prophetic Ravings
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_7xKgUmLhkG.png
+value=2.500
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={R}
+ability=Enchant creature;\
+        Enchanted creature has haste and "{T}, Discard a card: Draw a card."
+timing=aura
+enchant=haste,pos creature
+oracle=Enchant creature\nEnchanted creature has haste and "{T}, Discard a card: Draw a card."

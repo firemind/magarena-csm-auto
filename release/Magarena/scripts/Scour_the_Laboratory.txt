@@ -1,0 +1,10 @@
+name=Scour the Laboratory
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_KyStjb3mg9.png
+value=2.500
+rarity=U
+type=Instant
+cost={4}{U}{U}
+effect=Draw three cards.
+timing=draw
+requires_groovy_code=Dusk Feaster
+oracle=Delirium — Scour the Laboratory costs {2} less to cast if there are four or more card types among cards in your graveyard.\nDraw three cards.

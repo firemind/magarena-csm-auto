@@ -220,6 +220,11 @@ public enum CardProperty {
             card.setTransformCardName(value);
         }
     },
+    MELD(){
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setMeldCardNames(value.split(SEMI));
+        }
+    },
     SPLIT() {
       public void setProperty(final MagicCardDefinition card, final String value) {
           card.setSplitCardName(value);
@@ -247,7 +252,7 @@ public enum CardProperty {
     },
     STATUS() {
         public void setProperty(final MagicCardDefinition card, final String value) {
-            //not tracked in game
+            card.setStatus(value);
         }
     },
     ;

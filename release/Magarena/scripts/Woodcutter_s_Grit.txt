@@ -1,0 +1,9 @@
+name=Woodcutter's Grit
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_qINPOR4tL4.png
+value=2.500
+rarity=C
+type=Instant
+cost={2}{G}
+effect=Target creature you control gets +3/+3 and gains hexproof until end of turn.
+timing=removal
+oracle=Target creature you control gets +3/+3 and gains hexproof until end of turn.

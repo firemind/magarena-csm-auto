@@ -1,0 +1,9 @@
+name=Grapple with the Past
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_pS4NZMSg9x.png
+value=2.500
+rarity=C
+type=Instant
+cost={1}{G}
+effect=Put the top three cards of your library into your graveyard, then you may return a creature or land card from your graveyard to your hand.
+timing=removal
+oracle=Put the top three cards of your library into your graveyard, then you may return a creature or land card from your graveyard to your hand.

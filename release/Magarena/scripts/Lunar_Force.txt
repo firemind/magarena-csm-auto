@@ -1,0 +1,9 @@
+name=Lunar Force
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_tKI0pFuWu2.png
+value=2.500
+rarity=U
+type=Enchantment
+cost={2}{U}
+timing=enchantment
+requires_groovy_code
+oracle=When an opponent casts a spell, sacrifice Lunar Force and counter that spell.

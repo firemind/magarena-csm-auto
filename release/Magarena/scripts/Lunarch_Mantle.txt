@@ -1,0 +1,12 @@
+name=Lunarch Mantle
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_qm7aQzTzLX.png
+value=2.500
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={1}{W}
+ability=Enchant creature;\
+        Enchanted creature gets +2/+2 and has "{1}, Sacrifice a permanent: This creature gains flying until end of turn."
+timing=aura
+enchant=pump,creature
+oracle=Enchant creature\nEnchanted creature gets +2/+2 and has "{1}, Sacrifice a permanent: This creature gains flying until end of turn."

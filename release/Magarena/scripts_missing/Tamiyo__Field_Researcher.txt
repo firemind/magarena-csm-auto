@@ -1,0 +1,13 @@
+name=Tamiyo, Field Researcher
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_Q09aZeYOnr.png
+value=2.500
+rarity=M
+type=Planeswalker
+subtype=Tamiyo
+cost={1}{G}{W}{U}
+ability=+1: Choose up to two target creatures. Until your next turn, whenever either of those creatures deals combat damage, you draw a card.;\
+        −2: Tap up to two target nonland permanents. They don't untap during their controller's next untap step.;\
+        −7: Draw three cards. You get an emblem with "You may cast nonland cards from your hand without paying their mana costs."
+timing=main
+oracle=+1: Choose up to two target creatures. Until your next turn, whenever either of those creatures deals combat damage, you draw a card.\n−2: Tap up to two target nonland permanents. They don't untap during their controller's next untap step.\n−7: Draw three cards. You get an emblem with "You may cast nonland cards from your hand without paying their mana costs."
+status=not supported: multiple-targets

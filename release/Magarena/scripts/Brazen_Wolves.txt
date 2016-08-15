@@ -1,0 +1,11 @@
+name=Brazen Wolves
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_Ki2q3cjZzr.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Wolf
+cost={2}{R}
+pt=2/3
+ability=Whenever SN attacks, SN gets +2/+0 until end of turn.
+timing=main
+oracle=Whenever Brazen Wolves attacks, it gets +2/+0 until end of turn.

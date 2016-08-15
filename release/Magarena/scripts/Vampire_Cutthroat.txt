@@ -1,0 +1,12 @@
+name=Vampire Cutthroat
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_3Mzh6KreJZ.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Vampire,Rogue
+cost={B}
+pt=1/1
+ability=Skulk;\
+        Lifelink
+timing=main
+oracle=Skulk\nLifelink

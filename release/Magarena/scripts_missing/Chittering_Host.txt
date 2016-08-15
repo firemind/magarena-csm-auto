@@ -1,0 +1,16 @@
+name=Chittering Host
+image=http://www.magicspoiler.com/wp-content/uploads/2016/06/Chittering-Host.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Eldrazi,Horror
+color=
+pt=5/6
+ability=Haste;\
+        Menace;\
+        When SN enters the battlefield, other creatures you control get +1/+0 and gain menace until end of turn.
+meld=Graf Rats;Midnight Scavengers
+timing=fmain
+hidden
+oracle=Haste\nMenace\nWhen Chittering Host enters the battlefield, other creatures you control get +1/+0 and gain menace until end of turn.
+status=not supported: blocking-restriction

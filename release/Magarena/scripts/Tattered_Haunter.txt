@@ -1,0 +1,12 @@
+name=Tattered Haunter
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_rNSnzNrW1b.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Spirit
+cost={1}{U}
+pt=2/1
+ability=Flying;\
+        SN can block only creatures with flying.
+timing=main
+oracle=Flying\nTattered Haunter can block only creatures with flying.

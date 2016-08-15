@@ -130,8 +130,8 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition BEFORE_YOUR_ATTACK_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return game.getTurnPlayer() == source.getController() &&
-                game.getPhase().getType().ordinal() < MagicPhaseType.DeclareAttackers.ordinal();
+            return source.isFriend(game.getTurnPlayer()) &&
+                   game.getPhase().getType().ordinal() < MagicPhaseType.DeclareAttackers.ordinal();
         }
     };
 
@@ -145,8 +145,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition YOUR_UPKEEP_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return game.isPhase(MagicPhaseType.Upkeep) &&
-                game.getTurnPlayer() == source.getController();
+            return game.isPhase(MagicPhaseType.Upkeep) && source.isFriend(game.getTurnPlayer());
         }
     };
 
@@ -160,15 +159,46 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition OPPONENTS_UPKEEP_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return game.isPhase(MagicPhaseType.Upkeep) &&
-                game.getTurnPlayer() != source.getController();
+            return game.isPhase(MagicPhaseType.Upkeep) && source.isEnemy(game.getTurnPlayer());
         }
     };
 
     public static MagicCondition YOUR_TURN_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return source.getController() == game.getTurnPlayer();
+            return source.isFriend(game.getTurnPlayer());
+        }
+    };
+
+    public static MagicCondition BEFORE_ATTACKERS = new MagicCondition() {
+        @Override
+        public boolean accept(MagicSource source) {
+            final MagicGame game = source.getGame();
+            return game.getPhase().getType().ordinal() < MagicPhaseType.DeclareAttackers.ordinal();
+        }
+    };
+
+    public static MagicCondition BEFORE_BLOCKERS = new MagicCondition() {
+        @Override
+        public boolean accept(MagicSource source) {
+            final MagicGame game = source.getGame();
+            return game.getPhase().getType().ordinal() < MagicPhaseType.DeclareBlockers.ordinal();
+        }
+    };
+
+    public static MagicCondition BEFORE_COMBAT_DAMAGE = new MagicCondition() {
+        @Override
+        public boolean accept(MagicSource source) {
+            final MagicGame game = source.getGame();
+            return game.getPhase().getType().ordinal() < MagicPhaseType.CombatDamage.ordinal();
+        }
+    };
+
+    public static MagicCondition BEFORE_END_OF_COMBAT = new MagicCondition() {
+        @Override
+        public boolean accept(MagicSource source) {
+            final MagicGame game = source.getGame();
+            return game.getPhase().getType().ordinal() < MagicPhaseType.EndOfCombat.ordinal();
         }
     };
 
@@ -190,10 +220,8 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition DURING_COMBAT = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return game.isPhase(MagicPhaseType.BeginOfCombat) ||
-                game.isPhase(MagicPhaseType.DeclareAttackers) ||
-                game.isPhase(MagicPhaseType.DeclareBlockers) ||
-                game.isPhase(MagicPhaseType.EndOfCombat);
+            return game.getPhase().getType().ordinal() >= MagicPhaseType.BeginOfCombat.ordinal() &&
+                   game.getPhase().getType().ordinal() <= MagicPhaseType.EndOfCombat.ordinal();
         }
     };
 
@@ -215,8 +243,15 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition DURING_COMBAT_BEFORE_BLOCKERS = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return game.isPhase(MagicPhaseType.BeginOfCombat) ||
-                game.isPhase(MagicPhaseType.DeclareAttackers);
+            return game.getPhase().getType().ordinal() >= MagicPhaseType.BeginOfCombat.ordinal() &&
+                   game.getPhase().getType().ordinal() < MagicPhaseType.DeclareBlockers.ordinal();
+        }
+    };
+
+    public static MagicCondition AFTER_COMBAT = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            final MagicGame game = source.getGame();
+            return game.getPhase().getType().ordinal() > MagicPhaseType.EndOfCombat.ordinal();
         }
     };
 
@@ -423,6 +458,12 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
+    public static MagicCondition ANY_HELLBENT = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            return source.getOpponent().getHandSize() == 0 || source.getController().getHandSize() == 0;
+        }
+    };
+
     public static MagicCondition ENCHANTED_IS_UNTAPPED_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicPermanent permanent = (MagicPermanent)source;
@@ -440,7 +481,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition HAS_EXILED_CARD = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicPermanent permanent = (MagicPermanent)source;
-            return !permanent.getExiledCard().equals(MagicCard.NONE);
+            return permanent.getExiledCard().isValid();
         }
     };
 
@@ -448,7 +489,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         public boolean accept(final MagicSource source) {
             final MagicPermanent permanent = (MagicPermanent)source;
             final MagicCard card = permanent.getExiledCard();
-            return !card.equals(MagicCard.NONE) && card.hasType(MagicType.Creature);
+            return card.isValid() && card.hasType(MagicType.Creature);
         }
     };
 
@@ -584,7 +625,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
     public static MagicCondition NOT_YOUR_TURN_CONDITION = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
-            return !source.getController().equals(game.getTurnPlayer());
+            return source.isEnemy(game.getTurnPlayer());
         }
     };
 

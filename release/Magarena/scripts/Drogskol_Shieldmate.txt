@@ -1,0 +1,12 @@
+name=Drogskol Shieldmate
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_e2MCB9iDdR.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Spirit,Soldier
+cost={2}{W}
+pt=2/3
+ability=Flash;\
+        When SN enters the battlefield, other creatures you control get +0/+1 until end of turn.
+timing=flash
+oracle=Flash\nWhen Drogskol Shieldmate enters the battlefield, other creatures you control get +0/+1 until end of turn.

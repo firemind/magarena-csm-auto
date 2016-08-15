@@ -1,0 +1,9 @@
+name=Unsubstantiate
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_jZ4hFdwwu2.png
+value=2.500
+rarity=U
+type=Instant
+cost={1}{U}
+effect=Return target spell or creature to its owner's hand.
+timing=removal
+oracle=Return target spell or creature to its owner's hand.

@@ -1,0 +1,11 @@
+name=Bastion Protector
+image=http://magiccards.info/scans/en/c15/1.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=R
+type=Creature
+subtype=Human,Soldier
+cost={2}{W}
+pt=3/3
+timing=main
+oracle=Commander creatures you control get +2/+2 and have indestructible.

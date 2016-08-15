@@ -1,0 +1,10 @@
+name=Long Road Home
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_KbyqMl9MVs.png
+value=2.500
+rarity=U
+type=Instant
+cost={1}{W}
+effect=Exile target creature. At the beginning of the next end step, return that card to the battlefield under its owner's control with a +1/+1 counter on it.
+timing=removal
+oracle=Exile target creature. At the beginning of the next end step, return that card to the battlefield under its owner's control with a +1/+1 counter on it.
+status=needs groovy

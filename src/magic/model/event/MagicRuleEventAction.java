@@ -231,7 +231,7 @@ public enum MagicRuleEventAction {
         }
     },
     FlickerOwner(
-        "exile " + ARG.PERMANENTS + ", then return (it|that card) to the battlefield under its owner's control",
+        "exile " + ARG.PERMANENTS + ", then return (it|that card) to the battlefield" + ARG.MODS + " under its owner's control",
         MagicTargetHint.Positive,
         MagicBounceTargetPicker.create(),
         MagicTiming.Removal,
@@ -239,6 +239,7 @@ public enum MagicRuleEventAction {
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
+            final List<MagicPlayMod> mods = ARG.mods(matcher);
             final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
             return (game, event) -> {
                 for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
@@ -249,7 +250,8 @@ public enum MagicRuleEventAction {
                     game.doAction(new ReturnCardAction(
                         MagicLocationType.Exile,
                         it.getCard(),
-                        it.getOwner()
+                        it.getOwner(),
+                        mods
                     ));
                 }
             };
@@ -553,6 +555,30 @@ public enum MagicRuleEventAction {
         public MagicTargetPicker<?> getPicker(final Matcher matcher) {
             final MagicAmount count = ARG.amountObj(matcher);
             return new MagicDamageTargetPicker(count);
+        }
+    },
+    Fight(
+        ARG.IT + " fight(s)? " + ARG.TARGETS,
+        MagicTiming.Removal,
+        "Fight"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicTarget> filter = ARG.targetsParse(matcher);
+            return (game, event) -> event.processTargetPermanent(game, (final MagicPermanent other) -> {
+                final MagicPermanent it = ARG.itPermanent(event, matcher);
+                game.doAction(new DealDamageAction(it, other, it.getPower()));
+                game.doAction(new DealDamageAction(other, it, other.getPower()));
+            });
+        }
+
+        @Override
+        public MagicTargetPicker<?> getPicker(final Matcher matcher) {
+            if (matcher.group("sn") != null) {
+                return new MagicDamageTargetPicker(MagicAmountFactory.SN_Power);
+            } else {
+                return MagicDefaultTargetPicker.create();
+            }
         }
     },
     PreventNextDamage(
@@ -2866,7 +2892,7 @@ public enum MagicRuleEventAction {
                 final String rider = (hasReference && matcher.group().contains("player")) ?
                     matcher.replaceAll("target player") :
                     matcher.replaceAll("target permanent");
-                final String riderWithoutPrefix = rider.replaceAll("^(and|then|If you do,) ", "");
+                final String riderWithoutPrefix = rider.replaceAll("^(and|then|Then|If you do,) ", "");
                 final MagicSourceEvent riderSourceEvent = build(riderWithoutPrefix);
 
                 //rider cannot have choices

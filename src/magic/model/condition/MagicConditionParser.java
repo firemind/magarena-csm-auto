@@ -142,6 +142,11 @@ public enum MagicConditionParser {
             return MagicCondition.OPPONENT_HELLBENT;
         }
     },
+    AnyHellbent("a player has no cards in hand") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.ANY_HELLBENT;
+        }
+    },
     CountersAtMost("(SN|it) has " + ARG.AMOUNT + " or fewer " + ARG.WORD1 + " counters on (it|him)") {
         public MagicCondition toCondition(final Matcher arg) {
             final int amount = ARG.amount(arg);
@@ -377,6 +382,26 @@ public enum MagicConditionParser {
             return MagicCondition.BEFORE_YOUR_ATTACK_CONDITION;
         }
     },
+    BeforeAttackers("before attackers are declared") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.BEFORE_ATTACKERS;
+        }
+    },
+    BeforeBlockers("before blockers are declared") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.BEFORE_BLOCKERS;
+        }
+    },
+    BeforeCombatDamage("before the combat damage step") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.BEFORE_COMBAT_DAMAGE;
+        }
+    },
+    BeforeEndOfCombat("before the end of combat step") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.BEFORE_END_OF_COMBAT;
+        }
+    },
     BeenAttacked("you've been attacked this step") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.BEEN_ATTACKED;
@@ -405,6 +430,11 @@ public enum MagicConditionParser {
     DuringCombatBeforeBlockers("during combat before blockers are declared") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.DURING_COMBAT_BEFORE_BLOCKERS;
+        }
+    },
+    AfterCombat("after combat") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.AFTER_COMBAT;
         }
     },
     YourTurn("during your turn") {
