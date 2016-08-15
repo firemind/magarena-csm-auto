@@ -1,0 +1,13 @@
+name=Grisly Anglerfish
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_8GFZrLgAMY.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Eldrazi,Fish
+color=
+pt=4/5
+ability={6}: Creatures your opponents control attack this turn if able.
+transform=Grizzled Angler
+timing=main
+hidden
+oracle={6}: Creatures your opponents control attack this turn if able.

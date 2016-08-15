@@ -1,0 +1,11 @@
+name=Woodland Patrol
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_plSKFzkb2g.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Human,Scout
+cost={2}{G}
+pt=3/2
+ability=Vigilance
+timing=main
+oracle=Vigilance

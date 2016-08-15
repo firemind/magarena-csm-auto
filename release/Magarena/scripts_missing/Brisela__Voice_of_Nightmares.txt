@@ -1,0 +1,14 @@
+name=Brisela, Voice of Nightmares
+image=http://www.magicspoiler.com/wp-content/uploads/2016/06/Brisela-Voice-of-Nightmares-MTG.jpg
+value=2.500
+rarity=M
+type=Legendary,Creature
+subtype=Eldrazi,Angel
+color=
+pt=9/10
+ability=Flying, first strike, vigilance, lifelink;\
+        Your opponents can't cast spells with converted mana cost 3 or less.
+meld=Bruna, the Fading Light;Gisela, the Broken Blade
+timing=main
+hidden
+oracle=Flying, first strike, vigilance, lifelink\nYour opponents can't cast spells with converted mana cost 3 or less.

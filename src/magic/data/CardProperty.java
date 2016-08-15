@@ -220,6 +220,11 @@ public enum CardProperty {
             card.setTransformCardName(value);
         }
     },
+    MELD(){
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setMeldCardNames(value.split(SEMI));
+        }
+    },
     SPLIT() {
       public void setProperty(final MagicCardDefinition card, final String value) {
           card.setSplitCardName(value);
@@ -243,6 +248,11 @@ public enum CardProperty {
     OVERLAY() {
         public void setProperty(final MagicCardDefinition card, final String value) {
             card.setOverlay();
+        }
+    },
+    STATUS() {
+        public void setProperty(final MagicCardDefinition card, final String value) {
+            card.setStatus(value);
         }
     },
     ;

@@ -1,0 +1,10 @@
+name=Repel the Abominable
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_F55g7UyaTT.png
+value=2.500
+rarity=U
+type=Instant
+cost={1}{W}
+effect=Prevent all damage that would be dealt this turn by non-Human sources.
+timing=removal
+oracle=Prevent all damage that would be dealt this turn by non-Human sources.
+status=needs groovy

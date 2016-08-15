@@ -1,15 +1,13 @@
 package magic.data;
 
-import magic.utility.FileIO;
-import groovy.lang.GroovyShell;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,23 +17,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import magic.utility.ProgressReporter;
-import magic.utility.MagicSystem;
+
+import groovy.lang.GroovyShell;
+import groovy.transform.CompileStatic;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicChangeCardDefinition;
 import magic.model.MagicColor;
 import magic.model.event.MagicHandCastActivation;
+import magic.utility.FileIO;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
 import magic.utility.MagicResources;
+import magic.utility.MagicSystem;
+import magic.utility.ProgressReporter;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
@@ -81,7 +83,7 @@ public class CardDefinitions {
                 "magic.model.target.MagicTargetFilterFactory",
                 "magic.model.choice.MagicTargetChoice"
             ),
-            new ASTTransformationCustomizer(groovy.transform.CompileStatic.class)
+            new ASTTransformationCustomizer(CompileStatic.class)
         )
     );
 
@@ -143,7 +145,7 @@ public class CardDefinitions {
     static void addCardSpecificGroovyCode(final MagicCardDefinition cardDefinition, final String cardName) {
         try {
             final File groovyFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".groovy");
-            if (groovyFile.isFile() == false) {
+            if (!groovyFile.isFile()) {
                 throw new RuntimeException("groovy file not found: " + groovyFile);
             }
             @SuppressWarnings("unchecked")
@@ -161,7 +163,7 @@ public class CardDefinitions {
     }
 
     public static String getASCII(String fullName) {
-        return Normalizer.normalize(fullName, Normalizer.Form.NFD)
+        return Normalizer.normalize(fullName, Form.NFD)
                          .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                          .replace("\u00C6", "AE");
     }
@@ -171,14 +173,17 @@ public class CardDefinitions {
             final MagicCardDefinition cdef = prop2carddef(file, false);
             addDefinition(cdef);
         } catch (final Throwable cause) {
-            //System.out.println("ERROR file: " + file + " cause: " + cause.getMessage());
-            throw new RuntimeException("Error loading " + file, cause);
+            if (MagicSystem.isParseMissing()) {
+                System.out.println("ERROR file: " + file + " cause: " + cause.getMessage());
+            } else {
+                throw new RuntimeException("Error loading " + file, cause);
+            }
         }
     }
 
     public static void loadCardDefinition(final String cardName) {
         final File cardFile = new File(SCRIPTS_DIRECTORY, getCanonicalName(cardName) + ".txt");
-        if (cardFile.isFile() == false) {
+        if (!cardFile.isFile()) {
             throw new RuntimeException("card script file not found: " + cardFile);
         }
         loadCardDefinition(cardFile);
@@ -193,7 +198,7 @@ public class CardDefinitions {
         final File[] scriptFiles = MagicFileSystem.getSortedScriptFiles(SCRIPTS_DIRECTORY);
 
         reporter.setMessage("Loading cards...0%");
-        final double totalFiles = (double)scriptFiles.length;
+        final double totalFiles = scriptFiles.length;
         int fileCount = 0;
         for (final File file : scriptFiles) {
             loadCardDefinition(file);
@@ -213,7 +218,7 @@ public class CardDefinitions {
 
     public static void postCardDefinitions() {
         printStatistics();
-        updateNewCardsLog(CardDefinitions.loadCardsSnapshotFile());
+        updateNewCardsLog(loadCardsSnapshotFile());
     }
 
     private static boolean isZero(double value, double delta){
@@ -223,13 +228,16 @@ public class CardDefinitions {
     public static void loadCardAbilities() {
         final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         Stream.concat(getDefaultPlayableCardDefStream(), getTokensCardDefStream()).forEach(cdef -> {
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        cdef.loadAbilities();
-                    } catch (Throwable cause) {
-                        //System.out.println("ERROR card: " + cdef + " cause: " + cause.getMessage());
+            executor.execute(() -> {
+                try {
+                    cdef.loadAbilities();
+                    if (MagicSystem.isParseMissing() && !cdef.isToken()) {
+                        System.out.println("OK card: " + cdef);
+                    }
+                } catch (Throwable cause) {
+                    if (MagicSystem.isParseMissing()) {
+                        System.out.println("ERROR card: " + cdef + " cause: " + cause.getMessage());
+                    } else {
                         throw new RuntimeException("Unable to load " + cdef, cause);
                     }
                 }
@@ -254,17 +262,13 @@ public class CardDefinitions {
 
     public static MagicCardDefinition getMissingOrCard(final String original) {
         final String key = getASCII(original);
-        if (missingCards != null && missingCards.containsKey(key)) {
-            return missingCards.get(key);
-        } else {
-            return getCard(original);
-        }
+        return missingCards != null && missingCards.containsKey(key) ? missingCards.get(key) : getCard(original);
     }
 
     public static MagicCardDefinition getCard(final String original) {
         final String key = getASCII(original);
         // lazy loading of card scripts
-        if (allPlayableCardDefs.containsKey(key) == false) {
+        if (!allPlayableCardDefs.containsKey(key)) {
             loadCardDefinition(original);
         }
         if (allPlayableCardDefs.containsKey(key)) {
@@ -291,12 +295,12 @@ public class CardDefinitions {
 
     private static Stream<MagicCardDefinition> getDefaultPlayableCardDefStream() {
         return getAllPlayableCardDefs().stream()
-            .filter(card -> card.isPlayable());
+            .filter(MagicCardDefinition::isPlayable);
     }
 
     private static Stream<MagicCardDefinition> getTokensCardDefStream() {
         return getAllPlayableCardDefs().stream()
-            .filter(card -> card.isToken());
+            .filter(MagicCardDefinition::isToken);
     }
 
     /**
@@ -356,7 +360,7 @@ public class CardDefinitions {
         final InputStream stream = MagicResources.getAllCardNames();
         try (final Scanner sc = new Scanner(stream, FileIO.UTF8.name())) {
             while (sc.hasNextLine()) {
-                final String cardName = sc.nextLine().trim();
+                final String cardName = sc.nextLine();
                 if (!allPlayableCardDefs.containsKey(getASCII(cardName))) {
                     missingCardNames.add(cardName);
                 }
@@ -379,7 +383,7 @@ public class CardDefinitions {
             }
         }
 
-        missingCards = new HashMap<String, MagicCardDefinition>();
+        missingCards = new HashMap<>();
         for (String cardName : missingCardNames) {
             final String cardKey = getASCII(cardName);
             if (missingScripts.containsKey(cardKey)) {
@@ -400,11 +404,8 @@ public class CardDefinitions {
      */
     private static File[] getSortedMissingScriptFiles() {
         final Path cardsPath = MagicFileSystem.getDataPath(DataPath.SCRIPTS_MISSING);
-        final File[] files = cardsPath.toFile().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".txt");
-            }
+        final File[] files = cardsPath.toFile().listFiles((dir, name) -> {
+            return name.toLowerCase().endsWith(".txt");
         });
         if (files != null) {
             Arrays.sort(files);
@@ -420,11 +421,8 @@ public class CardDefinitions {
     }
 
     public static void checkForMissingFiles() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GeneralConfig.getInstance().setIsMissingFiles(isMissingPlayableImages());
-            }
+        new Thread(() -> {
+            GeneralConfig.getInstance().setIsMissingFiles(isMissingPlayableImages());
         }).start();
     }
 
@@ -448,7 +446,11 @@ public class CardDefinitions {
     }
 
     public static boolean isCardMissing(MagicCardDefinition card) {
-        return missingCards == null ? false : missingCards.containsKey(card.getAsciiName());
+        return missingCards != null && missingCards.containsKey(card.getAsciiName());
+    }
+
+    public static boolean isPotential(MagicCardDefinition card) {
+        return card.hasStatus() ? isCardMissing(card) && !card.getStatus().contains("not supported") : isCardMissing(card);
     }
 
     public static synchronized Collection<MagicCardDefinition> getMissingCards() {
@@ -467,28 +469,22 @@ public class CardDefinitions {
     }
 
     private static List<String> loadCardsSnapshotFile() {
-        if (!CARDS_SNAPSHOT_FILE.exists()) {
+        if (CARDS_SNAPSHOT_FILE.exists()) {
+            return MagicFileSystem.deserializeStringList(CARDS_SNAPSHOT_FILE);
+        } else {
             saveCardsSnapshotFile();
             return new ArrayList<>();
-        } else {
-            return MagicFileSystem.deserializeStringList(CARDS_SNAPSHOT_FILE);
         }
     }
 
     private static List<String> getPlayableNonTokenCardNames() {
-        final ArrayList<String> cardNames = new ArrayList<>();
-        for (MagicCardDefinition card : getAllPlayableCardDefs()) {
-            if (card.isToken() == false) {
-                cardNames.add(card.getName());
-            }
-        }
-        return cardNames;
+        return getAllPlayableCardDefs().stream().filter(card -> !card.isToken()).map(MagicCardDefinition::getName).collect(Collectors.toList());
     }
 
     public static void updateNewCardsLog(final List<String> snapshot) {
         final List<String> cardNames = getPlayableNonTokenCardNames();
         cardNames.removeAll(snapshot);
-        if (cardNames.size() > 0) {
+        if (!cardNames.isEmpty()) {
             saveNewCardsLog(cardNames);
             saveCardsSnapshotFile();
         }
@@ -498,9 +494,7 @@ public class CardDefinitions {
         final Path LOGS_PATH = MagicFileSystem.getDataPath(DataPath.LOGS);
         final File LOG_FILE = LOGS_PATH.resolve("newcards.log").toFile();
         try (final PrintWriter writer = new PrintWriter(LOG_FILE)) {
-            for (String cardName : cardNames) {
-                writer.println(cardName);
-            }
+            cardNames.forEach(writer::println);
         } catch (FileNotFoundException ex) {
             System.err.println("Failed to save " + LOG_FILE + " - " + ex);
         }

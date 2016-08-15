@@ -183,7 +183,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
             preventDamage,
             equippedCreature.getStateId(),
             enchantedPermanent.getStateId(),
-            blockedCreature.getStateId(),
+            blockingCreatures.getStateId(),
             //pairedCreature.getStateId(),
             exiledCards.getUnorderedStateId(),
             chosenPlayer.getId(),
@@ -356,19 +356,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
     }
 
     public int getDevotion(final MagicColor... colors) {
-        int devotion = 0;
-        for (final MagicCostManaType mt : getCardDefinition().getCost().getCostManaTypes(0)) {
-            if (mt == MagicCostManaType.Generic) {
-                continue;
-            }
-            for (final MagicColor c : colors) {
-                if (mt.getTypes().contains(c.getManaType())) {
-                    devotion++;
-                    break;
-                }
-            }
-        }
-        return devotion;
+        return getCardDefinition().getCost().getDevotion(colors);
     }
 
     public boolean producesMana() {
@@ -558,6 +546,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
         return !hasState(MagicPermanentState.Tapped);
     }
 
+    @Override
     public int getColorFlags() {
         return cachedColorFlags;
     }
@@ -978,10 +967,19 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
                 return false;
             }
         }
-        if (hasAbility(MagicAbility.NonbasicLandwalk) && defendingPlayer.controlsPermanent(MagicTargetFilterFactory.NONBASIC_LAND)) {
+        if (hasAbility(MagicAbility.Snowlandwalk) && defendingPlayer.controlsPermanent(MagicTargetFilterFactory.SNOW_LAND)) {
+            return false;
+        }
+        if (hasAbility(MagicAbility.Snowswampwalk) && defendingPlayer.controlsPermanent(MagicTargetFilterFactory.SNOW_SWAMP)) {
+            return false;
+        }
+        if (hasAbility(MagicAbility.Snowforestwalk) && defendingPlayer.controlsPermanent(MagicTargetFilterFactory.SNOW_FOREST)) {
             return false;
         }
         if (hasAbility(MagicAbility.LegendaryLandwalk) && defendingPlayer.controlsPermanent(MagicTargetFilterFactory.LEGENDARY_LAND)) {
+            return false;
+        }
+        if (hasAbility(MagicAbility.NonbasicLandwalk) && defendingPlayer.controlsPermanent(MagicTargetFilterFactory.NONBASIC_LAND)) {
             return false;
         }
         return true;
@@ -1003,7 +1001,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
                 return false;
             }
             if (attacker.hasAbility(MagicAbility.Intimidate) &&
-                ((getColorFlags() & attacker.getColorFlags()) == 0)) {
+                !shareColor(attacker)) {
                 return false;
             }
         }

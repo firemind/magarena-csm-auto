@@ -1,0 +1,16 @@
+name=Fibrous Entangler
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_X6qu0NQmVq.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Eldrazi,Werewolf
+color=
+pt=4/6
+ability=Vigilance;\
+        SN must be blocked if able.;\
+        SN can block an additional creature each combat.
+transform=Tangleclaw Werewolf
+timing=main
+hidden
+oracle=Vigilance\nFibrous Entangler must be blocked if able.\nFibrous Entangler can block an additional creature each combat.
+status=not supported: block-multiple

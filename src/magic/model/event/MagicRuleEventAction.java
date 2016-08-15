@@ -231,7 +231,7 @@ public enum MagicRuleEventAction {
         }
     },
     FlickerOwner(
-        "exile " + ARG.PERMANENTS + ", then return (it|that card) to the battlefield under its owner's control",
+        "exile " + ARG.PERMANENTS + ", then return (it|that card) to the battlefield" + ARG.MODS + " under its owner's control",
         MagicTargetHint.Positive,
         MagicBounceTargetPicker.create(),
         MagicTiming.Removal,
@@ -239,6 +239,7 @@ public enum MagicRuleEventAction {
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
+            final List<MagicPlayMod> mods = ARG.mods(matcher);
             final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
             return (game, event) -> {
                 for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
@@ -249,14 +250,15 @@ public enum MagicRuleEventAction {
                     game.doAction(new ReturnCardAction(
                         MagicLocationType.Exile,
                         it.getCard(),
-                        it.getOwner()
+                        it.getOwner(),
+                        mods
                     ));
                 }
             };
         }
     },
     FlickerEndStep(
-        "exile " + ARG.PERMANENTS + "\\. (if you do, )?return (those cards|the exiled card|that card|it|sn) to the battlefield under (their|its) owner's control at the beginning of the next end step",
+        "exile " + ARG.PERMANENTS + "\\. (if you do, )?return (those cards|the exiled card|that card|it|sn) to the battlefield under (their|its) owner('s|s') control at the beginning of the next end step",
         MagicTargetHint.None,
         MagicBounceTargetPicker.create(),
         MagicTiming.Removal,
@@ -553,6 +555,30 @@ public enum MagicRuleEventAction {
         public MagicTargetPicker<?> getPicker(final Matcher matcher) {
             final MagicAmount count = ARG.amountObj(matcher);
             return new MagicDamageTargetPicker(count);
+        }
+    },
+    Fight(
+        ARG.IT + " fight(s)? " + ARG.TARGETS,
+        MagicTiming.Removal,
+        "Fight"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicTarget> filter = ARG.targetsParse(matcher);
+            return (game, event) -> event.processTargetPermanent(game, (final MagicPermanent other) -> {
+                final MagicPermanent it = ARG.itPermanent(event, matcher);
+                game.doAction(new DealDamageAction(it, other, it.getPower()));
+                game.doAction(new DealDamageAction(other, it, other.getPower()));
+            });
+        }
+
+        @Override
+        public MagicTargetPicker<?> getPicker(final Matcher matcher) {
+            if (matcher.group("sn") != null) {
+                return new MagicDamageTargetPicker(MagicAmountFactory.SN_Power);
+            } else {
+                return MagicDefaultTargetPicker.create();
+            }
         }
     },
     PreventNextDamage(
@@ -855,6 +881,35 @@ public enum MagicRuleEventAction {
                 if (matcher.group("choice") == null || players.isEmpty() == false) {
                     game.doAction(new ChangeLifeAction(event.getPlayer(), amount2));
                 }
+            };
+        }
+    },
+    DrainLifeAlt(
+        ARG.PLAYERS + "( )?lose(s)?( " + ARG.AMOUNT + ")? life( (for each|equal to) " + ARG.WORDRUN + ")?\\. You gain life equal to the life lost this way",
+        MagicTargetHint.Negative,
+        MagicTiming.Removal,
+        "-Life"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int amount = ARG.amount(matcher);
+            final MagicAmount count = MagicAmountParser.build(ARG.wordrun(matcher));
+            final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
+            return (game, event) -> {
+                final int multiplier = count.getAmount(event);
+                final int total = amount * multiplier;
+                if (count != MagicAmountFactory.One) {
+                    game.logAppendMessage(event.getPlayer(), "(" + total + ")");
+                }
+                int totalLost = 0;
+                for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
+                    final ChangeLifeAction act = new ChangeLifeAction(it, -total);
+                    game.doAction(act);
+                    if (act.getLifeChange() < 0) {
+                        totalLost += -act.getLifeChange();
+                    }
+                }
+                game.doAction(new ChangeLifeAction(event.getPlayer(), totalLost));
             };
         }
     },
@@ -2063,13 +2118,22 @@ public enum MagicRuleEventAction {
         (game, event) -> game.doAction(new ShuffleLibraryAction(event.getPlayer()))
     ),
     AttachSelf(
-        "attach sn to " + ARG.CHOICE,
+        "attach sn to " + ARG.PERMANENTS,
         MagicTargetHint.Positive,
         MagicPumpTargetPicker.create(),
         MagicTiming.Pump,
-        "Attach",
-        (game, event) -> event.processTargetPermanent(game, creature -> game.doAction(new AttachAction(event.getPermanent(), creature)))
-    ),
+        "Attach"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new AttachAction(event.getPermanent(), it));
+                }
+            };
+        }
+    },
     TurnFaceDown(
         "turn " + ARG.PERMANENTS + " face down",
         MagicTiming.Tapping,
@@ -2828,7 +2892,7 @@ public enum MagicRuleEventAction {
                 final String rider = (hasReference && matcher.group().contains("player")) ?
                     matcher.replaceAll("target player") :
                     matcher.replaceAll("target permanent");
-                final String riderWithoutPrefix = rider.replaceAll("^(and|then|If you do,) ", "");
+                final String riderWithoutPrefix = rider.replaceAll("^(and|then|Then|If you do,) ", "");
                 final MagicSourceEvent riderSourceEvent = build(riderWithoutPrefix);
 
                 //rider cannot have choices

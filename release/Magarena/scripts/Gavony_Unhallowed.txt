@@ -1,0 +1,11 @@
+name=Gavony Unhallowed
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_DdoTqfR8Uk.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Zombie
+cost={3}{B}
+pt=2/4
+ability=Whenever another creature you control dies, put a +1/+1 counter on SN.
+timing=main
+oracle=Whenever another creature you control dies, put a +1/+1 counter on Gavony Unhallowed.

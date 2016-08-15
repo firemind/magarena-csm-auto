@@ -1,0 +1,11 @@
+name=Bloodbriar
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_2gSpfp40eN.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Plant,Elemental
+cost={2}{G}
+pt=2/3
+ability=Whenever you sacrifice another permanent, put a +1/+1 counter on SN.
+timing=main
+oracle=Whenever you sacrifice another permanent, put a +1/+1 counter on Bloodbriar.

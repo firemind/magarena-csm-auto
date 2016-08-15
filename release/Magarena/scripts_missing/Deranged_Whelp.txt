@@ -1,0 +1,12 @@
+name=Deranged Whelp
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_sDHgifAert.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Wolf
+cost={1}{R}
+pt=2/1
+ability=Menace
+timing=main
+oracle=Menace
+status=not supported: blocking-restriction

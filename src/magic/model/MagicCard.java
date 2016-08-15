@@ -72,6 +72,10 @@ public class MagicCard
         public boolean isOnStack() {
             return false;
         }
+        @Override
+        public boolean isValid() {
+            return false;
+        }
     };
 
     private static final int TOKEN_ID=-1;
@@ -355,6 +359,10 @@ public class MagicCard
         return true;
     }
 
+    public boolean isValid() {
+        return true;
+    }
+
     @Override
     public boolean isPermanent() {
         return false;
@@ -374,6 +382,7 @@ public class MagicCard
         return true;
     }
 
+    @Override
     public int getColorFlags() {
         final int init = getCardDefinition().getColorFlags();
         return getCardDefinition().applyCDAColor(getGame(), getOwner(), init);

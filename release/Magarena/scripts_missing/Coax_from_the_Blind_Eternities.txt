@@ -1,0 +1,10 @@
+name=Coax from the Blind Eternities
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_LyEPtjnUiu.png
+value=2.500
+rarity=R
+type=Sorcery
+cost={2}{U}
+effect=You may choose an Eldrazi card you own from outside the game or in exile, reveal that card, and put it into your hand.
+timing=main
+oracle=You may choose an Eldrazi card you own from outside the game or in exile, reveal that card, and put it into your hand.
+status=not supported: outside-the-game

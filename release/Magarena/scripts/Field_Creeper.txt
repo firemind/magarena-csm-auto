@@ -1,0 +1,10 @@
+name=Field Creeper
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_E7HsgGiVQu.png
+value=2.500
+rarity=C
+type=Artifact,Creature
+subtype=Scarecrow
+cost={2}
+pt=2/1
+timing=main
+oracle=NONE

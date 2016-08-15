@@ -1,9 +1,0 @@
-name=Amass the Components
-image=http://magiccards.info/scans/en/avr/43.jpg
-value=2.653
-rarity=C
-type=Sorcery
-cost={3}{U}
-effect=Draw three cards, then put a card from your hand on the bottom of your library.
-timing=main
-oracle=Draw three cards, then put a card from your hand on the bottom of your library.

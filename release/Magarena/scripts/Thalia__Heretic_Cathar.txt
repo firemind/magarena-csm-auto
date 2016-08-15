@@ -1,0 +1,12 @@
+name=Thalia, Heretic Cathar
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_HWSn47iZj0.png
+value=2.500
+rarity=R
+type=Legendary,Creature
+subtype=Human,Soldier
+cost={2}{W}
+pt=3/2
+ability=First strike
+timing=main
+requires_groovy_code
+oracle=First strike\nCreatures and nonbasic lands your opponents control enter the battlefield tapped.

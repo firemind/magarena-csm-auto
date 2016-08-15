@@ -1,0 +1,10 @@
+name=Nephalia Academy
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_hmmJer36kb.png
+value=2.500
+rarity=U
+type=Land
+ability=If a spell or ability an opponent controls causes you to discard a card, you may reveal that card and put it on top of your library instead of putting it anywhere else.;\
+        {T}: Add {C} to your mana pool.
+timing=land
+oracle=If a spell or ability an opponent controls causes you to discard a card, you may reveal that card and put it on top of your library instead of putting it anywhere else.\n{T}: Add {C} to your mana pool.
+status=not supported: no-info

@@ -1,0 +1,14 @@
+name=Sinuous Predator
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_fWg8kxUiHI.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Eldrazi,Werewolf
+color=
+pt=4/4
+ability=SN can't be blocked by more than one creature.
+transform=Kessig Prowler
+timing=main
+hidden
+oracle=Sinuous Predator can't be blocked by more than one creature.
+status=not supported: blocking-restriction

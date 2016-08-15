@@ -1,0 +1,12 @@
+name=Subjugator Angel
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_VXLMyHKoL6.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Angel
+cost={4}{W}{W}
+pt=4/3
+ability=Flying;\
+        When SN enters the battlefield, tap all creatures your opponents control.
+timing=main
+oracle=Flying\nWhen Subjugator Angel enters the battlefield, tap all creatures your opponents control.

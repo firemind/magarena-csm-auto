@@ -1,0 +1,9 @@
+name=Spectral Reserves
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_5rv81kOMc0.png
+value=2.500
+rarity=C
+type=Sorcery
+cost={3}{W}
+effect=Put two 1/1 white Spirit creature tokens with flying onto the battlefield.~You gain 2 life.
+timing=main
+oracle=Put two 1/1 white Spirit creature tokens with flying onto the battlefield. You gain 2 life.

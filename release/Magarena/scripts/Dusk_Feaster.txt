@@ -1,0 +1,12 @@
+name=Dusk Feaster
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_dZeei1N5fo.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Vampire
+cost={5}{B}{B}
+pt=4/5
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Delirium — Dusk Feaster costs {2} less to cast if there are four or more card types among cards in your graveyard.\nFlying

@@ -1,0 +1,11 @@
+name=Weirded Vampire
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_VThePe1FOw.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Vampire,Horror
+cost={3}{B}
+pt=3/3
+ability=Madness {2}{B}
+timing=main
+oracle=Madness {2}{B}

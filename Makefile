@@ -227,6 +227,7 @@ life ?= 10
 ai1 ?= MMABFast
 ai2 ?= MMABFast
 debug ?= false
+parseMissing ?= false
 devMode ?= false
 selfMode ?= false
 flags ?= 
@@ -237,6 +238,7 @@ flags ?=
 	$(RUN) ${flags} \
 	-Dmagarena.dir=`pwd`/release \
 	-Ddebug=${debug} \
+	-DparseMissing=${parseMissing} \
 	-DdevMode=${devMode} \
 	-Dgame.log=$*.log \
 	-Djava.awt.headless=true \
@@ -519,7 +521,8 @@ checks: \
 	check_decks \
 	check_mana_or_combat \
 	check_color_or_cost \
-	check_tap_tap
+	check_tap_tap \
+	check_no_extra_space
 
 remove_extra_missing:
 	git rm `join <(ls -1 release/Magarena/scripts | sort) <(ls -1 release/Magarena/scripts_missing | sort) | sed 's/^/release\/Magarena\/scripts_missing\//'`
@@ -633,6 +636,10 @@ check_color_or_cost:
 
 check_tap_tap:
 	grep "{T}, Tap" -ir release/Magarena/scripts | grep -v oracle | grep -iv "{T}, Tap another" | ${NO_OUTPUT}
+
+check_no_extra_space:
+	grep "^[[:space:]]" resources/magic/data/AllCardNames.txt -r resources/magic/data/sets | ${NO_OUTPUT}
+	grep "[[:space:]]$$" resources/magic/data/AllCardNames.txt -r resources/magic/data/sets | ${NO_OUTPUT}
 
 crash.txt: $(wildcard *.log)
 	for i in `grep "^Excep" -l $^`; do \
@@ -801,30 +808,29 @@ push: clean normalize_files checks debug
 resources/magic/data/AllCardNames.txt:
 	grep "<name>" -r cards/cards.xml | sed 's/<[^>]*>//g;s/^ *//' | unaccent utf-8 | recode html..ascii | sort > $@
 
+resources/magic/data/sets/%.txt:
+	curl https://mtgjson.com/json/$*.json | jq -r .cards[].name | LC_ALL=C sort | uniq > $@
+
 missing_override:
 	grep public -B1 -r release/Magarena/scripts | awk '/Override/ {skip = NR + 1} NR != skip {print $$0}' | grep -v Override | grep release > $@
 
 parse_new.txt: cards/existing_master.txt
-	patch -p1 < parse_missing.patch
-	cp release/Magarena/scripts_missing/* release/Magarena/scripts
+	cp `grep status=not -Lr release/Magarena/scripts_missing/` release/Magarena/scripts
 	-rm 101.out
-	make debug
+	make parseMissing=true debug
 	grep "ERROR " 101.out | sed 's/java.lang.RuntimeException: //' | sed 's/\(ERROR.*\) \(cause: .*\)/\2 \1/' | sort > parse_missing.txt
 	grep OK 101.out | sed 's/OK card: //' | sort > parse_ok.txt  
 	git clean -qf release/Magarena/scripts
-	patch -p1 -R < parse_missing.patch
 	join -v2 -t'_' $^ parse_ok.txt > $@
 	diff parse_new.ignore $@
 
 parse_groovy.txt: cards/groovy.txt
-	patch -p1 < parse_missing.patch
 	cp scripts-builder/OUTPUT/scripts_missing/* release/Magarena/scripts
 	-rm 101.out
-	make debug
+	make parseMissing=true debug
 	grep "ERROR " 101.out | sed 's/java.lang.RuntimeException: //' | sed 's/\(ERROR.*\) \(cause: .*\)/\2 \1/' | sort > parse_missing.txt
 	grep OK 101.out | sed 's/OK card: //' | sort > parse_ok.txt
 	git checkout -- release/Magarena/scripts
-	patch -p1 -R < parse_missing.patch
 	join -t'_' <(sort $^) <(sort parse_ok.txt) > $@
 	diff parse_groovy.ignore $@
 
@@ -876,6 +882,10 @@ groovy-by-size:
 normalize_scripts.diff:
 	diff -d -ru -I rarity= -I removal= -I image -I enchant= -I effect= -I value= -I static= -I timing= -I mana= \
 	release/Magarena/scripts scripts-builder/OUTPUT/scripts_missing | grep -v Only > $@
+
+sorted_status.txt:
+	grep status= -r release/Magarena/scripts_missing/ -h | sort | uniq > $@
+	echo "unknown" `grep -L status= -r release/Magarena/scripts_missing | wc -l` >> $@
 
 # export GITHUB_TOKEN=`cat token`
 create-draft-release:

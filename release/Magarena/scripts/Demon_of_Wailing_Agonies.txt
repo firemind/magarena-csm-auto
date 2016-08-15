@@ -1,0 +1,11 @@
+name=Demon of Wailing Agonies
+image=http://magiccards.info/scans/en/c14/21.jpg
+value=2.500
+rarity=R
+type=Creature
+subtype=Demon
+cost={3}{B}{B}
+pt=4/4
+ability=Flying
+timing=main
+oracle=Flying\nLieutenant — As long as you control your commander, Demon of Wailing Agonies gets +2/+2 and has "Whenever Demon of Wailing Agonies deals combat damage to a player, that player sacrifices a creature."

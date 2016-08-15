@@ -1,0 +1,13 @@
+name=Kessig Prowler
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_NnjsUYnaVy.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Werewolf,Horror
+cost={G}
+pt=2/1
+ability={4}{G}: Transform SN.
+transform=Sinuous Predator
+timing=main
+oracle={4}{G}: Transform Kessig Prowler.
+status=not supported: other-half

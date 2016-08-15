@@ -1,0 +1,10 @@
+name=Give No Ground
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_r6pSuFr8Ze.png
+value=2.500
+rarity=U
+type=Instant
+cost={3}{W}
+effect=Target creature gets +2/+6 until end of turn and can block any number of creatures this turn.
+timing=removal
+oracle=Target creature gets +2/+6 until end of turn and can block any number of creatures this turn.
+status=not supported: block-multiple

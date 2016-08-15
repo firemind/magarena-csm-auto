@@ -17,6 +17,7 @@ import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
 import magic.model.MagicType;
+import magic.model.MagicManaCost;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.stack.MagicAbilityOnStack;
 import magic.model.stack.MagicItemOnStack;
@@ -278,6 +279,14 @@ public class MagicTargetFilterFactory {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
             return (target.hasColor(MagicColor.White) || target.hasColor(MagicColor.Blue)) &&
                 (target.isSpell(MagicType.Instant) || target.isSpell(MagicType.Sorcery));
+        }
+    };
+
+    public static final MagicStackFilterImpl ENCHANTMENT_OR_INSTANT_OR_SORCERY_SPELL = new MagicStackFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
+            return target.isSpell(MagicType.Enchantment) ||
+                   target.isSpell(MagicType.Instant) ||
+                   target.isSpell(MagicType.Sorcery);
         }
     };
 
@@ -996,6 +1005,12 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicPermanentFilterImpl CREATURE_YOU_CONTROL_SHARE_COLOR = new MagicPermanentFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            return target.isCreature() && target.isController(player) && target.shareColor(source);
+        }
+    };
+
     public static final MagicPermanentFilterImpl CREATURE_WITH_ANOTHER_AURA = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             final int amount = source.isPermanent() && source.hasSubType(MagicSubType.Aura) ? 1 : 0;
@@ -1316,6 +1331,8 @@ public class MagicTargetFilterFactory {
 
     public static final MagicPermanentFilterImpl CREATURE_LEVEL_COUNTER = creature(MagicCounterType.Level, Control.Any);
 
+    public static final MagicPermanentFilterImpl CREATURE_FATE_COUNTER = creature(MagicCounterType.Fate, Control.Any);
+
     public static final MagicPermanentFilterImpl CREATURE_AT_LEAST_3_LEVEL_COUNTERS = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return target.isCreature() &&
@@ -1413,6 +1430,8 @@ public class MagicTargetFilterFactory {
     public static final MagicPermanentFilterImpl ATTACKING_KAVU = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Kavu, Control.Any);
 
     public static final MagicPermanentFilterImpl ATTACKING_BEAST = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Beast, Control.Any);
+
+    public static final MagicPermanentFilterImpl ATTACKING_ALLY = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Ally, Control.Any);
 
     public static final MagicPermanentFilterImpl ATTACKING_OR_BLOCKING_CREATURE = creatureOr(MagicPermanentState.Attacking, MagicPermanentState.Blocking, Control.Any);
 
@@ -1572,6 +1591,14 @@ public class MagicTargetFilterFactory {
             return targetType == MagicTargetType.Graveyard;
         }
     };
+
+    public static final MagicPermanentFilterImpl CREATURE_YOU_CONTROL_FOR_EMERGE(final MagicManaCost manaCost) {
+        return new MagicPermanentFilterImpl() {
+            public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent perm) {
+                return perm.isCreature() && perm.isController(player) && manaCost.reduce(perm.getConvertedCost()).getCondition().accept(source);
+            }
+        };
+    }
 
     public static final MagicCardFilterImpl CREATURE_CARD_WITH_INFECT_FROM_GRAVEYARD = card(MagicType.Creature).and(MagicAbility.Infect).from(MagicTargetType.Graveyard);
 
@@ -1869,6 +1896,12 @@ public class MagicTargetFilterFactory {
     public static final MagicPermanentFilterImpl MULTICOLORED_CREATURE = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent permanent) {
             return MagicColor.isMulti(permanent) && permanent.isCreature();
+        }
+    };
+
+    public static final MagicPermanentFilterImpl MONO_OR_MULTICOLORED_CREATURE = new MagicPermanentFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent permanent) {
+            return (MagicColor.isMono(permanent) || MagicColor.isMulti(permanent)) && permanent.isCreature();
         }
     };
 
@@ -2191,6 +2224,22 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicPermanentFilterImpl CREATURE_POWER_GREATER_THAN_SN = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            final MagicPermanent sn = (MagicPermanent)source;
+            return target.isCreature() && target.getPower() > sn.getPower();
+        }
+    };
+
+    public static final MagicPermanentFilterImpl CREATURE_POWER_LESS_THAN_SN = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            final MagicPermanent sn = (MagicPermanent)source;
+            return target.isCreature() && target.getPower() < sn.getPower();
+        }
+    };
+
     public static final MagicPermanentFilterImpl CREATURE_POWER_2_OR_LESS = new MagicPTTargetFilter(
         CREATURE,
         Operator.LESS_THAN_OR_EQUAL,
@@ -2428,6 +2477,7 @@ public class MagicTargetFilterFactory {
         add("attacking Goblin", ATTACKING_GOBLIN);
         add("attacking Kavu", ATTACKING_KAVU);
         add("attacking Beast", ATTACKING_BEAST);
+        add("attacking Ally", ATTACKING_ALLY);
         add("attacking creature", ATTACKING_CREATURE);
         add("attacking creature with shadow", ATTACKING_CREATURE_WITH_SHADOW);
         add("attacking creature with power 3 or less", ATTACKING_CREATURE_POWER_3_OR_LESS);
@@ -2456,6 +2506,7 @@ public class MagicTargetFilterFactory {
         add("blue or black creature with flying", BLUE_OR_BLACK_CREATURE_WITH_FLYING);
         add("creature without flying", CREATURE_WITHOUT_FLYING);
         add("creature without defender", CREATURE_WITHOUT_DEFENDER);
+        add("creature without shadow", CREATURE_WITHOUT_SHADOW);
         add("creature with defender", CREATURE_WITH_DEFENDER);
         add("creature with a morph ability", CREATURE_WITH_MORPH_ABILITY);
         add("creature with horsemanship", CREATURE_WITH_HORSEMANSHIP);
@@ -2468,6 +2519,8 @@ public class MagicTargetFilterFactory {
         add("creature with power 3 or greater", CREATURE_POWER_3_OR_MORE);
         add("creature with power 4 or greater", CREATURE_POWER_4_OR_MORE);
         add("creature with power 5 or greater", CREATURE_POWER_5_OR_MORE);
+        add("creature with power greater than SN's power", CREATURE_POWER_GREATER_THAN_SN);
+        add("creature with power less than SN's power", CREATURE_POWER_LESS_THAN_SN);
         add("creature with toughness 2 or less", CREATURE_TOUGHNESS_2_OR_LESS);
         add("creature with toughness 3 or less", CREATURE_TOUGHNESS_3_OR_LESS);
         add("creature with toughness 3 or greater", CREATURE_TOUGHNESS_3_OR_GREATER);
@@ -2476,6 +2529,7 @@ public class MagicTargetFilterFactory {
         add("creature with a +1/+1 counter on it", CREATURE_PLUSONE_COUNTER);
         add("creature with a -1/-1 counter on it", CREATURE_MINSUONE_COUNTER);
         add("creature with a level counter on it", CREATURE_LEVEL_COUNTER);
+        add("creature that has a fate counter on it", CREATURE_FATE_COUNTER);
         add("creature with a counter on it", CREATURE_WITH_COUNTER);
         add("creature with another Aura attached to it", CREATURE_WITH_ANOTHER_AURA);
         add("creature that isn't enchanted", CREATURE_THAT_ISNT_ENCHANTED);
@@ -2500,6 +2554,7 @@ public class MagicTargetFilterFactory {
         add("nonenchantment creature", NONENCHANTMENT_CREATURE);
         add("creature that's a Barbarian, a Warrior, or a Berserker", BARBARIAN_WARRIOR_BERSERKER_CREATURE);
         add("multicolored creature", MULTICOLORED_CREATURE);
+        add("creature that's one or more colors", MONO_OR_MULTICOLORED_CREATURE);
         add("unblocked creature", UNBLOCKED_ATTACKING_CREATURE);
         add("Cleric or Wizard creature", CLERIC_OR_WIZARD_CREATURE);
         add("creature that was dealt damage this turn", CREATURE_BEEN_DAMAGED);
@@ -2534,6 +2589,7 @@ public class MagicTargetFilterFactory {
 
         // <color|type|subtype> you control
         add("equipped creature you control", EQUIPPED_CREATURE_YOU_CONTROL);
+        add("creature you control that share a color with it", CREATURE_YOU_CONTROL_SHARE_COLOR);
 
         // <color|type|subtype> you don't control
         add("spell you don't control", SPELL_YOU_DONT_CONTROL);
@@ -2634,6 +2690,7 @@ public class MagicTargetFilterFactory {
         add("blue instant spell", BLUE_INSTANT_SPELL);
         add("nonred spell", NONRED_SPELL);
         add("instant or sorcery spell", INSTANT_OR_SORCERY_SPELL);
+        add("enchantment, instant, or sorcery spell", ENCHANTMENT_OR_INSTANT_OR_SORCERY_SPELL);
         add("white or blue instant or sorcery spell", WHITE_OR_BLUE_INSTANT_OR_SORCERY_SPELL);
         add("instant or sorcery spell you control", INSTANT_OR_SORCERY_SPELL_YOU_CONTROL);
         add("spell with converted mana cost 1", SPELL_WITH_CMC_EQ_1);
@@ -2668,16 +2725,18 @@ public class MagicTargetFilterFactory {
         add("this permanent", SN);
         add("this creature", SN);
         add("creature blocking it", CREATURE_BLOCKING_SN);
+        add("creature blocking SN", CREATURE_BLOCKING_SN);
     }
 
     public static String toSingular(final String arg) {
-        return arg.toLowerCase()
-            .replaceAll("`", "QUOTE")
+        final String[] parts = arg.toLowerCase().split(" named ");
+        parts[0] = parts[0]
             .replaceAll("\\bwerewolves\\b", "werewolf")
             .replaceAll("\\belves\\b", "elf")
             .replaceAll("\\ballies\\b", "ally")
             .replaceAll("\\bmercenaries\\b", "mercenary")
-            .replaceAll("\\b(?!(controls|less|plains|opponents|graveyards|colorless|aurochs|pegasus|this|toughness|fungus|is|locus|counters)\\b)([a-z]+)s\\b", "$2")
+            .replaceAll("\\b(?!(controls|less|plains|opponents|graveyards|colorless|aurochs|pegasus|this|toughness|fungus|is|locus|counters)\\b)([a-z]+)s\\b", "$2");
+        return String.join(" named ", parts)
             .replaceAll("\\band\\b", "or")
             .replaceAll("\\bthem\\b", "it")
             .replaceAll("\\bin your hand\\b", "from your hand")
@@ -2686,7 +2745,6 @@ public class MagicTargetFilterFactory {
             .replaceAll("\\bfrom all graveyards\\b", "from a graveyard")
             .replaceAll("\\byour opponents control\\b", "an opponent controls")
             .replaceAll("\\byour opponents' graveyards\\b", "an opponent's graveyard")
-            .replaceAll("QUOTE", "")
             .replaceAll(" on the battlefield\\b", "")
             .replaceAll("^all ", "")
             .replaceAll("^each ", "")

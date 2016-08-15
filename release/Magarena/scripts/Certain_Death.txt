@@ -1,0 +1,9 @@
+name=Certain Death
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_D0zwr7t0lc.png
+value=2.500
+rarity=C
+type=Sorcery
+cost={5}{B}
+effect=Destroy target creature.~Its controller loses 2 life~and you gain 2 life.
+timing=main
+oracle=Destroy target creature. Its controller loses 2 life and you gain 2 life.

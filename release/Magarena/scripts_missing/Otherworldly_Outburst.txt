@@ -1,0 +1,10 @@
+name=Otherworldly Outburst
+image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_DghUDwp5Un.png
+value=2.500
+rarity=C
+type=Instant
+cost={R}
+effect=Target creature gets +1/+0 until end of turn. When that creature dies this turn, put a 3/2 colorless Eldrazi Horror creature token onto the battlefield.
+timing=removal
+oracle=Target creature gets +1/+0 until end of turn. When that creature dies this turn, put a 3/2 colorless Eldrazi Horror creature token onto the battlefield.
+status=needs groovy
