@@ -71,6 +71,30 @@ Thanks to
 
 Thank you for your support and have fun!
 
+Release 1.76 (August 28, 2016)
+============
+lodici
+melvin
+ShawnieBoy
+
+- add Conspiracy: Take the Crown to sets and formats
+
+- added the following to the card script:
+    * condition: you've cast another spell this turn
+
+- fixed the following bugs:
+    * Lambholt Pacifist can't attack when its power is greater than 4 (issue #819)
+    * Hope Against Hope missing AI enchant hint (issue #818)
+    * Lunarch Mantle missing AI enchant hint (issue #820)
+    * Ride Down doesn't give trample (issue #821)
+    * Ulrich of the Krallenhorde's pump trigger fires when he transforms into
+      Ulrich, Uncontested Alpha (issue #822)
+
+- added the following cards:
+Bazaar Krovod, Hewed Stone Retainers, Illusory Angel, Kytheon's Tactics,
+Lava Storm, Shaper Parasite, Skittering Crustacean, Skybind,
+Skyshroud Condor, Splitting Slime, Veteran Warleader
+
 Release 1.75 (July 31, 2016)
 ============
 lodici

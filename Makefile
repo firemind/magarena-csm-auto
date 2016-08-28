@@ -115,22 +115,32 @@ cards/unimplementable.tsv.add: cards/candidates_full.txt
 
 cards/staples.txt:
 	curl \
-	http://www.mtggoldfish.com/format-staples/standard/full/creatures \
-	http://www.mtggoldfish.com/format-staples/standard/full/lands \
-	http://www.mtggoldfish.com/format-staples/standard/full/spells \
-	http://www.mtggoldfish.com/format-staples/modern/full/creatures \
-	http://www.mtggoldfish.com/format-staples/modern/full/lands \
-	http://www.mtggoldfish.com/format-staples/modern/full/spells \
-	http://www.mtggoldfish.com/format-staples/pauper/full/creatures \
-	http://www.mtggoldfish.com/format-staples/pauper/full/lands \
-	http://www.mtggoldfish.com/format-staples/pauper/full/spells \
-	http://www.mtggoldfish.com/format-staples/legacy/full/creatures \
-	http://www.mtggoldfish.com/format-staples/legacy/full/lands \
-	http://www.mtggoldfish.com/format-staples/legacy/full/spells \
-	http://www.mtggoldfish.com/format-staples/vintage/full/creatures \
-	http://www.mtggoldfish.com/format-staples/vintage/full/lands \
-	http://www.mtggoldfish.com/format-staples/vintage/full/spells \
+	https://www.mtggoldfish.com/format-staples/standard/full/creatures \
+	https://www.mtggoldfish.com/format-staples/standard/full/lands \
+	https://www.mtggoldfish.com/format-staples/standard/full/spells \
+	https://www.mtggoldfish.com/format-staples/modern/full/creatures \
+	https://www.mtggoldfish.com/format-staples/modern/full/lands \
+	https://www.mtggoldfish.com/format-staples/modern/full/spells \
+	https://www.mtggoldfish.com/format-staples/pauper/full/creatures \
+	https://www.mtggoldfish.com/format-staples/pauper/full/lands \
+	https://www.mtggoldfish.com/format-staples/pauper/full/spells \
+	https://www.mtggoldfish.com/format-staples/legacy/full/creatures \
+	https://www.mtggoldfish.com/format-staples/legacy/full/lands \
+	https://www.mtggoldfish.com/format-staples/legacy/full/spells \
+	https://www.mtggoldfish.com/format-staples/vintage/full/creatures \
+	https://www.mtggoldfish.com/format-staples/vintage/full/lands \
+	https://www.mtggoldfish.com/format-staples/vintage/full/spells \
 	| pup ".col-card a text{}" | sed "s/&#39;/'/g;s/ (.*)//g" | sort | uniq > $@
+
+
+cards/unknown.txt:
+	grep name= `grep "status=" -Lr release/Magarena/scripts_missing` -h | sed 's/name=//' | sort > $@
+
+cards/unknown_oracle.txt:
+	grep oracle= `grep -L status= -r release/Magarena/scripts_missing` | sed 's/oracle=/\n/;s/release/\nrelease/' > $@
+
+cards/staples_unknown.txt: cards/staples.txt cards/unknown.txt
+	join -t"|" <(sort $(word 1,$^)) <(sort $(word 2,$^)) > $@
 
 %.out: $(MAG)
 	SGE_TASK_ID=$* exp/eval_mcts.sh
@@ -916,5 +926,5 @@ github-releases.json:
 	curl https://api.github.com/repos/magarena/magarena/releases > $@
 
 correct-release-label:
-	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${mac} -H"Content-Type: application/json" -d'{"name": "Magarena-${ver}.app.zip", "label":"Magarena-${ver}.app.zip for Mac"}' -u ${username}
-	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${linux} -H"Content-Type: application/json" -d'{"name": "Magarena-${ver}.zip", "label":"Magarena-${ver}.zip for Linux/Windows"}' -u ${username}
+	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${mac} -H"Content-Type: application/json" -d'{"name": "Magarena-${tag}.app.zip", "label":"Magarena-${tag}.app.zip for Mac"}' -u ${username}
+	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${linux} -H"Content-Type: application/json" -d'{"name": "Magarena-${tag}.zip", "label":"Magarena-${tag}.zip for Linux/Windows"}' -u ${username}
