@@ -1,0 +1,12 @@
+name=Orzhov Basilica
+image=http://magiccards.info/scans/en/c15/298.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=C
+type=Land
+ability=SN enters the battlefield tapped.;\
+When SN enters the battlefield, return a land you control to its owner's hand.;\
+{T}: Add {W}{B} to your mana pool.
+timing=land
+oracle=Orzhov Basilica enters the battlefield tapped.\nWhen Orzhov Basilica enters the battlefield, return a land you control to its owner's hand.\n{T}: Add {W}{B} to your mana pool.
+status=not supported: add-multiple-mana
