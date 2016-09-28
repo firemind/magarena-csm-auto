@@ -1,5 +1,5 @@
 name=Glasses of Urza
-image=http://magiccards.info/scans/en/me4/203.jpg
+image=http://magiccards.info/scans/en/6e/287.jpg
 value=4.064
 rarity=C
 type=Artifact
@@ -7,3 +7,4 @@ cost={1}
 ability={T}: Look at target player's hand.
 timing=artifact
 oracle={T}: Look at target player's hand.
+status=not supported: reveal-hand

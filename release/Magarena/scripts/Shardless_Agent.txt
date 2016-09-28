@@ -1,7 +1,7 @@
 name=Shardless Agent
-image=http://magiccards.info/scans/en/pc2/104.jpg
+image=http://magiccards.info/scans/en/ema/206.jpg
 value=4.316
-rarity=U
+rarity=R
 type=Artifact,Creature
 subtype=Human,Rogue
 cost={1}{G}{U}

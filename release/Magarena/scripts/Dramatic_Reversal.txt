@@ -1,0 +1,9 @@
+name=Dramatic Reversal
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_JjLRqK3SEZ.png
+value=2.500
+rarity=C
+type=Instant
+cost={1}{U}
+effect=Untap all nonland permanents you control.
+timing=removal
+oracle=Untap all nonland permanents you control.

@@ -1,5 +1,5 @@
 name=Palladia-Mors
-image=http://magiccards.info/scans/en/me3/164.jpg
+image=http://magiccards.info/scans/en/lg/287.jpg
 value=3.904
 rarity=R
 type=Legendary,Creature
@@ -7,6 +7,6 @@ subtype=Elder,Dragon
 cost={2}{R}{R}{G}{G}{W}{W}
 pt=7/7
 ability=Flying, trample;\
-        At the beginning of your upkeep, you may pay {R}{G}{W}. If you don't, sacrifice SN.
+        At the beginning of your upkeep, sacrifice SN unless you pay {R}{G}{W}.
 timing=main
 oracle=Flying, trample\nAt the beginning of your upkeep, sacrifice Palladia-Mors unless you pay {R}{G}{W}.

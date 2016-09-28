@@ -1,7 +1,7 @@
 name=Rally the Peasants
-image=http://magiccards.info/scans/en/isd/28.jpg
+image=http://magiccards.info/scans/en/ema/25.jpg
 value=3.588
-rarity=U
+rarity=C
 type=Instant
 cost={2}{W}
 ability=Flashback {2}{R};\

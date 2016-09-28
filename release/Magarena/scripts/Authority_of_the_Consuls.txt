@@ -1,0 +1,10 @@
+name=Authority of the Consuls
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_0ranYzPRuS.png
+value=2.500
+rarity=R
+type=Enchantment
+cost={W}
+ability=Creatures your opponents control enter the battlefield tapped.;\
+        Whenever a creature enters the battlefield under an opponent's control, you gain 1 life.
+timing=enchantment
+oracle=Creatures your opponents control enter the battlefield tapped.\nWhenever a creature enters the battlefield under an opponent's control, you gain 1 life.

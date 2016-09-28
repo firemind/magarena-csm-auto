@@ -1,7 +1,7 @@
 name=Undying Rage
-image=http://magiccards.info/scans/en/ddl/26.jpg
+image=http://magiccards.info/scans/en/ema/152.jpg
 value=2.917
-rarity=U
+rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{R}

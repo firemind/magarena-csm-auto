@@ -1,0 +1,11 @@
+name=Aether Tradewinds
+image=http://magiccards.info/scans/en/cns/89.jpg
+image_updated=2016-09-21
+value=3.200
+rarity=C
+type=Instant
+cost={2}{U}
+effect=Return target permanent you control and target permanent you don't control to their owners' hands.
+timing=removal
+oracle=Return target permanent you control and target permanent you don't control to their owners' hands.
+status=not supported: multiple-targets

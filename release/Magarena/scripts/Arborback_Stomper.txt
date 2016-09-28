@@ -1,0 +1,12 @@
+name=Arborback Stomper
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_GkHJJ9bQvG.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Beast
+cost={3}{G}{G}
+pt=5/4
+ability=Trample;\
+        When SN enters the battlefield, you gain 5 life.
+timing=main
+oracle=Trample\nWhen Arborback Stomper enters the battlefield, you gain 5 life.

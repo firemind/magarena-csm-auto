@@ -1,0 +1,9 @@
+name=Make Obsolete
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_okBbYfkIjw.png
+value=2.500
+rarity=U
+type=Instant
+cost={2}{B}
+effect=Creatures your opponents control get -1/-1 until end of turn.
+timing=removal
+oracle=Creatures your opponents control get -1/-1 until end of turn.

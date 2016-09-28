@@ -1,0 +1,12 @@
+name=Weldfast Monitor
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_QMfmc7cfKu.png
+value=2.500
+rarity=C
+type=Artifact,Creature
+subtype=Lizard
+cost={3}
+pt=3/2
+ability={R}: SN gains menace until end of turn.
+timing=main
+oracle={R}: Weldfast Monitor gains menace until end of turn.
+status=not supported: blocking-restriction

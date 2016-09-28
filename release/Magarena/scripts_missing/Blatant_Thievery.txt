@@ -1,5 +1,5 @@
 name=Blatant Thievery
-image=http://magiccards.info/scans/en/c15/87.jpg
+image=http://magiccards.info/scans/en/on/71.jpg
 image_updated=2016-02-29
 value=4.115
 rarity=R
@@ -8,3 +8,4 @@ cost={4}{U}{U}{U}
 effect=For each opponent, gain control of target permanent that player controls.
 timing=main
 oracle=For each opponent, gain control of target permanent that player controls.
+status=needs groovy

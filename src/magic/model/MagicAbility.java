@@ -32,7 +32,7 @@ public enum MagicAbility {
     CannotBeTheTargetOfNonGreen("(SN )?can't be the target of nongreen spells or abilities from nongreen sources\\.",10),
     CannotBeTheTargetOfBlackOrRedOpponentSpell("(SN )?can't be the target of black or red spells your opponents control\\.",10),
     CanBlockShadow("(SN )?can block creatures with shadow as though (they didn't have shadow|SN had shadow)\\.",10),
-    CanAttackWithDefender("can attack as though (it|they) didn't have defender", 10),
+    CanAttackWithDefender("can attack (this turn )?as though (it|they) didn't have defender", 10),
     Hexproof("hexproof",80),
     Deathtouch("deathtouch",60),
     Defender("defender",-100),
@@ -497,6 +497,21 @@ public enum MagicAbility {
             //do nothing there is only one opponent
         }
     },
+    Melee("melee", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(
+                AttacksTrigger.create(
+                    MagicTargetFilterFactory.SN,
+                    MagicRuleEventAction.create("SN gets +1/+1 until end of turn.")
+                )
+            );
+        }
+    },
+    Crew("crew " + ARG.NUMBER, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(new MagicCrewActivation(ARG.number(arg)));
+        }
+    },
 
     // abilities that involve SN
     ShockLand("As SN enters the battlefield, you may pay 2 life\\. If you don't, SN enters the battlefield tapped\\.", -10) {
@@ -589,6 +604,12 @@ public enum MagicAbility {
     EntersTapped("SN enters the battlefield tapped\\.", -10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(EntersTappedTrigger.create());
+        }
+    },
+    OtherEntersTapped(ARG.WORDRUN + " enter the battlefield tapped\\.", -10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(OtherEntersBattlefieldTrigger.Tapped(filter));
         }
     },
     EntersWithCounter("SN enters the battlefield with " + ARG.WORD1 + " " + ARG.WORD2 + " counter(s)? on it( for each " + ARG.WORDRUN + ")?\\.", 0) {
@@ -1424,7 +1445,7 @@ public enum MagicAbility {
             card.add(MagicStatic.genABStatic(filter, abList));
         }
     },
-    LordGainCan(ARG.WORDRUN + " (?<any>(can|can't|doesn't|attack(s)?) .+)", 0) {
+    LordGainCan(ARG.WORDRUN + " (?<any>(can|can't|doesn't|don't untap|attack(s)?) .+)", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
             final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
@@ -1435,6 +1456,12 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
             card.add(DamageIsDealtTrigger.Renown(n));
+        }
+    },
+    Fabricate("fabricate " + ARG.NUMBER,10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final int n = ARG.number(arg);
+            card.add(EntersBattlefieldTrigger.Fabricate(n));
         }
     },
     /*
@@ -1510,6 +1537,10 @@ public enum MagicAbility {
         return matcher;
     }
 
+    private static String renameThis(final String text) {
+        return text.replaceAll("\\b(T|t)his (creature|land|artifact|enchantment|permanent)( |\\.|'s|\\b)", "SN$3");
+    }
+
     public static MagicAbility getAbility(final String name) {
         for (final MagicAbility ability : values()) {
             if (ability.matches(name)) {
@@ -1545,9 +1576,10 @@ public enum MagicAbility {
         final MagicAbilityList abilityList = new MagicAbilityList();
         final Matcher m = SUB_ABILITY_LIST.matcher(names);
         while (m.find()) {
-            final String name = m.group(1) != null ? m.group(1) :
+            final String part = m.group(1) != null ? m.group(1) :
                                 m.group(2) != null ? m.group(2) :
                                 m.group(3);
+            final String name = renameThis(part);
             getAbility(name).addAbility(abilityList, name);
         }
         return abilityList;

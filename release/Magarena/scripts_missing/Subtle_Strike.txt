@@ -1,0 +1,10 @@
+name=Subtle Strike
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_RQdNlKp1Ed.png
+value=2.500
+rarity=C
+type=Instant
+cost={1}{B}
+effect=Choose one or both — (1) Target creature gets -1/-1 until end of turn. (2) Put a +1/+1 counter on target creature.
+timing=removal
+oracle=Choose one or both —\n• Target creature gets -1/-1 until end of turn.\n• Put a +1/+1 counter on target creature.
+status=not supported: multiple-targets

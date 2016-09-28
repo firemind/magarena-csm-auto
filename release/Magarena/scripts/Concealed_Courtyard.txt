@@ -1,0 +1,10 @@
+name=Concealed Courtyard
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_WReAbZ4h4v.png
+value=2.500
+rarity=R
+type=Land
+mana=w3b3
+ability=SN enters the battlefield tapped unless you control two or fewer other lands.;\
+        {T}: Add {W} or {B} to your mana pool.
+timing=land
+oracle=Concealed Courtyard enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {W} or {B} to your mana pool.

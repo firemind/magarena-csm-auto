@@ -1,0 +1,9 @@
+name=Blossoming Defense
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_JJzUvPix2M.png
+value=2.500
+rarity=U
+type=Instant
+cost={G}
+effect=Target creature you control gets +2/+2 and gains hexproof until end of turn.
+timing=removal
+oracle=Target creature you control gets +2/+2 and gains hexproof until end of turn.

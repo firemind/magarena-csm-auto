@@ -1,0 +1,12 @@
+name=Contraband Kingpin
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_48H40PzwmF.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Aetherborn,Rogue
+cost={U}{B}
+pt=1/4
+ability=Lifelink;\
+        Whenever an artifact enters the battlefield under your control, scry 1.
+timing=main
+oracle=Lifelink\nWhenever an artifact enters the battlefield under your control, scry 1.

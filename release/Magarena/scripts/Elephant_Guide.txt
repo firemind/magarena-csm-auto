@@ -1,7 +1,7 @@
 name=Elephant Guide
-image=http://magiccards.info/scans/en/vma/205.jpg
+image=http://magiccards.info/scans/en/ema/163.jpg
 value=4.400
-rarity=U
+rarity=C
 type=Enchantment
 subtype=Aura
 cost={2}{G}

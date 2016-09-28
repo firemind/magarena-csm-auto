@@ -1,0 +1,10 @@
+name=Tasseled Dromedary
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_TTsI3ophsR.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Camel
+cost={W}
+pt=0/4
+timing=main
+oracle=NONE

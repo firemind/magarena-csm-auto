@@ -1,0 +1,12 @@
+name=Rashmi, Eternities Crafter
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_3TS5Lso6RU.png
+value=2.500
+rarity=M
+type=Legendary,Creature
+subtype=Elf,Druid
+cost={2}{G}{U}
+pt=2/3
+ability=Whenever you cast your first spell each turn, reveal the top card of your library. If it's a nonland card with converted mana cost less than that spell's, you may cast it without paying its mana cost. If you don't cast the revealed card, put it into your hand.
+timing=main
+oracle=Whenever you cast your first spell each turn, reveal the top card of your library. If it's a nonland card with converted mana cost less than that spell's, you may cast it without paying its mana cost. If you don't cast the revealed card, put it into your hand.
+status=needs groovy

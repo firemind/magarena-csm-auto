@@ -1,9 +1,9 @@
 name=Energy Flux
-image=http://magiccards.info/scans/en/me4/48.jpg
+image=http://magiccards.info/scans/en/mm/78.jpg
 value=4.468
 rarity=U
 type=Enchantment
 cost={2}{U}
-ability=artifacts have "At the beginning of your upkeep, you may pay {2}. If you don't, sacrifice SN."
+ability=All artifacts have "At the beginning of your upkeep, sacrifice this artifact unless you pay {2}."
 timing=enchantment
 oracle=All artifacts have "At the beginning of your upkeep, sacrifice this artifact unless you pay {2}."

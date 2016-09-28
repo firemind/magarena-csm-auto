@@ -18,13 +18,10 @@
                 final int power = target.getPower();
                 final int toughness = target.getToughness();
                 game.doAction(new ShiftCardAction(target, MagicLocationType.Graveyard, MagicLocationType.Exile));
-                game.doAction(new PlayTokenAction(event.getPlayer(), MagicCardDefinition.create(
-                    CardDefinitions.getToken("black Zombie creature token"),
-                    {
-                        it.setPowerToughness(power, toughness);
-                        it.setValue(Math.min((power+toughness)/2,5));
-                    }
-                )));
+                game.doAction(new PlayTokenAction(
+                    event.getPlayer(),
+                    CardDefinitions.getToken(power, toughness, "black Zombie creature token")
+                ));
             });
         }
     }

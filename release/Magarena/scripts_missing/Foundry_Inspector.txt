@@ -1,0 +1,11 @@
+name=Foundry Inspector
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_ZistwQAtse.png
+value=2.500
+rarity=U
+type=Artifact,Creature
+subtype=Construct
+cost={3}
+pt=3/2
+ability=Artifact spells you cast cost {1} less to cast.
+timing=main
+oracle=Artifact spells you cast cost {1} less to cast.

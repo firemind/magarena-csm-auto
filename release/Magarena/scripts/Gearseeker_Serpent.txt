@@ -1,0 +1,12 @@
+name=Gearseeker Serpent
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_ErR7ZA4YHN.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Serpent
+cost={5}{U}{U}
+pt=5/6
+ability=SN costs {1} less to cast for each artifact you control.;\
+        {5}{U}: SN can't be blocked this turn.
+timing=main
+oracle=Gearseeker Serpent costs {1} less to cast for each artifact you control.\n{5}{U}: Gearseeker Serpent can't be blocked this turn.

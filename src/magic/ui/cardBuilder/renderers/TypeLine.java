@@ -42,16 +42,16 @@ public class TypeLine {
     }
 
     private static Font getFontSize(CharSequence cardType) {
-        if (cardType.length() > 46) {
+        if (cardType.length() > 43) {
             padding = 3;
             return cardTypeFontSmallest;
         }
-        if (cardType.length() > 43) {
+        if (cardType.length() > 39) {
             padding = 2;
             return cardTypeFontVerySmall;
 
         }
-        if (cardType.length() > 40) {
+        if (cardType.length() > 36) {
             padding = 2;
             return cardTypeFontSmall;
         }

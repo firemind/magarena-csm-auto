@@ -1,5 +1,6 @@
 name=Identity Thief
-image=http://media.wizards.com/2016/ouhtebrpjwxcnw5_EMN/en_G1uf6v8Q13.png
+image=http://magiccards.info/scans/en/emn/64.jpg
+image_updated=2016-09-05
 value=2.500
 rarity=R
 type=Creature
@@ -9,3 +10,4 @@ pt=0/3
 ability=Whenever SN attacks, you may exile another target nontoken creature. If you do, SN becomes a copy of that creature until end of turn. Return the exiled card to the battlefield under its owner's control at the beginning of the next end step.
 timing=main
 oracle=Whenever Identity Thief attacks, you may exile another target nontoken creature. If you do, Identity Thief becomes a copy of that creature until end of turn. Return the exiled card to the battlefield under its owner's control at the beginning of the next end step.
+status=not supported: becomes-copy

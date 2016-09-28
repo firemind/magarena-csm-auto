@@ -1,0 +1,10 @@
+name=Prakhata Club Security
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_rIj7i3ka4g.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Aetherborn,Warrior
+cost={3}{B}
+pt=3/4
+timing=main
+oracle=NONE

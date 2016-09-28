@@ -1,0 +1,10 @@
+name=Spirebluff Canal
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_IhoIzg0Q3tb.png
+value=2.500
+rarity=R
+type=Land
+mana=u3r3
+ability=SN enters the battlefield tapped unless you control two or fewer other lands.;\
+        {T}: Add {U} or {R} to your mana pool.
+timing=land
+oracle=Spirebluff Canal enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {U} or {R} to your mana pool.

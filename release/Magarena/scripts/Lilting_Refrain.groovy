@@ -4,7 +4,7 @@
         "Counter"
     ) {
         @Override
-        public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
+        public Iterable<? extends MagicEvent> getCostEvent(final MagicPermanent source) {
             return [
                 new MagicSacrificeEvent(source)
             ];
@@ -22,7 +22,7 @@
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetCardOnStack(game, {
                 final int amount = event.getPermanent().getCounters(MagicCounterType.Verse);
-                game.addEvent(new MagicCounterUnlessEvent(event.getSource(),it,MagicManaCost.create("{"+amount+"}")));
+                game.addEvent(new MagicCounterUnlessEvent(event.getSource(),it,MagicManaCost.create(amount)));
             });
         }
     }

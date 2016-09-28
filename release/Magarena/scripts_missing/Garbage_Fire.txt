@@ -1,5 +1,6 @@
 name=Garbage Fire
 image=http://magiccards.info/scans/en/cn2/52.jpg
+image_updated=2016-09-05
 value=2.500
 rarity=C
 type=Instant
@@ -7,3 +8,4 @@ cost={2}{R}
 effect=Reveal SN as you draft it and note how many cards you've drafted this draft round, including SN.~SN deals damage to target creature equal to the highest number you noted for cards named Garbage Fire.
 timing=removal
 oracle=Reveal Garbage Fire as you draft it and note how many cards you've drafted this draft round, including Garbage Fire.\nGarbage Fire deals damage to target creature equal to the highest number you noted for cards named Garbage Fire.
+status=not supported: draft

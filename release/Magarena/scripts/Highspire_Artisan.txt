@@ -1,0 +1,12 @@
+name=Highspire Artisan
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_IYWlFwPT2g.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Elf,Artificer
+cost={2}{G}
+pt=0/3
+ability=Reach;\
+        Fabricate 1
+timing=main
+oracle=Reach\nFabricate 1

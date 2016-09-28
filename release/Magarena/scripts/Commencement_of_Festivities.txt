@@ -1,0 +1,9 @@
+name=Commencement of Festivities
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_fjy9Ak1FS3.png
+value=2.500
+rarity=C
+type=Instant
+cost={1}{G}
+effect=Prevent all combat damage that would be dealt to players this turn.
+timing=removal
+oracle=Prevent all combat damage that would be dealt to players this turn.

@@ -1,0 +1,12 @@
+name=Consulate Skygate
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_kJlnCNicuJ.png
+value=2.500
+rarity=C
+type=Artifact,Creature
+subtype=Wall
+cost={2}
+pt=0/4
+ability=Defender;\
+        Reach
+timing=smain
+oracle=Defender\nReach

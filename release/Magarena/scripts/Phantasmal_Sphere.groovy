@@ -11,7 +11,7 @@
             return amount > 0 ?
                 new MagicEvent(
                     permanent,
-                    new MagicMayChoice(new MagicPayManaCostChoice(MagicManaCost.create("{"+amount+"}"))),
+                    new MagicMayChoice(new MagicPayManaCostChoice(MagicManaCost.create(amount))),
                     this,
                     "PN may\$ pay {"+amount+"}. If he or she doesn't, sacrifice SN."
                 ):
@@ -42,13 +42,7 @@
                 game.logAppendX(event.getPlayer(),X);
                 game.doAction(new PlayTokenAction(
                     it,
-                    MagicCardDefinition.create(
-                        CardDefinitions.getToken("blue Orb creature token with flying"),
-                        {
-                            it.setPowerToughness(X, X);
-                            it.setValue(X);
-                        }
-                    )
+                    CardDefinitions.getToken(X, X, "blue Orb creature token with flying")
                 ));
             });
         }

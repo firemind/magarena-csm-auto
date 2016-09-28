@@ -1,0 +1,13 @@
+name=Trusty Companion
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_ScxfQYPv71.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Hyena
+cost={1}{W}
+pt=3/2
+ability=Vigilance;\
+        SN can't attack alone.
+timing=main
+oracle=Vigilance\nTrusty Companion can't attack alone.
+status=not supported: attacking-restriction

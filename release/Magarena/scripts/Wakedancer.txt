@@ -1,7 +1,7 @@
 name=Wakedancer
-image=http://magiccards.info/scans/en/cns/134.jpg
+image=http://magiccards.info/scans/en/ema/116.jpg
 value=3.750
-rarity=U
+rarity=C
 type=Creature
 subtype=Human,Shaman
 cost={2}{B}

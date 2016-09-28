@@ -1,0 +1,11 @@
+name=Armored Transport
+image=http://magiccards.info/scans/en/gtc/226.jpg
+value=3.188
+rarity=C
+type=Artifact,Creature
+subtype=Construct
+cost={3}
+pt=2/1
+timing=main
+oracle=Prevent all combat damage that would be dealt to Armored Transport by creatures blocking it.
+requires_groovy_code

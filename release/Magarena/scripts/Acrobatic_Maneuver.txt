@@ -1,0 +1,9 @@
+name=Acrobatic Maneuver
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_9MWwXmwX0k.png
+value=2.500
+rarity=C
+type=Instant
+cost={2}{W}
+effect=Exile target creature you control, then return that card to the battlefield under its owner's control.~Draw a card.
+timing=removal
+oracle=Exile target creature you control, then return that card to the battlefield under its owner's control.\nDraw a card.

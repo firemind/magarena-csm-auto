@@ -1,0 +1,13 @@
+name=Aradara Express
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_cr3iuY0SE2.png
+value=2.500
+rarity=C
+type=Artifact
+subtype=Vehicle
+cost={5}
+pt=8/6
+ability=Menace;\
+        Crew 4
+timing=artifact
+oracle=Menace\nCrew 4
+status=not supported: blocking-restriction

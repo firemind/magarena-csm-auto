@@ -1,0 +1,10 @@
+name=Key to the City
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_8Q5zrkgxis.png
+value=2.500
+rarity=R
+type=Artifact
+cost={2}
+ability={T}, Discard a card: You may have target creature can't be blocked this turn.;\
+        Whenever SN becomes untapped, you may pay {2}. If you do, draw a card.
+timing=artifact
+oracle={T}, Discard a card: Up to one target creature can't be blocked this turn.\nWhenever Key to the City becomes untapped, you may pay {2}. If you do, draw a card.

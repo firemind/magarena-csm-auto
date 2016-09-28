@@ -1,6 +1,5 @@
 name=Mogg Hollows
-image=http://magiccards.info/scans/en/tpr/239.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/tp/318.jpg
 value=2.419
 rarity=U
 type=Land

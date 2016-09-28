@@ -1,7 +1,7 @@
 name=Cephalid Sage
-image=http://magiccards.info/scans/en/tr/29.jpg
+image=http://magiccards.info/scans/en/ema/41.jpg
 value=2.500
-rarity=U
+rarity=C
 type=Creature
 subtype=Cephalid
 cost={3}{U}

@@ -1,7 +1,7 @@
 name=Argothian Enchantress
-image=http://magiccards.info/scans/en/us/234.jpg
+image=http://magiccards.info/scans/en/ema/158.jpg
 value=4.579
-rarity=R
+rarity=M
 type=Creature
 subtype=Human,Druid
 cost={1}{G}

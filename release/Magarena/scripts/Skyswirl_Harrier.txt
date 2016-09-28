@@ -1,0 +1,11 @@
+name=Skyswirl Harrier
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_MiW0UFPZRr.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Bird
+cost={4}{W}
+pt=3/4
+ability=Flying
+timing=main
+oracle=Flying

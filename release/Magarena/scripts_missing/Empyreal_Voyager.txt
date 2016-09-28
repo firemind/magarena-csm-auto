@@ -1,0 +1,13 @@
+name=Empyreal Voyager
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_a7I1mfNYry.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Vedalken,Scout
+cost={1}{G}{U}
+pt=2/3
+ability=Flying, trample;\
+        Whenever SN deals combat damage to a player, you get that many {E}.
+timing=main
+oracle=Flying, trample\nWhenever Empyreal Voyager deals combat damage to a player, you get that many {E}.
+status=needs groovy

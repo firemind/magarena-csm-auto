@@ -1,0 +1,14 @@
+name=Mausoleum Wanderer
+image=http://magiccards.info/scans/en/emn/69.jpg
+image_updated=2016-09-05
+value=2.500
+rarity=R
+type=Creature
+subtype=Spirit
+cost={U}
+pt=1/1
+ability=Flying;\
+        Whenever another Spirit enters the battlefield under your control, SN gets +1/+1 until end of turn.
+timing=main
+oracle=Flying\nWhenever another Spirit enters the battlefield under your control, Mausoleum Wanderer gets +1/+1 until end of turn.\nSacrifice Mausoleum Wanderer: Counter target instant or sorcery spell unless its controller pays {X}, where X is Mausoleum Wanderer's power.
+requires_groovy_code

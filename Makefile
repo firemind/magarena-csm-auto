@@ -145,10 +145,11 @@ cards/staples_unknown.txt: cards/staples.txt cards/unknown.txt
 %.out: $(MAG)
 	SGE_TASK_ID=$* exp/eval_mcts.sh
 	
-release/Magarena/mods/felt_theme.zip:
+release/Magarena/themes/felt_theme.zip:
+	-mkdir release/Magarena/themes
 	wget https://github.com/magarena/magarena-themes/releases/download/1.0/felt_theme.zip -O $@
 
-M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
+M1.%: clean $(EXE) release/Magarena/themes/felt_theme.zip
 	grep "VERSION.*1.$*" -Ir src/
 	grep "Release.*1.$*" release/README.txt
 	grep 1.$* -Ir Magarena.app/
@@ -157,7 +158,7 @@ M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 	-rm Magarena-1.$*.zip
 	-rm Magarena-1.$*.app.zip
 	echo "preparing Lin/Win dist"
-	mkdir -p Magarena-1.$*/Magarena/mods
+	mkdir Magarena-1.$*
 	cp -r \
 			release/gpl-3.0.html \
 			release/Magarena.jar \
@@ -166,6 +167,7 @@ M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 			release/README.txt \
 			release/lib \
 			Magarena-1.$*
+	mkdir Magarena-1.$*/Magarena
 	cp -r \
 			release/Magarena/avatars \
 			release/Magarena/decks \
@@ -173,12 +175,13 @@ M1.%: clean $(EXE) release/Magarena/mods/felt_theme.zip
 			release/Magarena/scripts_missing \
 			release/Magarena/translations \
 			Magarena-1.$*/Magarena
+	mkdir Magarena-1.$*/Magarena/mods
 	cp \
 			release/Magarena/mods/*.txt \
 			Magarena-1.$*/Magarena/mods
-	mkdir -p Magarena-1.$*/Magarena/themes
+	mkdir Magarena-1.$*/Magarena/themes
 	cp \
-			release/Magarena/mods/felt_theme.zip \
+			release/Magarena/themes/felt_theme.zip \
 			Magarena-1.$*/Magarena/themes
 	-zip -r Magarena-1.$*.zip Magarena-1.$*
 	echo "preparing Mac dist"
@@ -335,10 +338,10 @@ decks/update:
 	find decks -size 0 -delete
 
 ref/MagicCompRules_latest.txt:
-	wget `curl http://magic.wizards.com/en/gameinfo/gameplay/formats/comprehensiverules | grep -o "http://media.*\.txt"` -O $@
+	wget `curl http://magic.wizards.com/en/game-info/gameplay/rules-and-formats/rules | grep -o "http://media.*\.txt"` -O $@
 
 ref/rules.txt: ref/MagicCompRules_latest.txt
-	fmt -s $^ > $@
+	iconv -f UTF-16LE -t UTF-8 $^ | fmt -s > $@
 	flip -bu $@
 
 resources/magic/data/icons/missing_card.png:
@@ -928,3 +931,11 @@ github-releases.json:
 correct-release-label:
 	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${mac} -H"Content-Type: application/json" -d'{"name": "Magarena-${tag}.app.zip", "label":"Magarena-${tag}.app.zip for Mac"}' -u ${username}
 	curl -XPATCH https://api.github.com/repos/magarena/magarena/releases/assets/${linux} -H"Content-Type: application/json" -d'{"name": "Magarena-${tag}.zip", "label":"Magarena-${tag}.zip for Linux/Windows"}' -u ${username}
+
+%_img.tsv:
+	paste <(cat image-gallery | pup 'img attr{alt}') <(cat image-gallery | pup 'img attr{src}') > $@
+	# edit tsv file to use only ASCII characters
+
+%_fix_image:
+	grep /$*/ -r release/Magarena/scripts_missing release/Magarena/scripts -l | parallel awk -f scripts/update_image.awk $*_img.tsv {} '>' {}.new
+	grep /$*/ -r release/Magarena/scripts_missing/*.txt release/Magarena/scripts/*.txt  -l | parallel mv {}.new {}

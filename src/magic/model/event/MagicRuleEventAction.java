@@ -787,7 +787,7 @@ public enum MagicRuleEventAction {
                     game.logAppendMessage(event.getPlayer(), "(" + total + ")");
                 }
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.addEvent(new MagicDrawEvent(event.getSource(), it, total));
+                    game.addEvent(new MagicDrawEvent(event.getSource(), it, total, ""));
                 }
             };
         }
@@ -1808,7 +1808,7 @@ public enum MagicRuleEventAction {
         }
     },
     PutTokens(
-        ARG.PLAYERS + "( )?put(s)? " + ARG.AMOUNT + " (?<name>[^\\.]*token[^\\.]*) onto the battlefield" + ARG.MODS + "( )?(for each " + ARG.WORDRUN + ")?",
+        ARG.PLAYERS + "( )?put(s)? " + ARG.AMOUNT + " (?<name>[^\\.]*token[^\\.]*) onto the battlefield" + ARG.MODS + "( )?((for each|where X is) " + ARG.WORDRUN + ")?",
         MagicTiming.Token,
         "Token"
     ) {
@@ -1822,7 +1822,8 @@ public enum MagicRuleEventAction {
             final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
             return (game, event) -> {
                 final int multiplier = eachCount.getAmount(event);
-                final int total = tokenCount.getAmount(event) * multiplier;
+                int total = (eachCount != MagicAmountFactory.One && tokenCount == MagicAmountFactory.XCost) ?
+                    multiplier : tokenCount.getAmount(event) * multiplier;
                 if (eachCount != MagicAmountFactory.One) {
                     game.logAppendMessage(event.getPlayer(), "(" + total + ")");
                 }
@@ -1922,18 +1923,28 @@ public enum MagicRuleEventAction {
         }
     },
     SacrificeChosen(
-        ARG.PLAYERS + "( )?sacrifice(s)? (?<permanent>[^\\.]*)",
+        ARG.PLAYERS + "( )?sacrifice(s)? (?<another>another )?(" + ARG.AMOUNT + " )?" + ARG.WORDRUN,
         MagicTargetHint.Negative,
         MagicTiming.Removal,
         "Sacrifice"
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
-            final MagicTargetChoice choice = new MagicTargetChoice(getHint(matcher), matcher.group("permanent") + " you control");
-            final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
+            final MagicTargetFilter<MagicPlayer> pfilter = ARG.playersParse(matcher);
+            final int amt = ARG.amount(matcher);
+            final String chosen = MagicTargetFilterFactory.toSingular(ARG.wordrun(matcher)) + " you control";
+            final MagicTargetFilter<MagicPermanent> regular = MagicTargetFilterFactory.Permanent(chosen);
+            final MagicTargetFilter<MagicPermanent> filter = matcher.group("another") != null ?
+                new MagicOtherPermanentTargetFilter(regular) : regular;
+            final MagicTargetChoice choice = new MagicTargetChoice(
+                filter,
+                ("aeiou".indexOf(chosen.charAt(0)) >= 0 ? "an " : "a ") + chosen
+            );
             return (game, event) -> {
-                for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.addEvent(new MagicSacrificePermanentEvent(event.getSource(), it, choice));
+                for (final MagicPlayer it : ARG.players(event, matcher, pfilter)) {
+                    for (int i = 0; i < amt; i++) {
+                        game.addEvent(new MagicSacrificePermanentEvent(event.getSource(), it, choice));
+                    }
                 }
             };
         }
@@ -2258,6 +2269,14 @@ public enum MagicRuleEventAction {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             return (game, event) -> game.doAction(new PlayTokenAction(event.getPlayer(), CardDefinitions.getToken("colorless Clue artifact token")));
+        }
+    },
+    BecomesMonarch(
+        "you become the monarch"
+    ){
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            return (game, event) -> game.doAction(new BecomeMonarchAction(event.getPlayer()));
         }
     },
     BecomeBlocked(
@@ -2726,6 +2745,23 @@ public enum MagicRuleEventAction {
             };
         }
     },
+    Energy(
+        ARG.PLAYERS + " get(s)? " + ARG.ENERGY,
+        MagicTargetHint.Negative,
+        MagicTiming.Removal,
+        "Poison"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int amount = ARG.energy(matcher);
+            final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
+            return (game, event) -> {
+                for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
+                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Energy, amount));
+                }
+            };
+        }
+    },
     ExtraTurn(
         ARG.PLAYERS + "( )?take(s)? " + ARG.AMOUNT + " extra turn(s)? after this one",
         MagicTargetHint.Positive,
@@ -2742,7 +2778,8 @@ public enum MagicRuleEventAction {
                 }
             };
         }
-    },;
+    },
+    ;
 
     private final Pattern pattern;
     private final MagicTargetHint hint;
@@ -2982,6 +3019,7 @@ public enum MagicRuleEventAction {
     }
 
     static final Pattern INTERVENING_IF = Pattern.compile("if " + ARG.COND + ", " + ARG.ANY, Pattern.CASE_INSENSITIVE);
+    static final Pattern EFFECT_UNLESS = Pattern.compile(ARG.WORDRUN + " unless you " + ARG.COST, Pattern.CASE_INSENSITIVE);
     static final Pattern MAY_DO = Pattern.compile("you may " + ARG.MAY_COST + "\\. if you do, .+", Pattern.CASE_INSENSITIVE);
     static final Pattern MAY_DONT = Pattern.compile("you may " + ARG.COST + "\\. if you don't, .+", Pattern.CASE_INSENSITIVE);
 
@@ -2997,7 +3035,13 @@ public enum MagicRuleEventAction {
         final Matcher ifMatcher = INTERVENING_IF.matcher(rule);
         final boolean ifMatched = ifMatcher.matches();
         final MagicCondition ifCond = ifMatched ? MagicConditionParser.build(ARG.cond(ifMatcher)) : MagicCondition.NONE;
-        final String ruleWithoutIf = ifMatched ? ARG.any(ifMatcher) : rule;
+        String ruleWithoutIf = ifMatched ? ARG.any(ifMatcher) : rule;
+
+        // rewrite effect unless clause into "you may <cost>, if you don't, <effect>"
+        final Matcher unlessMatcher = EFFECT_UNLESS.matcher(ruleWithoutIf);
+        if (unlessMatcher.matches()) {
+            ruleWithoutIf = "You may " + ARG.cost(unlessMatcher) + " If you don't, " + ARG.wordrun(unlessMatcher) + ".";
+        }
 
         // handle you may <cost>. if you do, <effect>
         final Matcher mayDoMatcher = MAY_DO.matcher(ruleWithoutIf);

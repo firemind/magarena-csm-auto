@@ -1,0 +1,12 @@
+name=Janjeet Sentry
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_igexItunaa.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Vedalken,Soldier
+cost={2}{U}
+pt=2/3
+ability=When SN enters the battlefield, you get {E}{E}.;\
+        {T}, Pay {E}{E}: You may tap or untap target artifact or creature.
+timing=main
+oracle=When Janjeet Sentry enters the battlefield, you get {E}{E}.\n{T}, Pay {E}{E}: You may tap or untap target artifact or creature.

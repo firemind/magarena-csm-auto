@@ -1,0 +1,13 @@
+name=Tree of Perdition
+image=http://magiccards.info/scans/en/emn/109.jpg
+image_updated=2016-09-05
+value=2.500
+rarity=M
+type=Creature
+subtype=Plant
+cost={3}{B}
+pt=0/13
+ability=Defender
+timing=smain
+oracle=Defender\n{T}: Exchange target opponent's life total with Tree of Perdition's toughness.
+requires_groovy_code

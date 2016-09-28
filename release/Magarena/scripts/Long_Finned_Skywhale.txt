@@ -1,0 +1,12 @@
+name=Long-Finned Skywhale
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_cv2PIvK1xd.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Whale
+cost={2}{U}{U}
+pt=4/3
+ability=Flying;\
+        SN can block only creatures with flying.
+timing=main
+oracle=Flying\nLong-Finned Skywhale can block only creatures with flying.

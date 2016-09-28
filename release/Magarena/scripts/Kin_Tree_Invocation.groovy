@@ -17,13 +17,7 @@
             game.logAppendValue(event.getPlayer(), x);
             game.doAction(new PlayTokenAction(
                 event.getPlayer(),
-                MagicCardDefinition.create(
-                    CardDefinitions.getToken("black and green Spirit Warrior creature token"),
-                    {
-                        it.setPowerToughness(x, x);
-                        it.setValue(x);
-                    }
-                )
+                CardDefinitions.getToken(x, x, "black and green Spirit Warrior creature token")
             ));
         }
     }

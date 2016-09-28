@@ -235,6 +235,13 @@ public enum MagicConditionParser {
             return MagicConditionFactory.EnchantedIs(filter);
         }
     },
+    EnchantedCountersAtLeast("enchanted creature has " + ARG.AMOUNT + " or more " + ARG.WORD1 + " counters on it") {
+        public MagicCondition toCondition(final Matcher arg) {
+            final int amount = ARG.amount(arg);
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(arg));
+            return MagicConditionFactory.EnchantedCounterAtLeast(counterType, amount);
+        }
+    },
     IsUntapped("(SN is|it's) untapped") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.UNTAPPED_CONDITION;
@@ -471,9 +478,7 @@ public enum MagicConditionParser {
     },
     NoneOnBattlefieldAlt("there are no " + ARG.WORDRUN + " on the battlefield") {
         public MagicCondition toCondition(final Matcher arg) {
-            return MagicConditionFactory.BattlefieldEqual(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)), 0
-            );
+            return NoneOnBattlefield.toCondition(arg);
         }
     },
     AtLeastOneOnBattlefield("there is (a|an) " + ARG.WORDRUN + " on the battlefield") {
@@ -481,6 +486,11 @@ public enum MagicConditionParser {
             return MagicConditionFactory.BattlefieldAtLeast(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)), 1
             );
+        }
+    },
+    IsOnBattlefield("(a|an) " + ARG.WORDRUN + " is on the battlefield") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return AtLeastOneOnBattlefield.toCondition(arg);
         }
     },
     FiveOrMoreIslands("there are " + ARG.AMOUNT + " or more " + ARG.WORDRUN + " on the battlefield") {
@@ -513,6 +523,21 @@ public enum MagicConditionParser {
     OpponentMoreLands("an opponent controls more lands than you") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.OPP_MORE_LANDS;
+        }
+    },
+    OpponentMoreCreatures("an opponent controls more creatures than you") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.OPP_MORE_CREATURES;
+        }
+    },
+    OpponentMoreLife("an opponent has more life than you") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.OPP_MORE_LIFE;
+        }
+    },
+    YouMoreLife("you have more life than an opponent") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.YOU_MORE_LIFE;
         }
     },
     Morbid("a creature died this turn") {
@@ -610,6 +635,11 @@ public enum MagicConditionParser {
     CastAnotherSpellThisTurn("you've cast another spell this turn") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.CAST_ANOTHER_SPELL_THIS_TURN;
+        }
+    },
+    YouAreMonarch("you're the monarch") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.YOU_ARE_MONARCH;
         }
     },
     ;

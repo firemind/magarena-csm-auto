@@ -1,0 +1,12 @@
+name=Peema Outrider
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_8wQHTDuq7D.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Elf,Artificer
+cost={2}{G}{G}
+pt=3/3
+ability=Trample;\
+        Fabricate 1
+timing=main
+oracle=Trample\nFabricate 1

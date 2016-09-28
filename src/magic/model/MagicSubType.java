@@ -33,6 +33,7 @@ public enum MagicSubType {
     Contraption,
     Equipment,
     Fortification,
+    Vehicle,
 
     //enchantment subtypes
     Aura,
@@ -56,7 +57,7 @@ public enum MagicSubType {
     },
 
     //creature and tribal subtypes
-    Advisor, Ally, Angel, Anteater, Antelope, Ape, Archer, Archon, Artificer,
+    Advisor, Aetherborn, Ally, Angel, Anteater, Antelope, Ape, Archer, Archon, Artificer,
     Assassin, Atog, Aurochs, Avatar, Badger, Barbarian, Basilisk,
     Bat, Bear, Beast, Beeble, Berserker, Bird, Blinkmoth, Boar, Bringer, Brushwagg,
     Camarid, Camel, Caribou, Carrier, Cat, Centaur, Cephalid, Chimera, Citizen,
@@ -69,12 +70,12 @@ public enum MagicSubType {
     Illusion, Imp, Incarnation, Insect, Jellyfish, Juggernaut, Kavu, Kirin,
     Kithkin, Knight, Kobold, Kor, Kraken, Lamia, Lammasu, Leech, Leviathan, Lhurgoyf,
     Licid, Lizard, Manticore, Masticore, Mercenary, Merfolk, Metathran, Minion,
-    Minotaur, Mole, Monger, Mongoose, Monk, Moonfolk, Mutant, Myr, Mystic, Naga, Nautilus,
+    Minotaur, Mole, Monger, Mongoose, Monk, Monkey, Moonfolk, Mutant, Myr, Mystic, Naga, Nautilus,
     Nephilim, Nightmare, Nightstalker, Ninja, Noggle, Nomad, Nymph, Octopus, Ogre, Ooze,
     Orb, Orc, Orgg, Ouphe, Ox, Oyster, Pegasus, Pentavite, Pest, Phelddagrif,
-    Phoenix, Pincher, Pirate, Plant, Praetor, Prism, Processor, Rabbit, Rat, Rebel,
+    Phoenix, Pilot, Pincher, Pirate, Plant, Praetor, Prism, Processor, Rabbit, Rat, Rebel,
     Reflection, Rhino, Rigger, Rogue, Sable, Salamander, Samurai, Sand, Saproling, Satyr,
-    Scarecrow, Scion, Scorpion, Scout, Serf, Serpent, Shade, Shaman, Shapeshifter, Sheep,
+    Scarecrow, Scion, Scorpion, Scout, Serf, Serpent, Servo, Shade, Shaman, Shapeshifter, Sheep,
     Siren, Skeleton, Slith, Sliver, Slug, Snake, Soldier, Soltari, Spawn, Specter,
     Spellshaper, Sphinx, Spider, Spike, Spirit, Splinter, Sponge, Squid, Squirrel,
     Starfish, Surrakar, Survivor, Tetravite, Thalakos, Thopter, Thrull, Treefolk,
@@ -94,13 +95,15 @@ public enum MagicSubType {
 
     public static final Set<MagicSubType> ALL_LANDS = EnumSet.range(Plains, Gate);
 
-    public static final Set<MagicSubType> ALL_ARTIFACTS = EnumSet.range(Contraption, Fortification);
+    public static final Set<MagicSubType> ALL_ARTIFACTS = EnumSet.range(Contraption, Vehicle);
 
     public static final Set<MagicSubType> ALL_ENCHANTMENTS = EnumSet.range(Aura, Shrine);
 
     public static final Set<MagicSubType> ALL_CREATURES = EnumSet.range(Assembly_Worker, Zubera);
 
     public static final Set<MagicSubType> ALL_PLANESWALKERS = EnumSet.range(Ajani, Xenagos);
+
+    public static final Set<MagicSubType> FILTER_SUBTYPES = EnumSet.range(Plains,Zubera);
 
     private MagicSubType() {
     }

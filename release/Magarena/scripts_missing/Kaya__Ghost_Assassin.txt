@@ -1,12 +1,15 @@
 name=Kaya, Ghost Assassin
 image=http://magiccards.info/scans/en/cn2/75.jpg
+image_updated=2016-09-05
 value=2.500
 rarity=M
 type=Planeswalker
 subtype=Kaya
 cost={2}{W}{B}
+loyalty=5
 ability=0: Exile SN or up to one target creature. Return that card to the battlefield under its owner's control at the beginning of your next upkeep. You lose 2 life.;\
         −1: Each opponent loses 2 life and you gain 2 life.;\
         −2: Each opponent discards a card and you draw a card.
 timing=main
 oracle=0: Exile Kaya, Ghost Assassin or up to one target creature. Return that card to the battlefield under its owner's control at the beginning of your next upkeep. You lose 2 life.\n−1: Each opponent loses 2 life and you gain 2 life.\n−2: Each opponent discards a card and you draw a card.
+status=needs groovy

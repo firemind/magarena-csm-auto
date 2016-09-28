@@ -1,7 +1,7 @@
 name=Karakas
-image=http://magiccards.info/scans/en/me3/208.jpg
+image=http://magiccards.info/scans/en/ema/240.jpg
 value=4.570
-rarity=R
+rarity=M
 type=Legendary,Land
 mana=w1
 ability={T}: Add {W} to your mana pool.;\

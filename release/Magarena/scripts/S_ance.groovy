@@ -33,12 +33,8 @@ def Spirit = new MagicStatic(MagicLayer.Type) {
                     ));
                     game.doAction(new PlayTokenAction(
                         event.getPlayer(),
-                        it,
-                        {
-                            final MagicPermanent perm ->
-                            game.doAction(new AddStaticAction(perm, Spirit));
-                            game.doAction(new AddTriggerAction(perm, AtEndOfTurnTrigger.ExileAtEnd));
-                        }
+                        MagicCardDefinition.token(it, {it.addSubType(MagicSubType.Spirit)}),
+                        MagicPlayMod.EXILE_AT_END_OF_TURN
                     ));
                 });
             }

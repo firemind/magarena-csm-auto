@@ -1,0 +1,11 @@
+name=Vedalken Blademaster
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_Fp8pd41cQn.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Vedalken,Soldier
+cost={2}{U}
+pt=2/3
+ability=Prowess
+timing=main
+oracle=Prowess

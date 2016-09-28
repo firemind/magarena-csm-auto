@@ -3,7 +3,7 @@ def Bounce = new MagicPermanentActivation(
     "Bounce"
 ) {
     @Override
-    public Iterable<MagicEvent> getCostEvent(final MagicPermanent source) {
+    public Iterable<? extends MagicEvent> getCostEvent(final MagicPermanent source) {
         return [
             new MagicPayManaCostEvent(source,"{2}{U}{U}"),
             new MagicPlayAbilityEvent(source)
@@ -31,7 +31,7 @@ def GainAct = new MagicStatic(MagicLayer.Ability) {
 };
 
 [
-    new MagicSpellCardEvent() {
+    new MagicETBEvent() {
         @Override
         public MagicEvent getEvent(final MagicCardOnStack cardOnStack,final MagicPayedCost payedCost) {
             return new MagicEvent(

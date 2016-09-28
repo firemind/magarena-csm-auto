@@ -1,0 +1,10 @@
+name=Eliminate the Competition
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_6BCxfM3QVq.png
+value=2.500
+rarity=R
+type=Sorcery
+cost={4}{B}
+ability=As an additional cost to cast SN, sacrifice X creatures.
+effect=Destroy X target creatures.
+timing=main
+oracle=As an additional cost to cast Eliminate the Competition, sacrifice X creatures.\nDestroy X target creatures.

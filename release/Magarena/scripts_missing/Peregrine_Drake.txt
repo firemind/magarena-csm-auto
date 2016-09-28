@@ -1,7 +1,7 @@
 name=Peregrine Drake
-image=http://magiccards.info/scans/en/pc2/22.jpg
+image=http://magiccards.info/scans/en/ema/64.jpg
 value=4.400
-rarity=U
+rarity=C
 type=Creature
 subtype=Drake
 cost={4}{U}

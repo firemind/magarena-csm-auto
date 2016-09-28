@@ -1,0 +1,13 @@
+name=Padeem, Consul of Innovation
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_PeLV5taOs5b.png
+value=2.500
+rarity=R
+type=Legendary,Creature
+subtype=Vedalken,Artificer
+cost={3}{U}
+pt=1/4
+ability=Artifacts you control have hexproof.;\
+        At the beginning of your upkeep, if you control the artifact with the highest converted mana cost or tied for the highest converted mana cost, draw a card.
+timing=main
+oracle=Artifacts you control have hexproof.\nAt the beginning of your upkeep, if you control the artifact with the highest converted mana cost or tied for the highest converted mana cost, draw a card.
+status=needs groovy

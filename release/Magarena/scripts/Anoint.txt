@@ -1,6 +1,5 @@
 name=Anoint
-image=http://magiccards.info/scans/en/tpr/3.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/tp/215.jpg
 value=1.955
 rarity=C
 type=Instant

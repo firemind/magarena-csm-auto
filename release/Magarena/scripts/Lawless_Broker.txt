@@ -1,0 +1,11 @@
+name=Lawless Broker
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_T055YUZtHI.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Aetherborn,Rogue
+cost={2}{B}
+pt=3/2
+ability=When SN dies, put a +1/+1 counter on target creature you control.
+timing=main
+oracle=When Lawless Broker dies, put a +1/+1 counter on target creature you control.

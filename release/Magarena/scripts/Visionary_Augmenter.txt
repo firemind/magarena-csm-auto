@@ -1,0 +1,11 @@
+name=Visionary Augmenter
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_SgghAE8ACh.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Dwarf,Artificer
+cost={2}{W}{W}
+pt=2/1
+ability=Fabricate 2
+timing=main
+oracle=Fabricate 2

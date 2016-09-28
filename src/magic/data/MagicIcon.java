@@ -5,6 +5,7 @@ import java.util.Set;
 
 public enum MagicIcon {
 
+    LAYOUT_ICON("w-layout.png"),
     ILLEGAL_ICON("card_illegal.png"),
     LEGAL_ICON("card_legal.png"),
     BANNED_ICON("card_banned.png"),
@@ -182,6 +183,7 @@ public enum MagicIcon {
     PAGECOUNTER("study-counter.png"),
     SLEEPCOUNTER("sleep-counter.png"),
 
+    ENERGY("E.png"),
 
     MANA_ANY("anymana.gif"),
     MANA_PHYREXIAN_NULL("P.png"),

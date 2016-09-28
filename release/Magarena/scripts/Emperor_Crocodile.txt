@@ -1,7 +1,7 @@
 name=Emperor Crocodile
-image=http://magiccards.info/scans/en/9e/241.jpg
+image=http://magiccards.info/scans/en/ema/165.jpg
 value=3.721
-rarity=R
+rarity=C
 type=Creature
 subtype=Crocodile
 cost={3}{G}

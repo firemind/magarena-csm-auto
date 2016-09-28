@@ -78,6 +78,7 @@ public class CardDefinitions {
                 "magic.model.stack",
                 "magic.model.target",
                 "magic.model.trigger",
+                "magic.model.phase",
                 "magic.card"
             ).addStaticStars(
                 "magic.model.target.MagicTargetFilterFactory",
@@ -249,6 +250,10 @@ public class CardDefinitions {
         } catch (final InterruptedException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static MagicCardDefinition getToken(final int p, final int t, final String name) {
+        return MagicCardDefinition.token(CardDefinitions.getToken(name), cdef -> cdef.setPowerToughness(p, t));
     }
 
     public static MagicCardDefinition getToken(final String original) {

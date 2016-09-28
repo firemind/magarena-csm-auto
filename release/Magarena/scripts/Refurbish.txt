@@ -1,0 +1,9 @@
+name=Refurbish
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_AU2YyhAWm1.png
+value=2.500
+rarity=U
+type=Sorcery
+cost={3}{W}
+effect=Return target artifact card from your graveyard to the battlefield.
+timing=main
+oracle=Return target artifact card from your graveyard to the battlefield.

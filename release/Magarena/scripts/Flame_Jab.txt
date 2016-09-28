@@ -1,7 +1,7 @@
 name=Flame Jab
-image=http://magiccards.info/scans/en/eve/53.jpg
+image=http://magiccards.info/scans/en/ema/131.jpg
 value=3.284
-rarity=C
+rarity=U
 type=Sorcery
 cost={R}
 ability=Retrace

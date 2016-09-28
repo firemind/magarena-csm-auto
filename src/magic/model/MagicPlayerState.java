@@ -2,16 +2,19 @@ package magic.model;
 
 public enum MagicPlayerState {
 
-    Exhausted("creatures and lands don't untap during your next untap step"),
     WasDealtDamage(""),
     CantCastSpells("can't cast spells this turn"),
     CantActivateAbilities("can't activate abilities this turn"),
     HasLostLife(""),
     HasGainedLife(""),
+    Monarch(""),
     ;
 
     private final String description;
     private final int mask;
+
+    // states that persist after cleanup
+    public static final int CLEANUP_MASK = Monarch.getMask();
 
     private MagicPlayerState(final String description) {
         this.description=description;

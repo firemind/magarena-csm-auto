@@ -1,7 +1,7 @@
 name=Battle Squadron
-image=http://magiccards.info/scans/en/mm/174.jpg
+image=http://magiccards.info/scans/en/ema/118.jpg
 value=4.044
-rarity=R
+rarity=U
 type=Creature
 subtype=Goblin
 cost={3}{R}{R}

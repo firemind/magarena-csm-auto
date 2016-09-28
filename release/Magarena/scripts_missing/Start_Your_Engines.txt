@@ -1,0 +1,10 @@
+name=Start Your Engines
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_Ri5haaoDr6.png
+value=2.500
+rarity=U
+type=Sorcery
+cost={3}{R}
+effect=Vehicles you control become artifact creatures until end of turn. Creatures you control get +2/+0 until end of turn.
+timing=main
+oracle=Vehicles you control become artifact creatures until end of turn. Creatures you control get +2/+0 until end of turn.
+status=needs groovy

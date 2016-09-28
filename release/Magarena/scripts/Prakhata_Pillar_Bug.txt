@@ -1,0 +1,11 @@
+name=Prakhata Pillar-Bug
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_ju3LLueoJR.png
+value=2.500
+rarity=C
+type=Artifact,Creature
+subtype=Insect
+cost={3}
+pt=2/3
+ability={B}: SN gains lifelink until end of turn.
+timing=main
+oracle={B}: Prakhata Pillar-Bug gains lifelink until end of turn.

@@ -1,0 +1,10 @@
+name=Glimmer of Genius
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_qFvJXXsSfN.png
+value=2.500
+rarity=U
+type=Instant
+cost={3}{U}
+effect=Scry 2, then draw two cards. You get {E}{E}.
+timing=removal
+oracle=Scry 2, then draw two cards. You get {E}{E}.
+status=not supported: ordering-lib-top

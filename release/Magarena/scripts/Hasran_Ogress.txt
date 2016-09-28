@@ -1,11 +1,11 @@
 name=Hasran Ogress
-image=http://magiccards.info/scans/en/me4/86.jpg
+image=http://magiccards.info/scans/en/ch/6.jpg
 value=2.014
 rarity=C
 type=Creature
 subtype=Ogre
 cost={B}{B}
 pt=3/2
-ability=Whenever SN attacks, you may pay {2}. If you don't, SN deals 3 damage to you.
+ability=Whenever SN attacks, SN deals 3 damage to you unless you pay {2}.
 timing=main
 oracle=Whenever Hasran Ogress attacks, it deals 3 damage to you unless you pay {2}.

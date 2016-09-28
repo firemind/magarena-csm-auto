@@ -1,6 +1,5 @@
 name=Corpse Dance
-image=http://magiccards.info/scans/en/tpr/89.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/tp/10.jpg
 value=4.087
 rarity=R
 type=Instant

@@ -1,0 +1,11 @@
+name=Aerial Responder
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_TjgPgHeyHL.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Dwarf,Soldier
+cost={1}{W}{W}
+pt=2/3
+ability=Flying, vigilance, lifelink
+timing=main
+oracle=Flying, vigilance, lifelink

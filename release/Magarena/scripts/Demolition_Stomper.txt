@@ -1,0 +1,12 @@
+name=Demolition Stomper
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_X0cMY5R3AC.png
+value=2.500
+rarity=U
+type=Artifact
+subtype=Vehicle
+cost={6}
+pt=10/7
+ability=SN can't be blocked by creatures with power 2 or less.;\
+        Crew 5
+timing=artifact
+oracle=Demolition Stomper can't be blocked by creatures with power 2 or less.\nCrew 5

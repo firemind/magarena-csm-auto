@@ -1,5 +1,5 @@
 name=Intangible Virtue
-image=http://magiccards.info/scans/en/cns/72.jpg
+image=http://magiccards.info/scans/en/ema/15.jpg
 value=4.214
 rarity=U
 type=Enchantment

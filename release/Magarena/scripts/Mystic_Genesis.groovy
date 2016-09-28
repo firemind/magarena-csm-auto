@@ -18,13 +18,7 @@
                 final int x = card.getConvertedCost();
                 game.doAction(new PlayTokenAction(
                     event.getPlayer(),
-                    MagicCardDefinition.create(
-                        CardDefinitions.getToken("green Ooze creature token"),
-                        {
-                            it.setPowerToughness(x, x);
-                            it.setValue(x);
-                        }
-                    )
+                    CardDefinitions.getToken(x, x, "green Ooze creature token")
                 ));
             })
         }

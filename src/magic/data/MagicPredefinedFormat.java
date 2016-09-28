@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
@@ -44,13 +43,14 @@ public class MagicPredefinedFormat extends MagicFormat {
     public static final MagicFormat KHANS_OF_TARKIR_BLOCK = new MagicPredefinedFormat("Khans of Tarkir block", "khans_of_tarkir_block");
     public static final MagicFormat BATTLE_FOR_ZENDIKAR_BLOCK = new MagicPredefinedFormat("Battle for Zendikar block", "battle_for_zendikar_block");
     public static final MagicFormat SHADOWS_OVER_INNISTRAD_BLOCK = new MagicPredefinedFormat("Shadows over Innistrad block", "shadows_over_innistrad_block");
-
+    public static final MagicFormat KALADESH_BLOCK = new MagicPredefinedFormat("Kaladesh block", "kaladesh_block");
 
     private static final List<MagicFormat> values = Collections.unmodifiableList(Arrays.asList(
         STANDARD,
         MODERN,
         LEGACY,
         VINTAGE,
+        KALADESH_BLOCK,
         SHADOWS_OVER_INNISTRAD_BLOCK,
         BATTLE_FOR_ZENDIKAR_BLOCK,
         KHANS_OF_TARKIR_BLOCK,
@@ -106,11 +106,6 @@ public class MagicPredefinedFormat extends MagicFormat {
 
     public String getFilename() {
         return filename;
-    }
-
-    public static String[] getFilterValues() {
-        final List<String> values = values().stream().map(MagicFormat::getName).collect(Collectors.toList());
-        return values.toArray(new String[0]);
     }
 
     private void loadMagicFormatFile() {

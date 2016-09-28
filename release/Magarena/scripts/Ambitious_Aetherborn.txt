@@ -1,0 +1,11 @@
+name=Ambitious Aetherborn
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_iLKzwmI5TR.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Aetherborn,Artificer
+cost={4}{B}
+pt=4/3
+ability=Fabricate 1
+timing=main
+oracle=Fabricate 1

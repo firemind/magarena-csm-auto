@@ -696,6 +696,28 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
+    public static MagicCondition OPP_MORE_CREATURES = new MagicCondition() {
+        @Override
+        public boolean accept(final MagicSource source) {
+            return source.getOpponent().getNrOfPermanents(MagicType.Creature) >
+                source.getController().getNrOfPermanents(MagicType.Creature);
+        }
+    };
+
+    public static MagicCondition OPP_MORE_LIFE = new MagicCondition() {
+        @Override
+        public boolean accept(final MagicSource source) {
+            return source.getOpponent().getLife() > source.getController().getLife();
+        }
+    };
+
+    public static MagicCondition YOU_MORE_LIFE = new MagicCondition() {
+        @Override
+        public boolean accept(final MagicSource source) {
+            return source.getController().getLife() > source.getOpponent().getLife();
+        }
+    };
+
     public static MagicCondition CREATURE_DIED_THIS_TURN = new MagicCondition() {
         public boolean accept(final MagicSource source) {
             final MagicGame game = source.getGame();
@@ -796,6 +818,12 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         public boolean accept(final MagicSource source) {
             final MagicPermanent permanent = (MagicPermanent)source;
             return !permanent.hasState(MagicPermanentState.Summoned);
+        }
+    };
+
+    public static MagicCondition YOU_ARE_MONARCH = new MagicCondition() {
+        public boolean accept(final MagicSource source) {
+            return source.getController().isMonarch();
         }
     };
 }

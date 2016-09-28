@@ -1,0 +1,10 @@
+name=Paradoxical Outcome
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_OTb5aJDaVt.png
+value=2.500
+rarity=R
+type=Instant
+cost={3}{U}
+effect=Return any number of target nonland, nontoken permanents you control to their owners' hands. Draw a card for each card returned to your hand this way.
+timing=removal
+oracle=Return any number of target nonland, nontoken permanents you control to their owners' hands. Draw a card for each card returned to your hand this way.
+status=not supported: multiple-targets

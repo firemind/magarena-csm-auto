@@ -1,0 +1,11 @@
+name=Ninth Bridge Patrol
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_BIndl00tqH.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Dwarf,Soldier
+cost={1}{W}
+pt=1/1
+ability=Whenever another creature you control leaves the battlefield, put a +1/+1 counter on SN.
+timing=main
+oracle=Whenever another creature you control leaves the battlefield, put a +1/+1 counter on Ninth Bridge Patrol.

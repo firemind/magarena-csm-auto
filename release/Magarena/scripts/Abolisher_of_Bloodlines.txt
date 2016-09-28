@@ -1,0 +1,15 @@
+name=Abolisher of Bloodlines
+image=http://magiccards.info/scans/en/emn/111b.jpg
+image_updated=2016-09-05
+value=2.500
+rarity=R
+type=Creature
+subtype=Eldrazi,Vampire
+color=
+pt=6/5
+ability=Flying;\
+        When this creature transforms into SN, target opponent sacrifices three creatures.
+transform=Voldaren Pariah
+timing=main
+hidden
+oracle=Flying\nWhen this creature transforms into Abolisher of Bloodlines, target opponent sacrifices three creatures.

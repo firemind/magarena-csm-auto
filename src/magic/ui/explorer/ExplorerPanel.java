@@ -5,30 +5,24 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicRandom;
-import magic.ui.CardFilterPanel;
 import magic.ui.ICardFilterPanelListener;
 import magic.ui.ScreenController;
-import magic.translate.UiString;
 import magic.ui.cardtable.CardTable;
 import magic.ui.cardtable.ICardSelectionListener;
+import magic.ui.explorer.filter.CardFilterPanel;
+import magic.ui.screen.CardExplorerScreen;
 import magic.utility.MagicSystem;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICardFilterPanelListener {
-
-    // translatable strings
-    private static final String _S1 = "Cards:";
-    private static final String _S2 = "Playable:";
-    private static final String _S3 = "Unimplemented:";
+public class ExplorerPanel extends JPanel
+        implements ICardSelectionListener, ICardFilterPanelListener {
 
     private static final int FILTERS_PANEL_HEIGHT = 88; // pixels
 
@@ -37,8 +31,11 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
     private List<MagicCardDefinition> cardPoolDefs;
     private ExplorerSidebarPanel sideBarPanel;
     private final MigLayout migLayout = new MigLayout();
+    private final JPanel rhs = new JPanel();
+    private final CardExplorerScreen screen;
 
-    public ExplorerPanel() {
+    public ExplorerPanel(CardExplorerScreen explorerScreen) {
+        this.screen = explorerScreen;
         setupExplorerPanel();
     }
 
@@ -53,7 +50,6 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
         filterPanel = new CardFilterPanel(this);
         final Container cardsPanel = getMainContentContainer();
 
-        final JPanel rhs = new JPanel();
         rhs.setLayout(new MigLayout("flowy, insets 0, gapy 0"));
         rhs.add(filterPanel, "w 100%, h " + FILTERS_PANEL_HEIGHT + "!");
         rhs.add(cardsPanel, "w 100%, h 100%");
@@ -62,8 +58,7 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
 
         migLayout.setLayoutConstraints("insets 0, gap 0");
         setLayout(migLayout);
-        add(sideBarPanel, "h 100%");
-        add(rhs, "w 100%, h 100%");
+        refreshLayout();
 
         // set initial card image
         if (cardPoolDefs.isEmpty()) {
@@ -74,34 +69,16 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
             //sideBarPanel.setCard(CardDefinitions.getCard("Damnation"));
         }
 
+        refreshScreenTotals();
     }
 
     private Container getMainContentContainer() {
-
         cardPoolDefs = filterPanel.getFilteredCards();
-
-        cardPoolTable = new CardTable(cardPoolDefs, generatePoolTitle(), false);
+        cardPoolTable = new CardTable(cardPoolDefs);
         cardPoolTable.addMouseListener(new CardPoolMouseListener());
         cardPoolTable.addCardSelectionListener(this);
         return cardPoolTable;
 
-    }
-
-    public String generatePoolTitle() {
-        final int total = filterPanel.getTotalCardCount();
-        return String.format("%s %s      %s %s      %s %s",
-                UiString.get(_S1),
-                NumberFormat.getInstance().format(total),
-                UiString.get(_S2),
-                getCountCaption(total, filterPanel.getPlayableCardCount()),
-                UiString.get(_S3),
-                getCountCaption(total, filterPanel.getMissingCardCount()));
-    }
-
-    private String getCountCaption(final int total, final int value) {
-        final double percent = value / (double)total * 100;
-        DecimalFormat df = new DecimalFormat("0.0");
-        return NumberFormat.getInstance().format(value) + " (" + (!Double.isNaN(percent) ? df.format(percent) : "0.0") + "%)";
     }
 
     @Override
@@ -112,11 +89,6 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
     public void updateCardPool() {
         cardPoolDefs = filterPanel.getFilteredCards();
         cardPoolTable.setCards(cardPoolDefs);
-        cardPoolTable.setTitle(generatePoolTitle());
-    }
-
-    protected void close() {
-        filterPanel.closePopups();
     }
 
     @Override
@@ -137,9 +109,22 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
         }
     }
 
+    private void refreshScreenTotals() {
+        screen.refreshTotals(
+                filterPanel.getTotalCardCount(),
+                filterPanel.getPlayableCardCount(),
+                filterPanel.getMissingCardCount()
+        );
+    }
+
     @Override
     public void refreshTable() {
         updateCardPool();
+        refreshScreenTotals();
+    }
+
+    public void selectRandomCard() {
+        cardPoolTable.selectRandomCard();
     }
 
     private class CardPoolMouseListener extends MouseAdapter {
@@ -161,4 +146,27 @@ public class ExplorerPanel extends JPanel implements ICardSelectionListener, ICa
         }
     }
 
+    private void doDefaultLayout() {
+        removeAll();
+        add(sideBarPanel, "h 100%");
+        add(rhs, "w 100%, h 100%");
+        validate();
+    }
+
+    private void doNoSidebarLayout() {
+        removeAll();
+        add(rhs, "w 100%, h 100%");
+        validate();
+    }
+
+    public void refreshLayout() {
+        final ExplorerScreenLayout layout = ExplorerScreenLayout.getLayout();
+        if (layout == ExplorerScreenLayout.DEFAULT) {
+            doDefaultLayout();
+        } else if (layout == ExplorerScreenLayout.NO_SIDEBAR) {
+            doNoSidebarLayout();
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+    }
 }

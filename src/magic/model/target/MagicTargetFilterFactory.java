@@ -565,6 +565,12 @@ public class MagicTargetFilterFactory {
         3
     );
 
+    public static final MagicPermanentFilterImpl ARTIFACT_OR_ENCHANTMENT_CMC_4_OR_LESS = new MagicCMCPermanentFilter(
+        ARTIFACT_OR_ENCHANTMENT,
+        Operator.LESS_THAN_OR_EQUAL,
+        4
+    );
+
     public static final MagicPermanentFilterImpl ARTIFACT_OR_LAND = permanentOr(MagicType.Artifact, MagicType.Land, Control.Any);
 
     public static final MagicPermanentFilterImpl ARTIFACT_OR_ENCHANTMENT_OR_LAND = new MagicPermanentFilterImpl() {
@@ -668,6 +674,12 @@ public class MagicTargetFilterFactory {
     public static final MagicPermanentFilterImpl UNTAPPED_PERMANENT = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return target.isUntapped();
+        }
+    };
+
+    public static final MagicPermanentFilterImpl TAPPED_PERMANENT = new MagicPermanentFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            return target.isTapped();
         }
     };
 
@@ -919,7 +931,7 @@ public class MagicTargetFilterFactory {
                 !target.hasType(MagicType.Enchantment);
         }
     };
-    
+
     public static final MagicPermanentFilterImpl NONENCHANTMENT_PERMANENT = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return !target.hasType(MagicType.Enchantment);
@@ -1034,6 +1046,18 @@ public class MagicTargetFilterFactory {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return (target.isCreature() && target.isEnchanted()) ||
                 (target.isCreature() && target.hasType(MagicType.Enchantment));
+        }
+    };
+
+    public static final MagicPermanentFilterImpl CREATURE_OR_VEHICLE = new MagicPermanentFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            return target.isCreature() && target.hasSubType(MagicSubType.Vehicle);
+        }
+    };
+
+    public static final MagicPermanentFilterImpl CREATURE_OR_NONBASIC_LAND = new MagicPermanentFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            return target.isCreature() || (!target.hasType(MagicType.Basic) && target.isLand());
         }
     };
 
@@ -1464,20 +1488,11 @@ public class MagicTargetFilterFactory {
 
     public static final MagicPermanentFilterImpl WEREWOLF_OR_WOLF_CREATURE_YOU_CONTROL = creatureOr(MagicSubType.Werewolf, MagicSubType.Wolf, Control.You);
 
-    public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF = new MagicPermanentFilterImpl() {
-        @Override
-        public boolean accept(MagicSource source, MagicPlayer player, MagicPermanent target) {
-            return target.hasSubType(MagicSubType.Wolf) || target.hasSubType(MagicSubType.Werewolf);
-        }
-    };
+    public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF = permanentOr(MagicSubType.Wolf, MagicSubType.Werewolf, Control.Any);
 
-    public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF_YOU_CONTROL = new MagicPermanentFilterImpl() {
-        @Override
-        public boolean accept(MagicSource source, MagicPlayer player, MagicPermanent target) {
-            return target.isController(player) &&
-                (target.hasSubType(MagicSubType.Wolf) || target.hasSubType(MagicSubType.Werewolf));
-        }
-    };
+    public static final MagicPermanentFilterImpl SERVO_OR_THOPTER = permanentOr(MagicSubType.Servo, MagicSubType.Thopter, Control.Any);
+
+    public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF_YOU_CONTROL = permanentOr(MagicSubType.Wolf, MagicSubType.Werewolf, Control.You);
 
     public static final MagicPermanentFilterImpl ATTACKING_WOLF_OR_WEREWOLF = new MagicPermanentFilterImpl() {
         @Override
@@ -2604,6 +2619,7 @@ public class MagicTargetFilterFactory {
         // <color|type|subtype> permanent
         add("permanent", PERMANENT);
         add("untapped permanent", UNTAPPED_PERMANENT);
+        add("tapped permanent", TAPPED_PERMANENT);
         add("permanent you own", PERMANENT_YOU_OWN);
         add("permanent you both own and control", PERMANENT_YOU_OWN_AND_CONTROL);
         add("noncreature permanent", NONCREATURE);
@@ -2647,6 +2663,7 @@ public class MagicTargetFilterFactory {
         add("artifact land", ARTIFACT_LAND);
         add("artifact or enchantment", ARTIFACT_OR_ENCHANTMENT);
         add("artifact or enchantment with converted mana cost 3 or less", ARTIFACT_OR_ENCHANTMENT_CMC_3_OR_LESS);
+        add("artifact or enchantment with converted mana cost 4 or less", ARTIFACT_OR_ENCHANTMENT_CMC_4_OR_LESS);
         add("artifact, enchantment, or land", ARTIFACT_OR_ENCHANTMENT_OR_LAND);
         add("artifact, creature, or land", ARTIFACT_OR_CREATURE_OR_LAND);
         add("artifact, creature, or enchantment", ARTIFACT_OR_CREATURE_OR_ENCHANTMENT);
@@ -2656,8 +2673,10 @@ public class MagicTargetFilterFactory {
         add("Spirit or enchantment", SPIRIT_OR_ENCHANTMENT);
         add("creature or enchantment", CREATURE_OR_ENCHANTMENT);
         add("creature or land", CREATURE_OR_LAND);
+        add("creature or nonbasic land", CREATURE_OR_NONBASIC_LAND);
         add("creature or planeswalker", CREATURE_OR_PLANESWALKER);
         add("creature or player", CREATURE_OR_PLAYER);
+        add("creature or vehicle", CREATURE_OR_VEHICLE);
         add("Sliver creature or player", SLIVER_CREATURE_OR_PLAYER);
         add("nontoken Elf", NONTOKEN_ELF);
         add("legendary Samurai", LEGENDARY_SAMURAI);
@@ -2668,6 +2687,7 @@ public class MagicTargetFilterFactory {
         add("attacking Human", ATTACKING_HUMAN);
         add("Aura attached to a creature", AURA_ATTACHED_TO_CREATURE);
         add("wolf or werewolf", WOLF_OR_WEREWOLF);
+        add("servo or thopter", SERVO_OR_THOPTER);
         add("attacking wolf or werewolf", ATTACKING_WOLF_OR_WEREWOLF);
         add("human or an angel", HUMAN_OR_ANGEL);
 
@@ -2742,7 +2762,7 @@ public class MagicTargetFilterFactory {
             .replaceAll("\\belves\\b", "elf")
             .replaceAll("\\ballies\\b", "ally")
             .replaceAll("\\bmercenaries\\b", "mercenary")
-            .replaceAll("\\b(?!(controls|less|plains|opponents|graveyards|colorless|aurochs|pegasus|this|toughness|fungus|is|locus|counters)\\b)([a-z]+)s\\b", "$2");
+            .replaceAll("\\b(?!(controls|less|plains|opponents|graveyards|colorless|aurochs|pegasus|this|toughness|fungus|homunculus|is|locus|counters)\\b)([a-z]+)s\\b", "$2");
         return String.join(" named ", parts)
             .replaceAll("\\band\\b", "or")
             .replaceAll("\\bthem\\b", "it")
@@ -2750,6 +2770,7 @@ public class MagicTargetFilterFactory {
             .replaceAll("\\bin your graveyard\\b", "from your graveyard")
             .replaceAll("\\bin all graveyards\\b", "from a graveyard")
             .replaceAll("\\bfrom all graveyards\\b", "from a graveyard")
+            .replaceAll("\\bplayed by your opponents\\b", "an opponent controls")
             .replaceAll("\\byour opponents control\\b", "an opponent controls")
             .replaceAll("\\byour opponents' graveyards\\b", "an opponent's graveyard")
             .replaceAll(" on the battlefield\\b", "")

@@ -1,0 +1,9 @@
+name=Renegade Tactics
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_XXNC1VfXap.png
+value=2.500
+rarity=C
+type=Sorcery
+cost={R}
+effect=Target creature can't block this turn.~Draw a card.
+timing=main
+oracle=Target creature can't block this turn.\nDraw a card.

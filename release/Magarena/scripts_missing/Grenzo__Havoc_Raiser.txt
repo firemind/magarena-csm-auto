@@ -1,5 +1,6 @@
 name=Grenzo, Havoc Raiser
 image=http://magiccards.info/scans/en/cn2/54.jpg
+image_updated=2016-09-05
 value=2.500
 rarity=R
 type=Legendary,Creature
@@ -11,3 +12,4 @@ ability=Whenever a creature you control deals combat damage to a player, choose 
         (2) Exile the top card of that player's library. Until end of turn, you may cast that card and you may spend mana as though it were mana of any color to cast it.
 timing=main
 oracle=Whenever a creature you control deals combat damage to a player, choose one —\n• Goad target creature that player controls. \n• Exile the top card of that player's library. Until end of turn, you may cast that card and you may spend mana as though it were mana of any color to cast it.
+status=not supported: goad

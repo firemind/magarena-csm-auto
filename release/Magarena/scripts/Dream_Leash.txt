@@ -1,0 +1,12 @@
+name=Dream Leash
+image=http://magiccards.info/scans/en/rav/45.jpg
+value=3.321
+rarity=R
+type=Enchantment
+subtype=Aura
+cost={3}{U}{U}
+ability=Enchant permanent;\
+        You control enchanted permanent.
+timing=aura
+enchant=gain control,neg tapped permanent
+oracle=Enchant permanent\nYou can't choose an untapped permanent as Dream Leash's target as you cast Dream Leash.\nYou control enchanted permanent.

@@ -1,0 +1,11 @@
+name=Glint-Sleeve Artisan
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_eMQxKzsTBs.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Dwarf,Artificer
+cost={2}{W}
+pt=2/2
+ability=Fabricate 1
+timing=main
+oracle=Fabricate 1

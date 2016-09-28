@@ -1,6 +1,5 @@
 name=Pandemonium
-image=http://magiccards.info/scans/en/tpr/149.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/ex/93.jpg
 value=4.339
 rarity=R
 type=Enchantment

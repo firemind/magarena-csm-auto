@@ -1,8 +1,7 @@
 name=Telethopter
-image=http://magiccards.info/scans/en/tpr/232.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/tp/301.jpg
 value=1.539
-rarity=C
+rarity=U
 type=Artifact,Creature
 subtype=Thopter
 cost={4}

@@ -1,0 +1,13 @@
+name=Malfunction
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_zB7FpinF4f.png
+value=2.500
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={3}{U}
+ability=Enchant artifact or creature;\
+        When SN enters the battlefield, tap enchanted permanent.;\
+        Enchanted permanent doesn't untap during its controller's untap step.
+timing=aura
+enchant=can't attack or block,neg artifact or creature
+oracle=Enchant artifact or creature\nWhen Malfunction enters the battlefield, tap enchanted permanent.\nEnchanted permanent doesn't untap during its controller's untap step.

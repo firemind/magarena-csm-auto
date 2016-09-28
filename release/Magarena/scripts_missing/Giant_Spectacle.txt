@@ -1,0 +1,13 @@
+name=Giant Spectacle
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_cVocmn8d2e.png
+value=2.500
+rarity=C
+type=Enchantment
+subtype=Aura
+cost={1}{R}
+ability=Enchant creature;\
+        Enchanted creature gets +2/+1 and has menace.
+timing=aura
+enchant=default,creature
+oracle=Enchant creature\nEnchanted creature gets +2/+1 and has menace.
+status=not supported: blocking-restriction

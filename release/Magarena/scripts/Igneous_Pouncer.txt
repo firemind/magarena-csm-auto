@@ -1,5 +1,5 @@
 name=Igneous Pouncer
-image=http://magiccards.info/scans/en/ddh/57.jpg
+image=http://magiccards.info/scans/en/arb/40.jpg
 value=2.317
 rarity=C
 type=Creature
@@ -8,5 +8,5 @@ cost={4}{B}{R}
 pt=5/1
 ability=Haste;\
         Swampcycling {2}; mountaincycling {2}
-timing=main
+timing=fmain
 oracle=Haste\nSwampcycling {2}, mountaincycling {2}

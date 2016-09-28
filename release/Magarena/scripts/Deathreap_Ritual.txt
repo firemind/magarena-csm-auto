@@ -1,5 +1,5 @@
 name=Deathreap Ritual
-image=http://magiccards.info/scans/en/vma/250.jpg
+image=http://magiccards.info/scans/en/cns/44.jpg
 value=4.111
 rarity=U
 type=Enchantment

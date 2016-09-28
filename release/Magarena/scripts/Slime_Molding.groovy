@@ -12,13 +12,10 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             final int x = event.getCardOnStack().getX();
-            game.doAction(new PlayTokenAction(event.getPlayer(), MagicCardDefinition.create(
-                CardDefinitions.getToken("green Ooze creature token"),
-                {
-                    it.setPowerToughness(x, x);
-                    it.setValue(x);
-                }
-            )));
+            game.doAction(new PlayTokenAction(
+                event.getPlayer(),
+                CardDefinitions.getToken(x, x, "green Ooze creature token")
+            ));
         }
     }
 ]

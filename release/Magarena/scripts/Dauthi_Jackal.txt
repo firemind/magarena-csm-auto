@@ -1,6 +1,5 @@
 name=Dauthi Jackal
-image=http://magiccards.info/scans/en/tpr/95.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/ex/58.jpg
 value=3.833
 rarity=C
 type=Creature

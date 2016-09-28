@@ -1,5 +1,6 @@
 name=Entourage of Trest
 image=http://magiccards.info/scans/en/cn2/64.jpg
+image_updated=2016-09-05
 value=2.500
 rarity=C
 type=Creature
@@ -10,3 +11,4 @@ ability=When SN enters the battlefield, you become the monarch.;\
         SN can block an additional creature each combat as long as you're the monarch.
 timing=main
 oracle=When Entourage of Trest enters the battlefield, you become the monarch.\nEntourage of Trest can block an additional creature each combat as long as you're the monarch.
+status=not supported: block-multiple

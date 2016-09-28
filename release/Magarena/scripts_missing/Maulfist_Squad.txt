@@ -1,0 +1,13 @@
+name=Maulfist Squad
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_M1kMIV5OMI.png
+value=2.500
+rarity=C
+type=Creature
+subtype=Human,Artificer
+cost={3}{B}
+pt=3/1
+ability=Menace;\
+        Fabricate 1
+timing=main
+oracle=Menace\nFabricate 1
+status=not supported: blocking-restriction

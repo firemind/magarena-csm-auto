@@ -1,0 +1,10 @@
+name=Cathartic Reunion
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_BCGEzrgE4C.png
+value=2.500
+rarity=C
+type=Sorcery
+cost={1}{R}
+ability=As an additional cost to cast SN, discard two cards.
+effect=Draw three cards.
+timing=main
+oracle=As an additional cost to cast Cathartic Reunion, discard two cards.\nDraw three cards.

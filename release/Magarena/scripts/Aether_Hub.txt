@@ -1,0 +1,11 @@
+name=Aether Hub
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_S4ldTjUAhp.png
+value=2.500
+rarity=U
+type=Land
+mana=b2g2r2u2w2
+ability=When SN enters the battlefield, you get {E}.;\
+        {T}: Add {C} to your mana pool.;\
+        {T}, Pay {E}: Add one mana of any color to your mana pool.
+timing=land
+oracle=When Aether Hub enters the battlefield, you get {E}.\n{T}: Add {C} to your mana pool.\n{T}, Pay {E}: Add one mana of any color to your mana pool.

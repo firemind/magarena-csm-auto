@@ -1,5 +1,5 @@
 name=Phantasmal Forces
-image=http://magiccards.info/scans/en/me4/55.jpg
+image=http://magiccards.info/scans/en/5e/106.jpg
 value=2.795
 rarity=C
 type=Creature
@@ -7,6 +7,6 @@ subtype=Illusion
 cost={3}{U}
 pt=4/1
 ability=Flying;\
-        At the beginning of your upkeep, you may pay {U}. If you don't, sacrifice SN.
+        At the beginning of your upkeep, sacrifice SN unless you pay {U}.
 timing=main
 oracle=Flying\nAt the beginning of your upkeep, sacrifice Phantasmal Forces unless you pay {U}.

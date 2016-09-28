@@ -1,0 +1,11 @@
+name=Self-Assembler
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_2V26S23k1z.png
+value=2.500
+rarity=C
+type=Artifact,Creature
+subtype=Assembly-Worker
+cost={5}
+pt=4/4
+ability=When SN enters the battlefield, you may search your library for an Assembly-Worker creature card, reveal it, put it into your hand, then shuffle your library.
+timing=main
+oracle=When Self-Assembler enters the battlefield, you may search your library for an Assembly-Worker creature card, reveal it, put it into your hand, then shuffle your library.

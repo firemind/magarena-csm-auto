@@ -1,7 +1,7 @@
 name=Serendib Efreet
-image=http://magiccards.info/scans/en/vma/93.jpg
+image=http://magiccards.info/scans/en/ema/70.jpg
 value=4.000
-rarity=U
+rarity=R
 type=Creature
 subtype=Efreet
 cost={2}{U}

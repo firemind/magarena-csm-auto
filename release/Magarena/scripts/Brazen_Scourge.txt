@@ -1,0 +1,11 @@
+name=Brazen Scourge
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_B6ENW8RQLR.png
+value=2.500
+rarity=U
+type=Creature
+subtype=Gremlin
+cost={1}{R}{R}
+pt=3/3
+ability=Haste
+timing=fmain
+oracle=Haste

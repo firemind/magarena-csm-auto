@@ -1,0 +1,9 @@
+name=Larger Than Life
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_9rfgbVozrF.png
+value=2.500
+rarity=C
+type=Sorcery
+cost={1}{G}
+effect=Target creature gets +4/+4 and gains trample until end of turn.
+timing=main
+oracle=Target creature gets +4/+4 and gains trample until end of turn.

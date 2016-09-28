@@ -1,8 +1,7 @@
 name=Thrull Surgeon
-image=http://magiccards.info/scans/en/tpr/121.jpg
-image_updated=2015-11-14
+image=http://magiccards.info/scans/en/10e/183.jpg
 value=2.500
-rarity=C
+rarity=U
 type=Creature
 subtype=Thrull
 cost={1}{B}
@@ -10,3 +9,4 @@ pt=1/1
 ability={1}{B}, Sacrifice SN: Look at target player's hand and choose a card from it. That player discards that card. Activate this ability only any time you could cast a sorcery.
 timing=main
 oracle={1}{B}, Sacrifice Thrull Surgeon: Look at target player's hand and choose a card from it. That player discards that card. Activate this ability only any time you could cast a sorcery.
+status=not supported: reveal-hand

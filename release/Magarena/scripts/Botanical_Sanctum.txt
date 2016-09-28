@@ -1,0 +1,10 @@
+name=Botanical Sanctum
+image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_2Fh6MKhqMY.png
+value=2.500
+rarity=R
+type=Land
+mana=g3u3
+ability=SN enters the battlefield tapped unless you control two or fewer other lands.;\
+        {T}: Add {G} or {U} to your mana pool.
+timing=land
+oracle=Botanical Sanctum enters the battlefield tapped unless you control two or fewer other lands.\n{T}: Add {G} or {U} to your mana pool.
