@@ -1,7 +1,7 @@
 package magic.ui;
 
-import magic.translate.UiString;
-import magic.ui.utility.GraphicsUtils;
+import magic.translate.MText;
+import magic.ui.helpers.ImageHelper;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.nio.file.Path;
@@ -23,8 +23,8 @@ public class UiExceptionHandler extends FileExceptionHandler {
     @Override
     public void reportException(final ExceptionReport report) {
         super.reportException(report);
-        if (ScreenController.getMainFrame() != null) {
-            doScreenShot(ScreenController.getMainFrame().getContentPane());
+        if (ScreenController.getFrame() != null) {
+            doScreenShot(ScreenController.getFrame().getContentPane());
         }
         doNotifyUser();
     }
@@ -38,20 +38,20 @@ public class UiExceptionHandler extends FileExceptionHandler {
 
             // By specifying a frame the JOptionPane will be shown in the taskbar.
             // Otherwise if the dialog is hidden it is easy to forget it is still open.
-            final JFrame frame = new JFrame(UiString.get(_S1));
+            final JFrame frame = new JFrame(MText.get(_S1));
             frame.setUndecorated(true);
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
 
-            String prompt = UiString.get(_S2);
+            String prompt = MText.get(_S2);
             if (Desktop.isDesktopSupported()) {
-                prompt += String.format("\n\n%s\n%s", UiString.get(_S3), UiString.get(_S4));
-                final int action = JOptionPane.showConfirmDialog(frame, prompt, UiString.get(_S1), JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE, null);
+                prompt += String.format("\n\n%s\n%s", MText.get(_S3), MText.get(_S4));
+                final int action = JOptionPane.showConfirmDialog(frame, prompt, MText.get(_S1), JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE, null);
                 if (action == JOptionPane.YES_OPTION) {
                     Desktop.getDesktop().open(MagicFileSystem.getDataPath(MagicFileSystem.DataPath.LOGS).toFile());
                 }
             } else {
-                JOptionPane.showMessageDialog(frame, prompt, UiString.get(_S1), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, prompt, MText.get(_S1), JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class UiExceptionHandler extends FileExceptionHandler {
                 public void run() {
                     try {
                         final Path filePath = MagicFileSystem.getDataPath(MagicFileSystem.DataPath.LOGS).resolve("crash.png");
-                        GraphicsUtils.doScreenshotToFile(container, filePath);
+                        ImageHelper.doScreenshotToFile(container, filePath);
                     } catch (Exception e) {
                         System.err.println("ScreenShot failed : " + e.toString());
                     }

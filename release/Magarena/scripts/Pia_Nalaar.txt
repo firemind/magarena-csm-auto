@@ -1,12 +1,13 @@
 name=Pia Nalaar
-image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_z8u7TFxf8R.png
+image=http://magiccards.info/scans/en/kld/124.jpg
+image_updated=2016-10-05
 value=2.500
 rarity=R
 type=Legendary,Creature
 subtype=Human,Artificer
 cost={2}{R}
 pt=2/2
-ability=When SN enters the battlefield, put a 1/1 colorless Thopter artifact creature token with flying onto the battlefield.;\
+ability=When SN enters the battlefield, create a 1/1 colorless Thopter artifact creature token with flying.;\
         {1}{R}: Target artifact creature gets +1/+0 until end of turn.;\
         {1}, Sacrifice an artifact: Target creature can't block this turn.
 timing=main

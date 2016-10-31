@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
-import magic.ui.cardBuilder.IRenderableCard;
+import magic.model.IRenderableCard;
+import magic.model.MagicGameLog;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -31,6 +33,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  */
 public final class MagicFileSystem {
+
     private MagicFileSystem() {}
 
     // card images
@@ -139,6 +142,10 @@ public final class MagicFileSystem {
         return new File(imageDirectory.toFile(), getImageFilename(card));
     }
 
+    public static File getCardImageFile(IRenderableCard face) {
+        return getCardImageFile(face.getCardDefinition());
+    }
+
     /**
      * Returns a File object representing the given card's cropped image file.
      */
@@ -215,7 +222,7 @@ public final class MagicFileSystem {
         final File[] files = scriptsDirectory.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".txt");
+                return name.toLowerCase(Locale.ENGLISH).endsWith(".txt");
             }
         });
         Arrays.sort(files);
@@ -310,5 +317,17 @@ public final class MagicFileSystem {
 
     public static Path getThemesPath() {
         return getDataPath(DataPath.THEMES);
+    }
+
+    public static Path getBackgroundImagePath() {
+        return getDataPath(DataPath.MODS).resolve("background.image");
+    }
+
+    public static File getBackgroundImageFile() {
+        return getBackgroundImagePath().toFile();
+    }
+
+    public static Path getGameLogPath() {
+        return getDataPath(DataPath.LOGS).resolve(MagicGameLog.LOG_FILE);
     }
 }

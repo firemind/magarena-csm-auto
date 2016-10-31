@@ -1,0 +1,10 @@
+name=Scrabbling Claws
+image=http://magiccards.info/scans/en/mi/237.jpg
+value=3.417
+rarity=U
+type=Artifact
+cost={1}
+ability={1}, Sacrifice SN: Exile target card from a graveyard.~Draw a card.
+timing=artifact
+oracle={T}: Target player exiles a card from his or her graveyard.\n{1}, Sacrifice Scrabbling Claws: Exile target card from a graveyard. Draw a card.
+requires_groovy_code=Relic of Progenitus

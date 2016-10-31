@@ -1,28 +1,41 @@
 package magic.ui.screen.widget;
 
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import magic.ui.utility.GraphicsUtils;
+import javax.swing.ImageIcon;
+import magic.ui.helpers.ImageHelper;
 import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
 public class ActionBarButton extends MenuButton {
 
+    private void setToolTip(String title, String tooltip) {
+        title = title == null ? "" : title.trim();
+        tooltip = tooltip == null ? "" : tooltip.trim();
+        if (title.isEmpty() && tooltip.isEmpty())
+            return;
+        final String s1 = !title.isEmpty() ? "<b>" + title + "</b>" : "";
+        final String s2 = s1 + (!title.isEmpty() && !tooltip.isEmpty() ? "<br>" : "") + tooltip;
+        setToolTipText("<html>" + s2 + "</html>");
+    }
+
     // CTR
     public ActionBarButton(ImageIcon icon, String actionName, String tooltip, AbstractAction action, boolean showSeparator) {
         super("", action, tooltip, showSeparator);
         setIcon(icon);
-        if (tooltip != null) {
-            setToolTipText("<html><b>" + actionName + "</b><br>" + tooltip + "</html>");
-        }
+        setToolTip(actionName, tooltip);
     }
+
     public ActionBarButton(ImageIcon icon, String actionName, String tooltip, AbstractAction action) {
         this(icon, actionName, tooltip, action, true);
     }
+
+    public ActionBarButton(ImageIcon icon, String actionName, AbstractAction action) {
+        this(icon, actionName, "", action);
+    }
+
     // CTR - text only action.
     public ActionBarButton(final String caption, final String tooltip, final AbstractAction action, final boolean showSeparator) {
         super(caption, action, tooltip, showSeparator);
@@ -30,12 +43,19 @@ public class ActionBarButton extends MenuButton {
             setToolTipText("<html><b>" + caption + "</b><br>" + tooltip + "</html>");
         }
     }
+
+    public ActionBarButton(AbstractAction action) {
+        this("", null, action);
+    }
+
     public ActionBarButton(final String caption, final String tooltip, final AbstractAction action) {
         this(caption, tooltip, action, true);
     }
+
     public ActionBarButton(final String caption, final AbstractAction action) {
         this(caption, null, action);
     }
+
     protected ActionBarButton() {}
 
     @Override
@@ -46,11 +66,11 @@ public class ActionBarButton extends MenuButton {
     @Override
     public void setIcon(Icon defaultIcon) {
         super.setIcon(defaultIcon);
-        setRolloverIcon(GraphicsUtils.getRecoloredIcon(
+        setRolloverIcon(ImageHelper.getRecoloredIcon(
                 (ImageIcon) defaultIcon,
                 MagicStyle.getRolloverColor())
         );
-        setPressedIcon(GraphicsUtils.getRecoloredIcon(
+        setPressedIcon(ImageHelper.getRecoloredIcon(
                 (ImageIcon) defaultIcon,
                 MagicStyle.getPressedColor())
         );

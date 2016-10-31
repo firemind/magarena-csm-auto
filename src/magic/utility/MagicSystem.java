@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +25,7 @@ import magic.utility.MagicFileSystem.DataPath;
 final public class MagicSystem {
     private MagicSystem() {}
 
-    public static final String VERSION = "1.77";
+    public static final String VERSION = "1.79";
 
     public static final String SOFTWARE_TITLE;
     private static final boolean DEV_MODE;
@@ -34,12 +35,12 @@ final public class MagicSystem {
         System.setProperty("http.agent", SOFTWARE_TITLE);
     }
 
-    public static final boolean IS_WINDOWS_OS = System.getProperty("os.name").toLowerCase().startsWith("windows");
+    public static final boolean IS_WINDOWS_OS = System.getProperty("os.name").toLowerCase(Locale.ENGLISH).startsWith("windows");
     private static final ProgressReporter reporter = new ProgressReporter();
 
     // Load card definitions in the background so that it does not delay the
     // loading of the UI. Override done() to ensure exceptions not suppressed.
-    private static final FutureTask<Void> loadCards = new FutureTask<Void>(new Runnable() {
+    public static final FutureTask<Void> loadCards = new FutureTask<Void>(new Runnable() {
         @Override
         public void run() {
             initializeEngine(reporter);

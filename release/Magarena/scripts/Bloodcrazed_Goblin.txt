@@ -1,0 +1,11 @@
+name=Bloodcrazed Goblin
+image=http://magiccards.info/scans/en/m11/125.jpg
+value=2.199
+rarity=C
+type=Creature
+subtype=Goblin,Berserker
+cost={R}
+pt=2/2
+ability=SN can't attack unless an opponent has been dealt damage this turn.
+timing=main
+oracle=Bloodcrazed Goblin can't attack unless an opponent has been dealt damage this turn.

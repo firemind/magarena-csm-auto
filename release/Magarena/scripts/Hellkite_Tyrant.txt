@@ -1,0 +1,13 @@
+name=Hellkite Tyrant
+image=http://magiccards.info/scans/en/gtc/94.jpg
+value=4.209
+rarity=M
+type=Creature
+subtype=Dragon
+cost={4}{R}{R}
+pt=6/5
+ability=Flying, trample;\
+        At the beginning of your upkeep, if you control twenty or more artifacts, you win the game.
+timing=main
+oracle=Flying, trample\nWhenever Hellkite Tyrant deals combat damage to a player, gain control of all artifacts that player controls.\nAt the beginning of your upkeep, if you control twenty or more artifacts, you win the game.
+requires_groovy_code

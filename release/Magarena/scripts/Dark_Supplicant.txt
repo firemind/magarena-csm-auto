@@ -1,0 +1,11 @@
+name=Dark Supplicant
+image=http://magiccards.info/scans/en/le/64.jpg
+value=3.375
+rarity=U
+type=Creature
+subtype=Human,Cleric
+cost={B}
+pt=1/1
+timing=main
+oracle={T}, Sacrifice three Clerics: Search your graveyard, hand, and/or library for a card named Scion of Darkness and put it onto the battlefield. If you search your library this way, shuffle it.
+requires_groovy_code

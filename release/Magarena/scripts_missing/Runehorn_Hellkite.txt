@@ -1,0 +1,12 @@
+name=Runehorn Hellkite
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/kXuK4yt9nN_EN.png
+value=2.500
+rarity=R
+type=Creature
+subtype=Dragon
+cost={5}{R}
+pt=5/5
+ability=Flying;\
+        {5}{R}, Exile SN from your graveyard: Each player discards his or her hand, then draws seven cards.
+timing=main
+oracle=Flying\n{5}{R}, Exile Runehorn Hellkite from your graveyard: Each player discards his or her hand, then draws seven cards.

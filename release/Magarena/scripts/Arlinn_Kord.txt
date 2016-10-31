@@ -1,0 +1,13 @@
+name=Arlinn Kord
+image=http://magiccards.info/scans/en/soi/243a.jpg
+value=2.500
+rarity=M
+type=Planeswalker
+subtype=Arlinn
+cost={2}{R}{G}
+loyalty=3
+ability=+1: You may have target creature get +2/+2 and gains vigilance and haste until end of turn.;\
+        0: Create a 2/2 green Wolf creature token.~Transform SN.
+transform=Arlinn, Embraced by the Moon
+timing=main
+oracle=+1: Until end of turn, up to one target creature gets +2/+2 and gains vigilance and haste.\n0: Create a 2/2 green Wolf creature token. Transform Arlinn Kord.

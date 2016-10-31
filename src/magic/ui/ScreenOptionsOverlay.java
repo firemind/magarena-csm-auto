@@ -1,6 +1,7 @@
 package magic.ui;
 
-import magic.translate.UiString;
+import magic.ui.helpers.UrlHelper;
+import magic.translate.MText;
 import magic.ui.utility.MagicStyle;
 import java.awt.Color;
 import java.awt.Component;
@@ -15,7 +16,6 @@ import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.MenuPanel;
 import magic.ui.theme.Theme;
-import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -38,7 +38,7 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
     protected abstract MenuPanel getScreenMenu();
     protected abstract boolean showPreferencesOption();
 
-    public ScreenOptionsOverlay(final MagicFrame frame) {
+    public ScreenOptionsOverlay() {
 
         refreshStyle();
         setBackground(FontsAndBorders.IMENUOVERLAY_BACKGROUND_COLOR);
@@ -47,7 +47,7 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
         screenMenu = getScreenMenu();
 
         addScreenSpecificMenu();
-        addGeneralOptionsMenu(frame);
+        addGeneralOptionsMenu();
 
         getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "closeMenu");
         getActionMap().put("closeMenu", new AbstractAction() {
@@ -61,31 +61,31 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
         addMouseMotionListener(new MouseMotionAdapter() {});
         addKeyListener(new KeyAdapter() {});
 
-        frame.setGlassPane(this);
+        ScreenController.getFrame().setGlassPane(this);
         setVisible(true);
 
     }
 
-    private void addGeneralOptionsMenu(final MagicFrame frame) {
+    private void addGeneralOptionsMenu() {
 
-        menu = new MenuPanel(UiString.get(_S1));
+        menu = new MenuPanel(MText.get(_S1));
 
         // Help stuff.
-        menu.addMenuItem(UiString.get(_S2), new AbstractAction() {
+        menu.addMenuItem(MText.get(_S2), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 ScreenController.showReadMeScreen();
                 hideOverlay();
             }
         });
-        menu.addMenuItem(UiString.get(_S3), new AbstractAction() {
+        menu.addMenuItem(MText.get(_S3), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                URLUtils.openURL(URLUtils.URL_USERGUIDE);
+                UrlHelper.openURL(UrlHelper.URL_USERGUIDE);
                 hideOverlay();
             }
         });
-        menu.addMenuItem(UiString.get(_S4), new AbstractAction() {
+        menu.addMenuItem(MText.get(_S4), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 ScreenController.showKeywordsScreen();
@@ -95,7 +95,7 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
         menu.addBlankItem();
 
         if (showPreferencesOption()) {
-            menu.addMenuItem(UiString.get(_S5), new AbstractAction() {
+            menu.addMenuItem(MText.get(_S5), new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     hideAllMenuPanels();
@@ -106,23 +106,23 @@ public abstract class ScreenOptionsOverlay extends TexturedPanel implements IThe
             menu.addBlankItem();
         }
 
-        menu.addMenuItem(UiString.get(_S6), new AbstractAction() {
+        menu.addMenuItem(MText.get(_S6), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 ScreenController.showMainMenuScreen();
                 hideOverlay();
             }
         });
-        menu.addMenuItem(UiString.get(_S7), new AbstractAction() {
+        menu.addMenuItem(MText.get(_S7), new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                frame.quitToDesktop(false);
+                ScreenController.getFrame().quitToDesktop(false);
             }
         });
 
         if (showGeneralCloseMenuOption()) {
             menu.addBlankItem();
-            menu.addMenuItem(new MenuButton(UiString.get(_S8), new AbstractAction() {
+            menu.addMenuItem(new MenuButton(MText.get(_S8), new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     hideOverlay();

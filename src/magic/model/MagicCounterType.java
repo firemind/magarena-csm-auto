@@ -58,6 +58,7 @@ public enum MagicCounterType {
     Flood("flood","{fld}",0), //Possibly -1
     Fungus("fungus","{fun}",-1),
     Fuse("fuse","{fse}",0), //Possibly -1 or 1
+    Fury("fury","{fry}",1),
     Gem("gem","{gem}",0),
     Glyph("glyph","{gly}",-1),
     Gold("gold","{gld}",0),
@@ -112,6 +113,7 @@ public enum MagicCounterType {
     Slime("slime","{slm}",1),
     Soot("soot","{sot}",-1), //Possibly 0
     Spore("spore","{spr}",1),
+    Spite("spite","{spt}",1),
     Storage("storage","{stg}",1),
     Strife("strife","{stf}",1),
     Study("study","{stu}",1),
@@ -125,6 +127,7 @@ public enum MagicCounterType {
     Velocity("velocity","{vly}",0), //Possibly -1
     Verse("verse","{vrs}",1),
     Vitality("vitality","{vit}",1),
+    Vortex("vortex","{vtx}",1),
     Wage("wage","{wge}",0), //Possibly -1
     Winch("winch","{wch}",1),
     Wind("wind","{wnd}",0),

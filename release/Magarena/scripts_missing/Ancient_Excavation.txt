@@ -1,0 +1,10 @@
+name=Ancient Excavation
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/0yB03Slaj7_EN.png
+value=2.500
+rarity=U
+type=Instant
+cost={2}{U}{B}
+ability=Basic landcycling {2}
+effect=Draw cards equal to the number of cards in your hand, then discard a card for each card drawn this way.
+timing=draw
+oracle=Draw cards equal to the number of cards in your hand, then discard a card for each card drawn this way.\nBasic landcycling {2}

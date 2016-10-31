@@ -1,0 +1,11 @@
+name=Frenzied Fugue
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/MQZlOGSAzZ_EN.png
+value=2.500
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={3}{R}
+ability=Enchant permanent;\
+        When SN enters the battlefield or at the beginning of your upkeep, gain control of enchanted permanent until end of turn. Untap that permanent. It gains haste until end of turn.
+timing=main
+oracle=Enchant permanent\nWhen Frenzied Fugue enters the battlefield or at the beginning of your upkeep, gain control of enchanted permanent until end of turn. Untap that permanent. It gains haste until end of turn.

@@ -17,7 +17,6 @@ import magic.model.stack.MagicItemOnStack;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetType;
-import magic.ui.cardBuilder.IRenderableCard;
 
 public class MagicCard
     extends MagicObjectImpl
@@ -294,11 +293,8 @@ public class MagicCard
 
     public boolean isOnStack() {
         for (final MagicItemOnStack item : getGame().getStack()) {
-            if (item.isSpell()) {
-                final MagicCardOnStack spell = (MagicCardOnStack)item;
-                if (spell.getCard() == this) {
-                    return true;
-                }
+            if (item.isSpell() && item.getSource() == this) {
+                return true;
             }
         }
         return false;

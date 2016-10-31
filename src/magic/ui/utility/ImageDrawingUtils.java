@@ -1,5 +1,6 @@
 package magic.ui.utility;
 
+import magic.ui.helpers.ImageHelper;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -22,7 +23,7 @@ import magic.model.MagicManaType;
 import magic.model.MagicPermanent;
 import magic.model.event.MagicManaActivation;
 import magic.ui.MagicImages;
-import magic.ui.widget.FontsAndBorders;
+import magic.ui.FontsAndBorders;
 import magic.ui.theme.AbilityIcon;
 import magic.utility.MagicSystem;
 import magic.data.TextImages;
@@ -169,7 +170,7 @@ public class ImageDrawingUtils {
     public static void drawCardId(final Graphics g, long id, int x, int y) {
         if (MagicSystem.isDevMode()) {
             g.setFont(FontsAndBorders.FONT1.deriveFont(11f));
-            GraphicsUtils.drawStringWithOutline(g, Long.toString(id), x + 6, y + 13);
+            ImageHelper.drawStringWithOutline(g, Long.toString(id), x + 6, y + 13);
         }
     }
 

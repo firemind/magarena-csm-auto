@@ -1,0 +1,12 @@
+name=Goblin Spymaster
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/ZZ3bAdHG7S_EN.png
+value=2.500
+rarity=R
+type=Creature
+subtype=Goblin,Rogue
+cost={2}{R}
+pt=2/1
+ability=First strike;\
+        At the beginning of each opponent's end step, that player creates a 1/1 red Goblin creature token with "Creatures you control attack each combat if able."
+timing=main
+oracle=First strike\nAt the beginning of each opponent's end step, that player creates a 1/1 red Goblin creature token with "Creatures you control attack each combat if able."

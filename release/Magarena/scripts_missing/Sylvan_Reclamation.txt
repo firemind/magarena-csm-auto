@@ -1,0 +1,10 @@
+name=Sylvan Reclamation
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/WRyejiPWUk_EN.png
+value=2.500
+rarity=U
+type=Instant
+cost={3}{G}{W}
+ability=Basic landcycling {2}
+effect=Exile up to two target artifacts and/or enchantments.
+timing=removal
+oracle=Exile up to two target artifacts and/or enchantments.\nBasic landcycling {2}

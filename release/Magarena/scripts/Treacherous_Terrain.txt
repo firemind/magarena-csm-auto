@@ -1,0 +1,10 @@
+name=Treacherous Terrain
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/Xj3CIJDTmk_EN.png
+value=2.500
+rarity=U
+type=Sorcery
+cost={6}{R}{G}
+ability=Basic landcycling {2}
+timing=main
+oracle=Treacherous Terrain deals damage to each opponent equal to the number of lands that player controls.\nBasic landcycling {2}
+requires_groovy_code

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -28,6 +29,8 @@ import java.util.stream.Stream;
 
 import groovy.lang.GroovyShell;
 import groovy.transform.CompileStatic;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicChangeCardDefinition;
 import magic.model.MagicColor;
@@ -90,9 +93,9 @@ public class CardDefinitions {
 
     private static void setProperty(final MagicCardDefinition card,final String property,final String value) {
         try {
-            CardProperty.valueOf(property.toUpperCase()).setProperty(card, value);
+            CardProperty.valueOf(property.toUpperCase(Locale.ENGLISH)).setProperty(card, value);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("unknown card property value \"" + property + "\" = \"" + value + "\"");
+            throw new RuntimeException("unknown card property value \"" + property + "\" = \"" + value + "\"", e);
         }
     }
 
@@ -160,13 +163,13 @@ public class CardDefinitions {
     }
 
     public static String getCanonicalName(String fullName) {
-        return fullName.replaceAll("[^A-Za-z0-9]", "_");
+        return fullName.replace("\u00C6", "Ae").replaceAll("[^A-Za-z0-9]", "_");
     }
 
     public static String getASCII(String fullName) {
         return Normalizer.normalize(fullName, Form.NFD)
                          .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
-                         .replace("\u00C6", "AE");
+                         .replace("\u00C6", "Ae");
     }
 
     private static void loadCardDefinition(final File file) {
@@ -410,7 +413,7 @@ public class CardDefinitions {
     private static File[] getSortedMissingScriptFiles() {
         final Path cardsPath = MagicFileSystem.getDataPath(DataPath.SCRIPTS_MISSING);
         final File[] files = cardsPath.toFile().listFiles((dir, name) -> {
-            return name.toLowerCase().endsWith(".txt");
+            return name.toLowerCase(Locale.ENGLISH).endsWith(".txt");
         });
         if (files != null) {
             Arrays.sort(files);
@@ -475,7 +478,12 @@ public class CardDefinitions {
 
     private static List<String> loadCardsSnapshotFile() {
         if (CARDS_SNAPSHOT_FILE.exists()) {
-            return MagicFileSystem.deserializeStringList(CARDS_SNAPSHOT_FILE);
+            try {
+                return MagicFileSystem.deserializeStringList(CARDS_SNAPSHOT_FILE);
+            } catch (Exception ex) {
+                Logger.getLogger(CardDefinitions.class.getName()).log(Level.WARNING, null, ex);
+                return new ArrayList<>();
+            }
         } else {
             saveCardsSnapshotFile();
             return new ArrayList<>();

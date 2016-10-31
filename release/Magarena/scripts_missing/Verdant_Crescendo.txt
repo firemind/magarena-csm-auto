@@ -1,5 +1,6 @@
 name=Verdant Crescendo
-image=http://mythicspoiler.com/kld/cards/verdantcrescendo.jpg
+image=http://magiccards.info/scans/en/kld/273.jpg
+image_updated=2016-10-05
 value=2.500
 rarity=R
 type=Sorcery
@@ -7,4 +8,4 @@ cost={3}{G}
 effect=Search your library for a basic land card and put it onto the battlefield tapped. Search your library and graveyard for a card named Nissa, Nature's Artisan, reveal it, and put it into your hand. Then shuffle your library.
 timing=main
 oracle=Search your library for a basic land card and put it onto the battlefield tapped. Search your library and graveyard for a card named Nissa, Nature's Artisan, reveal it, and put it into your hand. Then shuffle your library.
-status=not supported: search-multiple-locations
+status=needs groovy

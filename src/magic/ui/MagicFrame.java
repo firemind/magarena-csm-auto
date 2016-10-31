@@ -1,19 +1,16 @@
 package magic.ui;
 
-import magic.translate.UiString;
+import magic.translate.MText;
 import java.awt.dnd.DropTarget;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import javax.swing.AbstractAction;
+import java.util.Locale;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 import magic.data.CardDefinitions;
 import magic.data.DuelConfig;
@@ -23,17 +20,18 @@ import magic.model.MagicDeck;
 import magic.model.MagicDeckConstructionRule;
 import magic.model.MagicDuel;
 import magic.model.MagicGameLog;
-import magic.ui.screen.AbstractScreen;
+import magic.ui.screen.ScreenHelper;
 import magic.ui.theme.ThemeFactory;
-import magic.ui.utility.DesktopUtils;
-import magic.ui.utility.GraphicsUtils;
+import magic.ui.helpers.DesktopHelper;
+import magic.ui.helpers.ImageHelper;
+import magic.ui.screen.MScreen;
 import magic.utility.MagicFileSystem.DataPath;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicSystem;
 import org.apache.commons.io.FileUtils;
 
 @SuppressWarnings("serial")
-public class MagicFrame extends MagicStickyFrame implements IImageDragDropListener {
+public class MagicFrame extends MagicStickyFrame implements IDragDropListener {
 
     // translatable strings
     private static final String _S1 = "F11 : full screen";
@@ -46,7 +44,7 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
     private boolean confirmQuitToDesktop = true;
 
     // Check if we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
-    public static final boolean MAC_OS_X = System.getProperty("os.name").toLowerCase().startsWith("mac os x");
+    public static final boolean MAC_OS_X = System.getProperty("os.name").toLowerCase(Locale.ENGLISH).startsWith("mac os x");
 
     private final MagicFramePanel contentPanel;
     private MagicDuel duel;
@@ -56,7 +54,7 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
         ToolTipManager.sharedInstance().setInitialDelay(400);
 
         // Setup frame.
-        this.setTitle(String.format("%s [%s]", frameTitle, UiString.get(_S1)));
+        this.setTitle(String.format("%s [%s]", frameTitle, MText.get(_S1)));
         this.setIconImage(MagicImages.APP_LOGO);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListeners();
@@ -66,14 +64,19 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
         contentPanel = new MagicFramePanel();
         contentPanel.setOpaque(true);
         setContentPane(contentPanel);
-        setF10KeyInputMap();
-        setF11KeyInputMap();
-        setF12KeyInputMap();
+
+        setKeyboardEventActions();
 
         // Enable drag and drop of background image file.
-        new DropTarget(this, new ImageDropTargetListener(this));
+        new DropTarget(this, new FileDropTargetListener(this));
 
         setVisible(true);
+    }
+    
+    private void setKeyboardEventActions() {
+        ScreenHelper.setKeyEvent(contentPanel, KeyEvent.VK_F10, this::doScreenshot);
+        ScreenHelper.setKeyEvent(contentPanel, KeyEvent.VK_F11, this::toggleFullScreenMode);
+        ScreenHelper.setKeyEvent(contentPanel, KeyEvent.VK_F12, this::toggleUI);
     }
 
     private void addWindowListeners() {
@@ -111,7 +114,7 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
             duel.load(duelFile);
             showDuel();
         } else {
-            ScreenController.showWarningMessage(UiString.get(_S2));
+            ScreenController.showWarningMessage(MText.get(_S2));
         }
     }
 
@@ -127,8 +130,7 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
                 MagicDeckConstructionRule.getRulesText(MagicDeckConstructionRule.checkDeck(deck));
 
         if (brokenRulesText.length() > 0) {
-            ScreenController.showWarningMessage(
-                    String.format("%s\n\n%s", UiString.get(_S3, playerName), brokenRulesText));
+            ScreenController.showWarningMessage(String.format("%s\n\n%s", MText.get(_S3, playerName), brokenRulesText));
             return false;
         }
 
@@ -162,12 +164,11 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
         if (!confirmQuitToDesktop) {
             doShutdownMagarena();
         } else {
-            final String message = String.format("%s\n", UiString.get(_S4));
+            final String message = String.format("%s\n", MText.get(_S4));
             final Object[] params = {message};
-            final int n = JOptionPane.showConfirmDialog(
-                    contentPanel,
+            final int n = JOptionPane.showConfirmDialog(contentPanel,
                     params,
-                    UiString.get(_S5),
+                    MText.get(_S5),
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 doShutdownMagarena();
@@ -205,68 +206,15 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
         showDuel();
     }
 
-    /**
-     * F10 take a screen shot.
-     */
-    private void setF10KeyInputMap() {
-        contentPanel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0), "Screenshot");
-        contentPanel.getActionMap().put("Screenshot", new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                GraphicsUtils.setBusyMouseCursor(true);
-                doScreenshot();
-                GraphicsUtils.setBusyMouseCursor(false);
-            }
-        });
-    }
-
-    /**
-     * F11 key toggles full screen mode.
-     */
-    private void setF11KeyInputMap() {
-        contentPanel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), "FullScreen");
-        contentPanel.getActionMap().put("FullScreen", new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                toggleFullScreenMode();
-            }
-        });
-    }
-
-    private void setF12KeyInputMap() {
-        contentPanel.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0), "HideMenu");
-        contentPanel.getActionMap().put("HideMenu", new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final AbstractScreen activeScreen = ScreenController.getActiveScreen();
-                activeScreen.setVisible(!activeScreen.isVisible());
-            }
-        });
-    }
-
     private void doScreenshot() {
         try {
             final Path filePath = MagicFileSystem.getDataPath(DataPath.LOGS).resolve("screenshot.png");
-            final File imageFile = GraphicsUtils.doScreenshotToFile(this.getContentPane(), filePath);
-            DesktopUtils.openFileInDefaultOsEditor(imageFile);
+            final File imageFile = ImageHelper.doScreenshotToFile(this.getContentPane(), filePath);
+            DesktopHelper.openFileInDefaultOsEditor(imageFile);
         } catch (IOException | DesktopNotSupportedException e) {
             e.printStackTrace();
             ScreenController.showWarningMessage(e.toString());
         }
-    }
-
-    @Override
-    public void setDroppedImageFile(File imageFile) {
-        final Path path = MagicFileSystem.getDataPath(DataPath.MODS).resolve("background.image");
-        try {
-            FileUtils.copyFile(imageFile, path.toFile());
-        } catch (IOException ex) {
-            ScreenController.showWarningMessage(
-                    String.format("%s\n\n%s", UiString.get(_S6), ex.getMessage()));
-        }
-        config.setCustomBackground(true);
-        config.save();
-        refreshLookAndFeel();
     }
 
     private void refreshBackground() {
@@ -286,8 +234,59 @@ public class MagicFrame extends MagicStickyFrame implements IImageDragDropListen
         refreshLookAndFeel();
     }
 
-    public void setContentPanel(JPanel aPanel) {
-        contentPanel.setContentPanel(aPanel);
+    public void setScreen(MScreen s) {
+        contentPanel.setScreen(s);
+    }
+
+    private boolean replaceBackgroundImage(File newImage) {
+        try {
+            FileUtils.copyFile(newImage, MagicFileSystem.getBackgroundImageFile());
+            return true;
+        } catch (IOException ex) {
+            ScreenController.showWarningMessage(String.format("%s\n\n%s", 
+                    MText.get(_S6),
+                    ex.getMessage())
+            );
+        }
+        return false;
+    }
+
+    private void doSetCustomBackgroundImage(File imageFile) {
+
+        if (!ImageHelper.isValidImageFile(imageFile)) {
+            ScreenController.showWarningMessage("Invalid image file.");
+            return;
+        }
+
+        final String message = String.format("%s\n", MText.get("Replace background image?"));
+        final Object[] params = {message};
+        final int response = JOptionPane.showConfirmDialog(contentPanel,
+                params,
+                MText.get("Confirmation required..."),
+                JOptionPane.YES_NO_OPTION);
+        
+        if (response == JOptionPane.YES_OPTION) {
+            if (replaceBackgroundImage(imageFile)) {
+                config.setCustomBackground(true);
+                config.save();
+                refreshLookAndFeel();
+            }
+        }
+    }
+
+    @Override
+    public void onImageFileDropped(File imageFile) {
+        doSetCustomBackgroundImage(imageFile);
+    }
+
+    @Override
+    public void onZipFileDropped(File zipFile) {
+        System.out.println("[TODO] onZipFileDropped : " + zipFile);
+    }
+
+    private void toggleUI() {
+        final MScreen screen = ScreenController.getActiveScreen();
+        screen.setVisible(!screen.isVisible());
     }
 
 }

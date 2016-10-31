@@ -2,7 +2,7 @@ package magic.ui.dialog.button;
 
 import magic.data.MagicIcon;
 import magic.ui.MagicImages;
-import magic.translate.UiString;
+import magic.translate.MText;
 
 @SuppressWarnings("serial")
 public class SaveButton extends MagicDialogButton {
@@ -12,11 +12,11 @@ public class SaveButton extends MagicDialogButton {
 
     public SaveButton(String text) {
         super(text);
-        setIcon(MagicImages.getIcon(MagicIcon.LEGAL_ICON));
+        setIcon(MagicImages.getIcon(MagicIcon.LEGAL));
     }
 
     public SaveButton() {
-        this(UiString.get(_S1));
+        this(MText.get(_S1));
     }
 
 }

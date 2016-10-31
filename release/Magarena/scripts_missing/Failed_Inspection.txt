@@ -1,9 +1,0 @@
-name=Failed Inspection
-image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_8iOubYE37A.png
-value=2.500
-rarity=C
-type=Instant
-cost={2}{U}{U}
-effect=Counter target spell. Draw a card, then discard a card.
-timing=counter
-oracle=Counter target spell. Draw a card, then discard a card.

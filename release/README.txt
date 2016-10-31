@@ -71,6 +71,85 @@ Thanks to
 
 Thank you for your support and have fun!
 
+Release 1.79 (November 27, 2016)
+============
+
+Release 1.78 (October 30, 2016)
+============
+kelsioboy
+lodici
+melvin
+ShawnieBoy
+
+- update formats to include Kaladesh and Commander 2016, rotate Standard
+
+- new themes and avatars
+  * Greenwood theme by sevacro, http://www.slightlymagic.net/forum/viewtopic.php?f=89&t=19316
+  * Black & White theme by sevacro, http://www.slightlymagic.net/forum/viewtopic.php?f=89&t=19317
+  * Avatar set by sevacro, http://www.slightlymagic.net/forum/viewtopic.php?f=89&t=19309
+
+- changed/added the following to the user interface:
+  * show/hide keywords screen from anywhere using 'K' key
+  * show/hide log messages during game using 'M' key
+  * show/hide log screen during game using 'L' key
+  * optional new style keywords screen with example cards
+  * new style checkbox implemented in preferences dialog
+  * new style scrollbar, toggle setting added to preferences dialog
+  * dev actions in Explorer moved to dev menu
+  * implement uniform table/list selection color based on theme
+  * new translatable strings: 26
+
+- generate proxy images for permanents based on current characteristics for
+  English language with cropped images only
+  * permanent color, type, subtype and pt changes are displayed in-game
+  * token copies of permanents display token frames
+
+- added the following to the card script:
+  * support create token phrasing
+  * support searching from multiple locations via groovy code
+  * condition: that player has no cards in hand
+  * condition: RN has <amount> or more cards in hand
+  * condition: RN has <amount> or fewer cards in hand
+  * condition: enchanted creature's power is <amount> or greater
+  * effect: goad <permanents>
+  * effect: return <card> at random from your graveyard to your hand
+  * effect: At the beginning of your next upkeep, pay <mana cost>. If you don't, you lose the game
+
+- fixed the following bugs:
+  * crash on card loading due to system locale setting (issue #959)
+  * crash when reading old version of snapshot.dat (issue #956)
+  * missing activation cost in oracle text for 2/2 red Dragon token
+  * missing check for "isn't monstrous" when monstrousity resolves
+  * incorrect proxy image generated for hybrid cards
+  * incorrect selection color used in the deck legality list (issue #440)
+  * Morph permanents could not be turned face up (issue #921)
+  * Syndicate Trafficker ability crashes when it resolves
+  * Deathbringer Liege's triggers fire in the wrong order (issue #899)
+  * Aether Meltdown could only enchant creature and Vehicle (issue #922)
+  * Fertilid's ability made controller search, should be target player
+  * Slumbering Dragon could attack when it has less than five +1/+1 counters (issue #928)
+  * Inventor's Goggles doesn't attach to an Artificer entering the battlefield (issue #929)
+  * Grand Abolisher won't let the opponent cast anything at all (issue #962)
+  * Decree of Silence is sacrificed whenever it has three or more depletion counters on it (issue #963)
+
+- added the following cards:
+Akiri, Line-Slinger, Arachnogenesis, Arlinn, Embraced by the Moon,
+Arlinn Kord, Ash Barrens, Attune with Aether, Besmirch,
+Bloodcrazed Goblin, Boompile, Breya, Etherium Shaper,
+Bruse Tarl, Boorish Herder, Cavalry Master, Chandra, Pyrogenius,
+Coastal Breach, Coveted Peacock, Dark Supplicant, Domesticated Hydra,
+Failed Inspection, Flame-Wreathed Phoenix, Foundry Inspector,
+Ghirapur Orrery, Goblin Racketeer, Grave Upheaval, Grifter's Blade,
+Hellkite Tyrant, In Garruk's Wake, Ishai, Ojutai Dragonspeaker,
+Jeering Homunculus, Lashwrithe, Migratory Route, Mistform Ultimus,
+Moonmist, Nissa, Nature's Artisan, Ornamental Courage, Pact of Negation,
+Pact of the Titan, Primeval Protector, Pristine Skywise,
+Protector of the Crown, Quest for the Nihil Stone, Raving Dead,
+Ravos, Soultender, Razor Pendulum, Redeem the Lost, Skywhaler's Shot,
+Slaughter Pact, Stonehoof Chieftain, Structural Distortion,
+Sublime Exhalation, Summoner's Pact, Surreal Memoir, Sworn Defender,
+Valeron Wardens, Workshop Assistant, Zirilan of the Claw
+
 Release 1.77 (September 25, 2016)
 ============
 kelsioboy

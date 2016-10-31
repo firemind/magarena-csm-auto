@@ -1,0 +1,12 @@
+name=Merrow Bonegnawer
+image=http://magiccards.info/scans/en/eve/37.jpg
+value=2.542
+rarity=C
+type=Creature
+subtype=Merfolk,Rogue
+cost={B}
+pt=1/1
+ability=Whenever you cast a black spell, you may untap SN.
+timing=main
+oracle={T}: Target player exiles a card from his or her graveyard.\nWhenever you cast a black spell, you may untap Merrow Bonegnawer.
+requires_groovy_code=Relic of Progenitus

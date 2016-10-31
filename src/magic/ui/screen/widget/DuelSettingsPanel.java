@@ -10,14 +10,13 @@ import javax.swing.SwingConstants;
 import magic.data.DuelConfig;
 import magic.data.MagicIcon;
 import magic.data.MagicFormat;
-import magic.ui.utility.GraphicsUtils;
 import magic.ui.MagicImages;
-import magic.ui.MagicFrame;
-import magic.translate.UiString;
+import magic.translate.MText;
 import magic.ui.dialog.DuelPropertiesDialog;
+import magic.ui.helpers.MouseHelper;
 import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.Theme;
-import magic.ui.widget.FontsAndBorders;
+import magic.ui.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import magic.ui.utility.MagicStyle;
 import net.miginfocom.swing.MigLayout;
@@ -32,7 +31,6 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
     private static final String _S4 = "Maximum games: %d (first to %d)";
     private static final String _S5 = "Cube: %s";
 
-    private final MagicFrame frame;
     private final DuelConfig config;
     private int startLife;
     private int handSize;
@@ -40,9 +38,8 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
     private MagicFormat cube = MagicFormat.ALL;
     private final MouseAdapter mouseAdapter = getMouseAdapter();
 
-    public DuelSettingsPanel(final MagicFrame frame, final DuelConfig config) {
+    public DuelSettingsPanel(final DuelConfig config) {
 
-        this.frame = frame;
         this.config = config;
 
         startLife = config.getStartLife();
@@ -68,11 +65,11 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
             setBorder(null);
             setBackground(FontsAndBorders.TEXTAREA_TRANSPARENT_COLOR_HACK);
             setToolTipText(String.format("<html><b>%s</b><br>%s<br>%s<br>%s<br>%s</html>",
-                    UiString.get(_S1),
-                    UiString.get(_S2, startLife),
-                    UiString.get(_S3, handSize),
-                    UiString.get(_S4, maxGames, getGamesRequiredToWinDuel()),
-                    UiString.get(_S5, cube.getLabel())
+                    MText.get(_S1),
+                    MText.get(_S2, startLife),
+                    MText.get(_S3, handSize),
+                    MText.get(_S4, maxGames, getGamesRequiredToWinDuel()),
+                    MText.get(_S5, cube.getLabel())
             ));
         }
     }
@@ -83,10 +80,10 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
 
     private void refreshDisplay() {
         removeAll();
-        add(getDuelSettingsLabel(MagicImages.getIcon(MagicIcon.LIFE_ICON), "" + startLife), "h 100%");
+        add(getDuelSettingsLabel(MagicImages.getIcon(MagicIcon.LIFE), "" + startLife), "h 100%");
         add(getDuelSettingsLabel(MagicImages.getIcon(MagicIcon.HAND_ICON), "" + handSize), "h 100%");
         add(getDuelSettingsLabel(MagicImages.getIcon(MagicIcon.TARGET_ICON), "" + maxGames), "h 100%");
-        add(getDuelSettingsLabel(MagicImages.getIcon(MagicIcon.CUBE_ICON), " " + cube.getName()), "h 100%");
+        add(getDuelSettingsLabel(MagicImages.getIcon(MagicIcon.CUBE), " " + cube.getName()), "h 100%");
         revalidate();
         repaint();
     }
@@ -95,9 +92,9 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
         return new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                GraphicsUtils.setBusyMouseCursor(true);
+                MouseHelper.showBusyCursor();
                 updateDuelSettings();
-                GraphicsUtils.setBusyMouseCursor(false);
+                MouseHelper.showDefaultCursor();
             }
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -121,7 +118,6 @@ public class DuelSettingsPanel extends TexturedPanel implements IThemeStyle {
 
     public void updateDuelSettings() {
         final DuelPropertiesDialog dialog = new DuelPropertiesDialog(
-                frame,
                 handSize,
                 startLife,
                 maxGames,

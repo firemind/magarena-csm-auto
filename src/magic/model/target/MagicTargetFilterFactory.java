@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Locale;
 
 import magic.model.MagicAbility;
 import magic.model.MagicCard;
@@ -275,6 +276,18 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicStackFilterImpl GREEN_CREATURE_SPELL = new MagicStackFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack itemOnStack) {
+            return itemOnStack.isSpell(MagicType.Creature) && itemOnStack.hasColor(MagicColor.Green);
+        }
+    };
+
+    public static final MagicStackFilterImpl BLUE_CREATURE_SPELL = new MagicStackFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack itemOnStack) {
+            return itemOnStack.isSpell(MagicType.Creature) && itemOnStack.hasColor(MagicColor.Blue);
+        }
+    };
+
     public static final MagicStackFilterImpl WHITE_OR_BLUE_INSTANT_OR_SORCERY_SPELL = new MagicStackFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
             return (target.hasColor(MagicColor.White) || target.hasColor(MagicColor.Blue)) &&
@@ -404,14 +417,6 @@ public class MagicTargetFilterFactory {
     public static final MagicPermanentFilterImpl TRAPPED_LAND = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return target.isLand() && target.getCounters(MagicCounterType.Trap) >= 1;
-        }
-    };
-
-    public static final MagicPermanentFilterImpl TAPPED_BASIC_LAND = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isLand() &&
-                target.hasType(MagicType.Basic) &&
-                target.isTapped();
         }
     };
 
@@ -1051,7 +1056,7 @@ public class MagicTargetFilterFactory {
 
     public static final MagicPermanentFilterImpl CREATURE_OR_VEHICLE = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() && target.hasSubType(MagicSubType.Vehicle);
+            return target.isCreature() || target.hasSubType(MagicSubType.Vehicle);
         }
     };
 
@@ -1097,14 +1102,6 @@ public class MagicTargetFilterFactory {
 
     public static final MagicPermanentFilterImpl TAPPED_LAND = permanent(MagicPermanentState.Tapped, MagicType.Land, Control.Any);
 
-    public static final MagicPermanentFilterImpl TAPPED_NONBLACK_CREATURE = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                target.isTapped() &&
-                !target.hasColor(MagicColor.Black);
-        }
-    };
-
     public static final MagicPermanentFilterImpl UNTAPPED_CREATURE = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return target.isCreature() &&
@@ -1116,13 +1113,6 @@ public class MagicTargetFilterFactory {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
             return target.hasSubType(MagicSubType.Island) &&
                 target.isUntapped();
-        }
-    };
-
-    public static final MagicPermanentFilterImpl TAPPED_ARTIFACT_CREATURE_AND_LAND = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isTapped() &&
-                (target.hasType(MagicType.Artifact) || target.hasType(MagicType.Creature) || target.hasType(MagicType.Land));
         }
     };
 
@@ -1409,70 +1399,13 @@ public class MagicTargetFilterFactory {
         }
     };
 
-    public static final MagicPermanentFilterImpl ATTACKING_CREATURE_WITH_FLANKING = new MagicPermanentFilterImpl() {
+    public static final MagicPermanentFilterImpl CREATURE_WITH_FLANKING = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                target.isAttacking() &&
-                target.hasAbility(MagicAbility.Flanking);
+            return target.isCreature() && target.hasAbility(MagicAbility.Flanking);
         }
     };
-
-    public static final MagicPermanentFilterImpl ATTACKING_CREATURE_WITH_FLYING = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                target.isAttacking() &&
-                target.hasAbility(MagicAbility.Flying);
-        }
-    };
-
-    public static final MagicPermanentFilterImpl ATTACKING_CREATURE_WITH_SHADOW = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                target.isAttacking() &&
-                target.hasAbility(MagicAbility.Shadow);
-        }
-    };
-
-    public static final MagicPermanentFilterImpl ATTACKING_OR_BLOCKING_CREATURE_WITH_FLYING = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                (target.isAttacking() || target.isBlocking()) &&
-                target.hasAbility(MagicAbility.Flying);
-        }
-    };
-
-    public static final MagicPermanentFilterImpl ATTACKING_CREATURE_WITHOUT_FLYING = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                target.isAttacking() &&
-                !target.hasAbility(MagicAbility.Flying);
-        }
-    };
-
-    public static final MagicPermanentFilterImpl ATTACKING_ELF = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Elf, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_GOBLIN = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Goblin, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_HUMAN = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Human, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_AUROCHS = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Aurochs, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_KAVU = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Kavu, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_BEAST = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Beast, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_ALLY = creatureAnd(MagicPermanentState.Attacking, MagicSubType.Ally, Control.Any);
 
     public static final MagicPermanentFilterImpl ATTACKING_OR_BLOCKING_CREATURE = creatureOr(MagicPermanentState.Attacking, MagicPermanentState.Blocking, Control.Any);
-
-    public static final MagicPermanentFilterImpl ATTACKING_OR_BLOCKING_SPIRIT = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.isCreature() &&
-                target.hasSubType(MagicSubType.Spirit) &&
-                (target.isAttacking() ||
-                    target.isBlocking());
-        }
-    };
 
     public static final MagicPermanentFilterImpl BLACK_OR_RED_CREATURE_ATTACKING_OR_BLOCKING = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
@@ -1493,14 +1426,6 @@ public class MagicTargetFilterFactory {
     public static final MagicPermanentFilterImpl SERVO_OR_THOPTER = permanentOr(MagicSubType.Servo, MagicSubType.Thopter, Control.Any);
 
     public static final MagicPermanentFilterImpl WOLF_OR_WEREWOLF_YOU_CONTROL = permanentOr(MagicSubType.Wolf, MagicSubType.Werewolf, Control.You);
-
-    public static final MagicPermanentFilterImpl ATTACKING_WOLF_OR_WEREWOLF = new MagicPermanentFilterImpl() {
-        @Override
-        public boolean accept(MagicSource source, MagicPlayer player, MagicPermanent target) {
-            return target.isAttacking() &&
-                (target.hasSubType(MagicSubType.Wolf) || target.hasSubType(MagicSubType.Werewolf));
-        }
-    };
 
     public static final MagicPermanentFilterImpl UNBLOCKED_ATTACKING_CREATURE_YOU_CONTROL = new MagicPermanentFilterImpl() {
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
@@ -1630,6 +1555,17 @@ public class MagicTargetFilterFactory {
 
         public boolean acceptType(final MagicTargetType targetType) {
             return targetType == MagicTargetType.Graveyard;
+        }
+    };
+
+    public static final MagicCardFilterImpl LEGENDARY_SPIRIT_PERMANENT_CARD_FROM_LIBRARY = new MagicCardFilterImpl() {
+        public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
+            return target.hasSubType(MagicSubType.Spirit) &&
+                   target.hasType(MagicType.Legendary) &&
+                   target.isPermanentCard();
+        }
+        public boolean acceptType(final MagicTargetType targetType) {
+            return targetType == MagicTargetType.Library;
         }
     };
 
@@ -1952,12 +1888,6 @@ public class MagicTargetFilterFactory {
         }
     };
 
-    public static final MagicPermanentFilterImpl UNTAPPED_MOUNTAIN = new MagicPermanentFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return target.hasSubType(MagicSubType.Mountain) && target.isUntapped();
-        }
-    };
-
     public static final MagicCardFilterImpl WARRIOR_CARD_FROM_GRAVEYARD = new MagicCardFilterImpl() {
         public boolean acceptType(final MagicTargetType targetType) {
             return targetType == MagicTargetType.Graveyard;
@@ -2273,24 +2203,6 @@ public class MagicTargetFilterFactory {
         3
     );
 
-    public static final MagicPermanentFilterImpl ATTACKING_CREATURE_POWER_3_OR_LESS = new MagicPTTargetFilter(
-        ATTACKING_CREATURE,
-        Operator.LESS_THAN_OR_EQUAL,
-        3
-    );
-
-    public static final MagicPermanentFilterImpl ATTACKING_OR_BLOCKING_CREATURE_POWER_3_OR_LESS = new MagicPTTargetFilter(
-        ATTACKING_OR_BLOCKING_CREATURE,
-        Operator.LESS_THAN_OR_EQUAL,
-        3
-    );
-
-    public static final MagicPermanentFilterImpl ATTACKING_OR_BLOCKING_CREATURE_POWER_2_OR_LESS = new MagicPTTargetFilter(
-        ATTACKING_OR_BLOCKING_CREATURE,
-        Operator.LESS_THAN_OR_EQUAL,
-        2
-    );
-
     public static final MagicPermanentFilterImpl CREATURE_POWER_4_OR_MORE = new MagicPTTargetFilter(
         CREATURE,
         Operator.GREATER_THAN_OR_EQUAL,
@@ -2442,6 +2354,7 @@ public class MagicTargetFilterFactory {
         add("Mercenary permanent card with converted mana cost 4 or less from your library", permanentCardMaxCMC(MagicSubType.Mercenary, MagicTargetType.Library, 4));
         add("Mercenary permanent card with converted mana cost 5 or less from your library", permanentCardMaxCMC(MagicSubType.Mercenary, MagicTargetType.Library, 5));
         add("Mercenary permanent card with converted mana cost 6 or less from your library", permanentCardMaxCMC(MagicSubType.Mercenary, MagicTargetType.Library, 6));
+        add("legendary Spirit permanent card from your library", LEGENDARY_SPIRIT_PERMANENT_CARD_FROM_LIBRARY);
 
         // <color|type|subtype> creature card from your library
         add("creature card with converted mana cost 1 or less from your library", permanentCardMaxCMC(MagicType.Creature, MagicTargetType.Library, 1));
@@ -2456,7 +2369,6 @@ public class MagicTargetFilterFactory {
         // <color|type|subtype> creature
         add("1/1 creature", new MagicPTTargetFilter(CREATURE, Operator.EQUAL, 1, Operator.EQUAL, 1));
         add("blue or black creature", BLUE_OR_BLACK_CREATURE);
-        add("untapped island", UNTAPPED_ISLAND);
         add("creature with modular", MODULAR_CREATURE);
         add("creature with trample", CREATURE_WITH_TRAMPLE);
         add("creature with level up", LEVELUP_CREATURE);
@@ -2487,27 +2399,11 @@ public class MagicTargetFilterFactory {
         add("land or nonblack creature", LAND_OR_NONBLACK_CREATURE);
         add("red or green creature", RED_OR_GREEN_CREATURE);
         add("red or white creature", RED_OR_WHITE_CREATURE);
-        add("tapped creature", TAPPED_CREATURE);
-        add("untapped creature", UNTAPPED_CREATURE);
         add("face-down creature", FACE_DOWN_CREATURE);
         add("artifact or creature", ARTIFACT_OR_CREATURE);
         add("unpaired Soulbond creature", UNPAIRED_SOULBOND_CREATURE);
         add("monocolored creature", MONOCOLORED_CREATURE);
-        add("attacking Elf", ATTACKING_ELF);
-        add("attacking Aurochs", ATTACKING_AUROCHS);
-        add("attacking Goblin", ATTACKING_GOBLIN);
-        add("attacking Kavu", ATTACKING_KAVU);
-        add("attacking Beast", ATTACKING_BEAST);
-        add("attacking Ally", ATTACKING_ALLY);
-        add("attacking creature", ATTACKING_CREATURE);
-        add("attacking creature with shadow", ATTACKING_CREATURE_WITH_SHADOW);
-        add("attacking creature with power 3 or less", ATTACKING_CREATURE_POWER_3_OR_LESS);
         add("nonattacking creature", NONATTACKING_CREATURE);
-        add("attacking or blocking creature", ATTACKING_OR_BLOCKING_CREATURE);
-        add("attacking creature or blocking creature", ATTACKING_OR_BLOCKING_CREATURE);
-        add("attacking or blocking creature with flying", ATTACKING_OR_BLOCKING_CREATURE_WITH_FLYING);
-        add("attacking or blocking creature with power 3 or less", ATTACKING_OR_BLOCKING_CREATURE_POWER_3_OR_LESS);
-        add("attacking or blocking creature with power 2 or less", ATTACKING_OR_BLOCKING_CREATURE_POWER_2_OR_LESS);
         add("blocked creature", BLOCKED_CREATURE);
         add("blocking creature", BLOCKING_CREATURE);
         add("blue or red creature", BLUE_OR_RED_CREATURE);
@@ -2554,15 +2450,12 @@ public class MagicTargetFilterFactory {
         add("creature with a counter on it", CREATURE_WITH_COUNTER);
         add("creature with another Aura attached to it", CREATURE_WITH_ANOTHER_AURA);
         add("creature that isn't enchanted", CREATURE_THAT_ISNT_ENCHANTED);
-        add("attacking creature with flying", ATTACKING_CREATURE_WITH_FLYING);
-        add("attacking creature with flanking", ATTACKING_CREATURE_WITH_FLANKING);
-        add("attacking creature without flying", ATTACKING_CREATURE_WITHOUT_FLYING);
+        add("creature with flanking", CREATURE_WITH_FLANKING);
         add("nontoken creature", NONTOKEN_CREATURE);
         add("Djinn or Efreet", DJINN_OR_EFREET);
         add("Faerie or Elf", FAERIE_OR_ELF);
         add("Knight or Soldier", KNIGHT_OR_SOLDIER);
         add("Elf or Soldier creature", ELF_OR_SOLDIER_CREATURE);
-        add("tapped nonblack creature", TAPPED_NONBLACK_CREATURE);
         add("nonattacking, nonblocking creature", NONATTACKING_NONBLOCKING_CREATURE);
         add("creature without flying or islandwalk", CREATURE_WITHOUT_FLYING_OR_ISLANDWALK);
         add("creature without flying or a planeswalker", CREATURE_WITHOUT_FLYING_OR_PLANESWALKER);
@@ -2605,9 +2498,6 @@ public class MagicTargetFilterFactory {
         add("snow Forest", SNOW_FOREST);
         add("legendary snake", LEGENDARY_SNAKE);
         add("red or green enchantment", RED_OR_GREEN_ENCHANTMENT);
-        add("untapped mountain", UNTAPPED_MOUNTAIN);
-        add("tapped artifact, creature, or land", TAPPED_ARTIFACT_CREATURE_AND_LAND);
-        add("untapped artifact, creature, or land", UNTAPPED_ARTIFACT_CREATURE_OR_LAND);
 
         // <color|type|subtype> you control
         add("equipped creature you control", EQUIPPED_CREATURE_YOU_CONTROL);
@@ -2619,7 +2509,6 @@ public class MagicTargetFilterFactory {
         // <color|type|subtype> permanent
         add("permanent", PERMANENT);
         add("untapped permanent", UNTAPPED_PERMANENT);
-        add("tapped permanent", TAPPED_PERMANENT);
         add("permanent you own", PERMANENT_YOU_OWN);
         add("permanent you both own and control", PERMANENT_YOU_OWN_AND_CONTROL);
         add("noncreature permanent", NONCREATURE);
@@ -2652,7 +2541,6 @@ public class MagicTargetFilterFactory {
         add("permanent you own or control", PERMANENT_YOU_OWN_OR_CONTROL);
         add("Insect, Rat, Spider, or Squirrel", INSECT_RAT_SPIDER_OR_SQUIRREL);
         add("Vampire, Werewolf, or Zombie", VAMPIRE_WEREWOLF_OR_ZOMBIE);
-        add("attacking or blocking Spirit", ATTACKING_OR_BLOCKING_SPIRIT);
         add("basic land", BASIC_LAND);
         add("nonbasic land", NONBASIC_LAND);
         add("non-Swamp land", NON_SWAMP_LAND);
@@ -2681,14 +2569,10 @@ public class MagicTargetFilterFactory {
         add("nontoken Elf", NONTOKEN_ELF);
         add("legendary Samurai", LEGENDARY_SAMURAI);
         add("creature with three or more level counters on it", CREATURE_AT_LEAST_3_LEVEL_COUNTERS);
-        add("tapped basic land", TAPPED_BASIC_LAND);
-        add("untapped land", UNTAPPED_LAND);
         add("non-Aura enchantment", NON_AURA_ENCHANTMENT);
-        add("attacking Human", ATTACKING_HUMAN);
         add("Aura attached to a creature", AURA_ATTACHED_TO_CREATURE);
         add("wolf or werewolf", WOLF_OR_WEREWOLF);
         add("servo or thopter", SERVO_OR_THOPTER);
-        add("attacking wolf or werewolf", ATTACKING_WOLF_OR_WEREWOLF);
         add("human or an angel", HUMAN_OR_ANGEL);
 
         // <color|type> spell
@@ -2728,6 +2612,8 @@ public class MagicTargetFilterFactory {
         add("sorcery spell you control with converted mana cost 2 or less", SORCERY_SPELL_YOU_CONTROL_WITH_CMC_LEQ_2);
         add("creature spell with converted mana cost 6 or greater", CREATURE_SPELL_CMC_6_OR_MORE);
         add("creature spell with infect", CREATURE_SPELL_WITH_INFECT);
+        add("green creature spell", GREEN_CREATURE_SPELL);
+        add("blue creature spell", BLUE_CREATURE_SPELL);
         add("creature or Aura spell", CREATURE_OR_AURA_SPELL);
         add("creature or sorcery spell", CREATURE_OR_SORCERY_SPELL);
         add("Spirit or Arcane spell", SPIRIT_OR_ARCANE_SPELL);
@@ -2756,7 +2642,7 @@ public class MagicTargetFilterFactory {
     }
 
     public static String toSingular(final String arg) {
-        final String[] parts = arg.toLowerCase().split(" named ");
+        final String[] parts = arg.toLowerCase(Locale.ENGLISH).split(" named ");
         parts[0] = parts[0]
             .replaceAll("\\bwerewolves\\b", "werewolf")
             .replaceAll("\\belves\\b", "elf")
@@ -3275,6 +3161,22 @@ public class MagicTargetFilterFactory {
 
     public static final MagicPermanentFilterImpl creature(final MagicPermanentState state, final Control control) {
         return permanent(state, MagicType.Creature, control);
+    }
+
+    public static final MagicPermanentFilterImpl permanent(final MagicPermanentState state, final MagicTargetFilter<MagicPermanent> filter) {
+        return new MagicPermanentFilterImpl() {
+            public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+                return target.hasState(state) && filter.accept(source, player, target);
+            }
+        };
+    }
+
+    public static final MagicPermanentFilterImpl permanentOr(final MagicPermanentState state1, final MagicPermanentState state2, final MagicTargetFilter<MagicPermanent> filter) {
+        return new MagicPermanentFilterImpl() {
+            public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+                return (target.hasState(state1) || target.hasState(state2)) && filter.accept(source, player, target);
+            }
+        };
     }
 
     public static final MagicCardFilterImpl card() {

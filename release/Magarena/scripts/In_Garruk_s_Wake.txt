@@ -1,0 +1,9 @@
+name=In Garruk's Wake
+image=http://magiccards.info/scans/en/m15/100.jpg
+value=3.071
+rarity=R
+type=Sorcery
+cost={7}{B}{B}
+effect=Destroy all creatures you don't control.~Destroy all planeswalkers you don't control.
+timing=main
+oracle=Destroy all creatures you don't control and all planeswalkers you don't control.

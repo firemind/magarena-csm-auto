@@ -34,7 +34,6 @@ import magic.model.target.MagicTargetFilterFactory;
 import magic.model.trigger.EntersBattlefieldTrigger;
 import magic.model.trigger.MagicTrigger;
 import magic.model.trigger.MagicTriggerType;
-import magic.ui.cardBuilder.IRenderableCard;
 
 public class MagicPermanent extends MagicObjectImpl implements MagicSource, MagicTarget, Comparable<MagicPermanent>, MagicMappable<MagicPermanent>, IRenderableCard {
 
@@ -202,6 +201,10 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
             etbTriggers.hashCode()
         });
         return stateId;
+    }
+
+    public long getRenderKey() {
+        return getStateId();
     }
 
     private long getCountersHash() {
@@ -465,6 +468,7 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
                 cachedAbilityFlags = getCardDefinition().genAbilityFlags();
                 cachedPowerToughness = getCardDefinition().genPowerToughness();
                 cachedActivations = new LinkedList<MagicActivation<MagicPermanent>>(getCardDefinition().getActivations());
+                cachedActivations.addAll(cardDefinition.getMorphActivations());
                 cachedManaActivations = new LinkedList<MagicManaActivation>(getCardDefinition().getManaActivations());
                 cachedTriggers = new LinkedList<MagicTrigger<?>>(getCardDefinition().getTriggers());
                 etbTriggers = new LinkedList<EntersBattlefieldTrigger>(getCardDefinition().getETBTriggers());
@@ -477,9 +481,6 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
                 break;
             case CDAPT:
                 getCardDefinition().applyCDAPowerToughness(getGame(), getController(), this, cachedPowerToughness);
-                break;
-            case Game:
-                cachedActivations.addAll(cardDefinition.getMorphActivations());
                 break;
             default:
                 break;
@@ -1372,6 +1373,19 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
     @Override
     public Set<MagicSubType> getSubTypes() {
         return EnumSet.copyOf(cachedSubTypeFlags);
+    }
+
+    @Override
+    public String getSubTypeText() {
+        if (cachedSubTypeFlags.containsAll(MagicSubType.ALL_CREATURES)) {
+            return getCardDefinition().getSubTypeText();
+        } else {
+            StringBuilder subtypes = new StringBuilder();
+            for (final MagicSubType subType: cachedSubTypeFlags) {
+                subtypes.append(subType).append(" ");
+            }
+            return subtypes.toString();
+        }
     }
 
     @Override

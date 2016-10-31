@@ -1,0 +1,8 @@
+name=8/8 red, green, and white Beast creature token
+token=Beast
+image=http://magiccards.info/extras/token/shards-of-alara/beast.jpg
+value=3
+type=Creature
+subtype=Beast
+color=rgw
+pt=8/8

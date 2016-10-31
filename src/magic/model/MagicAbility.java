@@ -462,11 +462,10 @@ public enum MagicAbility {
             card.add(DamageIsDealtTrigger.Poisonous(n));
         }
     },
-    Tribute("tribute " + ARG.NUMBER + " " + ARG.EFFECT, 10) {
+    Tribute("tribute " + ARG.NUMBER + " effect " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
-            final String effect  = ARG.effect(arg).replaceFirst("^effect ", "");
-            card.add(TributeTrigger.create(n, MagicRuleEventAction.create(effect)));
+            card.add(TributeTrigger.create(n, MagicRuleEventAction.create(ARG.effect(arg))));
         }
     },
     Bestow("bestow " + ARG.MANACOST, 10) {
@@ -1340,20 +1339,7 @@ public enum MagicAbility {
             ConditionPumpGroup.addAbilityImpl(card, arg);
         }
     },
-    ConditionGainGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " have " + ARG.ANY, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
-            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
-            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
-            card.add(MagicStatic.genABStatic(condition, filter, abList));
-        }
-    },
-    ConditionGainGroupAlt(ARG.WORDRUN2 + " (?<any>(has|have|can).+) as long as " + ARG.WORDRUN, 0) {
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            ConditionGainGroup.addAbilityImpl(card, arg);
-        }
-    },
-    ConditionPumpGain(ARG.WORDRUN2 + " (gets " + ARG.PT + " )?(and )?(" + ARG.ANY + " )?as long as " + ARG.WORDRUN + "\\.", 0) {
+    ConditionPumpGain(ARG.WORDRUN2 + " (?=(get|has|can))(gets " + ARG.PT + " )?(and )?(" + ARG.ANY + " )?as long as " + ARG.WORDRUN + "\\.", 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
             final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
@@ -1387,12 +1373,25 @@ public enum MagicAbility {
             }
             final String abText = ARG.any(arg);
             if (abText != null) {
-                card.add(MagicStatic.genABStaticGame(
+                card.add(MagicStatic.genABStatic(
                     condition,
                     filter,
                     MagicAbility.getAbilityList(abText)
                 ));
             }
+        }
+    },
+    ConditionGainGroup("As long as " + ARG.WORDRUN + ", " + ARG.WORDRUN2 + " (has|have) " + ARG.ANY, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCondition condition = MagicConditionParser.build(ARG.wordrun(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun2(arg));
+            final MagicAbilityList abList = MagicAbility.getAbilityList(ARG.any(arg));
+            card.add(MagicStatic.genABStatic(condition, filter, abList));
+        }
+    },
+    ConditionGainGroupAlt(ARG.WORDRUN2 + " (?<any>(has|have|can).+) as long as " + ARG.WORDRUN, 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            ConditionGainGroup.addAbilityImpl(card, arg);
         }
     },
     CantBlockPermanent("(SN )?can't block " + ARG.WORDRUN, 10) {
@@ -1462,6 +1461,17 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
             card.add(EntersBattlefieldTrigger.Fabricate(n));
+        }
+    },
+    Partner("Partner", 0) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            //Does nothing as commander rules are not implemented
+        }
+    },
+    Undaunted("Undaunted", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(MagicHandCastActivation.reduction(cardDef, MagicAmountFactory.One));
         }
     },
     /*

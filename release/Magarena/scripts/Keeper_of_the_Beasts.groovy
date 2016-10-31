@@ -10,7 +10,7 @@ def TARGET_OPPONENT_WHO_CONTROLS_MORE_CREATURES = new MagicTargetChoice(
     "target opponent who controls more creatures than you"
 );
 
-def effect = MagicRuleEventAction.create("Put a 2/2 green Beast creature token onto the battlefield.");
+def effect = MagicRuleEventAction.create("Create a 2/2 green Beast creature token.");
 
 [
     new MagicPermanentActivation(
@@ -31,7 +31,7 @@ def effect = MagicRuleEventAction.create("Put a 2/2 green Beast creature token o
                 source,
                 TARGET_OPPONENT_WHO_CONTROLS_MORE_CREATURES,
                 effect.getAction(),
-                "PN puts a 2/2 green Beast creature token onto the battlefield."
+                "PN creates a 2/2 green Beast creature token."
             );
         }
     }

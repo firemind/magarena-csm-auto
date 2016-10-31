@@ -9,12 +9,12 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import magic.data.MagicIcon;
 import magic.ui.MagicImages;
-import magic.ui.utility.GraphicsUtils;
+import magic.ui.helpers.ImageHelper;
 
 @SuppressWarnings("serial")
 public class DialButton extends ActionBarButton {
 
-    private static final ImageIcon DIAL_ICON = MagicImages.getIcon(MagicIcon.MARKER_ICON);
+    private static final ImageIcon DIAL_ICON = MagicImages.getIcon(MagicIcon.MARKER);
 
     private final int increment;
     private int position;
@@ -38,7 +38,7 @@ public class DialButton extends ActionBarButton {
     }
 
     private void rotateIconImage() {
-        final BufferedImage image = GraphicsUtils.getCompatibleBufferedImage(
+        final BufferedImage image = ImageHelper.getCompatibleBufferedImage(
             DIAL_ICON.getIconWidth(), DIAL_ICON.getIconWidth(), BufferedImage.TRANSLUCENT
         );
         final Graphics2D g2d = image.createGraphics();

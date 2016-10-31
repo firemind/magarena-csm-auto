@@ -1,5 +1,6 @@
 package magic.ui.screen.widget;
 
+import magic.ui.widget.about.AboutPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import javax.swing.BorderFactory;
 import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.Theme;
 import magic.ui.utility.MagicStyle;
-import magic.ui.widget.FontsAndBorders;
+import magic.ui.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -41,9 +42,17 @@ public class MenuPanel extends TexturedPanel implements IThemeStyle {
     public void addMenuItem(final MenuButton button) {
         menuItems.add(button);
     }
+
     public void addMenuItem(final String caption, final AbstractAction action, final String tooltip) {
         addMenuItem(new MenuButton(caption, action, tooltip));
     }
+
+    public void addMenuItem(final String caption, int fontSize, final AbstractAction action) {
+        final MenuButton btn = new MenuButton(caption, action, null);
+        btn.setFont(btn.getFont().deriveFont((float)fontSize));
+        addMenuItem(btn);
+    }
+
     public void addMenuItem(final String caption, final AbstractAction action) {
         addMenuItem(caption, action, null);
     }
@@ -60,7 +69,7 @@ public class MenuPanel extends TexturedPanel implements IThemeStyle {
 
     private void setMenuPanelLayout() {
         removeAll();
-        setLayout(new MigLayout("insets 6, gap 0, flowy"));
+        setLayout(new MigLayout("insets 0 6 6 6, gap 0, flowy"));
         if (this.title != null) {
             add(getMenuTitlePanel(), "w 100%, pad 0 0 10 0, gapbottom 20");
         }
@@ -69,8 +78,8 @@ public class MenuPanel extends TexturedPanel implements IThemeStyle {
         }
     }
 
-    private CaptionPanel getMenuTitlePanel() {
-        final CaptionPanel p = new CaptionPanel(this.title);
+    private AboutPanel getMenuTitlePanel() {
+        final AboutPanel p = new AboutPanel(this.title);
         p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
         return p;
     }

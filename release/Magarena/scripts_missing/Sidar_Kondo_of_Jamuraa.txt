@@ -1,0 +1,13 @@
+name=Sidar Kondo of Jamuraa
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/zP2tJ6yQY4_EN.png
+value=2.500
+rarity=M
+type=Legendary,Creature
+subtype=Human,Knight
+cost={2}{G}{W}
+pt=2/5
+ability=Flanking;\
+        Creatures your opponents control without flying or reach can't block creatures with power 2 or less.;\
+        Partner
+timing=main
+oracle=Flanking\nCreatures your opponents control without flying or reach can't block creatures with power 2 or less.\nPartner

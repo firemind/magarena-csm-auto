@@ -16,9 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import magic.ui.CardTextLanguage;
-import magic.ui.duel.animation.AnimationFx;
-import magic.ui.message.MessageStyle;
-import magic.ui.prefs.ImageSizePresets;
+import magic.ui.widget.duel.animation.AnimationFx;
+import magic.ui.widget.message.MessageStyle;
+import magic.ui.dialog.prefs.ImageSizePresets;
 import magic.utility.MagicFileSystem;
 import magic.utility.SortedProperties;
 
@@ -172,6 +172,12 @@ public class GeneralConfig {
 
     private static final String IMAGES_ON_DEMAND = "imagesOnDemand";
     private boolean imagesOnDemand = false;
+
+    private static final String CUSTOM_SCROLLBAR = "customScrollBar";
+    private boolean isCustomScrollBar = true;
+
+    private static final String KEYWORDS_SCREEN = "keywordsScreen";
+    private String keywordsScreen;
 
     private boolean isStatsVisible = true;
 
@@ -581,6 +587,8 @@ public class GeneralConfig {
         cardTextLanguage = CardTextLanguage.valueOf(properties.getProperty(CARD_TEXT_LANG, cardTextLanguage.name()));
         gameVolume = Integer.parseInt(properties.getProperty(GAME_VOLUME, "" + gameVolume));
         imagesOnDemand = Boolean.parseBoolean(properties.getProperty(IMAGES_ON_DEMAND, "" + imagesOnDemand));
+        isCustomScrollBar = Boolean.parseBoolean(properties.getProperty(CUSTOM_SCROLLBAR, "" + isCustomScrollBar));
+        keywordsScreen = properties.getProperty(KEYWORDS_SCREEN, "");
     }
 
     public void load() {
@@ -633,12 +641,14 @@ public class GeneralConfig {
         properties.setProperty(CARD_TEXT_LANG, cardTextLanguage.name());
         properties.setProperty(GAME_VOLUME, String.valueOf(gameVolume));
         properties.setProperty(IMAGES_ON_DEMAND, String.valueOf(imagesOnDemand));
+        properties.setProperty(CUSTOM_SCROLLBAR, String.valueOf(isCustomScrollBar));
+        properties.setProperty(KEYWORDS_SCREEN, keywordsScreen);
     }
 
     public void save() {
-        final Properties properties=new SortedProperties();
+        final Properties properties = new SortedProperties();
         save(properties);
-        try { //save config
+        try {
             FileIO.toFile(getConfigFile(), properties, "General configuration");
         } catch (final IOException ex) {
             System.err.println("ERROR! Unable to save general config");
@@ -713,6 +723,22 @@ public class GeneralConfig {
         frameTop = aPoint.y;
         frameWidth = aSize.width;
         frameHeight = aSize.height;
+    }
+
+    public void setCustomScrollBar(boolean b) {
+        isCustomScrollBar = b;
+    }
+
+    public boolean isCustomScrollBar() {
+        return isCustomScrollBar;
+    }
+
+    public void setKeywordsSettings(String text) {
+        keywordsScreen = text;
+    }
+
+    public String getKeywordsSettings() {
+        return keywordsScreen;
     }
 
 }

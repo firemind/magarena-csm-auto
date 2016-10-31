@@ -132,7 +132,7 @@ public enum MagicConditionParser {
             return MagicConditionFactory.HandAtLeast(amount);
         }
     },
-    Hellbent("you have no cards in hand") {
+    Hellbent("(you )?have no cards in hand") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.HELLBENT;
         }
@@ -145,6 +145,23 @@ public enum MagicConditionParser {
     AnyHellbent("a player has no cards in hand") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.ANY_HELLBENT;
+        }
+    },
+    ThatHellbent("RN has no cards in hand") {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.THAT_HELLBENT;
+        }
+    },
+    ThatHandSizeMore("RN has " + ARG.AMOUNT + " or more cards in hand") {
+        public MagicCondition toCondition(final Matcher arg) {
+            final int amount = ARG.amount(arg);
+            return MagicConditionFactory.RNHandAtLeast(amount);
+        }
+    },
+    ThatHandSizeLess("RN has " + ARG.AMOUNT + " or fewer cards in hand") {
+        public MagicCondition toCondition(final Matcher arg) {
+            final int amount = ARG.amount(arg);
+            return MagicConditionFactory.RNHandAtMost(amount);
         }
     },
     CountersAtMost("(SN|it) has " + ARG.AMOUNT + " or fewer " + ARG.WORD1 + " counters on (it|him)") {
@@ -240,6 +257,12 @@ public enum MagicConditionParser {
             final int amount = ARG.amount(arg);
             final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(arg));
             return MagicConditionFactory.EnchantedCounterAtLeast(counterType, amount);
+        }
+    },
+    EnchantedPowerAtLeast("enchanted creature's power is " + ARG.AMOUNT + " or greater") {
+        public MagicCondition toCondition(final Matcher arg) {
+            final int amount = ARG.amount(arg);
+            return MagicConditionFactory.EnchantedPowerAtLeast(amount);
         }
     },
     IsUntapped("(SN is|it's) untapped") {
@@ -567,7 +590,7 @@ public enum MagicConditionParser {
             return MagicConditionFactory.OpponentLoseLifeOrMore(amount);
         }
     },
-    OpponentWasDealtDamage("an opponent was dealt damage this turn") {
+    OpponentWasDealtDamage("an opponent (was|has been) dealt damage this turn") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.OPPONENT_WAS_DEALT_DAMAGE;
         }
@@ -671,6 +694,19 @@ public enum MagicConditionParser {
             }
         }
         throw new RuntimeException("unknown condition \"" + cost + "\"");
+    }
+
+    public static MagicCondition buildCompose(final String costs) {
+        final String[] splitCosts = costs.split(" and ");
+        final MagicCondition[] conds = new MagicCondition[splitCosts.length];
+        for (int i = 0; i < splitCosts.length; i++) {
+            conds[i] = build(splitCosts[i]);
+        }
+        if (conds.length == 1) {
+            return conds[0];
+        } else {
+            return MagicConditionFactory.compose(conds);
+        }
     }
 
     public static MagicCondition[] buildCast(final String costs) {

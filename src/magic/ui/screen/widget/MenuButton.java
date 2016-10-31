@@ -11,13 +11,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import magic.data.MagicIcon;
+import magic.translate.MText;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
-import magic.ui.utility.GraphicsUtils;
+import magic.ui.helpers.ImageHelper;
 import magic.ui.utility.MagicStyle;
-import magic.ui.widget.FontsAndBorders;
+import magic.ui.FontsAndBorders;
+import magic.ui.widget.button.LayoutButton;
 
 @SuppressWarnings("serial")
 public class MenuButton extends JButton {
+
+    // translatable strings
+    private static final String _S1 = "Close";
 
     private final static Color COLOR_NORMAL = Color.WHITE;
     private final static Color COLOR_DISABLED = Color.DARK_GRAY;
@@ -131,18 +138,107 @@ public class MenuButton extends JButton {
     @Override
     public void setIcon(final Icon defaultIcon) {
         super.setIcon(defaultIcon);
-        setRolloverIcon(GraphicsUtils.getRecoloredIcon(
+        setRolloverIcon(ImageHelper.getRecoloredIcon(
                 (ImageIcon) defaultIcon,
                 MagicStyle.getRolloverColor())
         );
-        setPressedIcon(GraphicsUtils.getRecoloredIcon(
+        setPressedIcon(ImageHelper.getRecoloredIcon(
                 (ImageIcon) defaultIcon,
                 MagicStyle.getPressedColor())
         );
-        setDisabledIcon(GraphicsUtils.getRecoloredIcon(
+        setDisabledIcon(ImageHelper.getRecoloredIcon(
                 (ImageIcon) defaultIcon,
                 COLOR_DISABLED)
         );
+    }
+
+    public static MenuButton getCloseScreenButton() {
+        return getCloseScreenButton(MText.get(_S1));
+    }
+
+    public static MenuButton getTestButton() {
+        return new MenuButton("Test", closeScreenAction);
+    }
+
+    /**
+     * Creates an icon-only button with tooltip.<br>
+     *
+     * @param action click action
+     * @param icon
+     * @param title tooltip title text (<b>in English</b>).
+     * @param description tooltip body text (<b>in English</b>).
+     * @return
+     */
+    public static MenuButton build(Runnable action, ImageIcon image, String title, String description) {
+        return new ActionBarButton(
+                image, title, description,
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        action.run();
+                    }
+                }
+        );
+    }
+
+    public static MenuButton build(Runnable action, MagicIcon icon, String title) {
+        return build(action, MagicImages.getIcon(icon), title, null);
+    }
+
+    /**
+     * Creates an icon-only button with tooltip.<br>
+     *
+     * @param action click action
+     * @param icon
+     * @param title tooltip title text (<b>in English</b>).
+     * @param description tooltip body text (<b>in English</b>).
+     * @return
+     */
+    public static MenuButton build(Runnable action, MagicIcon icon, String title, String description) {
+        return build(action, MagicImages.getIcon(icon), title, description);
+    }
+
+    /**
+     * Creates a text-only button with tooltip.
+     * 
+     * @param action click action.
+     * @param title button caption and tooltip title (<b>in English</b>).
+     * @param tooltip main tooltip text (<b>in English</b>).
+     * @return
+     */
+    public static MenuButton build(Runnable action, String title, String tooltip) {
+        return new ActionBarButton(
+                title, tooltip,
+                new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        action.run();
+                    }
+                }
+        );
+    }
+
+    /**
+     * Creates a text-only button.
+     *
+     * @param action click action.
+     * @param text button caption (<b>in English</b>).
+     * @return
+     */
+    public static MenuButton build(Runnable action, String title) {
+        return new ActionBarButton(title, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                action.run();
+            }
+        });
+    }
+
+    /**
+    * Action bar button used to change screen layout.
+    */
+    public static MenuButton buildLayoutButton(final Runnable action) {
+        return new LayoutButton(action);
     }
 
 }

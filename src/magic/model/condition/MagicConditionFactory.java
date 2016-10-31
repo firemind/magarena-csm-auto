@@ -10,6 +10,7 @@ import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
+import magic.model.event.MagicEvent;
 import magic.model.event.MagicPermanentActivation;
 import magic.model.target.MagicOtherCardTargetFilter;
 import magic.model.target.MagicOtherPermanentTargetFilter;
@@ -42,6 +43,15 @@ public class MagicConditionFactory {
             public boolean accept(final MagicSource source) {
                 final MagicPermanent permanent = (MagicPermanent)source;
                 return permanent.getEnchantedPermanent().getCounters(counterType) >= n;
+            }
+        };
+    }
+
+    public static MagicCondition EnchantedPowerAtLeast(final int n) {
+        return new MagicCondition() {
+            public boolean accept(final MagicSource source) {
+                final MagicPermanent permanent = (MagicPermanent)source;
+                return permanent.getEnchantedPermanent().getPower() >= n;
             }
         };
     }
@@ -95,6 +105,32 @@ public class MagicConditionFactory {
         return new MagicCondition() {
             public boolean accept(final MagicSource source) {
                 return source.getController().getHandSize() >= n;
+            }
+        };
+    }
+
+    public static MagicCondition RNHandAtLeast(final int n) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicEvent event) {
+                return event.getRefPlayer().getHandSize() >= n;
+            }
+            @Override
+            public boolean accept(final MagicSource source) {
+                throw new RuntimeException("accept(source) called on RNHandAtLeast");
+            }
+        };
+    }
+
+    public static MagicCondition RNHandAtMost(final int n) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicEvent event) {
+                return event.getRefPlayer().getHandSize() <= n;
+            }
+            @Override
+            public boolean accept(final MagicSource source) {
+                throw new RuntimeException("accept(source) called on RNHandAtMost");
             }
         };
     }
@@ -350,6 +386,24 @@ public class MagicConditionFactory {
             @Override
             public boolean accept(final MagicSource source) {
                 return condition.accept(source) == false;
+            }
+        };
+    }
+
+    public static MagicCondition compose(final MagicCondition... conds) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicEvent event) {
+                for (final MagicCondition cond : conds) {
+                    if (cond.accept(event) == false) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            @Override
+            public boolean accept(final MagicSource source) {
+                throw new RuntimeException("accept(source) called on compose");
             }
         };
     }

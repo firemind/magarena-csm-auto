@@ -4,10 +4,11 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import magic.data.MagicIcon;
 import magic.ui.MagicImages;
-import magic.ui.widget.FontsAndBorders;
+import magic.ui.FontsAndBorders;
 
 public abstract class AbstractTheme implements Theme {
 
@@ -84,7 +85,7 @@ public abstract class AbstractTheme implements Theme {
     @Override
     public ImageIcon getIcon(final String aName) {
         final Object value=themeMap.get(aName);
-        return value==null?MagicImages.getIcon(MagicIcon.MISSING_ICON):(ImageIcon)value;
+        return value==null?MagicImages.getIcon(MagicIcon.MISSING):(ImageIcon)value;
     }
 
     @Override
@@ -116,7 +117,7 @@ public abstract class AbstractTheme implements Theme {
 
     @Override
     public ImageIcon getAbilityIcon(AbilityIcon ability) {
-        final String key = "icon_" + ability.name().toLowerCase();
+        final String key = "icon_" + ability.name().toLowerCase(Locale.ENGLISH);
         final Object value = themeMap.get(key);
         return value == null ? null : (ImageIcon)value;
     }

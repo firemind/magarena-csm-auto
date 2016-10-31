@@ -1,0 +1,10 @@
+name=Migratory Route
+image=http://media.wizards.com/2016/bn8f9t2zc_C16/5ZEcbD9i4C_EN.png
+value=2.500
+rarity=U
+type=Sorcery
+cost={3}{W}{U}
+ability=Basic landcycling {2}
+effect=Create four 1/1 white Bird creature tokens with flying.
+timing=token
+oracle=Create four 1/1 white Bird creature tokens with flying.\nBasic landcycling {2}

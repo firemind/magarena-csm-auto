@@ -1,5 +1,6 @@
 name=Speedway Fanatic
-image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_fpBCSo5oJh.png
+image=http://magiccards.info/scans/en/kld/132.jpg
+image_updated=2016-10-05
 value=2.500
 rarity=U
 type=Creature
@@ -10,3 +11,4 @@ ability=Haste;\
         Whenever SN crews a Vehicle, that Vehicle gains haste until end of turn.
 timing=fmain
 oracle=Haste\nWhenever Speedway Fanatic crews a Vehicle, that Vehicle gains haste until end of turn.
+status=not supported: crews

@@ -1,5 +1,6 @@
 name=Territorial Gorger
-image=http://media.wizards.com/2016/bVvMNuiu2i_KLD/en_uc7YO3uQ1g.png
+image=http://magiccards.info/scans/en/kld/136.jpg
+image_updated=2016-10-05
 value=2.500
 rarity=R
 type=Creature
@@ -10,3 +11,4 @@ ability=Trample;\
         Whenever you get one or more {E}, SN gets +2/+2 until end of turn.
 timing=main
 oracle=Trample\nWhenever you get one or more {E}, Territorial Gorger gets +2/+2 until end of turn.
+status=not supported: when-get-e

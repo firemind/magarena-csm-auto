@@ -1,7 +1,7 @@
 package magic.ui;
 
 import java.awt.AlphaComposite;
-import magic.translate.UiString;
+import magic.translate.MText;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Cursor;
@@ -11,7 +11,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
@@ -28,12 +27,11 @@ import magic.model.MagicDeck;
 import magic.model.MagicDeckProfile;
 import magic.model.MagicDuel;
 import magic.model.player.PlayerProfile;
-import magic.ui.cardtable.CardTable;
-import magic.ui.deck.editor.DeckSideBar;
-import magic.ui.player.PlayerDetailsPanel;
+import magic.ui.widget.cards.table.CardTable;
+import magic.ui.screen.deck.editor.DeckSideBar;
+import magic.ui.widget.player.PlayerDetailsPanel;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
-import magic.ui.widget.FontsAndBorders;
 import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -120,7 +118,7 @@ public class DuelDecksPanel extends TexturedPanel {
     }
 
     String generateTitle(final MagicDeck deck) {
-        return UiString.get(_S2, deck.getName(), deck.size());
+        return MText.get(_S2, deck.getName(), deck.size());
     }
 
     public MagicDuel getDuel() {
@@ -205,9 +203,9 @@ public class DuelDecksPanel extends TexturedPanel {
 
     private ActionBarButton getNewDeckActionBarButton() {
         return new ActionBarButton(
-            MagicImages.getIcon(MagicIcon.RANDOM_ICON),
-            UiString.get(_S15),
-            UiString.get(_S16),
+            MagicImages.getIcon(MagicIcon.RANDOM),
+            MText.get(_S15),
+            MText.get(_S16),
             new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -229,13 +227,13 @@ public class DuelDecksPanel extends TexturedPanel {
         players[1].setDeckProfile(deckProfile1);
         players[1].setDeck(deck1);
         ScreenController.closeActiveScreen(false);
-        ScreenController.getMainFrame().showDuel();
+        ScreenController.getFrame().showDuel();
     }
 
     private ActionBarButton getSwapDecksButton() {
         return new ActionBarButton(
-            MagicImages.getIcon(MagicIcon.SWAP_ICON),
-            UiString.get(_S7), UiString.get(_S8),
+            MagicImages.getIcon(MagicIcon.SWAP),
+            MText.get(_S7), MText.get(_S8),
             new AbstractAction() {
                 @Override
                 public void actionPerformed(final ActionEvent e) {
@@ -249,11 +247,11 @@ public class DuelDecksPanel extends TexturedPanel {
         );
     }
 
-    public Collection<? extends MenuButton> getActionBarButtons() {
+    public MenuButton[] getActionBarButtons() {
         final List<MenuButton> buttons = new ArrayList<>();
         buttons.add(newDeckButton);
         buttons.add(getSwapDecksButton());
-        return buttons;
+        return buttons.toArray(new MenuButton[buttons.size()]);
     }
 
 }
