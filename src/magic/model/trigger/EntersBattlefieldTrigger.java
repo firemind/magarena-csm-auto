@@ -1,21 +1,21 @@
 package magic.model.trigger;
 
+import magic.data.CardDefinitions;
 import magic.model.MagicCardDefinition;
+import magic.model.MagicCounterType;
 import magic.model.MagicGame;
+import magic.model.MagicMessage;
 import magic.model.MagicPayedCost;
 import magic.model.MagicPermanent;
+import magic.model.MagicPlayer;
 import magic.model.MagicPermanentState;
-import magic.model.MagicCounterType;
-import magic.model.MagicMessage;
-import magic.data.CardDefinitions;
-import magic.model.action.ChangeStateAction;
 import magic.model.action.ChangeCountersAction;
+import magic.model.action.ChangeStateAction;
 import magic.model.action.PlayTokensAction;
 import magic.model.action.SacrificeAction;
+import magic.model.action.MagicPlayerAction;
 import magic.model.choice.MagicMayChoice;
 import magic.model.choice.MagicTargetChoice;
-import magic.model.choice.MagicOrChoice;
-import magic.model.choice.MagicChoice;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicEventAction;
 import magic.model.event.MagicSacrificePermanentEvent;
@@ -65,6 +65,28 @@ public abstract class EntersBattlefieldTrigger extends MagicTrigger<MagicPayedCo
         public MagicEvent executeTrigger(final MagicGame game, final MagicPermanent permanent, final MagicPayedCost payedCost) {
             permanent.setChosenPlayer(permanent.getOpponent());
             return MagicEvent.NONE;
+        }
+    };
+
+    public static final EntersBattlefieldTrigger ChoosePlayer = new EntersBattlefieldTrigger(MagicTrigger.REPLACEMENT) {
+        @Override
+        public MagicEvent executeTrigger(MagicGame game, MagicPermanent permanent, MagicPayedCost data) {
+            return new MagicEvent(
+                permanent,
+                MagicTargetChoice.Negative("a player"),
+                this,
+                "PN chooses a player$."
+            );
+        }
+
+        @Override
+        public void executeEvent(final MagicGame game, final MagicEvent event) {
+            event.processTargetPlayer(game, new MagicPlayerAction() {
+                @Override
+                public void doAction(final MagicPlayer player) {
+                    event.getPermanent().setChosenPlayer(player);
+                }
+            });
         }
     };
 

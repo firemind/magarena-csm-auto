@@ -71,8 +71,31 @@ Thanks to
 
 Thank you for your support and have fun!
 
-Release 1.79 (November 27, 2016)
+Release 1.79 (November 28, 2016)
 ============
+lodici
+melvin
+ShawnieBoy
+
+- changed/added the following to the user interface:
+  * use custom checkboxes in Card Explorer filters
+  * add option to select 'X' in cost filter
+  * add 'Match all' option for cost filter, e.g. X and 3
+  * add menu on Card Explorer to change style and layout of card pool
+
+- added the following to the card script:
+  * ability: As SN enters the battlefield, choose a player
+
+- fixed the following bugs:
+  * fix broken image links for C16 cards
+  * fix losing your life total while having negative life gains life (issue #985)
+  * power and toughness of creatures not updated after spell resolves (issue #986)
+
+- added the following cards:
+Excruciator, Hydra Omnivore, Keening Stone, Merrow Bonegnawer,
+Phyrexian Rebirth, Saskia the Unyielding, Scrabbling Claws, Sewer Nemesis,
+Shattered Perception, Tana, the Bloodsower, Thrashing Mudspawn,
+Treacherous Terrain
 
 Release 1.78 (October 30, 2016)
 ============

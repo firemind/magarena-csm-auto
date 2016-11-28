@@ -13,7 +13,7 @@
         @Override
         public void executeEvent(final MagicGame game, final MagicEvent event) {
             event.processTargetPlayer(game, {
-                final ChangeLifeAction act = new ChangeLifeAction(it,-(it.getLife()+1)/2);
+                final ChangeLifeAction act = new ChangeLifeAction(it,-it.getHalfLifeRoundUp());
                 game.doAction(act);
                 if (event.isKicked()) {
                     final int amount = -act.getLifeChange();
