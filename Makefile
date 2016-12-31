@@ -524,7 +524,6 @@ checks: \
 	check_requires_groovy_code \
 	check_script_name \
 	check_tokens \
-	check_all_cards \
 	check_unique_property \
 	check_required_property \
 	check_spells \
@@ -634,11 +633,6 @@ check_unused_choice:
 	diff declared-choices used-choices | ${NO_OUTPUT}
 	rm declared-choices used-choices
 
-check_all_cards:
-	diff \
-	<(grep "name=" `grep "token=\|^overlay" -Lr release/Magarena/scripts release/Magarena/scripts_missing` -h | sed 's/name=//' | sort | uniq) \
-	<(sort resources/magic/data/AllCardNames.txt)
-
 check_mana_or_combat:
 	diff \
 	<(grep mana_or_combat -lr release/Magarena/scripts) \
@@ -654,8 +648,8 @@ check_tap_tap:
 	grep "{T}, Tap" -ir release/Magarena/scripts | grep -v oracle | grep -iv "{T}, Tap another" | ${NO_OUTPUT}
 
 check_no_extra_space:
-	grep "^[[:space:]]" resources/magic/data/AllCardNames.txt -r resources/magic/data/sets | ${NO_OUTPUT}
-	grep "[[:space:]]$$" resources/magic/data/AllCardNames.txt -r resources/magic/data/sets | ${NO_OUTPUT}
+	grep "^[[:space:]]"  -r resources/magic/data/sets | ${NO_OUTPUT}
+	grep "[[:space:]]$$" -r resources/magic/data/sets | ${NO_OUTPUT}
 
 crash.txt: $(wildcard *.log)
 	for i in `grep "^Excep" -l $^`; do \
@@ -821,9 +815,6 @@ common_costs:
 push: clean normalize_files checks debug
 	git push origin master
 
-resources/magic/data/AllCardNames.txt:
-	grep "<name>" -r cards/cards.xml | sed 's/<[^>]*>//g;s/^ *//' | unaccent utf-8 | recode html..ascii | sort > $@
-
 resources/magic/data/sets/%.txt:
 	curl https://mtgjson.com/json/$*.json | jq -r .cards[].name | LC_ALL=C sort | uniq > $@
 
@@ -962,7 +953,8 @@ requires_scripted.txt: groovy_scripted.txt
 requires_scripted_candidate.txt: requires_scripted.txt
 	cat $^ | parallel -k grep '{}' -r release/Magarena/scripts_missing > $@
 
-requires_scripted_candidate:
+requires_scripted_candidate: cards/existing_master.txt
+	cd scripts-builder && make gen-groovy-all
 	rm groovy_scripted.txt requires_scripted.txt requires_scripted_candidate.txt
 	make requires_scripted_candidate.txt
 	diff requires_scripted_candidate.ignore requires_scripted_candidate.txt

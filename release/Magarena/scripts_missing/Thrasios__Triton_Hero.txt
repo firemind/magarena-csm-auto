@@ -1,5 +1,6 @@
 name=Thrasios, Triton Hero
-image=http://media.wizards.com/2016/bn8f9t2zc_C16/hFa1VZjFdf_EN.png
+image=http://magiccards.info/scans/en/c16/46.jpg
+image_updated=2016-12-28
 value=2.500
 rarity=R
 type=Legendary,Creature
@@ -10,3 +11,4 @@ ability={4}: Scry 1, then reveal the top card of your library. If it's a land ca
         Partner
 timing=main
 oracle={4}: Scry 1, then reveal the top card of your library. If it's a land card, put it onto the battlefield tapped. Otherwise, draw a card.\nPartner
+status=needs groovy
