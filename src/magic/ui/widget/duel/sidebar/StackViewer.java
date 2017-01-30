@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Scrollable;
-import magic.ui.screen.duel.game.SwingGameController;
 import magic.ui.IChoiceViewer;
 import magic.ui.duel.viewerinfo.StackViewerInfo;
+import magic.ui.screen.duel.game.SwingGameController;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -62,12 +62,15 @@ public class StackViewer extends JPanel implements IChoiceViewer {
 
         // Display stack items
         final List<StackViewerInfo> stack = controller.getViewerInfo().getStack();
-        for (final StackViewerInfo stackInfo : stack) {
-            StackButton btn = new StackButton(controller, stackInfo, maxWidth);
+        final int stackSize = stack.size();
+        for (int i = 0; i < stackSize; i++) {
+            final StackViewerInfo stackInfo = stack.get(i);
+            StackButton btn = new StackButton(controller, stackInfo, maxWidth, stackSize - i);
             buttons.add(btn);
             stackScrollablePanel.add(btn, "w 100%");
         }
         stackScrollablePanel.revalidate();
+        controller.setStackCount(buttons.size());
 
         // set preferred size for layout manager.
         int preferredHeight =
@@ -75,7 +78,6 @@ public class StackViewer extends JPanel implements IChoiceViewer {
         setPreferredSize(new Dimension(getWidth(), preferredHeight));
 
         showValidChoices(controller.getValidChoices());
-
     }
 
     @Override

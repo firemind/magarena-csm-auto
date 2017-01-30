@@ -9,11 +9,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import magic.model.MagicCardDefinition;
-import magic.model.MagicDeck;
 import magic.ui.MagicSound;
-import magic.ui.widget.cards.table.BasicDeckTablePanel;
-import magic.ui.widget.cards.table.CardTablePanel;
 import magic.ui.screen.widget.ActionBarButton;
+import magic.ui.widget.cards.table.BasicDeckTablePanel;
+import magic.ui.widget.cards.table.CardTablePanelA;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -22,15 +21,16 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
     // fired when card selection changes
     public static final String CP_CARD_SELECTED = "5d3dc52f-b1b3-419e-a4ab-375c3c85d29c";
 
+    private final DeckEditorController controller = DeckEditorController.instance;
+
     private final CardQuantityActionPanel quantityPanel;
     private final BasicDeckTablePanel deckPanel;
-    private final CardTablePanel recallTablePanel;
+    private final CardTablePanelA recallTablePanel;
     private final MigLayout miglayout = new MigLayout();
 
     private final List<MagicCardDefinition> recallCards;
     private MagicCardDefinition selectedCard = MagicCardDefinition.UNKNOWN;
     private final IDeckEditorListener listener;
-    private MagicDeck deck = new MagicDeck();
 
     CardRecallPanel(final IDeckEditorListener aListener, final CardQuantityActionPanel aPanel) {
 
@@ -40,7 +40,7 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
         deckPanel = new BasicDeckTablePanel();
 
         recallCards = new ArrayList<>();
-        recallTablePanel = new CardTablePanel(recallCards, "");
+        recallTablePanel = new CardTablePanelA(recallCards, "");
         recallTablePanel.setDeckEditorSelectionMode();
         recallTablePanel.setHeaderVisible(false);
 
@@ -74,7 +74,7 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
     private void doRecallPanelSelectionAction() {
         if (getRecallSelectedCard() != null) {
             selectedCard = getRecallSelectedCard();
-            if (deck.contains(selectedCard) == false) {
+            if (controller.getDeck().contains(selectedCard) == false) {
                 deckPanel.clearSelection();
             } else {
                 deckPanel.setSelectedCard(selectedCard);
@@ -92,24 +92,21 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
                         doDeckPanelSelectionAction();
                     }
                 });
-        recallTablePanel.addPropertyChangeListener(
-                CardTablePanel.CP_CARD_SELECTED,
+        recallTablePanel.addPropertyChangeListener(CardTablePanelA.CP_CARD_SELECTED,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         doRecallPanelSelectionAction();
                     }
                 });
-        recallTablePanel.addPropertyChangeListener(
-                CardTablePanel.CP_CARD_LCLICKED,
+        recallTablePanel.addPropertyChangeListener(CardTablePanelA.CP_CARD_LCLICKED,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         addSelectedCardToDeck();
                     }
                 });
-        recallTablePanel.addPropertyChangeListener(
-                CardTablePanel.CP_CARD_RCLICKED,
+        recallTablePanel.addPropertyChangeListener(CardTablePanelA.CP_CARD_RCLICKED,
                 new PropertyChangeListener() {
                     @Override
                     public void propertyChange(PropertyChangeEvent evt) {
@@ -145,15 +142,15 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
         }
 
         for (int i = 0; i < quantityPanel.getQuantity(); i++) {
-            deck.add(card);
+            controller.getDeck().add(card);
         }
 
-        listener.deckUpdated(deck);
+        listener.deckUpdated(controller.getDeck());
 
         // Ensures the count overlay is updated on card image.
         listener.cardSelected(card);
 
-        deckPanel.getTableModel().setCards(deck);
+        deckPanel.getTableModel().setCards(controller.getDeck());
         deckPanel.getTable().repaint();
         deckPanel.setSelectedCard(card);
 
@@ -169,21 +166,21 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
             return;
         }
 
-        if (deck.contains(card) == false) {
+        if (controller.getDeck().contains(card) == false) {
             MagicSound.BEEP.play();
             return;
         }
 
         for (int i = 0; i < quantityPanel.getQuantity(); i++) {
-            deck.remove(card);
+            controller.getDeck().remove(card);
         }
 
-        listener.deckUpdated(deck);
+        listener.deckUpdated(controller.getDeck());
 
         // Ensures the count overlay is updated on card image.
         listener.cardSelected(card);
 
-        deckPanel.getTableModel().setCards(deck);
+        deckPanel.getTableModel().setCards(controller.getDeck());
         deckPanel.getTable().repaint();
 
         if (card != deckPanel.getSelectedCard() && getRecallSelectedCard() != null) {
@@ -246,10 +243,6 @@ class CardRecallPanel extends JPanel implements IDeckEditorView, FocusListener {
     @Override
     public void focusLost(FocusEvent e) {
         doFocusLostAction(e);
-    }
-
-    void setDeck(MagicDeck aDeck) {
-        this.deck = aDeck;
     }
 
 }

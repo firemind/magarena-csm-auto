@@ -53,7 +53,7 @@ public class MagicManaCost {
     private final int converted;
     private final int XCount;
     private final List<MagicCostManaType> order = new ArrayList<>();
-    private MagicBuilderManaCost builderCost;
+    private volatile MagicBuilderManaCost builderCost;
     private List<MagicIcon> icons;
 
     private MagicManaCost(final String aCostText) {
@@ -335,8 +335,11 @@ public class MagicManaCost {
 
     public MagicBuilderManaCost getBuilderCost() {
         if (builderCost == null) {
-            builderCost=new MagicBuilderManaCost();
-            addTo(builderCost);
+            synchronized (this) {
+                if (builderCost == null) {
+                    builderCost = new MagicBuilderManaCost(this);
+                }
+            }
         }
         return builderCost;
     }

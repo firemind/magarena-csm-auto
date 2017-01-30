@@ -16,13 +16,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import magic.data.CardImageFile;
 import magic.data.DownloadableFile;
-import magic.data.ImagesDownloadList;
 import magic.data.GeneralConfig;
+import magic.data.ImagesDownloadList;
 import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
-import magic.ui.MagicImages;
 import magic.translate.MText;
 import magic.ui.CardTextLanguage;
+import magic.ui.MagicImages;
 import magic.utility.MagicFileSystem;
 import net.miginfocom.swing.MigLayout;
 
@@ -47,15 +47,15 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
     private SwingWorker<Void, Integer> imagesDownloader;
     private ScanWorker imagesScanner;
     private DownloadState downloaderState = DownloadState.STOPPED;
-    private DownloadMode downloadMode = DownloadMode.CARDS;
+    private CardImageDisplayMode displayMode = CardImageDisplayMode.PRINTED;
     private CardTextLanguage textLanguage = CardTextLanguage.ENGLISH;
     private final DialogMainPanel mainPanel;
 
     protected abstract String getProgressCaption();
     protected abstract String getDownloadButtonCaption();
 
-    DownloadPanel(DownloadMode aMode, CardTextLanguage aLang, DialogMainPanel aPanel) {
-        this.downloadMode = aMode;
+    DownloadPanel(CardImageDisplayMode aMode, CardTextLanguage aLang, DialogMainPanel aPanel) {
+        this.displayMode = aMode;
         this.textLanguage = aLang;
         this.mainPanel = aPanel;
         setLookAndFeel();
@@ -70,7 +70,7 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
 
     private void doRunImageDownloadWorker() {
         setDownloadingState();
-        imagesDownloader = new DownloadWorker(this, textLanguage, downloadMode);
+        imagesDownloader = new DownloadWorker(this, textLanguage, displayMode);
         imagesDownloader.execute();
         notifyStatusChanged(DownloadState.DOWNLOADING);
     }
@@ -111,7 +111,7 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         if (!isCancelled) {
             captionLabel.setIcon(MagicImages.getIcon(MagicIcon.BUSY16));
             captionLabel.setText(getProgressCaption());
-            imagesScanner = new ScanWorker(this, downloadMode);
+            imagesScanner = new ScanWorker(this, displayMode);
             imagesScanner.execute();
             downloadButton.setEnabled(false);
             notifyStatusChanged(DownloadState.SCANNING);
@@ -186,8 +186,8 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         );
     }
 
-    void refreshDownloadList(DownloadMode aMode, CardTextLanguage aLang) {
-        this.downloadMode = aMode;
+    void refreshDownloadList(CardImageDisplayMode aMode, CardTextLanguage aLang) {
+        this.displayMode = aMode;
         this.textLanguage = aLang;
         buildDownloadImagesList();
     }
@@ -225,18 +225,19 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         return countInteger;
     }
 
-    protected static Stream<MagicCardDefinition> getCards(Collection<MagicCardDefinition> cards, Date aDate, DownloadMode mode) {
-        if (mode == DownloadMode.CARDS) {
-            return cards.stream()
-                .filter(MagicCardDefinition::hasImageUrl)
-                .filter(card -> card.isImageUpdatedAfter(aDate)
-                    || !MagicFileSystem.getCardImageFile(card).exists());
+    private static boolean isImageFileMissing(MagicCardDefinition card, CardImageDisplayMode mode) {
+        if (mode == CardImageDisplayMode.PRINTED) {
+            return !MagicFileSystem.getPrintedCardImage(card).exists();
         } else {
-            return cards.stream()
-                .filter(MagicCardDefinition::hasImageUrl)
-                .filter(card -> card.isImageUpdatedAfter(aDate)
-                    || !MagicFileSystem.getCroppedCardImageFile(card).exists());
+           return !MagicFileSystem.getCroppedCardImage(card).exists()
+               && !MagicFileSystem.getPrintedCardImage(card).exists();
         }
+    }
+
+    protected static Stream<MagicCardDefinition> getCards(Collection<MagicCardDefinition> cards, Date aDate, CardImageDisplayMode mode) {
+        return cards.stream()
+            .filter(MagicCardDefinition::hasImageUrl)
+            .filter(card -> card.isImageUpdatedAfter(aDate) || isImageFileMissing(card, mode));
     }
 
     void setLocked(boolean b) {

@@ -2790,10 +2790,10 @@ public enum MagicRuleEventAction {
         }
     },
     Energy(
-        ARG.PLAYERS + " get(s)? " + ARG.ENERGY,
-        MagicTargetHint.Negative,
-        MagicTiming.Removal,
-        "Poison"
+        ARG.PLAYERS + "( )?get(s)? " + ARG.ENERGY,
+        MagicTargetHint.Positive,
+        MagicTiming.Pump,
+        "Energy"
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
@@ -2802,6 +2802,23 @@ public enum MagicRuleEventAction {
             return (game, event) -> {
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
                     game.doAction(new ChangeCountersAction(it, MagicCounterType.Energy, amount));
+                }
+            };
+        }
+    },
+    Experience(
+        ARG.PLAYERS + " get(s)? " + ARG.AMOUNT + " experience counter(s)?",
+        MagicTargetHint.Positive,
+        MagicTiming.Pump,
+        "Experience"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final int amount = ARG.amount(matcher);
+            final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
+            return (game, event) -> {
+                for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
+                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Experience, amount));
                 }
             };
         }

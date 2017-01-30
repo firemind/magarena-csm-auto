@@ -14,9 +14,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
-
 import magic.ui.CardTextLanguage;
 import magic.ui.dialog.prefs.ImageSizePresets;
+import magic.ui.screen.images.download.CardImageDisplayMode;
 import magic.ui.widget.duel.animation.AnimationFx;
 import magic.ui.widget.message.MessageStyle;
 import magic.utility.FileIO;
@@ -177,6 +177,9 @@ public class GeneralConfig {
 
     private static final String KEYWORDS_SCREEN = "keywordsScreen";
     private String keywordsScreen;
+
+    private static final String CARD_DISPLAY_MODE = "cardImageDisplayMode";
+    private CardImageDisplayMode cardDisplayMode = CardImageDisplayMode.PRINTED;
 
     private boolean isStatsVisible = true;
 
@@ -393,10 +396,7 @@ public class GeneralConfig {
         return isMulliganScreenActive;
     }
 
-    public boolean getMulliganScreenActive() {
-        return isMulliganScreenActive;
-    }
-    public void setMulliganScreenActive(final boolean b) {
+    public void setShowMulliganScreen(final boolean b) {
         isMulliganScreenActive = b;
     }
 
@@ -580,6 +580,7 @@ public class GeneralConfig {
         imagesOnDemand = Boolean.parseBoolean(properties.getProperty(IMAGES_ON_DEMAND, "" + imagesOnDemand));
         isCustomScrollBar = Boolean.parseBoolean(properties.getProperty(CUSTOM_SCROLLBAR, "" + isCustomScrollBar));
         keywordsScreen = properties.getProperty(KEYWORDS_SCREEN, "");
+        cardDisplayMode = CardImageDisplayMode.valueOf(properties.getProperty(CARD_DISPLAY_MODE, cardDisplayMode.name()));
     }
 
     public void load() {
@@ -633,6 +634,7 @@ public class GeneralConfig {
         properties.setProperty(IMAGES_ON_DEMAND, String.valueOf(imagesOnDemand));
         properties.setProperty(CUSTOM_SCROLLBAR, String.valueOf(isCustomScrollBar));
         properties.setProperty(KEYWORDS_SCREEN, keywordsScreen);
+        properties.setProperty(CARD_DISPLAY_MODE, cardDisplayMode.name());
     }
 
     public void save() {
@@ -736,6 +738,14 @@ public class GeneralConfig {
 
     public int getInt(String name, int value) {
         return Integer.parseInt(settings.getProperty(name, Integer.toString(value)));
+    }
+
+    public CardImageDisplayMode getCardImageDisplayMode() {
+        return cardDisplayMode;
+    }
+
+    public void setCardImageDisplayMode(CardImageDisplayMode newMode) {
+        cardDisplayMode = newMode;
     }
 
 }

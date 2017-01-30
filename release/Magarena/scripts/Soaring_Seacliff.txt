@@ -1,5 +1,6 @@
 name=Soaring Seacliff
-image=http://magiccards.info/scans/en/ddi/37.jpg
+image=http://magiccards.info/scans/en/zen/225.jpg
+image_updated=2017-01-08
 value=2.550
 rarity=C
 type=Land

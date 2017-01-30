@@ -7,10 +7,10 @@ import javax.swing.JSplitPane;
 import magic.data.DeckType;
 import magic.model.MagicDeck;
 import magic.translate.MText;
-import magic.ui.widget.cards.table.CardTable;
+import magic.ui.screen.interfaces.IDeckConsumer;
+import magic.ui.widget.cards.table.CardTablePanelB;
 import magic.ui.widget.deck.DeckStatusPanel;
 import magic.ui.widget.duel.viewer.CardViewer;
-import magic.ui.screen.interfaces.IDeckConsumer;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -22,7 +22,7 @@ class ScreenPanel extends JPanel implements IDeckConsumer {
 
     private MagicDeck selectedDeck = null;
     private Path deckFilePath = null;
-    private final CardTable deckTable;
+    private final CardTablePanelB deckTable;
     private final CardViewer cardViewer = new CardViewer();
     private final JSplitPane splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     private final DeckStatusPanel deckStatusPanel;
@@ -35,7 +35,7 @@ class ScreenPanel extends JPanel implements IDeckConsumer {
         setOpaque(false);
 
         selectedDeck = new MagicDeck();
-        deckTable = new CardTable(selectedDeck, "{deckName}", true);
+        deckTable = new CardTablePanelB(selectedDeck, "{deckName}", true);
         deckTable.addCardSelectionListener(cardViewer);
         deckTable.setHeaderVisible(false);
         deckTable.showCardCount(true);
@@ -83,7 +83,7 @@ class ScreenPanel extends JPanel implements IDeckConsumer {
     }
 
     @Override
-    public void setDeck(MagicDeck deck, Path deckPath) {
+    public boolean setDeck(MagicDeck deck, Path deckPath) {
         if (deckPath != null) {
             selectedDeck = deck;
             deckFilePath = deckPath;
@@ -101,6 +101,7 @@ class ScreenPanel extends JPanel implements IDeckConsumer {
             deckStatusPanel.setDeck(null, false);
             splitter.setVisible(false);
         }
+        return true;
     }
 
 }

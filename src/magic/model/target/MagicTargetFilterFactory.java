@@ -1,24 +1,23 @@
 package magic.model.target;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Locale;
 
 import magic.model.MagicAbility;
 import magic.model.MagicCard;
-import magic.model.MagicCardDefinition;
 import magic.model.MagicColor;
 import magic.model.MagicCounterType;
 import magic.model.MagicGame;
+import magic.model.MagicManaCost;
 import magic.model.MagicPermanent;
 import magic.model.MagicPermanentState;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
 import magic.model.MagicType;
-import magic.model.MagicManaCost;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.stack.MagicAbilityOnStack;
 import magic.model.stack.MagicItemOnStack;
@@ -1560,6 +1559,16 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicCardFilterImpl PERMANENT_CARD_FROM_LIBRARY = new MagicCardFilterImpl() {
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
+            return target.isPermanentCard();
+        }
+
+        public boolean acceptType(final MagicTargetType targetType) {
+            return targetType == MagicTargetType.Library;
+        }
+    };
+
     public static final MagicCardFilterImpl LEGENDARY_SPIRIT_PERMANENT_CARD_FROM_LIBRARY = new MagicCardFilterImpl() {
         public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
             return target.hasSubType(MagicSubType.Spirit) &&
@@ -1568,17 +1577,6 @@ public class MagicTargetFilterFactory {
         }
         public boolean acceptType(final MagicTargetType targetType) {
             return targetType == MagicTargetType.Library;
-        }
-    };
-
-    public static final MagicCardFilterImpl PERMANENT_CARD_CMC_LEQ_3_FROM_GRAVEYARD = new MagicCardFilterImpl() {
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
-            final MagicCardDefinition cardDefinition = target.getCardDefinition();
-            return cardDefinition.getConvertedCost() <= 3 && cardDefinition.isPermanent();
-        }
-
-        public boolean acceptType(final MagicTargetType targetType) {
-            return targetType == MagicTargetType.Graveyard;
         }
     };
 
@@ -1747,8 +1745,6 @@ public class MagicTargetFilterFactory {
                 target.hasType(MagicType.Artifact);
         }
     };
-
-    public static final MagicCardFilterImpl ZOMBIE_CARD_FROM_GRAVEYARD = card(MagicSubType.Zombie).from(MagicTargetType.Graveyard);
 
     public static final MagicCardFilterImpl ZOMBIE_CARD_FROM_ALL_GRAVEYARDS = new MagicCardFilterImpl() {
         public boolean acceptType(final MagicTargetType targetType) {
@@ -2000,6 +1996,19 @@ public class MagicTargetFilterFactory {
         };
     }
 
+    public static final MagicCardFilterImpl permanentCardMaxCMC(final MagicTargetType from, final int cmc) {
+        return new MagicCardFilterImpl() {
+            public boolean accept(MagicSource source, MagicPlayer player, MagicCard target) {
+                return target.isPermanentCard() &&
+                    target.getConvertedCost() <= cmc;
+            }
+
+            public boolean acceptType(final MagicTargetType targetType) {
+                return targetType == from;
+            }
+        };
+    }
+
     public static final MagicCardFilterImpl permanentCardMinCMC(final MagicType type, final MagicTargetType from, final int cmc) {
         return new MagicCardFilterImpl() {
             public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
@@ -2211,6 +2220,12 @@ public class MagicTargetFilterFactory {
         4
     );
 
+    public static final MagicPermanentFilterImpl CREATURE_POWER_4_OR_LESS = new MagicPTTargetFilter(
+        CREATURE,
+        Operator.LESS_THAN_OR_EQUAL,
+        4
+    );
+
     public static final MagicPermanentFilterImpl CREATURE_POWER_2_OR_MORE = new MagicPTTargetFilter(
         CREATURE,
         Operator.GREATER_THAN_OR_EQUAL,
@@ -2267,6 +2282,7 @@ public class MagicTargetFilterFactory {
         addp("instant, sorcery, or creature card", INSTANT_SORCERY_OR_CREATURE_CARD);
         addp("artifact or creature card", ARTIFACT_OR_CREATURE_CARD);
         addp("colorless creature card", COLORLESS_CREATURE_CARD);
+        addp("creature card in a graveyard", CREATURE_CARD_FROM_ALL_GRAVEYARDS);
 
         // ... card
         addp("instant or sorcery card", INSTANT_OR_SORCERY_CARD);
@@ -2318,7 +2334,8 @@ public class MagicTargetFilterFactory {
 
         // <color|type|subtype> permanent card from your graveyard
         add("permanent card from your graveyard", PERMANENT_CARD_FROM_GRAVEYARD);
-        add("permanent card with converted mana cost 3 or less from your graveyard", PERMANENT_CARD_CMC_LEQ_3_FROM_GRAVEYARD);
+        add("permanent card with converted mana cost 3 or less from your graveyard", permanentCardMaxCMC(MagicTargetType.Graveyard, 3));
+        add("permanent card with converted mana cost 2 or less from your graveyard", permanentCardMaxCMC(MagicTargetType.Graveyard, 2));
 
         // <color|type|subtype> creature card from your graveyard
         add("creature card with converted mana cost 3 or less from your graveyard", CREATURE_CARD_CMC_LEQ_3_FROM_GRAVEYARD);
@@ -2357,6 +2374,7 @@ public class MagicTargetFilterFactory {
         add("Mercenary permanent card with converted mana cost 5 or less from your library", permanentCardMaxCMC(MagicSubType.Mercenary, MagicTargetType.Library, 5));
         add("Mercenary permanent card with converted mana cost 6 or less from your library", permanentCardMaxCMC(MagicSubType.Mercenary, MagicTargetType.Library, 6));
         add("legendary Spirit permanent card from your library", LEGENDARY_SPIRIT_PERMANENT_CARD_FROM_LIBRARY);
+        add("permanent card from your library", PERMANENT_CARD_FROM_LIBRARY);
 
         // <color|type|subtype> creature card from your library
         add("creature card with converted mana cost 1 or less from your library", permanentCardMaxCMC(MagicType.Creature, MagicTargetType.Library, 1));
@@ -2437,6 +2455,7 @@ public class MagicTargetFilterFactory {
         add("creature with power 2 or greater", CREATURE_POWER_2_OR_MORE);
         add("creature with power 3 or greater", CREATURE_POWER_3_OR_MORE);
         add("creature with power 4 or greater", CREATURE_POWER_4_OR_MORE);
+        add("creature with power 4 or less", CREATURE_POWER_4_OR_LESS);
         add("creature with power 5 or greater", CREATURE_POWER_5_OR_MORE);
         add("creature with power greater than SN's power", CREATURE_POWER_GREATER_THAN_SN);
         add("creature with power less than SN's power", CREATURE_POWER_LESS_THAN_SN);

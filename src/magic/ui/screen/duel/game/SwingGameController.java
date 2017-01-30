@@ -44,14 +44,15 @@ import magic.model.MagicPlayer;
 import magic.model.MagicPlayerZone;
 import magic.model.MagicSource;
 import magic.model.MagicSubType;
+import magic.model.choice.MagicPlayChoice;
 import magic.model.choice.MagicPlayChoiceResult;
 import magic.model.event.MagicEvent;
 import magic.model.event.MagicPriorityEvent;
 import magic.model.phase.MagicPhaseType;
 import magic.model.target.MagicTarget;
 import magic.model.target.MagicTargetNone;
-import magic.translate.StringContext;
 import magic.translate.MText;
+import magic.translate.StringContext;
 import magic.ui.IChoiceViewer;
 import magic.ui.IPlayerZoneListener;
 import magic.ui.MagicFileChoosers;
@@ -103,6 +104,8 @@ public class SwingGameController implements IUIGameController {
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final AtomicBoolean isPaused =  new AtomicBoolean(false);
     private final AtomicBoolean gameConceded = new AtomicBoolean(false);
+    private final AtomicBoolean isStackFastForward = new AtomicBoolean(false);
+    private final AtomicBoolean isPauseCancelled = new AtomicBoolean(false);
     private final Collection<IChoiceViewer> choiceViewers = new ArrayList<>();
     private Set<?> validChoices = Collections.emptySet();
     private AnnotatedCardPanel cardPopup;
@@ -208,12 +211,18 @@ public class SwingGameController implements IUIGameController {
 
     @Override
     public void pause(final int t) {
+        assert !SwingUtilities.isEventDispatchThread();
         disableActionUndoButtons();
-        try { //sleep
-            Thread.sleep(t);
-        } catch (final InterruptedException ex) {
-            throw new RuntimeException(ex);
+        int tick = 0;
+        while (tick < t && isPauseCancelled.get() == false) {
+            try {
+                Thread.sleep(10);
+            } catch (final InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            tick += 10;
         }
+        isPauseCancelled.set(false);
     }
 
     private static void invokeAndWait(final Runnable task) {
@@ -652,6 +661,12 @@ public class SwingGameController implements IUIGameController {
         if (isReadyToAnimate() == false) {
             return;
         }
+
+        // skip animation when newGameInfo is result of undo
+        if (newGameInfo.getUndoPoints() < oldGameInfo.getUndoPoints()) {
+            return;
+        }
+
         animation = MagicAnimations.getGameplayAnimation(oldGameInfo, newGameInfo, gamePanel);
         if (animation != null) {
             animation.isRunning.set(true);
@@ -737,6 +752,10 @@ public class SwingGameController implements IUIGameController {
         final Object[] choiceResults;
         if (event.getPlayer().isArtificial()) {
             choiceResults = getArtificialNextEventChoiceResults(event);
+            // clear skip till EOT if AI plays something
+            if (event.getChoice() == MagicPlayChoice.getInstance() && choiceResults[0] != MagicPlayChoiceResult.PASS && choiceResults[0] != MagicPlayChoiceResult.SKIP) {
+                game.clearSkipTurnTill();
+            }
         } else {
             try {
                 choiceResults = getPlayerNextEventChoiceResults(event);
@@ -1137,4 +1156,31 @@ public class SwingGameController implements IUIGameController {
         }
     }
 
+    public void setStackCount(int count) {
+        logStackViewer.setStackCount(count);
+    }
+
+    private int getStackItemPause() {
+        return isStackFastForward.get() == true ? 0 : CONFIG.getMessageDelay();
+    }
+
+    @Override
+    public void setStackFastForward(boolean b) {
+        isPauseCancelled.set(b);
+        isStackFastForward.set(b);
+    }
+
+    @Override
+    public boolean isStackFastForward() {
+        return isStackFastForward.get();
+    }
+
+    @Override
+    public void doStackItemPause() {
+        if (game.getStack().hasItem()) {
+            if (getStackItemPause() > 0) {
+                pause(getStackItemPause());
+            }
+        }
+    }
 }

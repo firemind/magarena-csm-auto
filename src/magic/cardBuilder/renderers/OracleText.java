@@ -14,21 +14,22 @@ import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import magic.awt.MagicFont;
 
+import magic.awt.MagicFont;
+import magic.cardBuilder.ResourceManager;
+import magic.model.IRenderableCard;
 import magic.model.MagicColor;
 import magic.model.MagicType;
 import magic.ui.MagicImages;
-import magic.model.IRenderableCard;
-import magic.cardBuilder.ResourceManager;
 import magic.ui.helpers.ImageHelper;
 
 public class OracleText {
@@ -57,21 +58,22 @@ public class OracleText {
             );
 
         } else if (cardDef.hasType(MagicType.Land)) {
-            List<MagicColor> landColors = Frame.getLandColors(cardDef);
-            BufferedImage landImage = null;
-            if (landColors.size() == 1) {
-                for (MagicColor color : landColors) {
-                    landImage = getLandImage(color);
+            //Currently ignoring colorless basic lands with no type - no watermark for colorless yet
+            Set<MagicColor> landColors = Frame.getLandColors(cardDef);
+            if (landColors.equals(Frame.getBasicLandColors(cardDef))) {
+                BufferedImage landImage = null;
+                if (landColors.size() == 1) {
+                    landImage = getLandImage(landColors.iterator().next());
+                } else if (landColors.size() == 2) {
+                    landImage = getHybridLandImage(landColors);
                 }
-            } else {
-                landImage = getHybridLandImage(landColors);
-            }
-            if (landImage != null) { //Currently ignoring colorless basic lands with no type - no watermark for colorless yet
-                Graphics2D g2d = cardImage.createGraphics();
-                int heightPadding = (int) ((textBoxBounds.getHeight() - landImage.getHeight()) / 2);
-                int widthPadding = (int) ((textBoxBounds.getWidth() - landImage.getWidth()) / 2);
-                g2d.drawImage(landImage, 30 + widthPadding, 327 + heightPadding, null);
-                g2d.dispose();
+                if (landImage != null) {
+                    Graphics2D g2d = cardImage.createGraphics();
+                    int heightPadding = (int)((textBoxBounds.getHeight() - landImage.getHeight()) / 2);
+                    int widthPadding = (int)((textBoxBounds.getWidth() - landImage.getWidth()) / 2);
+                    g2d.drawImage(landImage, 30 + widthPadding, 327 + heightPadding, null);
+                    g2d.dispose();
+                }
             }
         }
     }
@@ -84,7 +86,7 @@ public class OracleText {
         Rectangle textBoxBounds = new Rectangle(0, 0, 282, 49);
         for (int i = 0; i < lines; i++) {
             int xPos = 63;
-            int yPos = (int) (yPosOffset + i * textBoxBounds.getHeight());
+            int yPos = (int)(yPosOffset + i * textBoxBounds.getHeight());
             drawTextToCard(
                 cardImage,
                 xPos,
@@ -102,7 +104,7 @@ public class OracleText {
             String oracleText = abilities[i];
             if (!oracleText.isEmpty()) { //Not all levels have text
                 int xPos = i == 0 ? 30 : 104; // xpos 104 for level arrows, normal for first line
-                int yPos = (int) (330 + i * textBoxBounds.getHeight());
+                int yPos = (int)(330 + i * textBoxBounds.getHeight());
                 drawTextToCard(
                     cardImage,
                     xPos,
@@ -229,7 +231,7 @@ public class OracleText {
         return text.toArray(new String[3]);
     }
 
-    public static void drawTextToCard(
+    static void drawTextToCard(
         BufferedImage cardImage,
         int xPos,
         int yPos,
@@ -248,8 +250,8 @@ public class OracleText {
 
         Graphics2D g2d = cardImage.createGraphics();
         BufferedImage trimmedTextBox = trimTransparency(textBoxText);
-        int heightPadding = (int) ((textBoxBounds.getHeight() - trimmedTextBox.getHeight()) / 2);
-        int widthPadding = (int) Math.min((textBoxBounds.getWidth() - trimmedTextBox.getWidth()) / 2, 3);
+        int heightPadding = (int)((textBoxBounds.getHeight() - trimmedTextBox.getHeight()) / 2);
+        int widthPadding = (int)Math.min((textBoxBounds.getWidth() - trimmedTextBox.getWidth()) / 2, 3);
         g2d.drawImage(trimmedTextBox, xPos + widthPadding, yPos + heightPadding, null);
         g2d.dispose();
     }
@@ -338,8 +340,8 @@ public class OracleText {
 
         //setUp baseImage and Graphics2D
         BufferedImage baseImage = ImageHelper.getCompatibleBufferedImage(
-            (int) box.getWidth(),
-            (int) box.getHeight(),
+            (int)box.getWidth(),
+            (int)box.getHeight(),
             Transparency.TRANSLUCENT);
         Graphics2D g2d = baseImage.createGraphics();
 
@@ -365,43 +367,62 @@ public class OracleText {
         return baseImage;
     }
 
-    public static BufferedImage trimTransparency(BufferedImage source) {
-        int height = source.getHeight();
-        int width = source.getWidth();
-        int x0 = width;
-        int y0 = height;
-        int x1 = 0;
-        int y1 = 0;
-        int color = Transparency.TRANSLUCENT;
-        BufferedImage tmp = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        // Copy over the pixel grid to the temporary image
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int pixel = source.getRGB(j, i);
-                tmp.setRGB(j, i, pixel);
-                // If not within tolerance, update coordinates;
-                if (!isWithinTolerance(color, pixel, transparencyTolerance)) {
-                    x0 = j < x0 ? j : x0;
-                    x1 = j > x1 ? j : x1;
-                    y0 = i < y0 ? i : y0;
-                    y1 = i > y1 ? i : y1;
+    private static BufferedImage trimTransparency(BufferedImage image) {
+        WritableRaster raster = image.getAlphaRaster();
+        int width = raster.getWidth();
+        int height = raster.getHeight();
+        int left = 0;
+        int top = 0;
+        int right = width - 1;
+        int bottom = height - 1;
+        int minRight = width - 1;
+        int minBottom = height - 1;
+
+        top:
+        for (;top < bottom; top++){
+            for (int x = 0; x < width; x++){
+                if (raster.getSample(x, top, 0) != 0){
+                    minRight = x;
+                    minBottom = top;
+                    break top;
                 }
             }
         }
-        if (!(x0 == width && y0 == height)) {
-            x0 -= x0 - padding < 0 ? 0 : padding;
-            x1 += x1 + padding > width ? 1 : padding;
-            y0 -= y0 - padding < 0 ? 0 : padding;
-            y1 += y1 + padding > height ? 1 : padding;
 
-            // Recalculate height and width
-            tmp = tmp.getSubimage(x0, y0, x1 - x0, y1 - y0);
+        left:
+        for (;left < minRight; left++){
+            for (int y = height - 1; y > top; y--){
+                if (raster.getSample(left, y, 0) != 0){
+                    minBottom = y;
+                    break left;
+                }
+            }
         }
-        return tmp;
+
+        bottom:
+        for (;bottom > minBottom; bottom--){
+            for (int x = width - 1; x >= left; x--){
+                if (raster.getSample(x, bottom, 0) != 0){
+                    minRight = x;
+                    break bottom;
+                }
+            }
+        }
+
+        right:
+        for (;right > minRight; right--){
+            for (int y = bottom; y >= top; y--){
+                if (raster.getSample(right, y, 0) != 0){
+                    break right;
+                }
+            }
+        }
+
+        return image.getSubimage(left, top, right - left + 1, bottom - top + 1);
     }
 
     public static AttributedString textIconReplace(final String text) {
-        final String compacted = text.replaceAll("\\{[^\\}]+\\}", "M");
+        final String compacted = text.replaceAll("\\{[^}]+}", "M");
         final AttributedString attrString = new AttributedString(compacted);
         for (int i = 0, j = 0; i < text.length(); i++, j++) {
             char c = text.charAt(i);
@@ -427,16 +448,4 @@ public class OracleText {
         return attrString;
     }
 
-    public static boolean isWithinTolerance(int baseColor, int sourceColor, double tol) {
-        int distance = colorDistance(baseColor, sourceColor);
-        return distance <= tol * maxDistance;
-    }
-
-    public static int colorDistance(int baseColor, int sourceColor) {
-        int distance = 0;
-        for (int i = 0; i < 32; i += 8) {
-            distance += StrictMath.pow((baseColor >> i & 0xff) - (sourceColor >> i & 0xff), 2);
-        }
-        return distance;
-    }
 }

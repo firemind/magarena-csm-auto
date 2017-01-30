@@ -1,6 +1,8 @@
 package magic.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import magic.data.DeckType;
 import magic.utility.DeckUtils;
 
 @SuppressWarnings("serial")
@@ -8,32 +10,41 @@ public class MagicDeck extends ArrayList<MagicCardDefinition> {
 
     public static final int DEFAULT_SIZE = 40;
 
-    private String filename="Unsaved Deck";
+    private String filename = "";
     private String description = "";
     private boolean isDeckValid = true;
+    private long deckFileChecksum = 0;
+    private DeckType deckType = DeckType.Random;
+
     public MagicDeck() {}
 
     public MagicDeck(final MagicDeck deck) {
         super(deck);
-        filename = deck.filename;
+        this.filename = deck.filename;
+        this.description = deck.description;
+        this.deckFileChecksum = deck.deckFileChecksum;
+        this.deckType = deck.deckType;
     }
 
     public void setContent(final MagicDeck deck) {
         clear();
         addAll(deck);
-        filename = deck.filename;
-        description = deck.description;
+        this.filename = deck.filename;
+        this.description = deck.description;
+        this.deckFileChecksum = deck.deckFileChecksum;
+        this.deckType = deck.deckType;
     }
 
     public void setFilename(final String name) {
-        this.filename = name;
+        this.filename = name.trim();
     }
+
     public String getFilename() {
-        return filename;
+        return filename.isEmpty() ? "New deck" : filename;
     }
 
     public String getName() {
-        return DeckUtils.getDeckNameFromFilename(filename);
+        return DeckUtils.getDeckNameFromFilename(getFilename());
     }
 
     public String getDescription() {
@@ -53,7 +64,7 @@ public class MagicDeck extends ArrayList<MagicCardDefinition> {
     public boolean isValid() {
         if (!isDeckValid) {
             return false;
-        } else if (this.size() == 0) {
+        } else if (this.isEmpty()) {
             return false;
         } else {
             for (final MagicCardDefinition card : this) {
@@ -82,5 +93,64 @@ public class MagicDeck extends ArrayList<MagicCardDefinition> {
 
     public boolean contains(final MagicType type) {
         return this.stream().anyMatch(card -> card.hasType(type));
+    }
+
+    public void setDeckFileChecksum(long value) {
+        this.deckFileChecksum = value;
+    }
+
+    public void setDeckType(DeckType deckType) {
+        this.deckType = deckType;
+    }
+
+    long getDeckFileChecksum() {
+        return deckFileChecksum;
+    }
+
+    public DeckType getDeckType() {
+        return deckType;
+    }
+
+    public boolean isUnsaved() {
+        return deckFileChecksum == 0;
+    }
+
+    public void setUnsavedStatus() {
+        deckFileChecksum = 0;
+        if (deckType != DeckType.Random) {
+            deckType = DeckType.Random;
+        }
+    }
+
+    public boolean isSameDeckFile(MagicDeck other) {
+        return this.deckFileChecksum == other.deckFileChecksum;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj != null && obj instanceof MagicDeck) {
+            final MagicDeck other = (MagicDeck) obj;
+            if (!this.filename.equals(other.filename)) {
+                return false;
+            }
+            if (!this.description.equals(other.description)) {
+                return false;
+            }
+            if (this.deckFileChecksum != other.deckFileChecksum) {
+                return false;
+            }
+            if (this.deckType != other.deckType) {
+                return false;
+            }
+            if (this.size() != other.size()) {
+                return false;
+            }
+            Collections.sort(this, MagicCardDefinition.NAME_COMPARATOR_ASC);
+            Collections.sort(other, MagicCardDefinition.NAME_COMPARATOR_ASC);
+            return super.equals(other);
+        }
+        return false;
     }
 }

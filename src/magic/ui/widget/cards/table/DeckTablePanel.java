@@ -30,7 +30,7 @@ public class DeckTablePanel extends TexturedPanel {
 
     private final MigLayout migLayout = new MigLayout();
     private final MScrollPane scrollpane = new MScrollPane();
-    private final DeckTableModel tableModel;
+    private final CardTableModel tableModel;
     private JTable table;
 
     private final TitleBar titleBar;
@@ -41,12 +41,18 @@ public class DeckTablePanel extends TexturedPanel {
 
     public DeckTablePanel(final List<MagicCardDefinition> defs, final String title) {
 
-        setBackground(FontsAndBorders.TRANSLUCENT_WHITE_STRONG);
-
-        this.tableModel = new DeckTableModel(defs);
-        this.table = new DeckTable(tableModel, getForeground());
-
         this.lastSelectedCards = new ArrayList<>();
+
+        this.tableModel = new CardTableModel(defs);
+        this.table = new CardsJTable(tableModel);
+
+        if (!GeneralConfig.getInstance().isPreviewCardOnSelect()) {
+            table.addMouseMotionListener(new RowMouseOverListener());
+        }
+
+        // listener to change card image on selection
+        this.listSelListener = getTableListSelectionListener();
+        table.getSelectionModel().addListSelectionListener(listSelListener);
 
         // add table to scroll pane
         scrollpane.setViewportView(table);
@@ -56,16 +62,16 @@ public class DeckTablePanel extends TexturedPanel {
         // add title
         titleBar = new TitleBar(title);
 
-        this.listSelListener = getTableListSelectionListener();
-        table.getSelectionModel().addListSelectionListener(listSelListener);
+        // Raise events on mouse clicks.
         table.addMouseListener(getTableMouseAdapter());
-        if (!GeneralConfig.getInstance().isPreviewCardOnSelect()) {
-            table.addMouseMotionListener(new RowMouseOverListener());
-        }
 
         setLayout(migLayout);
         refreshLayout();
+        setEmptyBackgroundColor();
+    }
 
+    private void setEmptyBackgroundColor() {
+        setBackground(CardsTableStyle.getStyle().getEmptyBackgroundColor());
     }
 
     private ListSelectionListener getTableListSelectionListener() {

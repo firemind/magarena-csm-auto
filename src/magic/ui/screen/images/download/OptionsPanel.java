@@ -17,7 +17,7 @@ class OptionsPanel extends JPanel {
 
     private static final String _S1 = "Images folder:";
     private static final String _S2 = "Card text:";
-    private static final String _S3 = "Download:";
+    private static final String _S3 = "Display:";
     private static final String _S4 = "Preferred card text language";
     private static final String _S5 = "If a language other than English is selected then Magarena will try to find and download a card image for the given language. If no image is found then it will download the default English edition instead.";
 
@@ -26,14 +26,14 @@ class OptionsPanel extends JPanel {
     private final GeneralConfig CONFIG = GeneralConfig.getInstance();
 
     private final JComboBox<CardTextLanguage> cboCardText = new JComboBox<>();
-    private final JComboBox<DownloadMode> cboDownloadMode = new JComboBox<>();
+    private final JComboBox<CardImageDisplayMode> cboDisplayMode = new JComboBox<>();
     private final DirectoryChooser imagesFolderChooser;
 
     OptionsPanel() {
 
         imagesFolderChooser = getImagesFolderChooser();
         setCardTextCombo();
-        setDownloadModeCombo();
+        setDisplayModeCombo();
 
         setLayout(new MigLayout("wrap 2, insets 0", "[right][]"));
 
@@ -45,7 +45,7 @@ class OptionsPanel extends JPanel {
         add(cboCardText);
         // download mode
         add(getBoldLabel(MText.get(_S3)));
-        add(cboDownloadMode);
+        add(cboDisplayMode);
     }
 
     private JLabel getBoldLabel(String text) {
@@ -90,18 +90,19 @@ class OptionsPanel extends JPanel {
         });
     }
 
-    private void doDownloadModeChanged() {
+    private void doDisplayModeChanged() {
         setEnabled(false);
         firePropertyChange(CP_OPTIONS_CHANGED, true, false);
+        CONFIG.setCardImageDisplayMode((CardImageDisplayMode) cboDisplayMode.getSelectedItem());
     }
 
-    private void setDownloadModeCombo() {
-        cboDownloadMode.setFont(cboDownloadMode.getFont().deriveFont(Font.BOLD));
-        cboDownloadMode.setModel(new DefaultComboBoxModel<>(DownloadMode.values()));
-        cboDownloadMode.getModel().setSelectedItem(cboDownloadMode.getItemAt(0));
-        cboDownloadMode.addItemListener((final ItemEvent e) -> {
+    private void setDisplayModeCombo() {
+        cboDisplayMode.setFont(cboDisplayMode.getFont().deriveFont(Font.BOLD));
+        cboDisplayMode.setModel(new DefaultComboBoxModel<>(CardImageDisplayMode.values()));
+        cboDisplayMode.getModel().setSelectedItem(CONFIG.getCardImageDisplayMode());
+        cboDisplayMode.addItemListener((final ItemEvent e) -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                doDownloadModeChanged();
+                doDisplayModeChanged();
             }
         });
     }
@@ -114,12 +115,8 @@ class OptionsPanel extends JPanel {
         }
     }
 
-    JComboBox<DownloadMode> getDownloadTypeCombo() {
-        return cboDownloadMode;
-    }
-
-    DownloadMode getDownloadMode() {
-        return (DownloadMode) cboDownloadMode.getSelectedItem();
+    CardImageDisplayMode getDisplayMode() {
+        return (CardImageDisplayMode) cboDisplayMode.getSelectedItem();
     }
 
     CardTextLanguage getCardTextLanguage() {

@@ -67,9 +67,9 @@ public class ImageFrame {
         g2d.dispose();
     }
 
-    public static BufferedImage getDefaultBackground(IRenderableCard cardDef) {
+    private static BufferedImage getDefaultBackground(IRenderableCard cardDef) {
         if (cardDef.isMulti()) {
-            if (cardDef.isHybrid()) {
+            if (cardDef.isHybrid() || (cardDef.isToken() && cardDef.getNumColors() == 2)) {
                 List<BufferedImage> colorDefaults = Frame.getColorPairOrder(cardDef).stream().filter(cardDef::hasColor).map(ImageFrame::defaultBackground).collect(Collectors.toList());
                 return Frame.getBlendedFrame(
                     ResourceManager.newFrame(colorDefaults.get(0)),
@@ -94,29 +94,24 @@ public class ImageFrame {
         return ResourceManager.newFrame(ResourceManager.defaultColorless);
     }
 
-    public static BufferedImage getDefaultSymbol(IRenderableCard cardDef) {
+    private static BufferedImage getDefaultSymbol(IRenderableCard cardDef) {
         Set<MagicType> cardTypes = cardDef.getTypes();
-        cardTypes.remove(MagicType.Legendary);
+        cardTypes.removeAll(MagicType.SUPERTYPES);
         cardTypes.remove(MagicType.Tribal);
-        cardTypes.remove(MagicType.World);
-        cardTypes.remove(MagicType.Basic);
-        cardTypes.remove(MagicType.Snow);
         if (cardTypes.size() > 1) {
             if (cardDef.isCreature()) {
                 return ResourceManager.newFrame(ResourceManager.creatureSymbol);
             }
             return ResourceManager.newFrame(ResourceManager.multiSymbol);
         }
-        for (MagicType type : MagicType.values()) {
-            if (cardTypes.contains(type)) {
-                return defaultSymbol(type);
-            }
+        if (!cardTypes.isEmpty()) {
+            return defaultSymbol(cardTypes.iterator().next());
         }
         return ResourceManager.newFrame(ResourceManager.magarenaSymbol);
     }
 
     public static BufferedImage getCardImage(IRenderableCard cardDef) {
-        File cropFile = MagicFileSystem.getCroppedCardImageFile(cardDef);
+        File cropFile = MagicFileSystem.getCroppedCardImage(cardDef);
         if (cropFile.exists()) {
             if (cardDef.isPlaneswalker()) {
                 BufferedImage crop = ImageHelper.scale(ImageFileIO.toImg(cropFile, MagicImages.MISSING_CARD), 320, 234);
@@ -135,7 +130,7 @@ public class ImageFrame {
                     return Frame.getBlendedFrame(new BufferedImage(320, 289, BufferedImage.TYPE_INT_ARGB), blend, crop);
                 } else {
                     BufferedImage crop = ImageHelper.scale(ImageFileIO.toImg(cropFile, MagicImages.MISSING_CARD), 320, 360);
-                    BufferedImage blend =ResourceManager.newFrame(ResourceManager.tokenImageMaskLarge);
+                    BufferedImage blend = ResourceManager.newFrame(ResourceManager.tokenImageMaskLarge);
                     return Frame.getBlendedFrame(new BufferedImage(320, 360, BufferedImage.TYPE_INT_ARGB), blend, crop);
                 }
             } else {
@@ -152,8 +147,12 @@ public class ImageFrame {
         return buildDefaultImage(cardDef);
     }
 
-
     private static BufferedImage buildDefaultImage(IRenderableCard cardDef) {
+        File fullImage = MagicFileSystem.getPrintedCardImage(cardDef);
+        if (fullImage.exists()) {
+            BufferedImage full = ImageHelper.scale(ImageFileIO.toImg(fullImage, MagicImages.MISSING_CARD),375,523);
+            return full.getSubimage(29, 60, 316, 231);
+        }
         return getCompositeImage(getDefaultBackground(cardDef), getDefaultSymbol(cardDef));
     }
 
@@ -175,7 +174,6 @@ public class ImageFrame {
     }
 
     private static BufferedImage buildTokenImage(IRenderableCard cardDef) {
-        int WIDTH= 317;
         int HEIGHT;
         BufferedImage blend;
         if (cardDef.hasText()) {
@@ -185,6 +183,7 @@ public class ImageFrame {
             HEIGHT = 360;
             blend = ResourceManager.newFrame(ResourceManager.tokenImageMaskLarge);
         }
+        int WIDTH = 317;
         BufferedImage background = ImageHelper.scale(getDefaultBackground(cardDef), WIDTH, HEIGHT);
         BufferedImage symbol = ImageHelper.scale(getDefaultSymbol(cardDef), WIDTH, HEIGHT);
         BufferedImage image = Frame.getBlendedFrame(new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB), blend, background);

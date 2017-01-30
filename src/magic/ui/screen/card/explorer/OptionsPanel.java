@@ -13,7 +13,7 @@ import magic.ui.FontsAndBorders;
 import magic.ui.helpers.ImageHelper;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.BigDialButton;
-import magic.ui.widget.cards.table.ExplorerTableStyle;
+import magic.ui.widget.cards.table.CardsTableStyle;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -45,12 +45,13 @@ class OptionsPanel extends JPanel {
         );
 
         styleButton = new BigDialButton(
-                ExplorerTableStyle.values().length,
-                ExplorerTableStyle.getStyle().ordinal(),
+                CardsTableStyle.values().length,
+                CardsTableStyle.getStyle().ordinal(),
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        listener.doSwitchStyle();
+                        CardsTableStyle.setNextStyle();
+                        listener.setCardsTableStyle();
                     }
                 }
         );
@@ -76,7 +77,7 @@ class OptionsPanel extends JPanel {
 
         setOpaque(false);
     }
-    
+
     private void setLayout() {
         removeAll();
         if (isMenuOpen) {
@@ -86,7 +87,7 @@ class OptionsPanel extends JPanel {
             add(styleButton, "h 24!, gapbottom 2");
             add(closeButton, "spany 2, gapbottom 2");
         } else {
-            add(menuButton, "spany 2");            
+            add(menuButton, "spany 2");
         }
         revalidate();
         repaint();

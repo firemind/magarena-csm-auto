@@ -10,14 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import magic.data.MagicIcon;
-import magic.ui.MagicImages;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
+import magic.translate.MText;
+import magic.ui.MagicImages;
 import magic.ui.MagicSound;
 import magic.ui.ScreenController;
-import magic.translate.MText;
-import magic.ui.widget.cards.table.DeckTablePanel;
 import magic.ui.screen.widget.ActionBarButton;
+import magic.ui.widget.cards.table.DeckTablePanel;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -39,25 +39,22 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     // fired on remove card from deck action.
     public static final String CP_REMOVE_FROM_DECK = "33e31608-cf6b-45a2-9fde-bafaaf66f2d2";
 
-    // UI components
+    private final DeckEditorController controller = DeckEditorController.instance;
+
     private final CardQuantityActionPanel quantityPanel;
     private final DeckTablePanel deckTablePanel;
     private final MigLayout miglayout = new MigLayout();
-    private MagicDeck deck;
-    private final MagicDeck originalDeck;
     private final IDeckEditorListener listener;
     private final List<ActionBarButton> actionButtons = new ArrayList<>();
 
-    DeckPanel(final MagicDeck originalDeck, final IDeckEditorListener aListener, final CardQuantityActionPanel aPanel) {
+    DeckPanel(IDeckEditorListener aListener, final CardQuantityActionPanel aPanel) {
 
         this.quantityPanel = aPanel;
         this.listener = aListener;
-        this.originalDeck = originalDeck;
-        this.deck = getDeckCopy(originalDeck);
 
         actionButtons.add(getClearDeckActionButton());
 
-        deckTablePanel = new DeckTablePanel(this.deck, getDeckTitle(this.deck));
+        deckTablePanel = new DeckTablePanel(controller.getDeck(), getDeckTitle());
         deckTablePanel.setDeckEditorSelectionMode();
         deckTablePanel.setHeaderVisible(false);
         deckTablePanel.showCardCount(true);
@@ -66,20 +63,9 @@ class DeckPanel extends JPanel implements IDeckEditorView {
         setLookAndFeel();
         refreshLayout();
 
-        if (this.deck.size() > 0) {
+        if (!controller.getDeck().isEmpty()) {
             deckTablePanel.selectFirstRow();
         }
-    }
-
-    /**
-     * work with a copy of the original deck so it is easy to cancel updates.
-     */
-    private MagicDeck getDeckCopy(final MagicDeck deck) {
-        final MagicDeck deckCopy = new MagicDeck();
-        if (deck != null) {
-            deckCopy.setContent(deck);
-        }
-        return deckCopy;
     }
 
     private ActionBarButton getClearDeckActionButton() {
@@ -122,8 +108,8 @@ class DeckPanel extends JPanel implements IDeckEditorView {
                 });
     }
 
-    private String getDeckTitle(final MagicDeck deck) {
-        return String.format("   %s", deck.getName());
+    private String getDeckTitle() {
+        return String.format("   %s", controller.getDeck().getName());
     }
 
     private void setLookAndFeel() {
@@ -139,7 +125,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     }
 
     private void doClearDeck() {
-        if (deck.size() > 0) {
+        if (!controller.getDeck().isEmpty()) {
             final int userResponse = JOptionPane.showOptionDialog(ScreenController.getFrame(),
                     String.format("<html>%s<br><br><b>%s</b></html>", MText.get(_S3), MText.get(_S4)),
                     MText.get(_S5),
@@ -148,26 +134,17 @@ class DeckPanel extends JPanel implements IDeckEditorView {
                     null,
                     new String[] {MText.get(_S6), MText.get(_S7)}, MText.get(_S7));
             if (userResponse == JOptionPane.YES_OPTION) {
-                setDeck(null);
+                controller.setDeck(new MagicDeck());
             }
         } else {
             MagicSound.BEEP.play();
         }
     }
 
-    void setDeck(final MagicDeck newDeck) {
-        if (newDeck == null) {
-            deck = new MagicDeck();
-        } else {
-            deck = getDeckCopy(newDeck);
-        }
-        deckTablePanel.setTitle(getDeckTitle(deck));
-        deckTablePanel.setDeck(deck);
-        listener.deckUpdated(getDeck());
-    }
-
-    MagicDeck getDeck() {
-        return deck;
+    void doRefreshView() {
+        deckTablePanel.setTitle(getDeckTitle());
+        deckTablePanel.setDeck(controller.getDeck());
+        listener.deckUpdated(controller.getDeck());
     }
 
     @Override
@@ -186,7 +163,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     }
 
     private void removeSelectedCardFromDeck(final boolean isMouseClick) {
-        final int cardCount = deck.getCardCount(getSelectedCard());
+        final int cardCount = controller.getDeck().getCardCount(getSelectedCard());
         int quantity = Math.min(cardCount, quantityPanel.getQuantity());
         if (cardCount - quantity < 1 && isMouseClick) {
             quantity = cardCount - 1;
@@ -198,17 +175,17 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     }
 
     void addCardToDeck(final MagicCardDefinition card) {
-        deck.add(card);
-        deckTablePanel.setCards(deck);
+        controller.getDeck().add(card);
+        deckTablePanel.setCards(controller.getDeck());
         deckTablePanel.setSelectedCard(card);
-        listener.deckUpdated(getDeck());
+        listener.deckUpdated(controller.getDeck());
     }
 
     void removeCardFromDeck(MagicCardDefinition card) {
-        deck.remove(card);
-        deckTablePanel.setCards(deck);
+        controller.getDeck().remove(card);
+        deckTablePanel.setCards(controller.getDeck());
         deckTablePanel.setSelectedCard(card);
-        listener.deckUpdated(getDeck());
+        listener.deckUpdated(controller.getDeck());
     }
 
     @Override
@@ -217,14 +194,6 @@ class DeckPanel extends JPanel implements IDeckEditorView {
             deckTablePanel.selectFirstRow();
         }
         return super.requestFocusInWindow();
-    }
-
-    void updateOriginalDeck() {
-        originalDeck.setContent(deck);
-    }
-
-    boolean isUpdatingExistingDeck() {
-        return originalDeck != null;
     }
 
     void setSelectedCard(MagicCardDefinition selectedCard) {

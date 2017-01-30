@@ -1,31 +1,27 @@
 package magic.ui.screen.deck.editor;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import magic.data.DeckType;
-import magic.utility.DeckUtils;
 import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.data.MagicSetDefinitions;
-import magic.exception.InvalidDeckException;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
-import magic.ui.MagicFileChoosers;
-import magic.ui.ScreenController;
 import magic.translate.MText;
 import magic.ui.MagicLogs;
+import magic.ui.ScreenController;
+import magic.ui.WikiPage;
+import magic.ui.screen.HeaderFooterScreen;
 import magic.ui.screen.interfaces.IDeckConsumer;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.widget.deck.DeckStatusPanel;
-import magic.ui.screen.duel.decks.DuelDecksScreen;
+import magic.utility.DeckUtils;
 import magic.utility.MagicFileSystem;
-import magic.ui.WikiPage;
-import magic.ui.screen.HeaderFooterScreen;
 
 @SuppressWarnings("serial")
 public class DeckEditorScreen extends HeaderFooterScreen
@@ -52,25 +48,26 @@ public class DeckEditorScreen extends HeaderFooterScreen
     private static final String _S18 = "Overwrite file";
     private static final String _S19 = "Save deck";
     private static final String _S20 = "There was a problem saving the deck file!";
+    private static final String _S21 = "Deck editor has unsaved changes which will be lost.\nDo you wish to continue?";
+    private static final String _S22 = "Confirmation required...";
 
-    private DeckEditorScreenPanel screenContent;
-    private final boolean isStandalone;
+    private ContentPanel contentPanel;
     private final DeckStatusPanel deckStatusPanel = new DeckStatusPanel();
-    private MagicDeck deck;
+    private final IDeckEditorClient deckClient;
+    private final DeckEditorController controller = DeckEditorController.instance;
 
-    // CTR : opens Deck Editor ready to update passed in deck.
-    public DeckEditorScreen(final MagicDeck deck) {
+    public DeckEditorScreen(IDeckEditorClient client) {
         super(MText.get(_S14));
-        isStandalone = false;
-        this.deck = deck;
+        this.deckClient = client;
+        controller.init(this, client.getDeck());
         useLoadingScreen(this::initUI);
     }
 
     // CTR : open Deck Editor in standalone mode starting with an empty deck.
     public DeckEditorScreen() {
         super(MText.get(_S14));
-        isStandalone = true;
-        this.deck = getMostRecentEditedDeck();
+        this.deckClient = null;
+        controller.init(this, getMostRecentEditedDeck());
         useLoadingScreen(this::initUI);
     }
 
@@ -79,175 +76,196 @@ public class DeckEditorScreen extends HeaderFooterScreen
         return true;
     }
 
+    private boolean isStandaloneMode() {
+        return deckClient == null;
+    }
+
     private void initUI() {
-        screenContent = new DeckEditorScreenPanel(deck, this);
-        screenContent.setIsStandalone(isStandalone);
-        setDeck(deck == null ? new MagicDeck() : deck);
-        setMainContent(screenContent);
+        contentPanel = new ContentPanel(this);
+        contentPanel.setIsStandalone(isStandaloneMode());
+        doRefreshViews();
+        setMainContent(contentPanel);
         setHeaderContent(deckStatusPanel);
-        setLeftFooter(getLeftAction());
-        setRightFooter(getRightAction());
+        setLeftFooter(getLeftActionButton());
+        setRightFooter(getRightActionButton());
         setFooterButtons();
         setWikiPage(WikiPage.DECK_EDITOR);
     }
-    
-    private void showSampleHand() {
-        if (screenContent.getDeck().size() >= 7) {
-            ScreenController.showSampleHandScreen(screenContent.getDeck());
+
+    private void showSampleHandScreen() {
+        if (contentPanel.getDeck().size() >= 7) {
+            ScreenController.showSampleHandScreen(contentPanel.getDeck());
         } else {
-            showInvalidActionMessage(MText.get(_S10));
+            ScreenController.showWarningMessage(MText.get(_S10));
         }
-    }    
-    
-    private void showTiledImagesView() {
-        if (screenContent.getDeck().size() > 0) {
-            ScreenController.showDeckTiledCardsScreen(screenContent.getDeck());
+    }
+
+    private void showDeckTiledCardsScreen() {
+        if (contentPanel.getDeck().size() > 0) {
+            ScreenController.showDeckTiledCardsScreen(contentPanel.getDeck());
         } else {
-            showInvalidActionMessage(MText.get(_S13));
+            ScreenController.showWarningMessage(MText.get(_S13));
         }
     }
 
     private void setFooterButtons() {
-        addToFooter(MenuButton.build(this::loadDeck,
-                        MagicIcon.OPEN, MText.get(_S4), MText.get(_S5)
-                ),
-                MenuButton.build(this::saveDeck,
-                        MagicIcon.SAVE, MText.get(_S6), MText.get(_S7)
-                ),
-                MenuButton.build(this::showSampleHand,
-                        MagicIcon.HAND_ICON, MText.get(_S8), MText.get(_S9)
-                ),
-                MenuButton.build(this::showTiledImagesView,
-                        MagicIcon.TILED, MText.get(_S11), MText.get(_S12)
-                )
+        addToFooter(
+            MenuButton.build(this::showDecksScreen,
+                MagicIcon.OPEN, MText.get(_S4), MText.get(_S5)
+            ),
+            MenuButton.build(this::saveDeck,
+                MagicIcon.SAVE, MText.get(_S6), MText.get(_S7)
+            ),
+            MenuButton.build(this::showSampleHandScreen,
+                MagicIcon.HAND_ICON, MText.get(_S8), MText.get(_S9)
+            ),
+            MenuButton.build(this::showDeckTiledCardsScreen,
+                MagicIcon.TILED, MText.get(_S11), MText.get(_S12)
+            )
         );
     }
 
     private static MagicDeck getMostRecentEditedDeck() {
-        final Path deckFilePath = GeneralConfig.getInstance().getMostRecentDeckFilePath();
+        Path deckFilePath = GeneralConfig.getInstance().getMostRecentDeckFilePath();
         if (deckFilePath != null) {
-            final MagicDeck deck = loadDeck(deckFilePath);
-            if (deck != null && deck.isValid()) {
-                return deck;
+            MagicDeck newDeck = tryLoadDeck(deckFilePath);
+            if (newDeck.isValid()) {
+                return newDeck;
             }
         }
-        return null;
+        return new MagicDeck();
     }
 
-    private static MagicDeck loadDeck(final Path deckFilePath) {
+    private static MagicDeck tryLoadDeck(final Path deckFilePath) {
         try {
             return DeckUtils.loadDeckFromFile(deckFilePath);
-        } catch (InvalidDeckException ex) {
+        } catch (RuntimeException ex) {
             // if the most recent deck is invalid for some reason then I think it suffices
             // to log the error to console and open the deck editor with an empty deck.
-            System.err.println(ex);
-            return null;
+            Logger.getLogger(DeckEditorScreen.class.getName()).log(Level.WARNING, null, ex);
+            return new MagicDeck();
         }
     }
 
-    public MenuButton getLeftAction() {
-        final String caption = (!isStandalone ? MText.get(_S1) : MText.get(_S2));
-        return MenuButton.getCloseScreenButton(caption);
+    private MenuButton getLeftActionButton() {
+        return MenuButton.getCloseScreenButton(!isStandaloneMode() ? MText.get(_S1) : MText.get(_S2));
     }
 
-    public MenuButton getRightAction() {
-        if (!isStandalone) {
-            return new MenuButton(MText.get(_S3), new AbstractAction() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    if (screenContent.validateDeck(true) && screenContent.applyDeckUpdates()) {
-                        ScreenController.closeActiveScreen(false);
-                    }
-                }
-            });
-        } else {
-            return null;
+    private void doUseDeckAction() {
+        if (contentPanel.validateDeck(true)) {
+            if (controller.hasDeckChanged()) {
+                controller.setDeckStatusToUnsaved();
+            }
+            if (deckClient.setDeck(controller.getDeck())) {
+                ScreenController.closeActiveScreen(false);
+            }
         }
     }
 
-
-    private void showInvalidActionMessage(final String message) {
-        ScreenController.showWarningMessage(message);
+    private MenuButton getRightActionButton() {
+        return !isStandaloneMode()
+            ? MenuButton.build(this::doUseDeckAction, MText.get(_S3))
+            : null;
     }
 
-    public void createNewEmptyDeck() {
-        setDeck(new MagicDeck());
-    }
-
-    public void loadDeck() {
+    private void showDecksScreen() {
         ScreenController.showDecksScreen(this);
     }
 
-    private boolean isReservedDeckFolder(final Path saveFolder) {
-        return MagicFileSystem.isSamePath(saveFolder, DeckUtils.getPrebuiltDecksFolder())
-            || MagicFileSystem.isSamePath(saveFolder, DeckUtils.getFiremindDecksFolder());
+    private Path tryGetDeckFilePath(String filename) {
+        try {
+            return MagicFileSystem.getDataPath(MagicFileSystem.DataPath.DECKS).resolve(filename);
+        } catch (InvalidPathException ex) {
+            System.err.println(ex);
+            ScreenController.showWarningMessage("Invalid deck filename :-\n" + ex.getMessage());
+            return null;
+        }
     }
 
-    public void saveDeck() {
+    private void saveDeck() {
 
-        if (screenContent.getDeck().size() == 0) {
-            showInvalidActionMessage(MText.get(_S15));
+        final MagicDeck deck = contentPanel.getDeck();
+
+        if (deck.isEmpty()) {
+            ScreenController.showWarningMessage(MText.get(_S15));
             return;
         }
 
-        final JFileChooser fileChooser = new JFileChooser(DeckUtils.getDeckFolder()) {
-            @Override
-            public void approveSelection() {
-                // first ensure filename has "dec" extension
-                String filename = getSelectedFile().getAbsolutePath();
-                if (!filename.endsWith(DeckUtils.DECK_EXTENSION)) {
-                    setSelectedFile(new File(filename + DeckUtils.DECK_EXTENSION));
-                }
-                if (isReservedDeckFolder(getSelectedFile().toPath().getParent())) {
-                    ScreenController.showWarningMessage(MText.get(_S16));
-                } else if (Files.exists(getSelectedFile().toPath())) {
-                    int response = JOptionPane.showConfirmDialog(ScreenController.getFrame(),
-                            MText.get(_S17),
-                            MText.get(_S18),
-                            JOptionPane.YES_NO_OPTION);
-                    if (response == JOptionPane.YES_OPTION) {
-                        super.approveSelection();
-                    }
-                } else {
-                    super.approveSelection();
-                }
-            }
-        };
-        final MagicDeck deck = screenContent.getDeck();
-        fileChooser.setDialogTitle(MText.get(_S19));
-        fileChooser.setFileFilter(MagicFileChoosers.DECK_FILEFILTER);
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        if (deck != null) {
-            fileChooser.setSelectedFile(new File(deck.getFilename()));
+        // Prompt for name of deck (which is also used as the filename).
+        final String deckName = (String) JOptionPane.showInputDialog(
+            ScreenController.getFrame(),
+            MText.get("Deck name (must be a valid filename)"),
+            MText.get("Save player deck"),
+            JOptionPane.QUESTION_MESSAGE,
+            null, null, deck.getName()
+        );
+        if (deckName == null || deckName.trim().isEmpty()) {
+            return;
         }
-        final int action = fileChooser.showSaveDialog(ScreenController.getFrame());
-        if (action == JFileChooser.APPROVE_OPTION) {
-            final String filename = fileChooser.getSelectedFile().getAbsolutePath();
-            if (DeckUtils.saveDeck(filename, screenContent.getDeck())) {
-                final String shortFilename = fileChooser.getSelectedFile().getName();
-                screenContent.getDeck().setFilename(shortFilename);
-                setDeck(screenContent.getDeck());
-                setMostRecentDeck(filename);
-            } else {
-                ScreenController.showWarningMessage(MText.get(_S20));
+
+        // add '.dec' file extension to end of filename if not present.
+        String filename = deckName.trim();
+        if (!filename.endsWith(DeckUtils.DECK_EXTENSION)) {
+            filename += DeckUtils.DECK_EXTENSION;
+        }
+
+        // create deck file path - returns null if not valid (eg invalid char in filename).
+        Path deckFilePath = tryGetDeckFilePath(filename);
+        if (deckFilePath == null) {
+            return;
+        }
+
+        // if deck file already exists ask for overwrite confirmation.
+        if (Files.exists(deckFilePath)) {
+            int response = JOptionPane.showConfirmDialog(
+                ScreenController.getFrame(),
+                MText.get(_S17),
+                MText.get(_S18),
+                JOptionPane.YES_NO_OPTION
+            );
+            if (response != JOptionPane.YES_OPTION) {
+                return;
             }
         }
+
+        // finally can try to save deck to file.
+        if (DeckUtils.saveDeck(deckFilePath.toString(), deck)) {
+            setDeck(DeckUtils.loadDeckFromFile(deckFilePath));
+            setMostRecentDeck(deckFilePath.toString());
+        } else {
+            ScreenController.showWarningMessage(MText.get(_S20));
+        }
+
     }
 
     private void setMostRecentDeck(final String filename) {
-        if (isStandalone) {
+        if (isStandaloneMode()) {
             GeneralConfig.getInstance().setMostRecentDeckFilename(filename);
             GeneralConfig.getInstance().save();
         }
     }
 
+    private boolean isUserReadyToClose() {
+        if (controller.hasDeckChanged()) {
+            int response = JOptionPane.showConfirmDialog(
+                ScreenController.getFrame(),
+                MText.get(_S21),
+                MText.get(_S22),
+                JOptionPane.YES_NO_OPTION
+            );
+            return response == JOptionPane.YES_OPTION;
+        }
+        return true;
+    }
+
     @Override
     public boolean isScreenReadyToClose(final Object nextScreen) {
         if (super.isScreenReadyToClose(nextScreen)) {
-            if (screenContent == null) {
+            if (contentPanel == null) {
                 return true;
-            } else if (!screenContent.isStandaloneDeckEditor() && nextScreen instanceof DuelDecksScreen) {
-                ((DuelDecksScreen)nextScreen).updateDecksAfterEdit();
+            }
+            if (isStandaloneMode() && !isUserReadyToClose()) {
+                return false;
             }
             MagicSetDefinitions.clearLoadedSets();
             MagicLogs.clearLoadedLogs();
@@ -256,16 +274,32 @@ public class DeckEditorScreen extends HeaderFooterScreen
         return false;
     }
 
-    @Override
-    public void setDeck(final MagicDeck deck) {
-        screenContent.setDeck(deck);
-        deckStatusPanel.setDeck(deck, false);
+    void doRefreshViews() {
+        contentPanel.doRefreshView();
+        deckStatusPanel.setDeck(controller.getDeck(), false);
     }
 
     @Override
-    public void setDeck(MagicDeck deck, Path deckPath) {
-        setDeck(deck);
+    public void setDeck(final MagicDeck deck) {
+        controller.setDeck(deck);
+    }
+
+    @Override
+    public boolean setDeck(MagicDeck newDeck, Path deckPath) {
+        if (controller.hasDeckChanged()) {
+            int response = JOptionPane.showConfirmDialog(
+                ScreenController.getFrame(),
+                MText.get(_S21),
+                MText.get(_S22),
+                JOptionPane.YES_NO_OPTION
+            );
+            if (response == JOptionPane.NO_OPTION) {
+                return false;
+            }
+        }
+        setDeck(newDeck);
         setMostRecentDeck(deckPath.toString());
+        return true;
     }
 
     @Override
