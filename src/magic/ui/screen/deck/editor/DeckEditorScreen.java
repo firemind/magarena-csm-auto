@@ -17,6 +17,7 @@ import magic.ui.MagicLogs;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
 import magic.ui.screen.HeaderFooterScreen;
+import magic.ui.screen.MScreen;
 import magic.ui.screen.interfaces.IDeckConsumer;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.widget.deck.DeckStatusPanel;
@@ -43,13 +44,14 @@ public class DeckEditorScreen extends HeaderFooterScreen
     private static final String _S13 = "Deck is empty! Nothing to show.";
     private static final String _S14 = "Deck Editor";
     private static final String _S15 = "Deck is empty! Nothing to save.";
-    private static final String _S16 = "This directory is reserved for prebuilt decks.\nPlease choose a different directory.";
     private static final String _S17 = "Overwrite existing deck file?";
     private static final String _S18 = "Overwrite file";
-    private static final String _S19 = "Save deck";
     private static final String _S20 = "There was a problem saving the deck file!";
     private static final String _S21 = "Deck editor has unsaved changes which will be lost.\nDo you wish to continue?";
     private static final String _S22 = "Confirmation required...";
+    private static final String _S30 = "Invalid deck filename";
+    private static final String _S31 = "Deck name (must be a valid filename)";
+    private static final String _S32 = "Save player deck";
 
     private ContentPanel contentPanel;
     private final DeckStatusPanel deckStatusPanel = new DeckStatusPanel();
@@ -68,6 +70,13 @@ public class DeckEditorScreen extends HeaderFooterScreen
         super(MText.get(_S14));
         this.deckClient = null;
         controller.init(this, getMostRecentEditedDeck());
+        useLoadingScreen(this::initUI);
+    }
+
+    public DeckEditorScreen(MagicDeck aDeck) {
+        super(MText.get(_S14));
+        this.deckClient = null;
+        controller.init(this, aDeck);
         useLoadingScreen(this::initUI);
     }
 
@@ -177,7 +186,7 @@ public class DeckEditorScreen extends HeaderFooterScreen
             return MagicFileSystem.getDataPath(MagicFileSystem.DataPath.DECKS).resolve(filename);
         } catch (InvalidPathException ex) {
             System.err.println(ex);
-            ScreenController.showWarningMessage("Invalid deck filename :-\n" + ex.getMessage());
+            ScreenController.showWarningMessage(MText.get(_S30) + " :-\n" + ex.getMessage());
             return null;
         }
     }
@@ -194,8 +203,8 @@ public class DeckEditorScreen extends HeaderFooterScreen
         // Prompt for name of deck (which is also used as the filename).
         final String deckName = (String) JOptionPane.showInputDialog(
             ScreenController.getFrame(),
-            MText.get("Deck name (must be a valid filename)"),
-            MText.get("Save player deck"),
+            MText.get(_S31),
+            MText.get(_S32),
             JOptionPane.QUESTION_MESSAGE,
             null, null, deck.getName()
         );
@@ -259,7 +268,7 @@ public class DeckEditorScreen extends HeaderFooterScreen
     }
 
     @Override
-    public boolean isScreenReadyToClose(final Object nextScreen) {
+    public boolean isScreenReadyToClose(MScreen nextScreen) {
         if (super.isScreenReadyToClose(nextScreen)) {
             if (contentPanel == null) {
                 return true;

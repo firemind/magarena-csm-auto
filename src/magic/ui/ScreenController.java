@@ -22,7 +22,7 @@ import magic.ui.screen.MScreen;
 import magic.ui.screen.about.AboutScreen;
 import magic.ui.screen.card.explorer.ExplorerScreen;
 import magic.ui.screen.card.script.CardScriptScreen;
-import magic.ui.screen.deck.DeckViewScreen;
+import magic.ui.screen.deck.DeckScreen;
 import magic.ui.screen.deck.editor.DeckEditorScreen;
 import magic.ui.screen.deck.editor.DeckEditorSplitScreen;
 import magic.ui.screen.deck.editor.IDeckEditorClient;
@@ -48,7 +48,9 @@ import magic.ui.screen.menu.language.StartScreen;
 import magic.ui.screen.menu.main.MainMenuScreen;
 import magic.ui.screen.menu.migrate.ImportScreen;
 import magic.ui.screen.menu.settings.SettingsMenuScreen;
+import magic.ui.screen.player.PlayerScreen;
 import magic.ui.screen.readme.ReadmeScreen;
+import magic.ui.screen.stats.StatsScreen;
 import magic.ui.screen.test.TestScreen;
 import magic.ui.widget.duel.choice.MulliganChoicePanel;
 import magic.utility.MagicSystem;
@@ -193,6 +195,10 @@ public final class ScreenController {
         showScreen(TestScreen::new);
     }
 
+    public static void showStatsScreen() {
+        showScreen(StatsScreen::new);
+    }
+
     public static void showDuelDecksScreen(final MagicDuel duel) {
         if (isDuelDecksScreenDisplayed()) {
             screens.pop();
@@ -225,6 +231,12 @@ public final class ScreenController {
         showScreen(ExplorerScreen::new);
     }
 
+    public static void showDeckEditor(MagicDeck aDeck) {
+        showScreen(GeneralConfig.getInstance().isSplitViewDeckEditor()
+                ? () -> new DeckEditorSplitScreen(aDeck)
+                : () -> new DeckEditorScreen(aDeck));
+    }
+
     public static void showDeckEditor(IDeckEditorClient supplier) {
         showScreen(GeneralConfig.getInstance().isSplitViewDeckEditor()
                 ? () -> new DeckEditorSplitScreen(supplier.getDeck())
@@ -237,8 +249,12 @@ public final class ScreenController {
                 : DeckEditorScreen::new);
     }
 
-    public static void showDeckViewScreen(MagicDeck deck, MagicCardDefinition selectedCard) {
-        showScreen(() -> new DeckViewScreen(deck, selectedCard));
+    public static void showDeckScreen(MagicDeck deck, MagicCardDefinition selectedCard) {
+        showScreen(() -> new DeckScreen(deck, selectedCard));
+    }
+
+    public static void showDeckScreen(MagicDeck deck, String title) {
+        showScreen(() -> new DeckScreen(deck, title));
     }
 
     public static void showSampleHandScreen(final MagicDeck deck) {
@@ -319,5 +335,17 @@ public final class ScreenController {
 
     public static void showDownloadImagesScreen() {
         showScreen(DownloadImagesScreen::new);
+    }
+
+    public static void showPlayerScreen(String guid) {
+        showScreen(() -> new PlayerScreen(guid));
+    }
+
+    public static boolean isDeckScreenShowing() {
+        return !screens.isEmpty() && screens.peek() instanceof DeckScreen;
+    }
+
+    public static boolean isActive(MScreen aScreen) {
+        return screens.peek() == aScreen;
     }
 }

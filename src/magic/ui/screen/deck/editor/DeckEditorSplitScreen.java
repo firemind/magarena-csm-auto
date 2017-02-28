@@ -18,6 +18,7 @@ import magic.ui.MagicLogs;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
 import magic.ui.screen.HeaderFooterScreen;
+import magic.ui.screen.MScreen;
 import magic.ui.screen.duel.decks.DuelDecksScreen;
 import magic.ui.screen.interfaces.IDeckConsumer;
 import magic.ui.screen.widget.MenuButton;
@@ -201,7 +202,7 @@ public class DeckEditorSplitScreen extends HeaderFooterScreen
      * @see magic.ui.MagScreen#canScreenClose()
      */
     @Override
-    public boolean isScreenReadyToClose(final Object nextScreen) {
+    public boolean isScreenReadyToClose(MScreen nextScreen) {
         if (screenContent.isDeckEditor() && !screenContent.isStandaloneDeckEditor() && nextScreen instanceof DuelDecksScreen) {
             ((DuelDecksScreen)nextScreen).updateDecksAfterEdit();
         }
@@ -220,5 +221,10 @@ public class DeckEditorSplitScreen extends HeaderFooterScreen
 
     @Override
     public void setDeck(String deckName, DeckType deckType) { }
-    
+
+    @Override
+    public void setDeck(MagicDeck deck) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

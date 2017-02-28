@@ -30,12 +30,16 @@ import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.widget.TexturedPanel;
 import magic.ui.widget.cards.table.CardTablePanelB;
+import magic.ui.widget.deck.stats.IPwlWorkerListener;
+import magic.ui.widget.deck.stats.PwlWorker;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-class DuelDecksPanel extends TexturedPanel implements IPlayerProfileListener {
+class DuelDecksPanel extends TexturedPanel
+    implements IPlayerProfileListener, IPwlWorkerListener {
 
     // translatable strings
+    private static final String _S1 = "UNSAVED";
     private static final String _S7 = "Swap Decks";
     private static final String _S8 = "Swap your deck with your opponent's.";
     private static final String _S15 = "Generate another deck";
@@ -50,8 +54,8 @@ class DuelDecksPanel extends TexturedPanel implements IPlayerProfileListener {
     private final CardTablePanelB[] cardTables;
     private final DeckSideBar sidebar;
     private final ActionBarButton newDeckButton;
-
     private boolean isTabChanged = false;
+    private PwlWorker pwlWorker;
 
     DuelDecksPanel(final MagicDuel duel) {
 
@@ -128,6 +132,7 @@ class DuelDecksPanel extends TexturedPanel implements IPlayerProfileListener {
         DuelPlayerConfig player = getSelectedPlayer();
         MagicDeck deck = player.getDeck();
         sidebar.setDeck(deck);
+        doPWLStatsQuery(deck);
         sidebar.setCard(deck.get(0));
         boolean isRandomDeck = player.getDeckProfile().getDeckType() == DeckType.Random;
         newDeckButton.setEnabled(isRandomDeck && duel.getGamesPlayed() == 0);
@@ -147,7 +152,7 @@ class DuelDecksPanel extends TexturedPanel implements IPlayerProfileListener {
 
     private String generateTitle(final MagicDeck deck) {
         return deck.isUnsaved()
-            ? "UNSAVED  /  " + deck.getName()
+            ? MText.get(_S1) + "  /  " + deck.getName()
             : getDeckNameWithType(deck);
     }
 
@@ -274,5 +279,16 @@ class DuelDecksPanel extends TexturedPanel implements IPlayerProfileListener {
     void setCardsTableStyle() {
         cardTables[0].setStyle();
         cardTables[1].setStyle();
+    }
+
+    @Override
+    public void setPlayedWonLost(String pwl) {
+        sidebar.setPlayedWonLost(pwl);
+    }
+
+    private void doPWLStatsQuery(MagicDeck deck) {
+        pwlWorker = new PwlWorker(deck);
+        pwlWorker.setListeners(sidebar);
+        pwlWorker.execute();
     }
 }

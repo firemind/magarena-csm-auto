@@ -115,13 +115,35 @@ public class MagicCardDefinition implements MagicAbilityStore, IRenderableCard {
         cdef.setName(template.getName());
         cdef.setDistinctName(template.getDistinctName());
         cdef.setPowerToughness(template.getCardPower(), template.getCardToughness());
+        cdef.setPowerToughnessText(template.getPowerToughnessText());
         cdef.setColorFlags(template.getColorFlags());
         cdef.setSubTypes(template.genSubTypes());
-        cdef.setTypeFlags(template.getTypeFlags());
-        cdef.setToken();
-        cdef.setAbilityProperty(template.getAbilityProperty());
+        cdef.setSubTypeText(template.getSubTypeText());
+        for (final MagicType t : template.getTypes()) {
+            cdef.addType(t);
+        }
+        if (template.hasExcludeManaOrCombat()) {
+            cdef.setExcludeManaOrCombat();
+        }
+        cdef.manaSourceText = template.manaSourceText;
+        cdef.setEvent(template.getCardEvent());
+        cdef.setText(template.getText());
         cdef.setValue(template.getValue());
         cdef.setStatus(template.getStatus());
+
+        cdef.setStartingLoyalty(template.getStartingLoyalty());
+        cdef.setAbilityProperty(template.abilityProperty);
+        cdef.setRequiresGroovy(template.requiresGroovy);
+        cdef.abilityFlags.addAll(template.abilityFlags);
+        cdef.permActivations.addAll(template.permActivations);
+        cdef.morphActivations.addAll(template.morphActivations);
+        cdef.CDAs.addAll(template.CDAs);
+        cdef.triggers.addAll(template.triggers);
+        cdef.statics.addAll(template.statics);
+        cdef.etbTriggers.addAll(template.etbTriggers);
+        cdef.manaActivations.addAll(template.manaActivations);
+
+        cdef.setToken();
         init.initialize(cdef);
         cdef.validate();
         return cdef;
@@ -959,9 +981,11 @@ public class MagicCardDefinition implements MagicAbilityStore, IRenderableCard {
         return getName();
     }
 
-    public static final Comparator<MagicCardDefinition> NAME_COMPARATOR_DESC = (cd1, cd2) -> cd1.getName().compareTo(cd2.getName());
+    public static final Comparator<MagicCardDefinition> NAME_COMPARATOR_ASC =
+        (cd1, cd2) -> cd1.getName().compareTo(cd2.getName());
 
-    public static final Comparator<MagicCardDefinition> NAME_COMPARATOR_ASC = (cd1, cd2) -> NAME_COMPARATOR_DESC.compare(cd2, cd1);
+    public static final Comparator<MagicCardDefinition> NAME_COMPARATOR_DESC =
+        (cd1, cd2) -> cd2.getName().compareTo(cd1.getName());
 
     public static final Comparator<MagicCardDefinition> CONVERTED_COMPARATOR_DESC = (cd1, cd2) -> {
         final int cdif=cd1.getConvertedCost()-cd2.getConvertedCost();
@@ -1013,7 +1037,7 @@ public class MagicCardDefinition implements MagicAbilityStore, IRenderableCard {
         return powerToughnessText;
     }
 
-    public void setSubtypeText(String string) {
+    public void setSubTypeText(String string) {
         subTypeText = string.replaceAll("(\\w),(\\w)", "$1, $2");// Not automatically adding space unless space is there
     }
 

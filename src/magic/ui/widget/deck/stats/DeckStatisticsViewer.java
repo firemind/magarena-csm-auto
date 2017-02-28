@@ -29,12 +29,15 @@ public class DeckStatisticsViewer extends JPanel implements ChangeListener {
 
     // translatable strings
     private static final String _S1 = "Deck Statistics";
-    private static final String _S2 = "Deck Statistics : %d cards";
+    private static final String _S2 = "%d card deck";
 
     private final ActionButtonTitleBar titleBar;
     private final ManaCurvePanel manaCurvePanel;
     private final ActionBarButton titlebarButton;
     private final StatsTable statsTable;
+    private String pwl = "";
+    private CardStatistics statistics;
+    private MagicDeck thisDeck;
 
     public DeckStatisticsViewer() {
 
@@ -101,22 +104,36 @@ public class DeckStatisticsViewer extends JPanel implements ChangeListener {
         return btns;
     }
 
-    public void setDeck(final MagicDeck aDeck) {
+    private boolean isNewDeck(MagicDeck aDeck) {
+        return thisDeck == null
+            || !thisDeck.getName().equals(aDeck.getName())
+            || thisDeck.getDeckFileChecksum() != aDeck.getDeckFileChecksum()
+            || thisDeck.getDeckType() != aDeck.getDeckType();
+    }
 
-        final CardStatistics statistics = new CardStatistics(
+    public void setDeck(MagicDeck aDeck) {
+        statistics = new CardStatistics(
             aDeck == null || !aDeck.isValid() ? new MagicDeck() : aDeck
         );
-
-        titleBar.setText(MText.get(_S2, statistics.totalCards));
         statsTable.setStats(statistics);
         manaCurvePanel.setStats(statistics);
+        if (isNewDeck(aDeck)) {
+            this.thisDeck = aDeck;
+        }
+        setPlayedWonLost(pwl);
+    }
+
+    public void setPlayedWonLost(String newPWL) {
+        pwl = newPWL;
+        titleBar.setText(MText.get(_S2, statistics.totalCards)
+            + (!newPWL.isEmpty() ? "   •   " + newPWL : "")
+        );
     }
 
     @Override
     public void stateChanged(final ChangeEvent event) {
         setDeck(((DuelPlayerConfig)event.getSource()).getDeck());
     }
-
 
     static JLabel getCaptionLabel(String text) {
         JLabel lbl = new JLabel(text);

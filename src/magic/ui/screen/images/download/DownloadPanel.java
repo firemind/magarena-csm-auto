@@ -2,9 +2,10 @@ package magic.ui.screen.images.download;
 
 import java.awt.Font;
 import java.io.IOException;
-import java.net.Proxy;
 import java.util.Collection;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import magic.data.CardDefinitions;
 import magic.data.CardImageFile;
 import magic.data.DownloadableFile;
 import magic.data.GeneralConfig;
@@ -21,20 +23,20 @@ import magic.data.ImagesDownloadList;
 import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
 import magic.translate.MText;
-import magic.ui.CardTextLanguage;
 import magic.ui.MagicImages;
-import magic.utility.MagicFileSystem;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadListener {
+public abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadListener {
 
     static final String CP_STATE_CHANGED = "5234acd4-e05d-4fc4-a599-95ecd34aa893";
 
     // translatable strings
     private static final String _S1 = "Cancel";
 
-    protected final GeneralConfig CONFIG = GeneralConfig.getInstance();
+    private static final Logger LOGGER = Logger.getLogger(DownloadPanel.class.getName());
+
+    protected static final GeneralConfig CONFIG = GeneralConfig.getInstance();
 
     private final MigLayout migLayout = new MigLayout();
     protected final JLabel captionLabel = getCaptionLabel(getProgressCaption());
@@ -43,20 +45,17 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
     protected final JProgressBar progressBar = new JProgressBar();
 
     private ImagesDownloadList files;
-    private boolean isCancelled = false;
     private SwingWorker<Void, Integer> imagesDownloader;
     private ScanWorker imagesScanner;
     private DownloadState downloaderState = DownloadState.STOPPED;
     private CardImageDisplayMode displayMode = CardImageDisplayMode.PRINTED;
-    private CardTextLanguage textLanguage = CardTextLanguage.ENGLISH;
     private final DialogMainPanel mainPanel;
 
     protected abstract String getProgressCaption();
     protected abstract String getDownloadButtonCaption();
 
-    DownloadPanel(CardImageDisplayMode aMode, CardTextLanguage aLang, DialogMainPanel aPanel) {
+    DownloadPanel(CardImageDisplayMode aMode, DialogMainPanel aPanel) {
         this.displayMode = aMode;
-        this.textLanguage = aLang;
         this.mainPanel = aPanel;
         setLookAndFeel();
         refreshLayout();
@@ -70,7 +69,7 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
 
     private void doRunImageDownloadWorker() {
         setDownloadingState();
-        imagesDownloader = new DownloadWorker(this, textLanguage, displayMode);
+        imagesDownloader = new DownloadWorker(this, displayMode);
         imagesDownloader.execute();
         notifyStatusChanged(DownloadState.DOWNLOADING);
     }
@@ -85,7 +84,6 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
     }
 
     void doCancel() {
-        isCancelled = true;
         doCancelImageDownloadWorker();
         doCancelImagesScanner();
     }
@@ -108,14 +106,16 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         if (imagesScanner != null && !imagesScanner.isDone()) {
             imagesScanner.cancel(true);
         }
-        if (!isCancelled) {
-            captionLabel.setIcon(MagicImages.getIcon(MagicIcon.BUSY16));
-            captionLabel.setText(getProgressCaption());
-            imagesScanner = new ScanWorker(this, displayMode);
-            imagesScanner.execute();
-            downloadButton.setEnabled(false);
-            notifyStatusChanged(DownloadState.SCANNING);
+        if (imagesScanner != null && !imagesScanner.isDone()) {
+            LOGGER.log(Level.WARNING, "Scanner still running!");
+            return;
         }
+        captionLabel.setIcon(MagicImages.getIcon(MagicIcon.BUSY16));
+        captionLabel.setText(getProgressCaption());
+        imagesScanner = new ScanWorker(this, displayMode);
+        imagesScanner.execute();
+        downloadButton.setEnabled(false);
+        notifyStatusChanged(DownloadState.SCANNING);
     }
 
     private void resetProgressBar() {
@@ -186,9 +186,9 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         );
     }
 
-    void refreshDownloadList(CardImageDisplayMode aMode, CardTextLanguage aLang) {
+    void refreshDownloadList(CardImageDisplayMode aMode) {
+        doCancel();
         this.displayMode = aMode;
-        this.textLanguage = aLang;
         buildDownloadImagesList();
     }
 
@@ -212,8 +212,8 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         progressBar.setString(null);
     }
 
-    protected String doFileDownloadAndGetName(final DownloadableFile file, final Proxy proxy) throws IOException {
-        file.doDownload(proxy);
+    protected String doFileDownloadAndGetName(final DownloadableFile file) throws IOException {
+        file.doDownload();
         if (file instanceof CardImageFile) {
             return ((CardImageFile) file).getCardName();
         } else {
@@ -225,23 +225,20 @@ abstract class DownloadPanel extends JPanel implements IScanListener, IDownloadL
         return countInteger;
     }
 
-    private static boolean isImageFileMissing(MagicCardDefinition card, CardImageDisplayMode mode) {
-        if (mode == CardImageDisplayMode.PRINTED) {
-            return !MagicFileSystem.getPrintedCardImage(card).exists();
-        } else {
-           return !MagicFileSystem.getCroppedCardImage(card).exists()
-               && !MagicFileSystem.getPrintedCardImage(card).exists();
-        }
-    }
-
-    protected static Stream<MagicCardDefinition> getCards(Collection<MagicCardDefinition> cards, Date aDate, CardImageDisplayMode mode) {
-        return cards.stream()
-            .filter(MagicCardDefinition::hasImageUrl)
-            .filter(card -> card.isImageUpdatedAfter(aDate) || isImageFileMissing(card, mode));
+    public static Stream<MagicCardDefinition> getCards(Collection<MagicCardDefinition> cards, Date aDate, CardImageDisplayMode mode) {
+        return cards.stream().filter(card -> CardDefinitions.requiresNewImageDownload(card, aDate));
     }
 
     void setLocked(boolean b) {
         downloadButton.setEnabled(!b && files != null && !files.isEmpty());
+    }
+
+    @Override
+    public void setEnabled(boolean b) {
+        super.setEnabled(b);
+        downloadButton.setEnabled(b && imagesScanner.isDone());
+        progressBar.setEnabled(b);
+        captionLabel.setEnabled(b);
     }
 
 }

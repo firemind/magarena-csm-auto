@@ -7,11 +7,13 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.Set;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import magic.data.GeneralConfig;
 import magic.model.MagicPlayerZone;
-import magic.ui.screen.duel.game.SwingGameController;
+import magic.ui.FontsAndBorders;
 import magic.ui.IChoiceViewer;
 import magic.ui.duel.viewerinfo.PlayerViewerInfo;
+import magic.ui.screen.duel.game.SwingGameController;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.PanelButton;
 import magic.ui.widget.TexturedPanel;
@@ -20,17 +22,20 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class GamePlayerPanel extends TexturedPanel implements IChoiceViewer {
 
+    private static final int PANEL_HEIGHT = 82;
+
     private PlayerViewerInfo playerInfo;
     private PlayerZoneButtonsPanel zoneButtonsPanel;
     private PlayerImagePanel avatarPanel;
     private final PanelButton avatarButton;
+    private final PlayerCountersPanel countersPanel;
 
     public GamePlayerPanel(final SwingGameController controller, final PlayerViewerInfo playerInfo) {
 
         this.playerInfo = playerInfo;
 
-        setOpaque(false);
-        setPreferredSize(new Dimension(0, 80));
+        setBorder(FontsAndBorders.BLACK_BORDER);
+        setPreferredSize(new Dimension(0, PANEL_HEIGHT));
         setMinimumSize(getPreferredSize());
 
         zoneButtonsPanel = new PlayerZoneButtonsPanel(playerInfo, controller);
@@ -50,10 +55,17 @@ public class GamePlayerPanel extends TexturedPanel implements IChoiceViewer {
         };
         avatarButton.setComponent(avatarPanel);
 
-        setLayout(new MigLayout("flowy, insets 0, gap 4 1, wrap 2"));
-        add(avatarButton, "w 80!, h 80!, spany 2");
-        add(getPlayerLabel(), "gaptop 3");
-        add(zoneButtonsPanel, "w 100%, h 100%");
+        JPanel panel1 = new JPanel(new MigLayout("flowy, insets 0, gap 4 1, wrap 2"));
+        panel1.setOpaque(false);
+        panel1.add(avatarButton, "w 80!, h 80!, spany 2");
+        panel1.add(getPlayerLabel(), "gaptop 3");
+        panel1.add(zoneButtonsPanel, "w 100%, h 100%");
+
+        countersPanel = new PlayerCountersPanel();
+        panel1.add(countersPanel, "w 100%, h 100%, spany 2");
+
+        setLayout(new MigLayout("insets 0, gap 0"));
+        add(panel1, "w 100%, h 100%");
 
         if (controller != null) {
             controller.registerChoiceViewer(this);
@@ -86,6 +98,7 @@ public class GamePlayerPanel extends TexturedPanel implements IChoiceViewer {
         this.playerInfo = playerInfo;
         avatarPanel.updateDisplay(playerInfo);
         zoneButtonsPanel.updateDisplay(playerInfo);
+        countersPanel.updateDisplay(playerInfo);
     }
 
     public void setActiveZone(MagicPlayerZone zone) {

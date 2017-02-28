@@ -10,17 +10,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
-import magic.ui.FontsAndBorders;
-import magic.ui.widget.M.MScrollPane;
-import magic.ui.widget.TexturedPanel;
-import magic.ui.widget.TitleBar;
-import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
-public class DeckTablePanel extends TexturedPanel {
+public class DeckTablePanel extends CardsTablePanel {
 
     // fired when selection changes.
     public static final String CP_CARD_SELECTED = "21b18a13-afbb-4d6a-9edc-3119653f4560";
@@ -28,50 +22,33 @@ public class DeckTablePanel extends TexturedPanel {
     public static final String CP_CARD_LCLICKED = "d1b4df60-feb9-4bfe-88e2-49cd823efeb0";
     public static final String CP_CARD_RCLICKED = "0c0fc5c6-3be3-40f4-9b79-ded9e304a96d";
 
-    private final MigLayout migLayout = new MigLayout();
-    private final MScrollPane scrollpane = new MScrollPane();
-    private final CardTableModel tableModel;
-    private JTable table;
-
-    private final TitleBar titleBar;
-    private List<MagicCardDefinition> lastSelectedCards;
     private boolean isAdjusting = false;
     private int lastSelectedRow = -1;
     private final ListSelectionListener listSelListener;
 
-    public DeckTablePanel(final List<MagicCardDefinition> defs, final String title) {
-
-        this.lastSelectedCards = new ArrayList<>();
-
-        this.tableModel = new CardTableModel(defs);
-        this.table = new CardsJTable(tableModel);
-
-        if (!GeneralConfig.getInstance().isPreviewCardOnSelect()) {
-            table.addMouseMotionListener(new RowMouseOverListener());
-        }
+    public DeckTablePanel(final List<MagicCardDefinition> defs) {
+        super(defs);
 
         // listener to change card image on selection
         this.listSelListener = getTableListSelectionListener();
         table.getSelectionModel().addListSelectionListener(listSelListener);
 
-        // add table to scroll pane
-        scrollpane.setViewportView(table);
-        scrollpane.setBorder(FontsAndBorders.NO_BORDER);
-        scrollpane.setOpaque(false);
-
-        // add title
-        titleBar = new TitleBar(title);
-
         // Raise events on mouse clicks.
         table.addMouseListener(getTableMouseAdapter());
-
-        setLayout(migLayout);
-        refreshLayout();
-        setEmptyBackgroundColor();
     }
 
-    private void setEmptyBackgroundColor() {
-        setBackground(CardsTableStyle.getStyle().getEmptyBackgroundColor());
+    @Override
+    protected MouseAdapter getRowMouseOverListener() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseMoved(final MouseEvent e) {
+                final Point p = e.getPoint();
+                final int row = table.rowAtPoint(p);
+                if (row != lastSelectedRow) {
+                    lastSelectedRow = row;
+                }
+            }
+        };
     }
 
     private ListSelectionListener getTableListSelectionListener() {
@@ -119,17 +96,6 @@ public class DeckTablePanel extends TexturedPanel {
         };
     }
 
-    private void refreshLayout() {
-        removeAll();
-        migLayout.setLayoutConstraints("flowy, insets 0, gap 0");
-        add(titleBar, "w 100%, h 26!, hidemode 3");
-        add(scrollpane.component(), "w 100%, h 100%");
-    }
-
-    public void setDeckEditorSelectionMode() {
-        //table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    }
-
     public List<MagicCardDefinition> getSelectedCards() {
         final List<MagicCardDefinition> selectedCards = new ArrayList<>();
         for (final int row : table.getSelectedRows()) {
@@ -139,30 +105,6 @@ public class DeckTablePanel extends TexturedPanel {
             }
         }
         return selectedCards;
-    }
-
-    private void reselectLastCards() {
-        // select previous card if possible
-        if (lastSelectedCards.size() > 0) {
-            final List<MagicCardDefinition> newSelectedCards = new ArrayList<>();
-            for (final MagicCardDefinition card : lastSelectedCards) {
-                final int index = tableModel.findCardIndex(card);
-                if (index != -1) {
-                    // previous card still in list
-                    table.getSelectionModel().addSelectionInterval(index,index);
-                    newSelectedCards.add(card);
-                }
-            }
-            lastSelectedCards = newSelectedCards;
-        } else {
-            setSelectedRow();
-        }
-    }
-
-    private void setSelectedRow() {
-        if (table.getRowCount() > 0) {
-            table.setRowSelectionInterval(0, 0);
-        }
     }
 
     public void setDeck(MagicDeck aDeck) {
@@ -179,38 +121,18 @@ public class DeckTablePanel extends TexturedPanel {
         table.getSelectionModel().addListSelectionListener(listSelListener);
     }
 
-    public void setTitle(final String title) {
-        titleBar.setText(title);
-    }
-
-    public void setHeaderVisible(boolean b) {
-        titleBar.setVisible(b);
-        refreshLayout();
-    }
-
     public void clearSelection() {
         table.clearSelection();
     }
 
-    public JTable getDeckTable() {
+    public CardsJTable getDeckTable() {
         return table;
     }
 
-    public void setDeckTable(JTable aDeckTable) {
+    public void setDeckTable(CardsJTable aDeckTable) {
         this.table = aDeckTable;
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // ensures horizontal scrollbar is visible.
         scrollpane.setViewportView(table);
-    }
-
-    private class RowMouseOverListener extends MouseAdapter {
-        @Override
-        public void mouseMoved(final MouseEvent e) {
-            final Point p = e.getPoint();
-            final int row = table.rowAtPoint(p);
-            if (row != lastSelectedRow) {
-                lastSelectedRow = row;
-            }
-        }
     }
 
     public void selectFirstRow() {
@@ -226,10 +148,6 @@ public class DeckTablePanel extends TexturedPanel {
         } else if (tableModel.getRowCount() > 0) {
             table.getSelectionModel().addSelectionInterval(0, 0);
         }
-    }
-
-    public TitleBar getTitleBar() {
-        return titleBar;
     }
 
     public void showCardCount(final boolean b) {

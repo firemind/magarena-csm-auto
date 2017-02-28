@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import magic.data.DeckType;
+import magic.data.stats.MagicStats;
 import magic.exception.InvalidDeckException;
 import magic.firemind.FiremindJsonReader;
 import magic.model.MagicDeck;
@@ -34,8 +35,6 @@ import magic.translate.MText;
 import magic.ui.FontsAndBorders;
 import magic.ui.dialog.DecksFilterDialog;
 import magic.ui.screen.interfaces.IDeckConsumer;
-import magic.ui.theme.Theme;
-import magic.ui.utility.MagicStyle;
 import magic.ui.widget.duel.viewer.CardViewer;
 import magic.utility.DeckUtils;
 import net.miginfocom.swing.MigLayout;
@@ -46,9 +45,6 @@ public class DeckPicker extends JPanel {
     // translatable strings
     private static final String _S1 = "All Decks (%d)";
     private static final String _S2 = "Filtered Decks (%d)";
-
-    private static final Color HIGHLIGHT_BACK = MagicStyle.getTheme().getColor(Theme.COLOR_TITLE_BACKGROUND);
-    private static final Color HIGHLIGHT_FORE = MagicStyle.getTheme().getColor(Theme.COLOR_TITLE_FOREGROUND);
 
     // ui components
     private final MigLayout migLayout = new MigLayout();
@@ -143,7 +139,7 @@ public class DeckPicker extends JPanel {
 
     final public void refreshContent() {
         // deck types combo
-        final DeckType deckTypes[] = DeckType.PREDEFINED_DECKS.toArray(new DeckType[0]);
+        final DeckType deckTypes[] = DeckType.getPredefinedDecks().toArray(new DeckType[0]);
         deckTypeJCombo.setModel(new DefaultComboBoxModel<>(deckTypes));
         deckTypeJCombo.setSelectedIndex(0);
         refreshDecksList();
@@ -160,9 +156,21 @@ public class DeckPicker extends JPanel {
         } else {
             filterPanel.setDecksCount(0);
             for (IDeckConsumer listener : listeners) {
-                listener.setDeck(new MagicDeck(), null);
+                listener.setDeck(new MagicDeck());
             }
         }
+    }
+
+    private MagicDeck[] getPopularDecks() {
+       return MagicStats.getMostPlayedDecks().toArray(new MagicDeck[0]);
+    }
+
+    private MagicDeck[] getWinningDecks() {
+       return MagicStats.getTopWinningDecks().toArray(new MagicDeck[0]);
+    }
+
+    private MagicDeck[] getRecentDecks() {
+       return MagicStats.getRecentlyPlayedDecks().toArray(new MagicDeck[0]);
     }
 
     private MagicDeck[] getDecksListData() {
@@ -173,7 +181,13 @@ public class DeckPicker extends JPanel {
                 return getFilteredDecksListData(Paths.get(DeckUtils.getDeckFolder()));
             case Firemind:
                 FiremindJsonReader.refreshTopDecks();
-                return getFilteredDecksListData(Paths.get(DeckUtils.getDeckFolder()).resolve("firemind"));
+                return getFilteredDecksListData(DeckUtils.getFiremindDecksFolder());
+            case PopularDecks:
+                return getPopularDecks();
+            case WinningDecks:
+                return getWinningDecks();
+            case RecentDecks:
+                return getRecentDecks();
             default:
                 return new MagicDeck[0];
         }
@@ -249,6 +263,12 @@ public class DeckPicker extends JPanel {
                             for (IDeckConsumer listener : listeners) {
                                 if (selectedDeckType == DeckType.Random) {
                                     listener.setDeck(deck.getName(), selectedDeckType);
+                                } else if (selectedDeckType == DeckType.PopularDecks) {
+                                    listener.setDeck(deck);
+                                } else if (selectedDeckType == DeckType.WinningDecks) {
+                                    listener.setDeck(deck);
+                                } else if (selectedDeckType == DeckType.RecentDecks) {
+                                    listener.setDeck(deck);
                                 } else {
                                     listener.setDeck(deck, getDeckPath(deck.getName(), selectedDeckType));
                                 }

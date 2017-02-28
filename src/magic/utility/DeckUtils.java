@@ -62,8 +62,9 @@ public class DeckUtils {
     }
 
     public static Path getFiremindDecksFolder() {
-        final Path decksPath = Paths.get(getDeckFolder());
-        return decksPath.resolve("firemind");
+        Path decksPath = Paths.get(getDeckFolder()).resolve("firemind");
+        MagicFileSystem.verifyDirectoryPath(decksPath);
+        return decksPath;
     }
 
     public static void createDeckFolder() {
@@ -249,10 +250,14 @@ public class DeckUtils {
         }
     }
 
-    public static long getDeckFileChecksum(MagicDeck aDeck) {
-        Path deckPath = DeckType.getDeckFolder(aDeck.getDeckType());
-        Path deckFile = deckPath.resolve(aDeck.getName() + ".dec");
+    public static long getDeckFileChecksum(String name, DeckType deckType) {
+        Path deckPath = DeckType.getDeckFolder(deckType);
+        Path deckFile = deckPath.resolve(name + ".dec");
         return getDeckFileChecksum(deckFile);
+    }
+
+    public static long getDeckFileChecksum(MagicDeck aDeck) {
+        return getDeckFileChecksum(aDeck.getName(), aDeck.getDeckType());
     }
 
     private static boolean isSamePath(Path p1, Path p2) {
@@ -293,6 +298,11 @@ public class DeckUtils {
         return deck;
     }
 
+    public static MagicDeck loadDeckFromFile(String name, DeckType deckType) {
+        Path deckPath = DeckType.getDeckFolder(deckType);
+        return loadDeckFromFile(deckPath.resolve(name + ".dec"));
+    }
+
     public static void loadAndSetPlayerDeck(final String filename, final DuelPlayerConfig player) {
 
         final MagicDeck deck = loadDeckFromFile(Paths.get(filename));
@@ -328,7 +338,7 @@ public class DeckUtils {
     /**
      * Find up to 3 of the most common colors in the deck.
      */
-    private static String getDeckColor(final MagicDeck deck) {
+    public static String getDeckColor(final MagicDeck deck) {
         final int[] colorCount = getDeckColorCount(deck);
         final StringBuilder colorText = new StringBuilder();
         while (colorText.length() < 3) {
@@ -447,6 +457,11 @@ public class DeckUtils {
             distinctCards.add(card);
         }
         return distinctCards;
+    }
+
+    public static Path getDeckPath(MagicDeck deck) {
+        Path deckPath = DeckType.getDeckFolder(deck.getDeckType());
+        return deckPath.resolve(deck.getName() + ".dec");
     }
 
 }

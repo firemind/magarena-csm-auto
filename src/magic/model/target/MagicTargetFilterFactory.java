@@ -302,6 +302,14 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicStackFilterImpl AURA_EQUIPMENT_OR_VEHICLE_SPELL = new MagicStackFilterImpl() {
+        public boolean accept(MagicSource source, MagicPlayer player, MagicItemOnStack target) {
+            return target.isSpell(MagicSubType.Aura) ||
+                target.isSpell(MagicSubType.Equipment) ||
+                target.isSpell(MagicSubType.Vehicle);
+        }
+    };
+
     public static final MagicStackFilterImpl INSTANT_OR_SORCERY_SPELL = spellOr(MagicType.Instant, MagicType.Sorcery);
 
     public static final MagicStackFilterImpl INSTANT_OR_SORCERY_SPELL_YOU_CONTROL = spellOr(MagicType.Instant, MagicType.Sorcery, Control.You);
@@ -2023,6 +2031,20 @@ public class MagicTargetFilterFactory {
         };
     }
 
+    public static final MagicCardFilterImpl permanentCardEqualCMC(final MagicType type, final MagicTargetType from, final int cmc) {
+        return new MagicCardFilterImpl() {
+            public boolean accept(MagicSource source, MagicPlayer player, MagicCard target) {
+                return target.isPermanentCard() &&
+                    target.hasType(type) &&
+                    target.getConvertedCost() == cmc;
+            }
+
+            public boolean acceptType(MagicTargetType targetType) {
+                return targetType == from;
+            }
+        };
+    }
+
     public static final MagicCardFilterImpl BASIC_LAND_CARD = card(MagicType.Basic).and(MagicType.Land);
 
     public static final MagicCardFilterImpl BASIC_LAND_CARD_FROM_LIBRARY = card(MagicType.Basic).and(MagicType.Land).from(MagicTargetType.Library);
@@ -2359,6 +2381,7 @@ public class MagicTargetFilterFactory {
         add("enchantment card with converted mana cost 3 or less from your library", permanentCardMaxCMC(MagicType.Enchantment, MagicTargetType.Library, 3));
         add("artifact card with converted mana cost 1 or less from your library", permanentCardMaxCMC(MagicType.Artifact, MagicTargetType.Library, 1));
         add("artifact card with converted mana cost 6 or greater from your library", permanentCardMinCMC(MagicType.Artifact, MagicTargetType.Library, 6));
+        add("artifact card with converted mana cost 3 from your library", permanentCardEqualCMC(MagicType.Artifact, MagicTargetType.Library, 3));
 
         // <color|type|subtype> permanent card from your library
         add("Rebel permanent card with converted mana cost 1 or less from your library", permanentCardMaxCMC(MagicSubType.Rebel, MagicTargetType.Library, 1));
@@ -2644,6 +2667,7 @@ public class MagicTargetFilterFactory {
         add("colorless spell", COLORLESS_SPELL);
         add("colorless spell with converted mana cost 7 or greater", COLORLESS_SPELL_CMC_7_OR_MORE);
         add("creature spell with converted mana cost 3 or less", CREATURE_SPELL_CMC_3_OR_LESS);
+        add("aura, equipment, or vehicle spell", AURA_EQUIPMENT_OR_VEHICLE_SPELL);
 
         // player
         add("opponent", OPPONENT);

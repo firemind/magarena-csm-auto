@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import magic.data.MagicIcon;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
@@ -17,6 +16,7 @@ import magic.ui.MagicImages;
 import magic.ui.MagicSound;
 import magic.ui.ScreenController;
 import magic.ui.screen.widget.ActionBarButton;
+import magic.ui.widget.cards.table.CardsJTable;
 import magic.ui.widget.cards.table.DeckTablePanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -54,9 +54,7 @@ class DeckPanel extends JPanel implements IDeckEditorView {
 
         actionButtons.add(getClearDeckActionButton());
 
-        deckTablePanel = new DeckTablePanel(controller.getDeck(), getDeckTitle());
-        deckTablePanel.setDeckEditorSelectionMode();
-        deckTablePanel.setHeaderVisible(false);
+        deckTablePanel = new DeckTablePanel(controller.getDeck());
         deckTablePanel.showCardCount(true);
         setDeckTablePropChangeListeners();
 
@@ -108,10 +106,6 @@ class DeckPanel extends JPanel implements IDeckEditorView {
                 });
     }
 
-    private String getDeckTitle() {
-        return String.format("   %s", controller.getDeck().getName());
-    }
-
     private void setLookAndFeel() {
         setOpaque(false);
         setLayout(miglayout);
@@ -142,7 +136,6 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     }
 
     void doRefreshView() {
-        deckTablePanel.setTitle(getDeckTitle());
         deckTablePanel.setDeck(controller.getDeck());
         listener.deckUpdated(controller.getDeck());
     }
@@ -200,11 +193,11 @@ class DeckPanel extends JPanel implements IDeckEditorView {
         deckTablePanel.setSelectedCard(selectedCard);
     }
 
-    JTable getDeckTable() {
+    CardsJTable getDeckTable() {
         return deckTablePanel.getDeckTable();
     }
 
-    void setDeckTable(final JTable aDeckTable) {
+    void setDeckTable(CardsJTable aDeckTable) {
         deckTablePanel.setDeckTable(aDeckTable);
     }
 
@@ -221,6 +214,11 @@ class DeckPanel extends JPanel implements IDeckEditorView {
     @Override
     public List<ActionBarButton> getActionButtons() {
         return actionButtons;
+    }
+
+    @Override
+    public void notifyShowing() {
+        // not applicable
     }
 
 }

@@ -25,7 +25,7 @@ import magic.utility.MagicFileSystem.DataPath;
 final public class MagicSystem {
     private MagicSystem() {}
 
-    public static final String VERSION = "1.81";
+    public static final String VERSION = "1.82";
 
     public static final String SOFTWARE_TITLE;
     private static final boolean DEV_MODE;
@@ -87,7 +87,8 @@ final public class MagicSystem {
     }
 
     public static boolean isTestGame() {
-        return (System.getProperty("testGame") != null && !System.getProperty("testGame").isEmpty());
+        return !System.getProperty("testGame", "").isEmpty()
+            || !System.getProperty("saveGame", "").isEmpty();
     }
 
     public static boolean isDevMode() {
@@ -202,15 +203,10 @@ final public class MagicSystem {
         reporter.setMessage("Initializing log...");
         MagicGameLog.initialize();
 
-        // start a separate thread to load cards
+        // Queue up tasks to run synchronously on a single background thread.
         final ExecutorService background = Executors.newSingleThreadExecutor();
         background.execute(loadCards);
-        background.execute(new Runnable() {
-            @Override
-            public void run() {
-                CardDefinitions.postCardDefinitions();
-            }
-        });
+        background.execute(() -> { CardDefinitions.postCardDefinitions(); });
         background.execute(loadMissing);
         background.shutdown();
 

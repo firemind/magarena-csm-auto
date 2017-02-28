@@ -5,6 +5,7 @@ import magic.translate.MText;
 import magic.ui.ScreenController;
 import magic.ui.dialog.DecksFilterDialog;
 import magic.ui.screen.HeaderFooterScreen;
+import magic.ui.screen.MScreen;
 import magic.ui.screen.interfaces.IDeckConsumer;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.widget.deck.DeckStatusPanel;
@@ -27,7 +28,7 @@ public class DecksScreen extends HeaderFooterScreen {
     private static final String _S12 = "Deck is empty! Nothing to show.";
     private static final String _S13 = "This deck is invalid.";
 
-    private final ScreenPanel screenContent;
+    private final DecksScreenPanel screenContent;
     private final IDeckConsumer deckConsumer;
     private final DeckStatusPanel deckStatusPanel;
 
@@ -35,7 +36,7 @@ public class DecksScreen extends HeaderFooterScreen {
         super(MText.get(_S1));
         this.deckConsumer = deckConsumer;
         deckStatusPanel = new DeckStatusPanel();
-        screenContent = new ScreenPanel(deckStatusPanel);
+        screenContent = new DecksScreenPanel(deckStatusPanel);
         setMainContent(screenContent);
         setHeaderContent(deckStatusPanel);
         setLeftFooter(MenuButton.getCloseScreenButton(MText.get(_S2)));
@@ -84,7 +85,7 @@ public class DecksScreen extends HeaderFooterScreen {
     }
 
     @Override
-    public boolean isScreenReadyToClose(final Object nextScreen) {
+    public boolean isScreenReadyToClose(MScreen nextScreen) {
         DecksFilterDialog.resetFilterHistory();
         return true;
     }

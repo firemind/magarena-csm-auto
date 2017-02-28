@@ -518,7 +518,7 @@ public class SwingGameController implements IUIGameController {
         rect.x -= pointOnScreen.x;
         rect.y -= pointOnScreen.y;
         final int x = rect.x + rect.width + 10;
-        cardPopup.setCard(cardDefinition, gamePanelSize);
+        cardPopup.setCardForPrompt(cardDefinition, gamePanelSize);
         final int maxY = gamePanelSize.height - cardPopup.getHeight();
         int y = rect.y + (rect.height-cardPopup.getHeight()) / 2;
         if (y < 0) {
@@ -713,11 +713,8 @@ public class SwingGameController implements IUIGameController {
 
     @Override
     public void showMessage(final MagicSource source, final String message) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                userActionPanel.showMessage(getMessageWithSource(source, message));
-            }
+        SwingUtilities.invokeLater(() -> {
+            userActionPanel.showMessage(getMessageWithSource(source, MText.get(message)));
         });
     }
 

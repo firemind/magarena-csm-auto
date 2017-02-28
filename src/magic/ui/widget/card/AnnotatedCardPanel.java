@@ -34,21 +34,27 @@ import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicObject;
 import magic.model.MagicPermanent;
+import magic.ui.FontsAndBorders;
+import magic.ui.MagicCardImages;
 import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.duel.viewerinfo.CardViewerInfo;
+import magic.ui.helpers.ImageHelper;
 import magic.ui.screen.duel.game.SwingGameController;
+import magic.ui.theme.AbilityIcon;
 import magic.ui.widget.duel.animation.AnimationFx;
 import magic.ui.widget.duel.animation.MagicAnimations;
-import magic.ui.theme.AbilityIcon;
-import magic.ui.helpers.ImageHelper;
-import magic.ui.FontsAndBorders;
 import magic.utility.MagicSystem;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.ease.Spline;
 
 @SuppressWarnings("serial")
 public class AnnotatedCardPanel extends JPanel {
+
+    private enum PopupMode {
+        Normal,
+        Prompt
+    }
 
     private static final Color BCOLOR = new Color(0, 0, 0, 0);
     private static final Font PT_FONT = new Font("Serif", Font.BOLD, 16);
@@ -72,6 +78,7 @@ public class AnnotatedCardPanel extends JPanel {
     private final MagicInfoWindow infoWindow = new MagicInfoWindow();
     private final Rectangle containerRect;
     private boolean preferredVisibility = false;
+    private PopupMode popupMode = PopupMode.Normal;
 
     public AnnotatedCardPanel() {
 
@@ -96,6 +103,7 @@ public class AnnotatedCardPanel extends JPanel {
             @Override
             public void mouseExited(MouseEvent e) {
                 infoWindow.setVisible(false);
+                setVisible(false);
             }
         });
 
@@ -182,7 +190,8 @@ public class AnnotatedCardPanel extends JPanel {
         setVisible(true);
     }
 
-    public void setCard(final MagicCardDefinition cardDef, final Dimension containerSize) {
+    public void setCardForPrompt(MagicCardDefinition cardDef, Dimension containerSize) {
+        popupMode = PopupMode.Prompt;
         this.cardImage = getCardImage(cardDef);
         // <--- order important
         cardIcons = AbilityIcon.getIcons(cardDef);
@@ -194,6 +203,7 @@ public class AnnotatedCardPanel extends JPanel {
     }
 
     public void setCard(CardViewerInfo cardInfo, final Dimension containerSize) {
+        popupMode = PopupMode.Normal;
         this.cardImage = cardInfo.getImage();
         // <--- order important
         cardIcons = AbilityIcon.getIcons(cardInfo.getMagicObject());
@@ -210,6 +220,7 @@ public class AnnotatedCardPanel extends JPanel {
      * additional abilities added during game-play (via enchantments, etc).
      */
     public void setCard(final MagicObject magicObject, final Dimension containerSize) {
+        popupMode = PopupMode.Normal;
         this.cardImage = getCardImage(magicObject);
         // <--- order important
         cardIcons = AbilityIcon.getIcons(magicObject);
@@ -228,7 +239,7 @@ public class AnnotatedCardPanel extends JPanel {
         // don't overwrite original image with modified PT overlay, use a copy.
         final BufferedImage cardCanvas = !modifiedPT.isEmpty() ? getImageCopy(cardImage) : cardImage;
         // draw modified PT on original image so it is scaled properly.
-        if (magicObject != null && MagicImages.isProxyImage(magicObject.getCardDefinition()) == false) {
+        if (magicObject != null && MagicCardImages.isProxyImage(magicObject.getCardDefinition()) == false) {
             drawPowerToughnessOverlay(cardCanvas);
         }
         // scale card image if required.
@@ -447,6 +458,10 @@ public class AnnotatedCardPanel extends JPanel {
             private CardIcon currentIcon;
             @Override
             public void mouseMoved(MouseEvent e) {
+                if (popupMode == PopupMode.Prompt) {
+                    setVisible(false);
+                    return;
+                }
                 if (!cardIcons.isEmpty() && !iconShapes.isEmpty()) {
                     final Shape lastShape = iconShapes.get(iconShapes.size() - 1);
                     final Dimension lastShapeSize = new Dimension(lastShape.getBounds().width, lastShape.getBounds().y + lastShape.getBounds().height);
