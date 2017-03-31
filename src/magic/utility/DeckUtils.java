@@ -52,25 +52,26 @@ public class DeckUtils {
 
     private static final String[] CARD_TYPES={"creatures","spells","lands"};
 
-    public static String getDeckFolder() {
-        return MagicFileSystem.getDataPath(DataPath.DECKS).toString();
+    public static Path getDecksFolder() {
+        return MagicFileSystem.getDataPath(DataPath.DECKS);
     }
 
     public static Path getPrebuiltDecksFolder() {
-        final Path decksPath = Paths.get(getDeckFolder());
-        return decksPath.resolve("prebuilt");
+        Path decksPath = getDecksFolder().resolve("prebuilt");
+        MagicFileSystem.verifyDirectoryPath(decksPath);
+        return decksPath;
     }
 
     public static Path getFiremindDecksFolder() {
-        Path decksPath = Paths.get(getDeckFolder()).resolve("firemind");
+        Path decksPath = getDecksFolder().resolve("firemind");
         MagicFileSystem.verifyDirectoryPath(decksPath);
         return decksPath;
     }
 
     public static void createDeckFolder() {
-        final File deckFolderFile=new File(getDeckFolder());
+        final File deckFolderFile = getDecksFolder().toFile();
         if (!deckFolderFile.exists() && !deckFolderFile.mkdir()) {
-            System.err.println("WARNING. Unable to create " + getDeckFolder());
+            System.err.println("WARNING. Unable to create " + getDecksFolder());
         }
     }
 
@@ -359,14 +360,13 @@ public class DeckUtils {
         return colorText.toString();
     }
 
-    private static void retrieveDeckFiles(final File folder,final List<File> deckFiles) {
-        final File[] files=folder.listFiles();
-        for (final File file : files) {
-            if (file.isDirectory()) {
-                retrieveDeckFiles(file,deckFiles);
-            } else if (file.getName().endsWith(DECK_EXTENSION)) {
-                deckFiles.add(file);
-            }
+    public static List<File> getDeckFiles() {
+        try {
+            DeckFileVisitor dfv = new DeckFileVisitor();
+            Files.walkFileTree(MagicFileSystem.getDataPath(DataPath.DECKS), dfv);
+            return dfv.getFiles();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -375,8 +375,7 @@ public class DeckUtils {
      *  (includes both custom & prebuilt decks).
      */
     public static void loadRandomDeckFile(final DuelPlayerConfig player) {
-        final List<File> deckFiles = new ArrayList<>();
-        retrieveDeckFiles(MagicFileSystem.getDataPath(DataPath.DECKS).toFile(), deckFiles);
+        List<File> deckFiles = getDeckFiles();
         if (deckFiles.isEmpty()) {
             // Creates a simple default deck.
             final MagicDeck deck = player.getDeck();
@@ -427,11 +426,7 @@ public class DeckUtils {
     public static List<File> getDecksContainingCard(final MagicCardDefinition cardDef) {
         final List<File> matchingDeckFiles = new ArrayList<>();
         if (cardDef != null) {
-
-            final List<File> allDeckFiles = new ArrayList<>();
-            retrieveDeckFiles(new File(getDeckFolder()), allDeckFiles);
-
-            for (File deckFile : allDeckFiles) {
+            for (File deckFile : getDeckFiles()) {
                 try (final BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(deckFile), "UTF-8"))) {
                     String line;
                     while ((line = br.readLine()) != null) {
@@ -446,7 +441,6 @@ public class DeckUtils {
                     throw new RuntimeException(ex);
                 }
             }
-
         }
         return matchingDeckFiles;
     };
@@ -464,4 +458,13 @@ public class DeckUtils {
         return deckPath.resolve(deck.getName() + ".dec");
     }
 
+    static Path getPlayerDecksFolder() {
+        return MagicFileSystem.getDataPath(MagicFileSystem.DataPath.DECKS);
+    }
+
+    static boolean isValidDeckFolder(Path dir) throws IOException {
+        return Files.isSameFile(dir, getPlayerDecksFolder())
+            || Files.isSameFile(dir, getPrebuiltDecksFolder())
+            || Files.isSameFile(dir, getFiremindDecksFolder());
+    }
 }

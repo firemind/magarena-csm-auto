@@ -311,4 +311,17 @@ public final class MagicFileSystem {
     public static Path getGameLogPath() {
         return getDataPath(DataPath.LOGS).resolve(MagicGameLog.LOG_FILE);
     }
+
+    public static boolean isMissingOrEmpty(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            return true;
+        }
+        if (Files.isDirectory(path)) {
+            try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
+                return !dirStream.iterator().hasNext();
+            }
+        } else {
+            throw new IOException("Specified path is not a valid directory : " + path);
+        }
+    }
 }

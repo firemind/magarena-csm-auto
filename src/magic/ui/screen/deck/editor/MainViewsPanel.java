@@ -2,17 +2,20 @@ package magic.ui.screen.deck.editor;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
 import magic.translate.MText;
 import magic.ui.MagicSound;
 import magic.ui.ScreenController;
-import magic.ui.helpers.MouseHelper;
 import magic.ui.deck.games.DeckGamesPanel;
+import magic.ui.helpers.MouseHelper;
 import magic.ui.widget.cards.table.CardsJTable;
 import magic.ui.widget.deck.legality.LegalityPanel;
 import magic.ui.widget.deck.stats.IPwlWorkerListener;
@@ -45,12 +48,12 @@ class MainViewsPanel extends JPanel
 
     private IDeckEditorView activeView;
     private final CardsJTable deckTable;
-    private final IDeckEditorListener listener;
+    private final ContentPanel container;
     private JToggleButton statsToggleButton;
 
-    MainViewsPanel(IDeckEditorListener aListener) {
+    MainViewsPanel(ContentPanel container) {
 
-        this.listener = aListener;
+        this.container = container;
 
         deckActionPanel = new DeckActionPanel(getPlusButtonAction(), getMinusButtonAction());
 
@@ -94,9 +97,25 @@ class MainViewsPanel extends JPanel
         };
     }
 
+    private void setOpenDecksScreenOnClick(JToggleButton btn) {
+        btn.addMouseListener(new MouseAdapter() {
+            private boolean isSelected;
+            @Override
+            public void mousePressed(MouseEvent e) {
+                isSelected = btn.isSelected();
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (isSelected && SwingUtilities.isLeftMouseButton(e)) {
+                    container.showDecksScreen();
+                }
+            }
+        });
+    }
+
     private void addToggleButtons() {
 
-        toggleButtonsPanel.addToggleButton(MText.get(_S1), new AbstractAction() {
+        JToggleButton btn = toggleButtonsPanel.addToggleButton(MText.get(_S1), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MouseHelper.showBusyCursor((Component) e.getSource());
@@ -105,6 +124,8 @@ class MainViewsPanel extends JPanel
                 MouseHelper.showHandCursor((Component) e.getSource());
             }
         });
+        setOpenDecksScreenOnClick(btn);
+
         toggleButtonsPanel.addToggleButton(MText.get(_S2), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -161,13 +182,13 @@ class MainViewsPanel extends JPanel
         );
         deckPanel.addPropertyChangeListener(
             DeckPanel.CP_CARD_SELECTED,
-            evt -> listener.cardSelected(getSelectedCard())
+            evt -> container.cardSelected(getSelectedCard())
         );
 
         // CardRecallPanel
         recallPanel.addPropertyChangeListener(
             CardRecallPanel.CP_CARD_SELECTED,
-            evt -> listener.cardSelected(getSelectedCard())
+            evt -> container.cardSelected(getSelectedCard())
         );
 
         // LegalityPanel
@@ -181,7 +202,7 @@ class MainViewsPanel extends JPanel
         if (card != null && card != MagicCardDefinition.UNKNOWN) {
             deckPanel.addCardToDeck(card);
             recallPanel.addCardToRecall(card);
-            listener.cardSelected(getSelectedCard());
+            container.cardSelected(getSelectedCard());
             MagicSound.ADD_CARD.play();
         }
     }
@@ -190,7 +211,7 @@ class MainViewsPanel extends JPanel
         if (card != null && card != MagicCardDefinition.UNKNOWN) {
             deckPanel.removeCardFromDeck(card);
             recallPanel.addCardToRecall(card);
-            listener.cardSelected(getSelectedCard());
+            container.cardSelected(getSelectedCard());
             MagicSound.REMOVE_CARD.play();
         }
     }
@@ -241,12 +262,12 @@ class MainViewsPanel extends JPanel
     @Override
     public void deckUpdated(MagicDeck deck) {
         legalityPanel.setDeck(deck);
-        listener.deckUpdated(deck);
+        container.deckUpdated(deck);
     }
 
     @Override
     public void cardSelected(MagicCardDefinition card) {
-        listener.cardSelected(card);
+        container.cardSelected(card);
     }
 
     @Override
