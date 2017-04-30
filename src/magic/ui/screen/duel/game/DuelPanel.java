@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
 import magic.model.MagicCardList;
-import magic.model.MagicGame;
 import magic.model.MagicPlayerZone;
 import magic.ui.ScreenController;
 import magic.ui.duel.resolution.DefaultResolutionProfile;
@@ -38,8 +37,7 @@ public final class DuelPanel extends JPanel {
     private BattlefieldPanel battlefieldPanel;
     private ResolutionProfileResult result;
 
-    public DuelPanel(final MagicGame game) {
-
+    public DuelPanel() {
         setOpaque(false);
         setFocusable(true);
     }
@@ -48,9 +46,9 @@ public final class DuelPanel extends JPanel {
 
         this.controller = aController;
 
-        battlefieldPanel = new ImageModeBattlefieldPanel(controller);
+        battlefieldPanel = new BattlefieldPanel(controller);
 
-        sidebarPanel = new DuelSideBarPanel(controller, battlefieldPanel.getStackViewer());
+        sidebarPanel = new DuelSideBarPanel(controller);
 
         updateView();
 
@@ -220,7 +218,6 @@ public final class DuelPanel extends JPanel {
         assert SwingUtilities.isEventDispatchThread();
 
         final GameLayoutInfo info = new GameLayoutInfo(this.getSize());
-        final ImageModeBattlefieldPanel battlefield = (ImageModeBattlefieldPanel) battlefieldPanel;
 
         info.setTurnPanelLayout(sidebarPanel.getTurnPanelLayout(this));
 
@@ -232,8 +229,8 @@ public final class DuelPanel extends JPanel {
             info.setHandButtonLayout(playerIndex, sidebarPanel.getHandButtonLayout(playerInfo, this));
 
             final ImageBattlefieldViewer battlefieldViewer = playerIndex == 0
-                ? battlefield.imagePlayerPermanentViewer
-                : battlefield.imageOpponentPermanentViewer;
+                ? battlefieldPanel.imagePlayerPermanentViewer
+                : battlefieldPanel.imageOpponentPermanentViewer;
 
             info.setPermanentsZoneLayout(
                 playerIndex,

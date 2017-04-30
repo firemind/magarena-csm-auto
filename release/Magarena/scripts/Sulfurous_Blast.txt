@@ -1,0 +1,9 @@
+name=Sulfurous Blast
+image=http://magiccards.info/scans/en/cmd/137.jpg
+value=3.362
+rarity=U
+type=Instant
+cost={2}{R}{R}
+timing=removal
+oracle=Sulfurous Blast deals 2 damage to each creature and each player. If you cast this spell during your main phase, Sulfurous Blast deals 3 damage to each creature and each player instead.
+requires_groovy_code

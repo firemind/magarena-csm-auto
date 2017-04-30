@@ -344,7 +344,7 @@ ref/MagicCompRules_latest.txt:
 	wget `curl http://magic.wizards.com/en/game-info/gameplay/rules-and-formats/rules | grep -o "http://media.*\.txt"` -O $@
 
 ref/rules.txt: ref/MagicCompRules_latest.txt
-	iconv -f UTF-16LE -t UTF-8 $^ | fmt -s > $@
+	iconv -f ISO-8859-1 -t UTF-8 $^ | fmt -s > $@
 	flip -bu $@
 
 resources/magic/data/icons/missing_card.png:
@@ -537,7 +537,8 @@ checks: \
 	check_mana_or_combat \
 	check_color_or_cost \
 	check_tap_tap \
-	check_no_extra_space
+	check_no_extra_space \
+	check_no_status
 
 check_property_alignment:
 	grep "^[^ ][^=]\+$$" -r release/Magarena/scripts/*.txt  | grep -v requires | grep -v mana_or | grep -v hidden | grep -v overlay | grep -v '#' | ${NO_OUTPUT}
@@ -653,6 +654,9 @@ check_tap_tap:
 check_no_extra_space:
 	grep "^[[:space:]]"  -r resources/magic/data/sets | ${NO_OUTPUT}
 	grep "[[:space:]]$$" -r resources/magic/data/sets | ${NO_OUTPUT}
+
+check_no_status:
+	grep "status"  -r release/Magarena/scripts | ${NO_OUTPUT}
 
 crash.txt: $(wildcard *.log)
 	for i in `grep "^Excep" -l $^`; do \

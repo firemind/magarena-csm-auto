@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import magic.data.CardDefinitions;
 import magic.model.*;
 import magic.model.action.*;
@@ -564,7 +563,6 @@ public enum MagicRuleEventAction {
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
-            final MagicTargetFilter<MagicTarget> filter = ARG.targetsParse(matcher);
             return (game, event) -> event.processTargetPermanent(game, (final MagicPermanent other) -> {
                 final MagicPermanent it = ARG.itPermanent(event, matcher);
                 game.doAction(new DealDamageAction(it, other, it.getPower()));
@@ -3007,26 +3005,44 @@ public enum MagicRuleEventAction {
         }
     }
 
-    public static String personalize(final MagicChoice choice, final String text) {
-        final String withIndicator = addChoiceIndicator(choice, text);
-        return withIndicator
+    public static String personalizeWithChoice(final MagicChoice choice, final String text) {
+        return personalize(addChoiceIndicator(choice, text));
+    }
+
+    public static String personalize(final String text) {
+        return text
+            .replaceAll("(Y|y)ou discard ", "PN discards ")
             .replaceAll("discard ", "discards ")
-            .replaceAll("reveal ", "reveals ")
+            .replaceAll("(?<!may )reveal ", "reveals ")
             .replaceAll("(S|s)earch your ", "PN searches his or her ")
             .replaceAll("(S|s)huffle your ", "PN shuffles his or her ")
             .replaceAll("(Y|y)ou draw ", "PN draws ")
             .replaceAll("(D|d)raw ", "PN draws ")
             .replaceAll("(Y|y)ou put ", "PN puts ")
-            .replaceAll("(P|p)ut ", "PN puts ")
-            .replaceAll("(C|c)reate ", "PN creates ")
+            .replaceAll("(?<!may )(P|p)ut ", "PN puts ")
+            .replaceAll("((Y|y)ou )?(C|c)reate ", "PN creates ")
             .replaceAll("(S|s)acrifice ", "PN sacrifices ")
-            .replaceAll("(Y|y)ou don't ", "PN doesn't ")
-            .replaceAll("(Y|y)ou do ", "PN does ")
+            .replaceAll("(Y|y)ou don't\\b", "PN doesn't")
+            .replaceAll("(Y|y)ou do\\b", "PN does")
+            .replaceAll("(Y|y)ou win\\b", "PN wins")
+            .replaceAll("(Y|y)ou have ", "PN has ")
+            .replaceAll("(Y|y)ou cast ", "PN casts ")
             .replaceAll("(Y|y)ou gain ", "PN gains ")
             .replaceAll("(Y|y)ou lose ", "PN loses ")
-            .replaceAll("(Y|y)ou control ", "PN controls ")
+            .replaceAll("(Y|y)ou become ", "PN becomes ")
+            .replaceAll("(Y|y)ou own\\b", "PN owns")
+            .replaceAll("(Y|y)ou control\\b", "PN controls")
+            .replaceAll("(Y|y)ou both own and control\\b", "PN both owns and controls")
+            .replaceAll("(Y|y)ou gained ", "PN gained ")
+            .replaceAll("(Y|y)ou attacked ", "PN attacked ")
+            .replaceAll("(Y|y)ou controlled\\b", "PN controlled")
+            .replaceAll("(Y|y)ou may ", "PN may ")
+            .replaceAll("(Y|y)ou get ", "PN gets ")
+            .replaceAll("(Y|y)ou pay ", "PN pays ")
+            .replaceAll("to you\\b", "to PN")
+            .replaceAll("than you\\b", "than PN")
             .replaceAll("(Y|y)our ", "PN's ")
-            .replaceAll("(Y|y)ou\\b", "PN")
+            .replaceAll("(Y|y)ou're ", "PN is ")
             .replaceAll("(C|c)hoose one ", "$1hoose one\\$ ")
             ;
     }
@@ -3036,7 +3052,8 @@ public enum MagicRuleEventAction {
             .replaceAll("PN's hand ", "his or her hand ")
             .replaceAll("PN searches ", "search ")
             .replaceAll("PN shuffles ", "shuffle ")
-            .replaceAll("PN draws", "draw ")
+            .replaceAll("PN draws ", "draw ")
+            .replaceAll("(D|d)iscards ", "$1iscard ")
             .replaceAll("(D|d)raws ", "$1raw ")
             .replaceAll("(S|s)acrifices ", "$1acrifice ")
             .replaceAll("(G|g)ains ", "$1ain ")
@@ -3051,7 +3068,7 @@ public enum MagicRuleEventAction {
     public static String addChoiceIndicator(final MagicChoice choice, final String text) {
         final MagicTargetChoice tchoice = choice.getTargetChoice();
         if (tchoice.isValid()) {
-            final Pattern p = Pattern.compile(Pattern.quote(tchoice.getTargetDescription()), Pattern.CASE_INSENSITIVE);
+            final Pattern p = Pattern.compile(Pattern.quote(tchoice.getTargetDescription()) + "('s)?", Pattern.CASE_INSENSITIVE);
             final Matcher m = p.matcher(text);
             return m.replaceFirst("$0\\$");
         } else if (choice.isValid()) {
@@ -3135,8 +3152,8 @@ public enum MagicRuleEventAction {
         final MagicChoice choice = ruleAction.getChoice(matcher);
         final String pnMayChoice = capitalize(ruleWithoutMay).replaceFirst("\\.", "?");
 
-        final String contextRule = personalize(choice, concat(ruleWithoutMay, part));
-        final String playerRule = personalize(choice, concat(rule, part));
+        final String contextRule = personalize(addChoiceIndicator(choice, concat(ruleWithoutMay, part)));
+        final String playerRule = personalize(addChoiceIndicator(choice, concat(rule, part)));
 
         //'If you don't' effect cannot have a choice as MagicMayChoice only prompts for choice in "Yes" case
         if (mayDontMatched && choice.isValid()) {
@@ -3164,8 +3181,8 @@ public enum MagicRuleEventAction {
         };
 
         final String eventDesc =
-              mayDoMatched ? "PN may$ " + ARG.cost(mayDoMatcher) + ". If PN does, " + contextRule
-            : mayDontMatched ? "PN may$ " + ARG.cost(mayDontMatcher) + ". If PN doesn't, " + contextRule
+              mayDoMatched ? "PN may$ " + mayTense(personalize(ARG.cost(mayDoMatcher))) + ". If PN does, " + contextRule
+            : mayDontMatched ? "PN may$ " + mayTense(personalize(ARG.cost(mayDontMatcher))) + ". If PN doesn't, " + contextRule
             : optional ? "PN may$ " + mayTense(contextRule)
             : capitalize(playerRule);
 

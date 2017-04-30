@@ -5,11 +5,10 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JLayeredPane;
-import magic.model.MagicGame;
-import magic.ui.widget.card.AnnotatedCardPanel;
-import magic.ui.widget.duel.animation.AnimationPanel;
-import magic.ui.widget.duel.DuelDialogPanel;
 import magic.ui.widget.ZoneBackgroundLabel;
+import magic.ui.widget.card.AnnotatedCardPanel;
+import magic.ui.widget.duel.DuelDialogPanel;
+import magic.ui.widget.duel.animation.AnimationPanel;
 
 @SuppressWarnings("serial")
 class DuelLayeredPane extends JLayeredPane {
@@ -20,9 +19,9 @@ class DuelLayeredPane extends JLayeredPane {
     private final AnnotatedCardPanel imageCardViewer;
     private final DuelDialogPanel dialogPanel;
 
-    DuelLayeredPane(final MagicGame aGame) {
+    DuelLayeredPane() {
 
-        this.duelPanel = new DuelPanel(aGame);
+        this.duelPanel = new DuelPanel();
 
         backgroundLabel = new ZoneBackgroundLabel();
         duelPanel.setBackgroundLabel(backgroundLabel);

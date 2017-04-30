@@ -1,9 +1,8 @@
 package magic.model.condition;
 
-import magic.model.MagicGame;
 import magic.model.MagicSource;
-import magic.model.event.MagicEvent;
 import magic.model.event.MagicConditionEvent;
+import magic.model.event.MagicEvent;
 
 public class MagicArtificialCondition extends MagicCondition {
 
@@ -15,7 +14,7 @@ public class MagicArtificialCondition extends MagicCondition {
 
     @Override
     public boolean accept(final MagicSource source) {
-        return source.getGame().isArtificial() ? cond.accept(source) : true;
+        return !source.getGame().isArtificial() || cond.accept(source);
     }
 
     @Override

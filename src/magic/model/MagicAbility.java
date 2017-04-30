@@ -389,6 +389,12 @@ public enum MagicAbility {
             card.add(new MagicFlashbackActivation(cardDef, matchedCostEvents));
         }
     },
+    Embalm("embalm " + ARG.MANACOST, 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
+            card.add(new MagicEmbalmActivation(manaCost));
+        }
+    },
     Scavenge("scavenge " + ARG.MANACOST,10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
@@ -427,10 +433,23 @@ public enum MagicAbility {
             card.add(MagicHandCastActivation.affinity(cardDef, MagicTargetFilterFactory.Permanent(ARG.wordrun(arg))));
         }
     },
-    LessToCast("SN costs \\{1\\} less to cast for each " + ARG.ANY + "\\.", 10) {
+    SelfLessToCastEach("SN costs \\{1\\} less to cast for each " + ARG.ANY + "\\.", 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicCardDefinition cardDef = (MagicCardDefinition)card;
             card.add(MagicHandCastActivation.reduction(cardDef, MagicAmountParser.build(ARG.any(arg))));
+        }
+    },
+    SelfLessToCastCond("SN costs \\{" + ARG.NUMBER + "\\} less to cast if " + ARG.COND + "\\.", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            final MagicCondition cond = MagicConditionParser.build(ARG.cond(arg));
+            card.add(MagicHandCastActivation.reduction(cardDef, ARG.number(arg), cond));
+        }
+    },
+    CardLessToCast(ARG.WORDRUN + " spells you cast cost \\{" + ARG.NUMBER + "\\} less to cast\\.", 10) {
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final String cards = ARG.wordrun(arg) + " cards from your hand";
+            card.add(MagicStatic.YourCostReduction(MagicTargetFilterFactory.Card(cards), ARG.number(arg)));
         }
     },
     Emerge("emerge " + ARG.MANACOST, 10) {
@@ -907,7 +926,7 @@ public enum MagicAbility {
             ));
         }
     },
-    OtherYouControlEntersEffect("Whenever " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
+    OtherYouControlEntersEffect("When(ever)? " + ARG.WORDRUN + " enters the battlefield under your control, " + ARG.EFFECT, 10) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(OtherEntersBattlefieldTrigger.create(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg) + " you control"),
@@ -1217,6 +1236,13 @@ public enum MagicAbility {
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
+    },
+    WheneverYouCycleOrDiscard("Whenever you cycle or discard a(nother)? card, " + ARG.EFFECT, 0) {
+      protected  void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+          card.add(CardIsDiscardedTrigger.you(
+              MagicRuleEventAction.create(ARG.effect(arg))
+          ));
+      }
     },
     WheneverPlayerDiscard("Whenever a player discards a card, " + ARG.EFFECT, 0) {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {

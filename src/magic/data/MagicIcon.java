@@ -62,6 +62,7 @@ public enum MagicIcon {
     TARGET_ICON("ui/w_target.png"),
     TILED("ui/w_tiled.png"),
 
+    AI_THINKING("b_overdrive@80.png"),
     MISSING("missing2.png"),
     ANY("any.png"),
     FOLDER("folder.png"),
@@ -192,6 +193,7 @@ public enum MagicIcon {
     FUSECOUNTER("fuse-counter.png"),
     PAGECOUNTER("study-counter.png"),
     SLEEPCOUNTER("sleep-counter.png"),
+    BRICKCOUNTER("goldcounter.png"),
 
     ENERGY("E.png"),
 

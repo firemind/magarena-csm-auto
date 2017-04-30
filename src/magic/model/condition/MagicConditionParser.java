@@ -65,6 +65,14 @@ public enum MagicConditionParser {
             );
         }
     },
+    ControlAtLeast2("you control at least " + ARG.AMOUNT + " " + ARG.WORDRUN) {
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicConditionFactory.YouControlAtLeast(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                ARG.amount(arg)
+            );
+        }
+    },
     ControlAtMost("you control " + ARG.AMOUNT + " or fewer " + ARG.WORDRUN) {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicConditionFactory.YouControlAtMost(
@@ -130,6 +138,12 @@ public enum MagicConditionParser {
         public MagicCondition toCondition(final Matcher arg) {
             final int amount = ARG.amount(arg);
             return MagicConditionFactory.HandAtLeast(amount);
+        }
+    },
+    HandFewer("you have " + ARG.AMOUNT +" or fewer cards in hand") {
+        public MagicCondition toCondition(final Matcher arg) {
+            final int amount = ARG.amount(arg);
+            return MagicConditionFactory.HandAtMost(amount);
         }
     },
     Hellbent("(you )?have no cards in hand") {
@@ -661,6 +675,11 @@ public enum MagicConditionParser {
     CastAnotherSpellThisTurn("you've cast another spell this turn") {
         public MagicCondition toCondition(final Matcher arg) {
             return MagicCondition.CAST_ANOTHER_SPELL_THIS_TURN;
+        }
+    },
+    CastNonCreatureSpellThisTurn("you've cast a noncreature spell this turn") {
+        public  MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.CAST_A_NONCREATURE_SPELL_THIS_TURN;
         }
     },
     YouAreMonarch("you're the monarch") {

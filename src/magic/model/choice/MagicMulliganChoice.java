@@ -1,26 +1,17 @@
 package magic.model.choice;
 
+import java.util.Collection;
+import java.util.List;
+import magic.exception.UndoClickedException;
+import magic.model.IUIGameController;
 import magic.model.MagicCard;
-import magic.model.MagicCardDefinition;
-import magic.model.MagicCostManaType;
 import magic.model.MagicGame;
-import magic.model.MagicManaCost;
 import magic.model.MagicPlayer;
 import magic.model.MagicSource;
 import magic.model.MagicType;
-import magic.model.condition.MagicCondition;
-import magic.model.MagicPayedCost;
 import magic.model.action.PlayCardAction;
 import magic.model.event.MagicEvent;
 import magic.model.phase.MagicMainPhase;
-import magic.exception.UndoClickedException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import magic.model.IUIGameController;
 
 public class MagicMulliganChoice extends MagicChoice {
 
@@ -36,7 +27,6 @@ public class MagicMulliganChoice extends MagicChoice {
     @Override
     public List<Object[]> getArtificialChoiceResults(final MagicGame game, final MagicEvent event) {
         final MagicPlayer player = event.getPlayer();
-        final MagicSource source = event.getSource();
 
         int costSum = 0;
         for (final MagicCard card: player.getLibrary()){

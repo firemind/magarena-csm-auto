@@ -1,24 +1,104 @@
 package magic.ui.screen.duel.game;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import magic.model.MagicCardList;
 import magic.ui.duel.resolution.ResolutionProfileResult;
-import magic.ui.widget.duel.sidebar.StackViewer;
+import magic.ui.duel.resolution.ResolutionProfileType;
 import magic.ui.duel.viewerinfo.CardViewerInfo;
+import magic.ui.widget.duel.viewer.ImageBattlefieldViewer;
+import magic.ui.widget.duel.viewer.ImageCombatViewer;
+import magic.ui.widget.duel.viewer.PlayerZoneViewer;
 
 @SuppressWarnings("serial")
-public abstract class BattlefieldPanel extends JPanel {
+public class BattlefieldPanel extends JPanel {
 
-    public abstract void doUpdate();
+    private final BattlefieldTextOverlay textOverlay = new BattlefieldTextOverlay();
 
-    public abstract void showCards(final MagicCardList cards);
+    private final PlayerZoneViewer playerZoneViewer;
+    public final ImageBattlefieldViewer imagePlayerPermanentViewer;
+    public final ImageBattlefieldViewer imageOpponentPermanentViewer;
+    private final ImageCombatViewer imageCombatViewer;
 
-    public abstract void focusViewers(final int handGraveyard);
+    public BattlefieldPanel(final SwingGameController controller) {
 
-    public abstract void resizeComponents(final ResolutionProfileResult result);
+        playerZoneViewer = controller.getPlayerZoneViewer();
+        imagePlayerPermanentViewer = new ImageBattlefieldViewer(controller, false);
+        imageOpponentPermanentViewer = new ImageBattlefieldViewer(controller, true);
+        imageCombatViewer = new ImageCombatViewer(controller);
 
-    public abstract StackViewer getStackViewer();
+        playerZoneViewer.addPropertyChangeListener(PlayerZoneViewer.CP_PLAYER_ZONE,
+                new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        textOverlay.setPlayerZoneName((String) evt.getNewValue());
+                        repaint();
+                    }
+                });
 
-    public abstract void highlightCard(CardViewerInfo cardInfo, boolean b);
+        setLayout(null);
+        add(playerZoneViewer);
+        add(imagePlayerPermanentViewer);
+        add(imageOpponentPermanentViewer);
+        add(imageCombatViewer);
+
+        setOpaque(false);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (controller.waitingForUser() && e.getClickCount() == 2) {
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        controller.actionClicked();
+                    } else if (SwingUtilities.isRightMouseButton(e)) {
+                        controller.passKeyPressed();
+                    }
+                }
+            }
+        });
+    }
+
+    public void doUpdate() {
+        playerZoneViewer.update();
+        imagePlayerPermanentViewer.update();
+        imageOpponentPermanentViewer.update();
+        imageCombatViewer.update();
+    }
+
+    public void showCards(final MagicCardList cards) {
+        playerZoneViewer.showCards(cards);
+        playerZoneViewer.setSelectedTab(5);
+    }
+
+    public void focusViewers(int handGraveyard) {
+        playerZoneViewer.setSelectedTab(handGraveyard);
+    }
+
+    public void resizeComponents(ResolutionProfileResult result) {
+        playerZoneViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageHandGraveyardViewer));
+        imagePlayerPermanentViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImagePlayerPermanentViewer));
+        imageOpponentPermanentViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageOpponentPermanentViewer));
+        imageCombatViewer.setBounds(result.getBoundary(ResolutionProfileType.GameImageCombatViewer));
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        final Image overlayImage = textOverlay.getOverlayImage(getWidth(), getHeight());
+        g.drawImage(overlayImage, 0, 0, this);
+    }
+
+    public void highlightCard(CardViewerInfo cardInfo, boolean b) {
+        if (!imagePlayerPermanentViewer.highlightCard(cardInfo, b))
+            if (!imageOpponentPermanentViewer.highlightCard(cardInfo, b))
+                imageCombatViewer.highlightCard(cardInfo, b);
+    }
 
 }
+

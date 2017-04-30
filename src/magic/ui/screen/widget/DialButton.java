@@ -7,8 +7,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import magic.data.MagicIcon;
 import magic.ui.MagicImages;
+import magic.ui.MagicSound;
 import magic.ui.helpers.ImageHelper;
 
 @SuppressWarnings("serial")
@@ -31,8 +33,11 @@ public class DialButton extends ActionBarButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                position = (position + increment) % 360;
-                rotateIconImage();
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    position = (position + increment) % 360;
+                    rotateIconImage();
+                    MagicSound.CLICK.play();
+                }
             }
         });
     }

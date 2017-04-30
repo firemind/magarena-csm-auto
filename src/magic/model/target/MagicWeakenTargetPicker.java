@@ -1,11 +1,11 @@
 package magic.model.target;
 
+import magic.model.MagicAmount;
+import magic.model.MagicAmountFactory;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
 import magic.model.MagicPowerToughness;
-import magic.model.MagicAmount;
-import magic.model.MagicAmountFactory;
 import magic.model.event.MagicEvent;
 
 public class MagicWeakenTargetPicker extends MagicTargetPicker<MagicPermanent> {
@@ -16,6 +16,7 @@ public class MagicWeakenTargetPicker extends MagicTargetPicker<MagicPermanent> {
     private static final int CAN_TAP=1<<8;
 
     private int amountToughness;
+    private int amountPower;
     private final MagicAmount count;
 
     public MagicWeakenTargetPicker(final MagicAmount aCount) {
@@ -23,8 +24,9 @@ public class MagicWeakenTargetPicker extends MagicTargetPicker<MagicPermanent> {
         count = aCount;
     }
 
-    public MagicWeakenTargetPicker(final int amountPower,final int aAmountToughness) {
+    public MagicWeakenTargetPicker(final int aAmountPower,final int aAmountToughness) {
         amountToughness = aAmountToughness;
+        amountPower = aAmountPower;
         count = MagicAmountFactory.One;
     }
 
@@ -72,7 +74,7 @@ public class MagicWeakenTargetPicker extends MagicTargetPicker<MagicPermanent> {
         }
 
         // Third level.
-        score+=Math.max(15,pt.getPositivePower());
+        score+=Math.max(15,pt.getPositivePower() - amountPower);
 
         return score;
     }

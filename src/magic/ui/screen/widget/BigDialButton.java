@@ -11,6 +11,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+import magic.ui.MagicSound;
 import magic.ui.helpers.ImageHelper;
 
 @SuppressWarnings("serial")
@@ -33,8 +35,11 @@ public class BigDialButton extends ActionBarButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                position = position >= positions - 1 ? 0 : position + 1;
-                rotateIconImage();
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    position = position >= positions - 1 ? 0 : position + 1;
+                    rotateIconImage();
+                    MagicSound.CLICK.play();
+                }
             }
         });
     }
