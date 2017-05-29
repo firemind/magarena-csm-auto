@@ -23,11 +23,13 @@ public class DuelConfig {
     private static final String PLAYER_TWO          = "p2.profile";
 
     public static final int MAX_PLAYERS = 2;
+    public static final int DEFAULT_GAMES = 7;
+    public static final int DEFAULT_LIFE = 20;
 
     // default values.
-    private int startLife = 20;
+    private int startLife = DEFAULT_LIFE;
     private int handSize = 7;
-    private int games = 7;
+    private int games = DEFAULT_GAMES;
     private MagicFormat cube = MagicFormat.ALL;
     private DuelPlayerConfig[] players = new DuelPlayerConfig[MAX_PLAYERS];
 

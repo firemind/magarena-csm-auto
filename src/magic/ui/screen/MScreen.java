@@ -1,14 +1,14 @@
 package magic.ui.screen;
 
-import magic.ui.ScreenController;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import magic.ui.ScreenController;
 import magic.ui.WikiPage;
 import magic.ui.helpers.KeyEventAction;
-import magic.ui.helpers.UrlHelper;
 import magic.ui.screen.duel.game.DuelGameScreen;
 import magic.utility.MagicSystem;
 import net.miginfocom.swing.MigLayout;
@@ -75,7 +75,7 @@ public abstract class MScreen {
     }
 
     public void showWikiHelpPage() {
-        UrlHelper.openURL(wikiPage.getUrl());
+        WikiPage.show(wikiPage);
     }
 
     public boolean isScreenReadyToClose(MScreen aScreen) {
@@ -172,5 +172,9 @@ public abstract class MScreen {
     public void refreshStyle() {
         MScreenHelper.refreshComponentStyle(screen);
     }
-    
+
+    public Font getFont() {
+        return screen.getFont();
+    }
+
 }

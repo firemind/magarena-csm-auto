@@ -1,8 +1,6 @@
 package magic.ui.widget.cards.canvas;
 
 import java.awt.BasicStroke;
-import javax.swing.JPanel;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -23,12 +21,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import javax.swing.JPanel;
 import magic.model.IRenderableCard;
-import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.ui.dialog.prefs.ImageSizePresets;
-import magic.ui.helpers.MouseHelper;
 import magic.ui.helpers.ImageHelper;
+import magic.ui.helpers.MouseHelper;
 import magic.ui.utility.MagicStyle;
 
 @SuppressWarnings("serial")
@@ -62,6 +60,7 @@ public class CardsCanvas extends JPanel {
     private int currentCardIndex = -1;
     private boolean refreshLayout = false;
     private ICardsCanvasListener listener = new NullCardsCanvasListener();
+    private List<? extends IRenderableCard> renderableCards;
 
     public CardsCanvas() {
 
@@ -89,11 +88,15 @@ public class CardsCanvas extends JPanel {
             }
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (!isAnimateThreadRunning) {
+                if (!isAnimateThreadRunning ) {
                     MouseHelper.showBusyCursor();
-                    final int cardIndex = getCardIndexAt(e.getPoint());
-                    if (cardIndex >= 0) {
-                        new CardImageOverlay(cards.get(cardIndex).getCardDefintion());
+                    int cardIndex = getCardIndexAt(e.getPoint());
+                    if (cardIndex >= 0 && !(listener instanceof NullCardsCanvasListener)) {
+                        listener.cardClicked(
+                            cardIndex,
+                            cardIndex >= 0
+                                ? cards.get(cardIndex).getCardDefinition()
+                                : MagicCardDefinition.UNKNOWN);
                     }
                     MouseHelper.showDefaultCursor();
                 }
@@ -113,7 +116,7 @@ public class CardsCanvas extends JPanel {
                 final int cardIndex = getCardIndexAt(event.getX(), event.getY());
                 if (currentCardIndex != cardIndex) {
                     if (cardIndex >= 0) {
-                        listener.cardSelected(cards.get(cardIndex).getCardDefintion());
+                        listener.cardSelected(cards.get(cardIndex).getCardDefinition());
                     }
                     currentCardIndex = cardIndex;
                     repaint();
@@ -222,8 +225,12 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    public void refresh(final List<MagicCard> newCards, final Dimension aSize) {
-        final List<CardCanvas> canvasCards = getCanvasCards(newCards);
+    public void refresh(List<? extends IRenderableCard> newCards, Dimension aSize) {
+        if (newCards == null) {
+            return;
+        }
+        renderableCards = newCards;
+        List<CardCanvas> canvasCards = getCanvasCards(newCards);
         this.preferredCardSize = aSize;
         refreshLayout = true;
         currentCardIndex = -1;
@@ -236,11 +243,11 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    public void refresh(final List<MagicCard> newCards) {
+    public void refresh(List<? extends IRenderableCard> newCards) {
         refresh(newCards, preferredCardSize);
     }
 
-    private List<CardCanvas> getCanvasCards(List<MagicCard> cards) {
+    private List<CardCanvas> getCanvasCards(List<? extends IRenderableCard> cards) {
         return cards.stream()
             .map(card -> new CardCanvas(card))
             .collect(Collectors.toList());
@@ -325,6 +332,9 @@ public class CardsCanvas extends JPanel {
     }
 
     private void drawCardCount(Graphics g, int X, int Y, int W, int H, final CardCanvas card) {
+        if (cardTypeCount.isEmpty()) {
+            return;
+        }
         final int cardCount = cardTypeCount.get(card.hashCode());
         if (cardCount > 1) {
             g.setColor(Color.WHITE);
@@ -436,27 +446,20 @@ public class CardsCanvas extends JPanel {
 
     public void setStackDuplicateCards(boolean stackDuplicateCards) {
         this.stackDuplicateCards = stackDuplicateCards;
-    }
-
-    public void refreshCards(final List<MagicCardDefinition> cards) {
-        final List<CardCanvas> canvasCards = cards.stream()
-                .map(card -> new CardCanvas(card))
-                .collect(Collectors.toList());
-        refreshLayout = true;
-        currentCardIndex = -1;
-        if (useAnimation) {
-            executor.execute(getDealCardsRunnable(canvasCards));
-        } else {
+        if (renderableCards != null) {
+            List<CardCanvas> canvasCards = getCanvasCards(renderableCards);
+            refreshLayout = true;
+            currentCardIndex = -1;
             createListOfCardCanvasObjects(canvasCards);
             maxCardsVisible = cards.size();
             repaint();
         }
     }
-    
+
     public void setCard(IRenderableCard aCard) {
-        final List<MagicCardDefinition> lst = new ArrayList<>();
-        lst.add(aCard.getCardDefinition());
-        refreshCards(lst);
+        List<IRenderableCard> lst = new ArrayList<>();
+        lst.add(aCard);
+        refresh(lst);
     }
 
     public void clear() {

@@ -510,10 +510,6 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
             case SwitchPT:
                 mstatic.modPowerToughness(source, this, cachedPowerToughness);
                 break;
-            case Game:
-                mstatic.modAbilityFlags(source, this, cachedAbilityFlags);
-                mstatic.modPowerToughness(source, this, cachedPowerToughness);
-                break;
             default:
                 break;
         }
@@ -936,9 +932,9 @@ public class MagicPermanent extends MagicObjectImpl implements MagicSource, Magi
 
     public boolean canAttack() {
         if (hasAbility(MagicAbility.CannotAttack) ||
-            hasAbility(MagicAbility.CannotAttackOrBlock) ||
-            hasState(MagicPermanentState.ExcludeFromCombat) ||
             hasState(MagicPermanentState.CannotAttack) ||
+            hasAbility(MagicAbility.CannotAttackOrBlock) ||
+            (hasState(MagicPermanentState.ExcludeFromCombat) && !hasAbility(MagicAbility.AttacksEachTurnIfAble)) ||
             (hasAbility(MagicAbility.Defender) && !hasAbility(MagicAbility.CanAttackWithDefender))) {
             return false;
         }

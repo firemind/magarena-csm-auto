@@ -11,23 +11,23 @@ import magic.model.stack.MagicItemOnStack;
 import magic.model.stack.MagicTriggerOnStack;
 import magic.ui.MagicImages;
 
-public class StackViewerInfo {
+public class StackItemViewerInfo {
 
     public final MagicItemOnStack itemOnStack;
     public final MagicCardDefinition cardDefinition;
     public final String name;
     public final ImageIcon icon;
     public final String description;
-    public final boolean visible;
+    public final boolean isControllerMainPlayer;
 
-    StackViewerInfo(final MagicGame game,final MagicItemOnStack itemOnStack) {
+    StackItemViewerInfo(final MagicGame game,final MagicItemOnStack itemOnStack) {
         this.itemOnStack=itemOnStack;
         cardDefinition=itemOnStack.getController().isHuman() ?
             itemOnStack.getRealCardDefinition() :
             itemOnStack.getCardDefinition();
         name=itemOnStack.getName();
         description=itemOnStack.getDescription();
-        visible=itemOnStack.getController()==game.getVisiblePlayer();
+        isControllerMainPlayer = itemOnStack.getController() == game.getPlayer(0);
         icon = getIcon(itemOnStack);
     }
 

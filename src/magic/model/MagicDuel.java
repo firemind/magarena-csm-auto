@@ -17,7 +17,6 @@ import magic.utility.SortedProperties;
 
 public class MagicDuel {
 
-    private static final String OPPONENT = "duel.opponent";
     private static final String GAME = "duel.game";
     private static final String PLAYED = "duel.played";
     private static final String WON = "duel.won";
@@ -164,8 +163,8 @@ public class MagicDuel {
         }
     }
 
-    private void setDeckFromFile(final DuelPlayerConfig player, final Path deckFolder) {
-        final String deckFilename = player.getDeckProfile().getDeckValue() + DeckUtils.DECK_EXTENSION;
+    private void setDeckFromFile(DuelPlayerConfig player, Path deckFolder) {
+        String deckFilename = DeckUtils.getNormalizedFilename(player.getDeckProfile().getDeckValue());
         player.setDeck(loadDeck(deckFolder.resolve(deckFilename)));
     }
 

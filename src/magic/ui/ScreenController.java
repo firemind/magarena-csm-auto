@@ -37,6 +37,7 @@ import magic.ui.screen.duel.player.SelectAiPlayerScreen;
 import magic.ui.screen.duel.player.SelectHumanPlayerScreen;
 import magic.ui.screen.duel.player.avatar.AvatarImagesScreen;
 import magic.ui.screen.duel.player.zone.CardZoneScreen;
+import magic.ui.screen.duel.player.zone.LibraryZoneScreen;
 import magic.ui.screen.duel.setup.NewDuelSettingsScreen;
 import magic.ui.screen.images.download.DownloadImagesScreen;
 import magic.ui.screen.interfaces.IAvatarImageConsumer;
@@ -48,10 +49,13 @@ import magic.ui.screen.menu.language.StartScreen;
 import magic.ui.screen.menu.main.MainMenuScreen;
 import magic.ui.screen.menu.migrate.ImportScreen;
 import magic.ui.screen.menu.settings.SettingsMenuScreen;
+import magic.ui.screen.menu.wip.WipMenuScreen;
 import magic.ui.screen.player.PlayerScreen;
 import magic.ui.screen.readme.ReadmeScreen;
 import magic.ui.screen.stats.StatsScreen;
 import magic.ui.screen.test.TestScreen;
+import magic.ui.screen.cardflow.CardFlowScreen;
+import magic.ui.screen.cardflow.ICardFlowProvider;
 import magic.ui.widget.duel.choice.MulliganChoicePanel;
 import magic.utility.MagicSystem;
 
@@ -64,7 +68,7 @@ public final class ScreenController {
     private static MagicFrame mainFrame;
     static {
         if (!GraphicsEnvironment.isHeadless()) {
-            mainFrame = new MagicFrame(MagicSystem.SOFTWARE_TITLE);
+            mainFrame = new MagicFrame(MagicSystem.getVersionTitle());
         }
     }
 
@@ -261,8 +265,12 @@ public final class ScreenController {
         showScreen(() -> new SampleHandScreen(deck));
     }
 
-    public static void showCardZoneScreen(final MagicCardList cards, final String zoneName, final boolean animateCards) {
+    public static void showCardZoneScreen(MagicCardList cards, String zoneName, boolean animateCards) {
         showScreen(() -> new CardZoneScreen(cards, zoneName, animateCards));
+    }
+
+    public static void showLibraryZoneScreen(MagicCardList library) {
+        showScreen(() -> new LibraryZoneScreen(library));
     }
 
     public static void showMulliganScreen(final MulliganChoicePanel choicePanel, final MagicCardList hand) {
@@ -341,6 +349,18 @@ public final class ScreenController {
         showScreen(() -> new PlayerScreen(guid));
     }
 
+    public static void showWipMenuScreen() {
+        showScreen(WipMenuScreen::new);
+    }
+
+    public static void showCardFlowScreen() {
+        showScreen(CardFlowScreen::new);
+    }
+
+    public static void showCardFlowScreen(ICardFlowProvider provider, String screenTitle) {
+        showScreen(() -> new CardFlowScreen(provider, screenTitle));
+    }
+
     public static boolean isDeckScreenShowing() {
         return !screens.isEmpty() && screens.peek() instanceof DeckScreen;
     }
@@ -348,4 +368,5 @@ public final class ScreenController {
     public static boolean isActive(MScreen aScreen) {
         return screens.peek() == aScreen;
     }
+
 }

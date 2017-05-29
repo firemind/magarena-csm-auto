@@ -8,16 +8,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import magic.model.MagicPlayerZone;
 
 @SuppressWarnings("serial")
 public class TabSelector extends JPanel implements ActionListener {
 
     private static final Dimension VERTICAL_BUTTON_DIMENSION=new Dimension(24,24);
+    private static final String DELIM = "~";
 
     private final JPanel buttonPanel;
     private final List<JToggleButton> buttons;
@@ -51,7 +52,6 @@ public class TabSelector extends JPanel implements ActionListener {
     }
 
     public int getSelectedTab() {
-
         return selectedTab;
     }
 
@@ -64,19 +64,18 @@ public class TabSelector extends JPanel implements ActionListener {
         setSelectedTab(selectedTab, false);
     }
 
-    public void addTab(final ImageIcon icon,final String toolTip) {
-
-        final JToggleButton button=new JToggleButton(icon);
+    public void addTab(MagicPlayerZone zone, int player) {
+        final JToggleButton button = new JToggleButton();
         button.setToolTipText(null);
         button.setBackground(this.backgroundColor);
         button.setFocusable(false);
         button.setPreferredSize(buttonDimension);
-        button.setActionCommand(Integer.toString(buttons.size()));
+        button.setActionCommand(zone.name() + DELIM + player + DELIM + buttons.size());
         button.addActionListener(this);
         buttons.add(button);
         buttonPanel.add(button);
 
-        if (buttons.size()==1) {
+        if (buttons.size() == 1) {
             showTab(button);
         }
     }
@@ -89,8 +88,7 @@ public class TabSelector extends JPanel implements ActionListener {
         for (final JToggleButton button : buttons) {
             button.setSelected(button==selectedButton);
         }
-
-        selectedTab=Integer.parseInt(selectedButton.getActionCommand());
+        selectedTab=getTabIndex(selectedButton);
         listener.stateChanged(new ChangeEvent(selectedButton));
     }
 
@@ -107,4 +105,42 @@ public class TabSelector extends JPanel implements ActionListener {
         this.isUserClick = b;
     }
 
+    private MagicPlayerZone getZone(JToggleButton btn) {
+        return MagicPlayerZone.valueOf(btn.getActionCommand().split(DELIM)[0]);
+    }
+
+    public MagicPlayerZone getZone() {
+        return getZone(buttons.get(selectedTab));
+    }
+
+    public static int getTabIndex(JToggleButton button) {
+        return Integer.parseInt(button.getActionCommand().split(DELIM)[2]);
+    }
+
+    private int getPlayerIndex(JToggleButton btn) {
+        return Integer.parseInt(btn.getActionCommand().split(DELIM)[1]);
+    }
+
+    private int getPlayerIndex() {
+        return getPlayerIndex(buttons.get(selectedTab));
+    }
+
+    public int getTabIndex(MagicPlayerZone aZone, int index) {
+        return buttons.stream()
+            .filter(btn -> aZone.equals(getZone(btn)) && index == getPlayerIndex(btn))
+            .findFirst()
+            .map(btn -> getTabIndex(btn))
+            .get();
+    }
+
+    public void setOrSwitchZone(MagicPlayerZone aZone) {
+        int switchPlayer = aZone != getZone()
+            ? getPlayerIndex()
+            : getPlayerIndex() == 0 ? 1 : 0;
+        for (JToggleButton btn : buttons) {
+            if (aZone.equals(getZone(btn)) && switchPlayer == getPlayerIndex(btn)) {
+                setSelectedTab(getTabIndex(aZone, switchPlayer));
+            }
+        }
+    }
 }

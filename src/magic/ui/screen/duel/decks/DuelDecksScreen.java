@@ -13,19 +13,22 @@ import magic.model.MagicDuel;
 import magic.model.MagicGame;
 import magic.translate.MText;
 import magic.ui.FontsAndBorders;
+import magic.ui.IDeckProvider;
 import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
 import magic.ui.screen.HeaderFooterScreen;
+import magic.ui.screen.MScreen;
 import magic.ui.screen.deck.editor.IDeckEditorClient;
 import magic.ui.screen.widget.DuelSettingsPanel;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.SampleHandActionButton;
+import magic.ui.widget.cards.table.CardsTableStyle;
 import magic.utility.MagicSystem;
 
 @SuppressWarnings("serial")
 public class DuelDecksScreen extends HeaderFooterScreen
-    implements IDeckEditorClient {
+    implements IDeckEditorClient, IDeckProvider {
 
     // translatable strings
     private static final String _S1 = "Duel Decks";
@@ -46,7 +49,7 @@ public class DuelDecksScreen extends HeaderFooterScreen
     private MagicGame nextGame = null;
     private final StartGameButton nextGameButton;
     private NewGameWorker worker;
-    private OptionsPanel optionsPanel;
+    private final OptionsPanel optionsPanel;
 
     public DuelDecksScreen(final MagicDuel duel) {
         super(MText.get(_S1));
@@ -112,7 +115,7 @@ public class DuelDecksScreen extends HeaderFooterScreen
                             MagicIcon.DECK, MText.get(_S5), MText.get(_S6)
                     ),
                     getTiledDeckCardImagesButton(),
-                    SampleHandActionButton.createInstance(getActiveDeck())
+                    SampleHandActionButton.createInstance(this)
             );
             addToFooter(screenContent.getActionBarButtons());
 
@@ -121,7 +124,7 @@ public class DuelDecksScreen extends HeaderFooterScreen
 
         } else { // duel in progress
             addToFooter(getTiledDeckCardImagesButton(),
-                    SampleHandActionButton.createInstance(getActiveDeck()),
+                    SampleHandActionButton.createInstance(this),
                     MenuButton.build(this::doRestartDuel,
                             MagicIcon.REFRESH, MText.get(_S10), MText.get(_S11)
                     )
@@ -268,7 +271,17 @@ public class DuelDecksScreen extends HeaderFooterScreen
         return true;
     }
 
-    void setCardsTableStyle() {
+    void setCardsTableStyle(int dialPosition) {
+        CardsTableStyle.setStyle(dialPosition);
         screenContent.setCardsTableStyle();
+    }
+
+    @Override
+    public boolean isScreenReadyToClose(MScreen nextScreen) {
+        if (super.isScreenReadyToClose(nextScreen)) {
+            CardsTableStyle.save();
+            return true;
+        }
+        return false;
     }
 }

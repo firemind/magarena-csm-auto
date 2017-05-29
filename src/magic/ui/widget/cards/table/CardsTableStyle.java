@@ -32,21 +32,17 @@ public enum CardsTableStyle {
         CONFIG.set(CONFIG_SETTING, style.ordinal());
     }
 
-    static void setStyle(CardsTableStyle newStyle) {
-        style = newStyle;
-    }
-
-    private CardsTableStyle next() {
-        return values()[(this.ordinal()+1) % values().length];
-    }
-
-    public static void setNextStyle() {
-        style = style.next();
+    public static void setStyle(int ordinal) {
+        style = CardsTableStyle.values()[ordinal];
     }
 
     public static CardsTableStyle getStyle() {
         return style;
     }
+
+    /*
+     Instance fields and methods.
+    */
 
     private final Color emptyBackgroundColor;
 

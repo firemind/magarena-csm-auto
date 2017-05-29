@@ -25,14 +25,9 @@ import magic.utility.MagicFileSystem.DataPath;
 final public class MagicSystem {
     private MagicSystem() {}
 
-    public static final String VERSION = "1.84";
-
-    public static final String SOFTWARE_TITLE;
-    private static final boolean DEV_MODE;
+    public static final String VERSION = "1.85";
     static {
-        DEV_MODE = Boolean.getBoolean("devMode") || Boolean.getBoolean("debug");
-        SOFTWARE_TITLE = "Magarena " + VERSION + (DEV_MODE ? " [DEV MODE]" : "");
-        System.setProperty("http.agent", SOFTWARE_TITLE);
+        System.setProperty("http.agent", "Magarena " + VERSION);
     }
 
     public static final boolean IS_WINDOWS_OS = System.getProperty("os.name").toLowerCase(Locale.ENGLISH).startsWith("windows");
@@ -82,6 +77,10 @@ final public class MagicSystem {
         }
     };
 
+    public static String getVersionTitle() {
+        return "Magarena " + VERSION + (isDevMode() ? " [DEV MODE]" : "");
+    }
+
     public static void setIsTestGame(boolean b) {
         System.setProperty("testGame", b ? "Y" : "");
     }
@@ -92,7 +91,11 @@ final public class MagicSystem {
     }
 
     public static boolean isDevMode() {
-        return DEV_MODE;
+        return Boolean.getBoolean("devMode") || Boolean.getBoolean("debug");
+    }
+
+    public static void setIsDevMode(boolean b) {
+        System.setProperty("devMode", String.valueOf(b));
     }
 
     public static boolean isDebugMode() {
@@ -111,6 +114,10 @@ final public class MagicSystem {
      */
     public static boolean isAiVersusAi() {
         return Boolean.getBoolean("selfMode");
+    }
+
+    public static void setAiVersusAi(boolean b) {
+        System.setProperty("selfMode", String.valueOf(b));
     }
 
     /**
@@ -297,6 +304,12 @@ final public class MagicSystem {
 
     public static boolean isNewInstall() {
         return Files.exists(MagicFileSystem.getDataPath().resolve(GeneralConfig.CONFIG_FILENAME)) == false;
+    }
+
+    public static boolean isNotNormalGame() {
+        return MagicSystem.isAiVersusAi()
+            || MagicSystem.isDevMode()
+            || MagicSystem.isTestGame();
     }
 
 }

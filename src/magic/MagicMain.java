@@ -1,25 +1,39 @@
 package magic;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.SplashScreen;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-
-import magic.utility.ProgressReporter;
-import magic.ui.SplashProgressReporter;
+import magic.ai.MagicAI;
+import magic.data.DeckGenerators;
 import magic.data.DuelConfig;
-import magic.data.GeneralConfig;
-import magic.test.TestGameBuilder;
+import magic.exception.InvalidDeckException;
 import magic.game.state.GameLoader;
+import magic.model.DuelPlayerConfig;
+import magic.model.MagicDeck;
+import magic.model.player.AiProfile;
+import magic.test.TestGameBuilder;
 import magic.ui.ScreenController;
-import magic.ui.helpers.LaFHelper;
+import magic.ui.SplashProgressReporter;
 import magic.ui.UiExceptionHandler;
-import magic.utility.MagicSystem;
+import magic.ui.WikiPage;
+import magic.ui.helpers.LaFHelper;
+import magic.ui.widget.duel.animation.MagicAnimations;
+import magic.utility.DeckUtils;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicFileSystem.DataPath;
+import magic.utility.MagicSystem;
+import magic.utility.ProgressReporter;
+import org.pushingpixels.trident.TridentConfig;
 
 public class MagicMain {
+
+    private static final Logger LOGGER = Logger.getLogger(MagicMain.class.getName());
 
     private static SplashScreen splash;
     private static ProgressReporter reporter = new ProgressReporter();
@@ -31,7 +45,9 @@ public class MagicMain {
         setSplashScreen();
 
         System.out.println(MagicSystem.getRuntimeParameters());
-        parseCommandline(args);
+
+        final CommandLineArgs cmdline = new CommandLineArgs(args);
+        parseCommandLine(cmdline);
 
         // show the data folder being used
         System.out.println("Data folder : "+ MagicFileSystem.getDataPath());
@@ -48,11 +64,76 @@ public class MagicMain {
         LaFHelper.setDefaultLookAndFeel();
 
         reporter.setMessage("Starting UI...");
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                startUI();
+        SwingUtilities.invokeLater(() -> { startUI(cmdline); });
+    }
+
+
+    private static void printRefreshRate() {
+        System.out.println("=== Screen devices refresh rates ===");
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+        for (int i = 0; i < gs.length; i++) {
+            DisplayMode dm = gs[i].getDisplayMode();
+            int refreshRate = dm.getRefreshRate();
+            if (refreshRate == DisplayMode.REFRESH_RATE_UNKNOWN) {
+                System.err.printf("[%d] Unknown rate\n", i);
+            } else {
+                System.out.printf("[%d] %d Hz", i, refreshRate);
+                System.out.println();
             }
-        });
+        }
+    }
+
+
+    /**
+     * Sets custom pulse behavior - higher frame rate, lower frame rate or dynamic frame rate.
+     * <p>
+     * By default, Trident timelines are driven by a dedicated thread that wakes up every 40ms and
+     * updates all the timelines. When the CPU is not heavily used this results in 25 frames-per-second
+     * refresh rate for Trident-driven UI animations - consistent with the frame rate of theatrical films
+     * and non-interlaced PAL television standard.
+     * <p>
+     * (see https://kenai.com/projects/trident/pages/CustomPulseSource)
+     *
+     * Must be run before any instance of Timeline is created in the application otherwise it will
+     * generate the "cannot replace the pulse source thread once it's running..." error.
+     */
+    private static void setTridentFPS(int fps) {
+        long sleepMs = 1000L / fps;
+        try {
+            TridentConfig.getInstance().setPulseSource(() -> {
+                try {
+                    Thread.sleep(sleepMs);
+                } catch (InterruptedException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
+                }
+            });
+        } catch (RuntimeException ex) {
+            LOGGER.log(Level.WARNING, ex.getMessage());
+        }
+    }
+
+    private static void parseCommandLine(CommandLineArgs cmdline) {
+
+        if (cmdline.showHelp()) {
+            System.err.println("--help specified - opening wiki page and exit...\n" + WikiPage.COMMAND_LINE.getUrl());
+            WikiPage.show(WikiPage.COMMAND_LINE);
+            System.exit(0);
+        }
+
+        if (cmdline.showFPS()) {
+            printRefreshRate();
+            System.exit(0);
+        }
+
+        if (cmdline.getFPS() > 0) {
+            setTridentFPS(cmdline.getFPS());
+            System.out.println("Trident FPS = " + cmdline.getFPS());
+        }
+
+        MagicAnimations.setEnabled(cmdline.isAnimationsEnabled());
+        MagicAI.setMaxThreads(cmdline.getMaxThreads());
+        MagicSystem.setIsDevMode(cmdline.isDevMode());
     }
 
     /**
@@ -79,7 +160,70 @@ public class MagicMain {
         }
     }
 
-    private static void startUI() {
+    private static void setPlayerDeck(String deckArg, DuelPlayerConfig player) {
+
+        if (deckArg.isEmpty()) {
+            player.setDeckProfile("Random;***");
+            DeckGenerators.setRandomDeck(player);
+            return;
+
+        } else if (deckArg.equals("@")) { // random deck file.
+            player.setDeckProfile("Random;@");
+            DeckGenerators.setRandomDeck(player);
+            return;
+
+        } else if (deckArg.equals("#")) { // random single color deck.
+            player.setDeckProfile("Random;*");
+            DeckGenerators.setRandomDeck(player);
+            return;
+
+        } else if (deckArg.equals("##")) { //random two-color deck.
+            player.setDeckProfile("Random;**");
+            DeckGenerators.setRandomDeck(player);
+            return;
+
+        } else if (deckArg.equals("###")) { // random three-color deck.
+            player.setDeckProfile("Random;***");
+            DeckGenerators.setRandomDeck(player);
+            return;
+
+        } else if (!deckArg.isEmpty()) { // search for deck file.
+            File deckFile = DeckUtils.findDeckFile(deckArg);
+            if (deckFile != null) {
+                MagicDeck deck = DeckUtils.loadDeckFromFile(deckFile.toPath());
+                if (deck.isValid()) {
+                    player.setDeck(deck);
+                    return;
+                }
+            }
+        }
+
+        throw new InvalidDeckException("Invalid deck specified in command line : " + deckArg);
+    }
+
+    private static void runAivsAiGame(CommandLineArgs cmdline) {
+        System.out.println("");
+        System.err.println("=== AI vs AI ===");
+
+        final DuelConfig config = DuelConfig.getInstance();
+        config.load();
+        config.setPlayerProfile(0, AiProfile.create(cmdline.getAi1(), cmdline.getAi1Level()));
+        config.setPlayerProfile(1, AiProfile.create(cmdline.getAi2(), cmdline.getAi2Level()));
+        setPlayerDeck(cmdline.getDeck1(), config.getPlayerConfig(0));
+        setPlayerDeck(cmdline.getDeck2(), config.getPlayerConfig(1));
+        config.setNrOfGames(cmdline.getGames());
+        config.setStartLife(cmdline.getLife());
+
+        System.out.println("P1 : " + config.getPlayerProfile(0).getPlayerLabel());
+        System.out.println("     " + config.getPlayerConfig(0).getDeck().getQualifiedName());
+        System.out.println("P2 : " + config.getPlayerProfile(1).getPlayerLabel());
+        System.out.println("     " + config.getPlayerConfig(1).getDeck().getQualifiedName());
+        System.out.println("Threads : " + MagicAI.getMaxThreads());
+
+        ScreenController.getFrame().newDuel(config);
+    }
+
+    private static void startUI(CommandLineArgs cmdline) {
 
         // -DtestGame=X, where X is one of the classes (without the .java) in "magic.test".
         final String testGame = System.getProperty("testGame");
@@ -96,30 +240,20 @@ public class MagicMain {
             return;
         }
 
-        // -DselfMode=true
+        // AI vs AI game.
         if (MagicSystem.isAiVersusAi()) {
-            final DuelConfig config = DuelConfig.getInstance();
-            config.load();
-
-            // set both player profile to AI for AI vs AI mode
-            config.setPlayerProfile(0, config.getPlayerProfile(1));
-
-            ScreenController.getFrame().newDuel(config);
+            try {
+                runAivsAiGame(cmdline);
+            } catch (InvalidDeckException ex) {
+                System.err.println(ex);
+            } catch (RuntimeException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
             return;
         }
 
         // normal UI startup.
         ScreenController.showStartScreen();
 
-    }
-
-    private static void parseCommandline(final String[] args) {
-        for (String arg : args) {
-            switch (arg.toLowerCase(Locale.ENGLISH)) {
-            case "disablelogviewer":
-                GeneralConfig.getInstance().setLogMessagesVisible(false);
-                break;
-            }
-        }
     }
 }

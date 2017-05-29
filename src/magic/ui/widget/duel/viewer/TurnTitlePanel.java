@@ -1,12 +1,12 @@
 package magic.ui.widget.duel.viewer;
 
-import magic.ui.duel.viewerinfo.GameViewerInfo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -14,13 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import magic.data.MagicIcon;
-import magic.ui.MagicImages;
-import magic.translate.StringContext;
-import magic.ui.utility.MagicStyle;
-import magic.ui.screen.duel.game.SwingGameController;
 import magic.translate.MText;
+import magic.translate.StringContext;
+import magic.ui.duel.viewerinfo.GameViewerInfo;
+import magic.ui.helpers.ImageHelper;
+import magic.ui.screen.duel.game.SwingGameController;
 import magic.ui.screen.widget.ActionBarButton;
 import magic.ui.theme.Theme;
+import magic.ui.utility.MagicStyle;
 import magic.utility.MagicSystem;
 import net.miginfocom.swing.MigLayout;
 
@@ -34,6 +35,10 @@ public class TurnTitlePanel extends JPanel {
     @StringContext(eg = "as in 'Game 2 of 3'")
     private static final String _S4 = "Game %d / %d";
     private static final String _S5 = "Turn %d";
+
+    private static final ImageIcon MENU_ICON = ImageHelper.getRecoloredIcon(
+        MagicIcon.OPTION_MENU_TINY, Color.BLACK, Color.WHITE
+    );
 
     private final MigLayout miglayout = new MigLayout();
     private final JLabel scoreLabel = new JLabel();
@@ -66,10 +71,8 @@ public class TurnTitlePanel extends JPanel {
 
     private JButton getOptionsIconButton() {
 
-        final JButton btn = new ActionBarButton(
-                MagicImages.getIcon(MagicIcon.MENU),
-                MText.get(_S1),
-                MText.get(_S2),
+        final JButton btn = new ActionBarButton(MENU_ICON,
+                MText.get(_S1), MText.get(_S2),
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
@@ -106,10 +109,10 @@ public class TurnTitlePanel extends JPanel {
 
     private String getScoreString(final GameViewerInfo gameInfo) {
         return String.format("%s %d - %d %s",
-                gameInfo.getPlayerInfo(false).getName(),
-                gameInfo.getPlayerInfo(false).getGamesWon(),
-                gameInfo.getPlayerInfo(true).getGamesWon(),
-                gameInfo.getPlayerInfo(true).getName()
+                gameInfo.getMainPlayer().getName(),
+                gameInfo.getMainPlayer().getGamesWon(),
+                gameInfo.getOpponent().getGamesWon(),
+                gameInfo.getOpponent().getName()
         );
     }
 

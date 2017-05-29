@@ -1,21 +1,20 @@
 package magic.ui.screen.deck.tiled;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
-import magic.model.MagicCard;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicDeck;
-import magic.model.MagicType;
 import magic.translate.MText;
+import magic.ui.IDeckProvider;
 import magic.ui.screen.HeaderFooterScreen;
 import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.SampleHandActionButton;
 
 @SuppressWarnings("serial")
-public class DeckTiledCardsScreen extends HeaderFooterScreen {
+public class DeckTiledCardsScreen extends HeaderFooterScreen
+    implements IDeckProvider {
 
     // translatable strings
     private static final String _S1 = "Deck image view";
@@ -40,27 +39,15 @@ public class DeckTiledCardsScreen extends HeaderFooterScreen {
         showCards(CardTypeFilter.ALL);
     }
 
-    private List<MagicCard> getFilteredDeck(final MagicDeck deck, final CardTypeFilter filterType) {
-
-        final List<MagicCard> cards = new ArrayList<>();
-
-        for (MagicCardDefinition cardDef : deck) {
-
-            final Set<MagicType> cardType = cardDef.getCardType();
-            final MagicCard card = new MagicCard(cardDef, null, 0);
-
-            if (filterType == CardTypeFilter.ALL
-                    || cardType.contains(filterType.getMagicType())) {
-                cards.add(card);
-            }
-        }
-
-        Collections.sort(cards);
-        return cards;
+    private List<MagicCardDefinition> getFilteredDeck(MagicDeck deck, CardTypeFilter filterType) {
+        return deck.stream()
+            .filter(c -> filterType == CardTypeFilter.ALL || c.getCardType().contains(filterType.getMagicType()))
+            .sorted(MagicCardDefinition.SORT_BY_NAME)
+            .collect(Collectors.toList());
     }
 
     private void showCards(CardTypeFilter filter) {
-        final List<MagicCard> cards = getFilteredDeck(deck, filter);
+        final List<MagicCardDefinition> cards = getFilteredDeck(deck, filter);
         content.refresh(cards);
         headerPanel.setContent(deck, filter, cards);
     }
@@ -79,7 +66,12 @@ public class DeckTiledCardsScreen extends HeaderFooterScreen {
 
     private void setFooterButtons() {
         setFilterButtons();
-        addToFooter(SampleHandActionButton.createInstance(deck));
+        addToFooter(SampleHandActionButton.createInstance(this));
+    }
+
+    @Override
+    public MagicDeck getDeck() {
+        return deck;
     }
 
 }

@@ -3,13 +3,14 @@ package magic.ui.widget.duel.sidebar;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import magic.ui.FontsAndBorders;
 import magic.ui.IChoiceViewer;
-import magic.ui.duel.viewerinfo.StackViewerInfo;
+import magic.ui.duel.viewerinfo.StackItemViewerInfo;
 import magic.ui.screen.duel.game.SwingGameController;
 import magic.ui.theme.ThemeFactory;
 import magic.ui.widget.PanelButton;
@@ -19,23 +20,33 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 class StackButton extends PanelButton implements IChoiceViewer {
 
-    private final StackViewerInfo stackInfo;
+    private final StackItemViewerInfo stackInfo;
     private final SwingGameController controller;
 
-    StackButton(SwingGameController aController, StackViewerInfo stackInfo, int maxWidth, int itemNum) {
+    StackButton(SwingGameController aController, StackItemViewerInfo stackItem, int maxWidth, int itemNum) {
 
         this.controller = aController;
-        this.stackInfo = stackInfo;
+        this.stackInfo = stackItem;
 
         final JPanel panel = new JPanel();
         panel.setOpaque(false);
-        panel.setBorder(FontsAndBorders.getPlayerBorder(stackInfo.visible));
+        panel.setBorder(FontsAndBorders.getPlayerBorder(stackItem.isControllerMainPlayer));
         panel.setLayout(new BorderLayout(0, 0));
         setComponent(panel);
 
-        final JLabel sourceLabel = new JLabel(stackInfo.name);
-        sourceLabel.setIcon(stackInfo.icon);
+        final JLabel sourceLabel = new JLabel(stackItem.name);
+        sourceLabel.setIcon(stackItem.icon);
         sourceLabel.setFont(sourceLabel.getFont().deriveFont(Font.BOLD | Font.ITALIC));
+        sourceLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                doShowCardImage();
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                controller.hideInfo();
+            }
+        });
 
         final JLabel itemLabel = new JLabel("#" + Integer.toString(itemNum));
         itemLabel.setFont(sourceLabel.getFont().deriveFont(Font.BOLD | Font.ITALIC));
@@ -48,7 +59,7 @@ class StackButton extends PanelButton implements IChoiceViewer {
         panel.add(headerPanel, BorderLayout.NORTH);
 
         final TextLabel textLabel = new TextLabel(
-            stackInfo.description,
+            stackItem.description,
             LogStackViewer.MESSAGE_FONT,
             maxWidth,
             false,
@@ -61,27 +72,12 @@ class StackButton extends PanelButton implements IChoiceViewer {
     }
 
     private void doShowCardImage() {
-        final Rectangle rect = new Rectangle(
-            getParent().getLocationOnScreen().x,
-            getLocationOnScreen().y,
-            getParent().getWidth(),
-            getHeight());
-        controller.viewInfoRight(stackInfo.cardDefinition, 0, rect);
+        controller.showCardPopupFromSidebar(stackInfo.cardDefinition);
     }
 
     @Override
     public void mouseClicked() {
         controller.processClick(stackInfo.itemOnStack);
-    }
-
-    @Override
-    public void mouseEntered() {
-        doShowCardImage();
-    }
-
-    @Override
-    public void mouseExited() {
-        controller.hideInfo();
     }
 
     @Override

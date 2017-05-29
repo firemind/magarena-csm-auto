@@ -19,8 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import magic.data.MagicIcon;
+import magic.model.MagicCardDefinition;
 import magic.ui.MagicImages;
 import magic.ui.helpers.ImageHelper;
 import magic.ui.screen.duel.game.SwingGameController;
@@ -32,8 +34,7 @@ import magic.ui.widget.throbber.ImageThrobber;
 public class UserActionPanel extends JPanel implements ActionListener {
 
     private static final BufferedImage BUSY_IMAGE = ImageHelper.getBufferedImage(
-        (ImageIcon) ImageHelper.getRecoloredIcon(
-            MagicIcon.AI_THINKING, Color.BLACK, Color.GRAY)
+        ImageHelper.getRecoloredIcon(MagicIcon.AI_THINKING, Color.BLACK, Color.GRAY)
     );
 
     public static final int TEXT_WIDTH=230;
@@ -46,6 +47,8 @@ public class UserActionPanel extends JPanel implements ActionListener {
     private final JPanel contentPanel;
     private boolean actionEnabled;
     private final AbstractThrobber busyItem;
+    private final JLabel imageLabel = new JLabel();
+    private String actionPanelId = "0";
 
     public UserActionPanel(final SwingGameController controller) {
 
@@ -62,6 +65,15 @@ public class UserActionPanel extends JPanel implements ActionListener {
 
         final JLabel emptyLabel=new JLabel("");
         actionPanel.add(emptyLabel,"0");
+
+        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imageLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                controller.showChoiceCardPopup();
+            }
+        });
+        actionPanel.add(imageLabel, "4");
 
         busyItem = new ImageThrobber.Builder(BUSY_IMAGE)
             .antiAlias(true)
@@ -104,6 +116,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
             @Override
             public void mouseEntered(MouseEvent e) {
                 controller.showChoiceCardPopup();
+                controller.getPlayerZoneViewer().showChoiceViewerIfActive();
             }
         });
 
@@ -129,11 +142,24 @@ public class UserActionPanel extends JPanel implements ActionListener {
         contentPanel.removeAll();
     }
 
+    private void setActionPanel(String id) {
+        this.actionPanelId = id;
+        actionCardLayout.show(actionPanel, id);
+    }
+
     public void setContentPanel(final JComponent newContent) {
         clearContentPanel();
         contentPanel.add(newContent,BorderLayout.CENTER);
         revalidate();
         repaint();
+        if (controller.getSourceCardDefinition() != MagicCardDefinition.UNKNOWN) {
+            BufferedImage image = MagicImages.getCardImage(controller.getSourceCardDefinition());
+            ImageIcon icon = new ImageIcon(ImageHelper.scale(image, 30, 48));
+            imageLabel.setIcon(icon);
+            setActionPanel("4");
+        } else {
+            setActionPanel(actionPanelId);
+        }
     }
 
     public void showMessage(final String message) {
@@ -150,7 +176,7 @@ public class UserActionPanel extends JPanel implements ActionListener {
     }
 
     public void enableUndoButton(final boolean thinking) {
-        final int undoPoints=controller.getViewerInfo().getUndoPoints();
+        final int undoPoints=controller.getGameViewerInfo().getUndoPoints();
         final boolean allowUndo=undoPoints>0&&!thinking;
         undoButton.setEnabled(allowUndo);
     }
@@ -158,14 +184,14 @@ public class UserActionPanel extends JPanel implements ActionListener {
     public void enableButton() {
         actionEnabled=true;
         enableUndoButton(false);
-        actionCardLayout.show(actionPanel,"2");
+        setActionPanel("2");
         repaint();
     }
 
     public void disableButton(final boolean thinking) {
         actionEnabled=false;
         enableUndoButton(thinking);
-        actionCardLayout.show(actionPanel,thinking?"1":"0");
+        setActionPanel(thinking ? "1" : "0");
         repaint();
     }
 
@@ -182,14 +208,6 @@ public class UserActionPanel extends JPanel implements ActionListener {
         } else if (source==undoButton) {
             controller.undoClicked();
         }
-    }
-
-    /**
-     * Gets the avatar portrait of the current player sized specifically
-     * for use with the GameStatusPanel component.
-     */
-    public ImageIcon getTurnSizedPlayerAvatar() {
-        return controller.getViewerInfo().getPriorityPlayer().getAvatar();
     }
 
 }

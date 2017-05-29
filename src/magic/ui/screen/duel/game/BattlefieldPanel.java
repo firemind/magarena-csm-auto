@@ -71,9 +71,8 @@ public class BattlefieldPanel extends JPanel {
         imageCombatViewer.update();
     }
 
-    public void showCards(final MagicCardList cards) {
-        playerZoneViewer.showCards(cards);
-        playerZoneViewer.setSelectedTab(5);
+    public void showCardsToChoose(final MagicCardList cards) {
+        playerZoneViewer.showCardsToChoose(cards);
     }
 
     public void focusViewers(int handGraveyard) {

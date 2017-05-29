@@ -55,7 +55,7 @@ public final class DuelPanel extends JPanel {
         createMouseListener();
 
         // TODO: should not have to run this, but required while sidebarPanel is created after battlefieldPanel.
-        controller.notifyPlayerZoneChanged(controller.getViewerInfo().getPlayerInfo(false), MagicPlayerZone.HAND);
+        controller.notifyPlayerZoneChanged(controller.getGameViewerInfo().getMainPlayer(), MagicPlayerZone.HAND);
         controller.setUserActionPanel(sidebarPanel.getGameStatusPanel().getUserActionPanel());
 
     }
@@ -86,8 +86,8 @@ public final class DuelPanel extends JPanel {
         battlefieldPanel.focusViewers(handGraveyard);
     }
 
-    public void showCards(final MagicCardList cards) {
-        battlefieldPanel.showCards(cards);
+    public void showCardsToChoose(final MagicCardList cards) {
+        battlefieldPanel.showCardsToChoose(cards);
     }
 
     public void update(final GameViewerInfo gameInfo) {
@@ -123,7 +123,7 @@ public final class DuelPanel extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                update(controller.getViewerInfo());
+                update(controller.getGameViewerInfo());
             }
         });
     }
@@ -223,7 +223,7 @@ public final class DuelPanel extends JPanel {
 
         for (PlayerViewerInfo playerInfo : gameInfo.getPlayers()) {
 
-            final int playerIndex = playerInfo.player.getIndex();
+            final int playerIndex = playerInfo.getPlayerIndex();
 
             info.setLibraryButtonLayout(playerIndex, sidebarPanel.getLibraryButtonLayout(playerInfo, this));
             info.setHandButtonLayout(playerIndex, sidebarPanel.getHandButtonLayout(playerInfo, this));
