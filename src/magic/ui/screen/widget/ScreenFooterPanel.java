@@ -3,21 +3,22 @@ package magic.ui.screen.widget;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import magic.data.MagicIcon;
 import magic.ui.MagicImages;
 import magic.ui.screen.interfaces.IThemeStyle;
 import magic.ui.theme.Theme;
-import magic.ui.widget.TexturedPanel;
 import magic.ui.utility.MagicStyle;
+import magic.ui.widget.TexturedPanel;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class ScreenFooterPanel extends TexturedPanel
         implements IThemeStyle {
 
-    private class ContentPanel extends JPanel {
+    private static class ContentPanel extends JPanel {
         public ContentPanel() {
             setLayout(new MigLayout("insets 0, gap 0"));
             setOpaque(false);
@@ -25,7 +26,7 @@ public class ScreenFooterPanel extends TexturedPanel
     }
 
     public final static int PANEL_HEIGHT = 50;
-    
+
     private final JPanel leftPanel;
     private final JPanel middlePanel;
     private final JPanel rightPanel;
@@ -40,9 +41,9 @@ public class ScreenFooterPanel extends TexturedPanel
         this.rightPanel = new ContentPanel();
 
         setMinimumSize(new Dimension(getPreferredSize().width, PANEL_HEIGHT));
-               
+
         // add close button as default.
-        setLeftButton(MenuButton.getCloseScreenButton());
+        setLeftButton(PlainMenuButton.getCloseScreenButton());
 
         setLayout(new MigLayout(
                 "insets 0, gap 10, flowx, aligny 50%",
@@ -67,9 +68,9 @@ public class ScreenFooterPanel extends TexturedPanel
         setBackground(thisBG);
     }
 
-    public void addMiddleButtons(MenuButton[] buttons) {
+    public void addMiddleButtons(PlainMenuButton[] buttons) {
         if (buttons != null) {
-            for (MenuButton btn : buttons) {
+            for (PlainMenuButton btn : buttons) {
                 btn.setEnabled(btn.isRunnable());
                 btn.setBorderPainted(true);
                 btn.setBorder(BorderFactory.createCompoundBorder(
@@ -89,7 +90,7 @@ public class ScreenFooterPanel extends TexturedPanel
         middlePanel.revalidate();
     }
 
-    public void setLeftButton(MenuButton btn) {
+    public void setLeftButton(PlainMenuButton btn) {
         leftPanel.removeAll();
         if (btn != null) {
             btn.setEnabled(btn.isRunnable());
@@ -100,7 +101,7 @@ public class ScreenFooterPanel extends TexturedPanel
         leftPanel.revalidate();
     }
 
-    public void setRightButton(MenuButton btn) {
+    public void setRightButton(PlainMenuButton btn) {
         rightPanel.removeAll();
         if (btn != null) {
             btn.setEnabled(btn.isRunnable());
@@ -119,8 +120,8 @@ public class ScreenFooterPanel extends TexturedPanel
         isFirstFooter = true;
     }
 
-    public void addFooterGroup(MenuButton[] btns) {
-        for (MenuButton btn : btns) {
+    public void addFooterGroup(PlainMenuButton[] btns) {
+        for (PlainMenuButton btn : btns) {
             final boolean isGroupFirst = btn == btns[0];
             final boolean isGroupLast = btn == btns[btns.length - 1];
             btn.setEnabled(btn.isRunnable());
@@ -146,6 +147,14 @@ public class ScreenFooterPanel extends TexturedPanel
             isFirstFooter = false;
         }
         middlePanel.revalidate();
+    }
+
+    public void setFooterContent(JComponent obj) {
+        removeAll();
+        add(this.leftPanel);
+        add(obj);
+        add(this.rightPanel);
+        revalidate();
     }
 
 }

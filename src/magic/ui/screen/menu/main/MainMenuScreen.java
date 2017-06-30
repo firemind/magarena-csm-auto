@@ -4,15 +4,24 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import magic.data.GeneralConfig;
+import magic.translate.MText;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
+import magic.ui.screen.HeaderFooterScreen;
 import magic.ui.screen.MScreen;
+import magic.ui.screen.widget.PlainMenuButton;
+import magic.ui.widget.alerter.AlertPanel;
 import magic.utility.MagicSystem;
 
 @SuppressWarnings("serial")
-public class MainMenuScreen extends MScreen {
+public class MainMenuScreen extends HeaderFooterScreen {
+
+    // translatable strings
+    private static final String _S1 = "Main menu";
+    private static final String _S2 = "Quit";
 
     private static final KeyboardFocusManager KBM = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+    private static final AlertPanel alertPanel = new AlertPanel();
 
     private final MainMenuContentPanel contentPanel;
 
@@ -44,13 +53,22 @@ public class MainMenuScreen extends MScreen {
     };
 
     public MainMenuScreen() {
+        super(MText.get(_S1));
         MagicSystem.setIsTestGame(false);
         contentPanel = new MainMenuContentPanel();
         setMainContent(contentPanel);
+        setHeaderContent(alertPanel);
+        setLeftFooter(null);
+        addToFooter(PlainMenuButton.build(this::doCloseScreen, MText.get(_S2)));
         setWikiPage(WikiPage.MAIN_MENU);
         if (!MagicSystem.isDevMode()) {
             KBM.addKeyEventDispatcher(keyEventDispatcher);
         }
+        alertPanel.refreshAlerts();
+    }
+
+    private void doCloseScreen() {
+        ScreenController.closeActiveScreen();
     }
 
     private void showDevModeMenuItem() {
@@ -64,7 +82,7 @@ public class MainMenuScreen extends MScreen {
     public void updateMissingImagesNotification() {
         if (GeneralConfig.getInstance().isMissingFiles()) {
             GeneralConfig.getInstance().setIsMissingFiles(false);
-            contentPanel.refreshAlerts();
+            alertPanel.refreshAlerts();
         }
     }
 

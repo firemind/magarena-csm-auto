@@ -8,7 +8,7 @@ import magic.ui.MagicLogs;
 import magic.ui.WikiPage;
 import magic.ui.screen.HeaderFooterScreen;
 import magic.ui.screen.MScreen;
-import magic.ui.screen.widget.MenuButton;
+import magic.ui.screen.widget.PlainMenuButton;
 import magic.ui.widget.cards.table.CardsTableStyle;
 
 @SuppressWarnings("serial")
@@ -23,7 +23,6 @@ public class ExplorerScreen extends HeaderFooterScreen {
 
     private ExplorerContentPanel contentPanel;
     private ExplorerHeaderPanel headerPanel;
-    private OptionsPanel optionsPanel;
 
     public ExplorerScreen() {
         super(MText.get(_S1));
@@ -38,20 +37,18 @@ public class ExplorerScreen extends HeaderFooterScreen {
     private void initUI() {
         headerPanel = new ExplorerHeaderPanel();
         contentPanel = new ExplorerContentPanel(this);
-        optionsPanel = new OptionsPanel(this);
         setHeaderContent(headerPanel);
-        setHeaderOptions(optionsPanel);
+        setHeaderOptions(new OptionsPanel(this));
         setMainContent(contentPanel);
         setFooterButtons();
         setWikiPage(WikiPage.CARDS_EXPLORER);
     }
 
     private void setFooterButtons() {
-        addToFooter(
-                MenuButton.build(this::doShowScriptScreen,
+        addToFooter(PlainMenuButton.build(this::doShowScriptScreen,
                         MagicIcon.EDIT, MText.get(_S3), MText.get(_S4)
                 ),
-                MenuButton.build(this::doSelectRandomCard,
+                PlainMenuButton.build(this::doSelectRandomCard,
                         MagicIcon.RANDOM, MText.get(_S5), MText.get(_S6)
                 )
         );

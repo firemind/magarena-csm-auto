@@ -22,7 +22,6 @@ import magic.ui.widget.ZoneBackgroundLabel;
 import magic.ui.widget.duel.animation.GameLayoutInfo;
 import magic.ui.widget.duel.sidebar.DuelSideBarPanel;
 import magic.ui.widget.duel.viewer.ImageBattlefieldViewer;
-import magic.ui.widget.duel.viewer.ImageCardListViewer;
 import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
@@ -201,6 +200,8 @@ public final class DuelPanel extends JPanel {
             case OwnersLibrary:
                 sidebarPanel.doHighlightPlayerZone(cardInfo, MagicPlayerZone.LIBRARY, b);
                 break;
+            default:
+                //do nothing
         }
     }
 
@@ -244,22 +245,8 @@ public final class DuelPanel extends JPanel {
 
         info.setStackLayout(sidebarPanel.getStackViewerRectangle(this));
 
-        setCardLayoutInfo(cardInfo, info);
         return info;
 
-    }
-
-    private void setCardLayoutInfo(CardViewerInfo cardInfo, GameLayoutInfo info) {
-        if (cardInfo.isNotEmpty()) {
-            final ImageCardListViewer handViewer = controller.getPlayerZoneViewer().getImageCardsListViewer();
-            if (handViewer.getCardPosition(cardInfo) != null) {
-                info.setCardInHandLayout(
-                    new Rectangle(
-                        handViewer.getCardPosition(cardInfo),
-                        handViewer.getCardSize())
-                );
-            }
-        }
     }
 
     void setBackgroundLabel(ZoneBackgroundLabel backgroundLabel) {

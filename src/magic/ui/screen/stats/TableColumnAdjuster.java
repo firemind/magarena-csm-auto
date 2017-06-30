@@ -160,7 +160,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
             width = Math.max(width, tableColumn.getPreferredWidth());
         }
 
-        columnSizes.put(tableColumn, new Integer(tableColumn.getWidth()));
+        columnSizes.put(tableColumn, tableColumn.getWidth());
 
         table.getTableHeader().setResizingColumn(tableColumn);
         tableColumn.setWidth(width);
@@ -245,6 +245,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 //
 //  Implement the PropertyChangeListener
 //
+    @Override
     public void propertyChange(PropertyChangeEvent e)
     {
         //  When the TableModel changes we need to update the listeners
@@ -263,6 +264,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 //
 //  Implement the TableModelListener
 //
+    @Override
     public void tableChanged(TableModelEvent e)
     {
         if (! isColumnDataIncluded) return;
@@ -271,6 +273,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
         SwingUtilities.invokeLater(new Runnable()
         {
+            @Override
             public void run()
             {
                 //  A cell has been updated

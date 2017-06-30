@@ -1077,8 +1077,9 @@ public class SwingGameController implements IUIGameController {
 
     public void showGameOptionsOverlay() {
         if (duelPane == null) {
-            //do nothing
-        } else if (duelPane.getDialogPanel().isVisible()) {
+            return;
+        }
+        if (duelPane.getDialogPanel().isVisible()) {
             duelPane.getDialogPanel().setVisible(false);
         } else {
             new GameOptionsOverlay(this);
@@ -1106,10 +1107,8 @@ public class SwingGameController implements IUIGameController {
 
     @Override
     public void doStackItemPause() {
-        if (game.getStack().hasItem()) {
-            if (getStackItemPause() > 0) {
-                pause(getStackItemPause());
-            }
+        if (game.getStack().hasItem() && getStackItemPause() > 0) {
+            pause(getStackItemPause());
         }
     }
 

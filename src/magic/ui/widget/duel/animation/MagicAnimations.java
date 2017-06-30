@@ -38,7 +38,6 @@ public class MagicAnimations {
 
         if (isOn(AnimationFx.NEW_TURN_MSG) && isNewTurnEvent(oldGameInfo, newGameInfo)) {
             gamePanel.doNewTurnNotification(newGameInfo);
-//            return getNewTurnAnimation(newGameInfo, gamePanel);
         }
 
         return null;
@@ -62,11 +61,6 @@ public class MagicAnimations {
             return !isShowingMulliganScreen && config.getNewTurnAlertDuration() > 0;
         }
         return false;
-    }
-
-    private static MagicAnimation getNewTurnAnimation(GameViewerInfo newGameInfo, DuelPanel gamePanel) {
-        setLayoutInfo(gamePanel, newGameInfo, CardViewerInfo.NO_CARD);
-        return new NewTurnAnimation(newGameInfo, layoutInfo);
     }
 
     private static void setLayoutInfo(DuelPanel gamePanel, GameViewerInfo newGameInfo, CardViewerInfo cardInfo) {
@@ -157,15 +151,15 @@ public class MagicAnimations {
         return !GeneralConfig.getInstance().showGameplayAnimations() || !AnimationFx.isOn(aFlag);
     }
 
-    private static void showDebugInfo(GameViewerInfo oldGameInfo, GameViewerInfo newGameInfo, MagicCard aCard) {
-        PlayerViewerInfo tpOld = oldGameInfo.getTurnPlayer();
-        PlayerViewerInfo tpNew = newGameInfo.getTurnPlayer();
-        System.out.println("===" + aCard + "===");
-        System.out.printf("  hand %d : %d\n", tpOld.hand.size(), tpNew.hand.size());
-        System.out.printf("  graveyard %d : %d\n", tpOld.graveyard.size(), tpNew.graveyard.size());
-        System.out.printf("  permanents %d : %d\n", tpOld.permanents.size(), tpNew.permanents.size());
-        System.out.printf("  stack %d : %d\n", oldGameInfo.getStack().size(), newGameInfo.getStack().size());
-    }
+//    private static void showDebugInfo(GameViewerInfo oldGameInfo, GameViewerInfo newGameInfo, MagicCard aCard) {
+//        PlayerViewerInfo tpOld = oldGameInfo.getTurnPlayer();
+//        PlayerViewerInfo tpNew = newGameInfo.getTurnPlayer();
+//        System.out.println("===" + aCard + "===");
+//        System.out.printf("  hand %d : %d\n", tpOld.hand.size(), tpNew.hand.size());
+//        System.out.printf("  graveyard %d : %d\n", tpOld.graveyard.size(), tpNew.graveyard.size());
+//        System.out.printf("  permanents %d : %d\n", tpOld.permanents.size(), tpNew.permanents.size());
+//        System.out.printf("  stack %d : %d\n", oldGameInfo.getStack().size(), newGameInfo.getStack().size());
+//    }
 
     public static void setEnabled(boolean b) {
         isEnabled = b;

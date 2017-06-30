@@ -1,21 +1,21 @@
-package magic.ui.screen.deck.hand;
+package magic.ui.screen;
 
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JLayeredPane;
-import magic.ui.screen.cardflow.*;
-import magic.ui.widget.cards.canvas.CardsCanvas;
+import javax.swing.JPanel;
+import magic.ui.screen.cardflow.FlashTextOverlay;
 
 @SuppressWarnings("serial")
-class SampleHandLayeredPane extends JLayeredPane {
+public class HandCanvasLayeredPane extends JLayeredPane {
 
-    private final CardsCanvas cardsCanvas;
+    private final JPanel contentPanel;
     private final FlashTextOverlay flashOverlay;
 
-    SampleHandLayeredPane(final CardsCanvas cardsCanvas, final FlashTextOverlay flashOverlay) {
+    public HandCanvasLayeredPane(final JPanel contentPanel, final FlashTextOverlay flashOverlay) {
 
-        this.cardsCanvas = cardsCanvas;
+        this.contentPanel = contentPanel;
         this.flashOverlay = flashOverlay;
 
         updateLayout();
@@ -31,14 +31,14 @@ class SampleHandLayeredPane extends JLayeredPane {
     private void updateLayout() {
         removeAll();
         // layers from bottom to top.
-        add(cardsCanvas, new Integer(0));
-        add(flashOverlay, new Integer(1));
+        add(contentPanel, Integer.valueOf(0));
+        add(flashOverlay, Integer.valueOf(1));
         revalidate();
     }
 
     private void resizeComponents() {
         Dimension sz = getSize();
-        cardsCanvas.setSize(sz);
+        contentPanel.setSize(sz);
         Dimension pref = flashOverlay.getPreferredSize();
         flashOverlay.setBounds(
             (sz.width - pref.width) / 2,

@@ -11,11 +11,12 @@ import magic.translate.MText;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
 import magic.ui.helpers.KeyEventAction;
+import magic.ui.screen.HandCanvasLayeredPane;
+import magic.ui.screen.HandCanvasOptionsPanel;
+import magic.ui.screen.HandCanvasScreen;
 import magic.ui.screen.HandZoneLayout;
-import magic.ui.screen.HeaderFooterScreen;
 import magic.ui.screen.MScreen;
-import magic.ui.screen.cardflow.FlashTextOverlay;
-import magic.ui.screen.widget.MenuButton;
+import magic.ui.screen.widget.PlainMenuButton;
 import magic.ui.widget.cards.canvas.CardImageOverlay;
 import magic.ui.widget.cards.canvas.CardsCanvas;
 import magic.ui.widget.cards.canvas.CardsCanvas.LayoutMode;
@@ -23,7 +24,7 @@ import magic.ui.widget.cards.canvas.ICardsCanvasListener;
 import magic.ui.widget.duel.choice.MulliganChoicePanel;
 
 @SuppressWarnings("serial")
-public class MulliganScreen extends HeaderFooterScreen
+public class MulliganScreen extends HandCanvasScreen
     implements ICardsCanvasListener {
 
     // translatable string
@@ -34,27 +35,22 @@ public class MulliganScreen extends HeaderFooterScreen
 
     private volatile static boolean isActive = false;
 
-    private MulliganLayeredPane layeredPane;
-    private CardsCanvas cardsCanvas;
     private MulliganChoicePanel choicePanel;
     private final MagicCardList hand;
-    private final OptionsPanel optionsPanel;
-    private final FlashTextOverlay flashOverlay;
 
     public MulliganScreen(final MulliganChoicePanel choicePanel, final MagicCardList hand) {
         super(MText.get(_S1));
         this.choicePanel = choicePanel;
         this.hand = hand;
-        flashOverlay = new FlashTextOverlay(600, 60);
         isActive = true;
-        layeredPane = new MulliganLayeredPane(getScreenContent(hand), flashOverlay);
+        layeredPane = new HandCanvasLayeredPane(getScreenContent(hand), flashOverlay);
         setMainContent(layeredPane);
-        optionsPanel = new OptionsPanel(this);
+        optionsPanel = new HandCanvasOptionsPanel(this);
         setHeaderContent(new HeaderPanel(choicePanel.getGameController().getGame()));
         setHeaderOptions(optionsPanel);
-        setLeftFooter(MenuButton.build(this::doCancel, MText.get(_S2)));
-        setRightFooter(MenuButton.build(this::doNextAction, MText.get(_S3)));
-        addToFooter(MenuButton.build(this::doMulligan,
+        setLeftFooter(PlainMenuButton.build(this::doCancel, MText.get(_S2)));
+        setRightFooter(PlainMenuButton.build(this::doNextAction, MText.get(_S3)));
+        addToFooter(PlainMenuButton.build(this::doMulligan,
                 MagicIcon.MULLIGAN, MText.get(_S1), MText.get(_S5))
         );
         setWikiPage(WikiPage.MULLIGAN);
@@ -118,19 +114,6 @@ public class MulliganScreen extends HeaderFooterScreen
         }
     }
 
-    private void setCardsLayout() {
-        switch (HandZoneLayout.getLayout()) {
-        case STACKED_DUPLICATES:
-            cardsCanvas.setStackDuplicateCards(true);
-            break;
-        case NO_STACKING:
-            cardsCanvas.setStackDuplicateCards(false);
-            break;
-        default:
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
     private void doSaveSettings() {
         HandZoneLayout.save();
         GeneralConfig.getInstance().save();
@@ -153,15 +136,5 @@ public class MulliganScreen extends HeaderFooterScreen
     @Override
     public void cardClicked(int index, MagicCardDefinition card) {
         new CardImageOverlay(card);
-    }
-
-    void flashLayoutSetting() {
-        flashOverlay.flashText(HandZoneLayout.getLayout().getDisplayName());
-    }
-
-    void setCardsLayout(int ordinal) {
-        HandZoneLayout.setLayout(ordinal);
-        setCardsLayout();
-        flashLayoutSetting();
     }
 }

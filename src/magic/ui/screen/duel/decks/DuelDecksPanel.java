@@ -27,7 +27,7 @@ import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.screen.deck.editor.DeckSideBar;
 import magic.ui.screen.widget.ActionBarButton;
-import magic.ui.screen.widget.MenuButton;
+import magic.ui.screen.widget.PlainMenuButton;
 import magic.ui.widget.TexturedPanel;
 import magic.ui.widget.cards.table.CardTablePanelB;
 import magic.ui.widget.deck.stats.IPwlWorkerListener;
@@ -226,15 +226,15 @@ class DuelDecksPanel extends TexturedPanel
         );
     }
 
-    MenuButton[] getActionBarButtons() {
-        final List<MenuButton> buttons = new ArrayList<>();
+    PlainMenuButton[] getActionBarButtons() {
+        final List<PlainMenuButton> buttons = new ArrayList<>();
         buttons.add(newDeckButton);
         buttons.add(getSwapDecksButton());
-        return buttons.toArray(new MenuButton[buttons.size()]);
+        return buttons.toArray(new PlainMenuButton[buttons.size()]);
     }
 
     @Override
-    public void PlayerProfileUpdated(PlayerProfile player) {
+    public void playerProfileUpdated(PlayerProfile player) {
         tabbedPane.setTabComponentAt(
             tabbedPane.getSelectedIndex(),
             new PlayerPanel(player, duel)
@@ -242,7 +242,7 @@ class DuelDecksPanel extends TexturedPanel
     }
 
     @Override
-    public void PlayerProfileDeleted(PlayerProfile deletedPlayer) {
+    public void playerProfileDeleted(PlayerProfile deletedPlayer) {
         PlayerProfile newPlayer = deletedPlayer.isHuman()
             ? PlayerProfiles.getDefaultHumanPlayer()
             : PlayerProfiles.getDefaultAiPlayer();
@@ -254,7 +254,7 @@ class DuelDecksPanel extends TexturedPanel
     }
 
     @Override
-    public void PlayerProfileSelected(PlayerProfile player) {
+    public void playerProfileSelected(PlayerProfile player) {
         saveSelectedPlayerProfile(player);
         tabbedPane.setTabComponentAt(
             tabbedPane.getSelectedIndex(),

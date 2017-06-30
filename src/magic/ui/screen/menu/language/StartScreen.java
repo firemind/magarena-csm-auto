@@ -7,8 +7,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
-import magic.ui.ScreenController;
 import magic.translate.MText;
+import magic.ui.ScreenController;
 import magic.ui.screen.MScreen;
 import magic.ui.screen.widget.MenuPanel;
 import magic.utility.MagicFileSystem;
@@ -81,7 +81,8 @@ public class StartScreen extends MScreen {
             });
 
             for (final String translation : translations) {
-                menuPanel.addMenuItem(translation, new AbstractAction() {
+                String caption = (translation + " " + MText.getTranslationVersion(translation)).trim();
+                menuPanel.addMenuItem(caption, new AbstractAction() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
                         try {

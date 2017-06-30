@@ -1,6 +1,5 @@
 package magic.ui.widget.cards.canvas;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -38,7 +37,6 @@ public class CardsCanvas extends JPanel {
 
     private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
     private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 20);
-    private static final Color MOUSE_OVER_BORDER_COLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 160);
 
     private int dealCardDelay = 80; // milliseconds
     private int removeCardDelay = 50; // millseconds
@@ -298,12 +296,13 @@ public class CardsCanvas extends JPanel {
         }
     }
 
-    private void drawHighlightBorder(Graphics2D g2d, Rectangle rect) {
-        final int w = 4;
-        g2d.setStroke(new BasicStroke(w));
-        g2d.setPaint(MOUSE_OVER_BORDER_COLOR);
-        g2d.drawRect(rect.x + (w / 2), rect.y + (w / 2), rect.width - w, rect.height - w);
-    }
+//    private static final Color MOUSE_OVER_BORDER_COLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 160);
+//    private void drawHighlightBorder(Graphics2D g2d, Rectangle rect) {
+//        final int w = 4;
+//        g2d.setStroke(new BasicStroke(w));
+//        g2d.setPaint(MOUSE_OVER_BORDER_COLOR);
+//        g2d.drawRect(rect.x + (w / 2), rect.y + (w / 2), rect.width - w, rect.height - w);
+//    }
 
     private void drawHighlightOverlay(Graphics2D g2d, Rectangle rect) {
         g2d.setPaint(MOUSE_OVER_TCOLOR);

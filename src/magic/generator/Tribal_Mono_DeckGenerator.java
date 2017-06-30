@@ -46,11 +46,11 @@ public class Tribal_Mono_DeckGenerator extends RandomDeckGenerator {
     private void getPossibleTribes() {
         for (final MagicSubType s : MagicSubType.ALL_CREATURES) {
             final HashMap<MagicColor, Integer> countColors = new HashMap<MagicColor, Integer>();
-            countColors.put(MagicColor.Black, new Integer(0));
-            countColors.put(MagicColor.White, new Integer(0));
-            countColors.put(MagicColor.Green, new Integer(0));
-            countColors.put(MagicColor.Red, new Integer(0));
-            countColors.put(MagicColor.Blue, new Integer(0));
+            countColors.put(MagicColor.Black, 0);
+            countColors.put(MagicColor.White, 0);
+            countColors.put(MagicColor.Green, 0);
+            countColors.put(MagicColor.Red, 0);
+            countColors.put(MagicColor.Blue, 0);
 
             // count colors
             for (final MagicCardDefinition card : CardDefinitions.getDefaultPlayableCardDefs()) {
@@ -59,7 +59,7 @@ public class Tribal_Mono_DeckGenerator extends RandomDeckGenerator {
 
                     for (final MagicColor c : countColors.keySet()) {
                         if (c.hasColor(colorFlags)) {
-                            countColors.put(c, new Integer(countColors.get(c).intValue() + 1));
+                            countColors.put(c, countColors.get(c) + 1);
                         }
                     }
                 }
@@ -91,6 +91,7 @@ public class Tribal_Mono_DeckGenerator extends RandomDeckGenerator {
         return colorText;
     }
 
+    @Override
     public int getMinRarity() {
         return 1;
     }
@@ -104,10 +105,12 @@ public class Tribal_Mono_DeckGenerator extends RandomDeckGenerator {
         }
     }
 
+    @Override
     public void setColors(final MagicDeckProfile profile) {
         profile.setColors(getColorText());
     }
 
+    @Override
     public boolean ignoreMaxCost() {
         return false;
     }

@@ -1,9 +1,12 @@
 package magic.data;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import groovy.lang.GroovyShell;
 import groovy.transform.CompileStatic;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -62,6 +65,10 @@ public class CardDefinitions {
     private static final Map<String, MagicCardDefinition> missingCards = new ConcurrentHashMap<>();
 
     private static final AtomicInteger cdefIndex = new AtomicInteger(1);
+
+    static {
+        CompilerConfiguration.DEFAULT.getOptimizationOptions().put(CompilerConfiguration.INVOKEDYNAMIC, Boolean.TRUE);
+    }
 
     // groovy shell for evaluating groovy card scripts with autmatic imports
     private static final GroovyShell shell = new GroovyShell(
@@ -476,9 +483,9 @@ public class CardDefinitions {
     private static void saveNewCardsLog(final Collection<String> cardNames) {
         final Path LOGS_PATH = MagicFileSystem.getDataPath(DataPath.LOGS);
         final File LOG_FILE = LOGS_PATH.resolve("newcards.log").toFile();
-        try (final PrintWriter writer = new PrintWriter(LOG_FILE)) {
+        try (final PrintWriter writer = new PrintWriter(LOG_FILE, UTF_8.name())) {
             cardNames.forEach(writer::println);
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException|UnsupportedEncodingException ex) {
             System.err.println("Failed to save " + LOG_FILE + " - " + ex);
         }
     }

@@ -1,6 +1,5 @@
 package magic.ui.screen.cardflow;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -135,20 +134,30 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
 
     }
 
-    /**
-     * Useful for debugging.
-     */
-    private void drawSlots(final Graphics2D g2d) {
-        // draw all available visible slots.
-        g2d.setColor(Color.GRAY);
-        g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{2, 2}, 0));
-        for (Rectangle r : slots) {
-            g2d.drawRect(r.x, r.y, r.width - 1, r.height - 1);
-        }
-    }
+//    /**
+//     * Useful for debugging.
+//     */
+//    private void drawSlots(final Graphics2D g2d) {
+//        // draw all available visible slots.
+//        g2d.setColor(Color.GRAY);
+//        g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{2, 2}, 0));
+//        for (Rectangle r : slots) {
+//            g2d.drawRect(r.x, r.y, r.width - 1, r.height - 1);
+//        }
+//    }
 
     private BufferedImage getImage(int index) {
         return provider.getImage(index);
+    }
+
+    private void drawCardImage(Graphics2D g2d, BufferedImage image, Rectangle startRect, Rectangle endRect) {
+        Rectangle drawRect = new Rectangle(
+            startRect.x - (int) ((startRect.x - endRect.x) * timelinePulse),
+            0,
+            startRect.width + (int) ((endRect.width - startRect.width) * timelinePulse),
+            startRect.height + (int) ((endRect.height - startRect.height) * timelinePulse)
+        );
+        g2d.drawImage(image, drawRect.x, drawRect.y, drawRect.width, drawRect.height, null);
     }
 
     private void drawLeadingImages(final Graphics2D g2d, final int activeSlotIndex) {
@@ -168,18 +177,7 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
                                 : slots.get(imageSlot)
                         : slots.get(imageSlot + 1);
 
-                final Rectangle endRect = slots.get(imageSlot);
-
-                final Rectangle drawRect = new Rectangle(
-                        startRect.x - (int) ((startRect.x - endRect.x) * timelinePulse),
-                        0,
-                        startRect.width + (int) ((endRect.width - startRect.width) * timelinePulse),
-                        startRect.height + (int) ((endRect.height - startRect.height) * timelinePulse)
-                );
-
-                final BufferedImage image = getImage(i);
-                g2d.drawImage(image, drawRect.x, drawRect.y, drawRect.width, drawRect.height, null);
-
+                drawCardImage(g2d, getImage(i), startRect, slots.get(imageSlot));
             }
         }
     }
@@ -205,18 +203,7 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
                                 ? slots.get(imageSlot + 1)
                                 : slots.get(imageSlot);
 
-                final Rectangle endRect = slots.get(imageSlot);
-
-                final Rectangle drawRect = new Rectangle(
-                        startRect.x - (int) ((startRect.x - endRect.x) * timelinePulse),
-                        0,
-                        startRect.width + (int) ((endRect.width - startRect.width) * timelinePulse),
-                        startRect.height + (int) ((endRect.height - startRect.height) * timelinePulse)
-                );
-
-                final BufferedImage image = getImage(i);
-                g2d.drawImage(image, drawRect.x, drawRect.y, drawRect.width, drawRect.height, null);
-
+                drawCardImage(g2d, getImage(i), startRect, slots.get(imageSlot));
             }
         }
     }
@@ -473,14 +460,14 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
         }
     }
 
-    /**
-     * Given a x = 0.0 to 1.0, returns f(0) = 0, f(0.5) = 1, f(1.0) = 0.
-     *
-     * see https://stackoverflow.com/questions/13097005/easing-functions-for-bell-curves.
-     */
-    private double getBellShapedFunctionA(final float x) {
-        return (Math.sin(2 * Math.PI * (x - 0.25d)) + 1) / 2.0d;
-    }
+//    /**
+//     * Given a x = 0.0 to 1.0, returns f(0) = 0, f(0.5) = 1, f(1.0) = 0.
+//     *
+//     * see https://stackoverflow.com/questions/13097005/easing-functions-for-bell-curves.
+//     */
+//    private double getBellShapedFunctionA(final float x) {
+//        return (Math.sin(2 * Math.PI * (x - 0.25d)) + 1) / 2.0d;
+//    }
 
     /**
      * Given a x = 0.0 to 1.0, returns f(0) = 0, f(0.5) = 1, f(1.0) = 0.

@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JPanel;
-import magic.data.GeneralConfig;
 import magic.ui.dialog.prefs.ImageSizePresets;
 import magic.ui.duel.viewerinfo.CardViewerInfo;
 import magic.ui.duel.viewerinfo.PermanentViewerInfo;
@@ -17,7 +16,6 @@ import magic.ui.screen.duel.game.SwingGameController;
 @SuppressWarnings("serial")
 public class ImagePermanentsViewer extends JPanel {
 
-    private static final GeneralConfig CONFIG = GeneralConfig.getInstance();
     private static final int POSITION_SPACING = 60;
     private static final int HORIZONTAL_SPACING = 40;
     private static final int VERTICAL_SPACING = 30;
@@ -149,7 +147,7 @@ public class ImagePermanentsViewer extends JPanel {
             float largestScaledCardSize = 0;
 
             // approximate number of rows needed to contain all the cards
-            for (r = (creatures.size() == 0 || nonCreatures.size() == 0) ? 1 : 2; r < numCards; r++) {
+            for (r = (creatures.isEmpty() || nonCreatures.isEmpty()) ? 1 : 2; r < numCards; r++) {
                 float numCardsPerRow = (float) Math.ceil((float) numCards / r); // avoid lost of precision
 
                 // max width and height for a card using this number of rows
@@ -162,7 +160,7 @@ public class ImagePermanentsViewer extends JPanel {
                     scaledCardWidth = (scaledCardHeight / CARD_HEIGHT) * CARD_WIDTH;
                 } else {
                     // width is limiting factor on size of scaled card
-                    scaledCardHeight = (scaledCardWidth / CARD_WIDTH) * CARD_HEIGHT;;
+                    scaledCardHeight = (scaledCardWidth / CARD_WIDTH) * CARD_HEIGHT;
                 }
                 numCardsPerRow = (float) Math.ceil(screenWidth / scaledCardWidth); // scaled -> more cards can fit per row
 

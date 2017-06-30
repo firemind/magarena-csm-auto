@@ -1,5 +1,6 @@
 package magic.ui.dialog.prefs;
 
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -17,16 +18,18 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import magic.data.GeneralConfig;
-import magic.translate.MText;
 import magic.exception.DesktopNotSupportedException;
+import magic.translate.MText;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
 import magic.ui.helpers.DesktopHelper;
@@ -54,6 +57,8 @@ class TranslationPanel extends JPanel {
     private static final String _S15 = "Yes";
     private static final String _S16 = "No";
     private static final String _S17 = "Help";
+    private static final String _S18 = "Error reading translation file";
+    private static final String _S19 = "Ensure encoding is \"UTF-8 without BOM\".";
 
     private final JComboBox<String> languageCombo = new JComboBox<>();
     private final JButton menuButton = new JButton();
@@ -124,12 +129,26 @@ class TranslationPanel extends JPanel {
         });
     }
 
+    private DefaultListCellRenderer getLanguageComboRenderer() {
+        return new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                String lang = value.toString();
+                String newValue = (lang + " " + MText.getTranslationVersion(lang)).trim();
+                return super.getListCellRendererComponent(list, newValue, index, isSelected, cellHasFocus);
+            }
+        };
+    }
+
     private void setupComboBox() {
+        languageCombo.setRenderer(getLanguageComboRenderer());
         refreshLanguageCombo();
         languageCombo.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                setStateOfActionButtons();
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    setStateOfActionButtons();
+                }
             }
         });
         languageCombo.setFocusable(false);
@@ -191,8 +210,11 @@ class TranslationPanel extends JPanel {
                 getParent().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 try {
                     doEditTranslationFile();
-                } catch (URISyntaxException | IOException ex) {
-                    ScreenController.showWarningMessage(ex.getMessage());
+                } catch (RuntimeException | URISyntaxException | IOException ex) {
+                    ScreenController.showWarningMessage(String.format(
+                        "<html>%s:<br><br><i>%s</i><br><br>%s</html>",
+                        MText.get(_S18), ex.getMessage(), MText.get(_S19))
+                    );
                 } finally {
                     getParent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 }

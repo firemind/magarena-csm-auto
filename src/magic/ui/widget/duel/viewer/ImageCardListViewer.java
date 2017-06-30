@@ -2,7 +2,6 @@ package magic.ui.widget.duel.viewer;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,7 +30,6 @@ import magic.model.MagicType;
 import magic.ui.FontsAndBorders;
 import magic.ui.IChoiceViewer;
 import magic.ui.MagicImages;
-import magic.ui.duel.viewerinfo.CardViewerInfo;
 import magic.ui.helpers.ImageHelper;
 import magic.ui.screen.duel.game.SwingGameController;
 import magic.ui.theme.Theme;
@@ -47,7 +45,6 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
     private static final int CARD_WIDTH=100;
     private static final int CARD_HEIGHT=140;
     private static final int SPACING=10;
-    private static final BasicStroke MOUSE_OVER_STROKE = new BasicStroke(2);
     private static final Color MOUSE_OVER_COLOR = MagicStyle.getRolloverColor();
     private static final Color MOUSE_OVER_TCOLOR = MagicStyle.getTranslucentColor(MOUSE_OVER_COLOR, 20);
 
@@ -224,7 +221,6 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
         final FontMetrics metrics=g.getFontMetrics();
         final Graphics2D g2d=(Graphics2D)g;
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        final Stroke defaultStroke = g2d.getStroke();
 
         final Point mousePoint = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(mousePoint, this);
@@ -298,13 +294,13 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
                 mouseOverRect = rect;
             }
         }
-        paintMouseOverHighlight2(g2d, mouseOverRect, defaultStroke);
+        paintMouseOverHighlight2(g2d, mouseOverRect);
     }
 
     /**
      * draw filled rectangle using translucent color over visible portion of card.
      */
-    private void paintMouseOverHighlight2(final Graphics2D g2d, final Rectangle rect, final Stroke defaultStroke) {
+    private void paintMouseOverHighlight2(final Graphics2D g2d, final Rectangle rect) {
         g2d.setPaint(MOUSE_OVER_TCOLOR);
         g2d.fillRect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
     }
@@ -313,26 +309,5 @@ public class ImageCardListViewer extends JPanel implements IChoiceViewer {
     public void showValidChoices(final Set<?> aValidChoices) {
         this.validChoices=aValidChoices;
         repaint();
-    }
-
-    public Point getCardPosition(final CardViewerInfo cardInfo) {
-        Point cardPosition = null;
-        for (int index=0; index < cardList.size(); index++) {
-            final MagicCard card = cardList.get(index);
-            if (card.getId() == cardInfo.getId()) {
-                cardPosition = cardPoints.get(index);
-                break;
-            }
-        }
-        if (cardPosition != null) {
-            cardPosition = new Point(
-                    cardPosition.x + getParent().getParent().getLocation().x + 45,
-                    cardPosition.y + getParent().getLocation().y);
-        }
-        return cardPosition;
-    }
-
-    public Dimension getCardSize() {
-        return new Dimension(CARD_WIDTH, CARD_HEIGHT);
     }
 }

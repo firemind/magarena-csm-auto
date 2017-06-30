@@ -58,7 +58,7 @@ public class Ability_Mono_DeckGenerator extends RandomDeckGenerator {
                     final int colorFlags = card.getColorFlags();
                     for (final MagicColor c : countColors.keySet()) {
                         if (c.hasColor(colorFlags)) {
-                            countColors.put(c, new Integer(countColors.get(c).intValue() + 1));
+                            countColors.put(c, countColors.get(c) + 1);
                         }
                     }
                 }
@@ -90,6 +90,7 @@ public class Ability_Mono_DeckGenerator extends RandomDeckGenerator {
         return colorText;
     }
 
+    @Override
     public int getMinRarity() {
         return 1;
     }
@@ -103,10 +104,12 @@ public class Ability_Mono_DeckGenerator extends RandomDeckGenerator {
         }
     }
 
+    @Override
     public void setColors(final MagicDeckProfile profile) {
         profile.setColors(getColorText());
     }
 
+    @Override
     public boolean ignoreMaxCost() {
         return false;
     }

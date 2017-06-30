@@ -29,6 +29,8 @@ public class RemoveCardAction extends MagicAction {
                 }
                 break;
             case OwnersLibrary:
+            case TopOfOwnersLibrary:
+            case BottomOfOwnersLibrary:
                 index=owner.getLibrary().removeCard(card);
                 break;
             case Graveyard:
@@ -37,6 +39,7 @@ public class RemoveCardAction extends MagicAction {
             case Exile:
                 index=owner.getExile().removeCard(card);
                 break;
+            default: throw new RuntimeException("Unsupported location for RemoveCardAction: " + locationType);
         }
         game.setStateCheckRequired();
     }
@@ -54,6 +57,8 @@ public class RemoveCardAction extends MagicAction {
                 owner.addCardToHand(card,index);
                 break;
             case OwnersLibrary:
+            case TopOfOwnersLibrary:
+            case BottomOfOwnersLibrary:
                 owner.getLibrary().add(index,card);
                 break;
             case Graveyard:
@@ -62,6 +67,7 @@ public class RemoveCardAction extends MagicAction {
             case Exile:
                 owner.getExile().add(index,card);
                 break;
+            default: throw new RuntimeException("Unsupported location for RemoveCardAction: " + locationType);
         }
     }
 

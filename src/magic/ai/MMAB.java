@@ -35,6 +35,7 @@ public class MMAB extends MagicAI {
         MagicGameLog.log(message);
     }
 
+    @Override
     public Object[] findNextEventChoiceResults(final MagicGame sourceGame, final MagicPlayer scorePlayer) {
         final long startTime = System.currentTimeMillis();
 
@@ -131,7 +132,7 @@ public class MMAB extends MagicAI {
         return sourceGame.map(bestAchoice.choiceResults);
     }
 
-class MMABWorker {
+static class MMABWorker {
 
     private final boolean CHEAT;
     private final long id;

@@ -31,6 +31,7 @@ public class MagicKickerCost extends MagicAdditionalCost implements MagicEventAc
         return new MagicKickerCost(aCost, "conspire");
     }
 
+    @Override
     public MagicEvent getEvent(final MagicSource source) {
         return new MagicEvent(
             source,
@@ -46,7 +47,7 @@ public class MagicKickerCost extends MagicAdditionalCost implements MagicEventAc
     @Override
     public void executeEvent(final MagicGame game, final MagicEvent event) {
         final MagicEvent costEvent = cost.getEvent(event.getSource());
-        if (event.isYes() & costEvent.isSatisfied()) {
+        if (event.isYes() && costEvent.isSatisfied()) {
             game.addFirstEvent(costEvent);
             game.doAction(new SetKickerAction(1));
         }

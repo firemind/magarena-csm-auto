@@ -47,7 +47,7 @@ public enum MagicSubType {
 
     //planeswalker subtypes
     Ajani, Arlinn, Ashiok, Bolas, Chandra, Dack, Daretti, Domri, Dovin, Elspeth, Freyalise, Garruk, Gideon, Jace, Karn, Kaya, Kiora, Koth,
-    Liliana, Nahiri, Narset, Nissa, Nixilis, Ral, Saheeli, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Ugin, Vraska, Xenagos,
+    Liliana, Nahiri, Narset, Nissa, Nixilis, Ral, Saheeli, Samut, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Ugin, Vraska, Xenagos,
 
     //special handling for Assembly_Worker
     Assembly_Worker() {
@@ -169,7 +169,7 @@ public enum MagicSubType {
             case Swamp: return MagicAbility.Swampwalk;
             case Mountain: return MagicAbility.Mountainwalk;
             case Forest: return MagicAbility.Forestwalk;
+            default: throw new RuntimeException("No landwalk ability for MagicSubType " + this);
         }
-        throw new RuntimeException("No landwalk ability for MagicSubType " + this);
     }
 }

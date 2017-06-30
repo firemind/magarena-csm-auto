@@ -1,10 +1,12 @@
 package magic.translate;
 
 import groovy.json.StringEscapeUtils;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -29,11 +31,16 @@ import magic.utility.MagicSystem;
 public final class MText {
     private MText() { }
 
+    private static final Logger LOGGER = Logger.getLogger(MText.class.getName());
+
     private static final String UTF_CHAR_SET = "UTF-8";
+    private static final String HEADER_CHAR = "¦";
 
     private static final CRC32 crc = new CRC32();
     private static final Map<Long, String> translationsMap = new HashMap<>();
     private static final Map<Long, String> annotations = new HashMap<>();
+
+    private static boolean useCustomFonts = false;
 
     static {
         try {
@@ -93,15 +100,39 @@ public final class MText {
         try (final Scanner sc = new Scanner(txtFile, UTF_CHAR_SET)) {
             while (sc.hasNextLine()) {
                 final String line = sc.nextLine().trim();
-                if (line.startsWith("#") == false && line.isEmpty() == false) {
-                    final int equalsChar = line.indexOf('=');
-                    final long stringId = Long.valueOf(line.substring(0, equalsChar).trim());
-                    final String translation = line.substring(equalsChar + 1).trim();
+                if (line.startsWith("#") || line.isEmpty()) {
+                    // ignore comments and blank lines.
+                    continue;
+                }
+                if (line.startsWith(HEADER_CHAR)) {
+                    parseHeaderLine(line, txtFile.getName());
+                } else {
+                    int equalsChar = line.indexOf('=');
+                    long stringId = Long.valueOf(line.substring(0, equalsChar).trim());
+                    String translation = line.substring(equalsChar + 1).trim();
                     stringsMap.put(stringId, unescape ? StringEscapeUtils.unescapeJava(translation) : translation);
                 }
             }
         }
         return stringsMap;
+    }
+
+    private static void parseHeaderLine(String text, String fileName) {
+        String[] values = text.substring(1).split(HEADER_CHAR);
+        try {
+            // version = values[0];
+            useCustomFonts = Boolean.valueOf(Integer.valueOf(values[1]) == 1);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            LOGGER.log(Level.INFO, String.format(
+                "Parsing header line in '%s' at item : %s",
+                fileName, ex.getMessage())
+            );
+        } catch (RuntimeException ex) {
+            LOGGER.log(Level.WARNING, String.format(
+                "Error parsing header line in '%s' : %s",
+                fileName, ex.getMessage())
+            );
+        }
     }
 
     public static Map<Long, String> getUnescapedStringsMap(final File txtFile) throws FileNotFoundException {
@@ -113,12 +144,15 @@ public final class MText {
     }
 
     public static void loadTranslationFile() throws FileNotFoundException {
+        useCustomFonts = false;
         translationsMap.clear();
         final String language = GeneralConfig.getInstance().getTranslation();
         if (language.isEmpty() == false) {
             final Path dirPath = MagicFileSystem.getDataPath(MagicFileSystem.DataPath.TRANSLATIONS);
             final File txtFile = dirPath.resolve(language + ".txt").toFile();
             translationsMap.putAll(getUnescapedStringsMap(txtFile));
+        } else {
+            useCustomFonts = true;
         }
     }
 
@@ -204,8 +238,16 @@ public final class MText {
         return stringsMap;
     }
 
+    private static String getHeaderLineData() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(HEADER_CHAR).append(MagicSystem.VERSION);
+        sb.append(HEADER_CHAR).append(useCustomFonts ? 1 : 0);
+        return sb.toString();
+    }
+
     public static void createTranslationFile(File txtFile, Map<Long, String> stringsMap) throws FileNotFoundException, UnsupportedEncodingException {
         try (final PrintWriter writer = new PrintWriter(txtFile, UTF_CHAR_SET)) {
+            writer.println(getHeaderLineData());
             for (Map.Entry<Long, String> entry : stringsMap.entrySet()) {
                 final Long key = entry.getKey();
                 if (annotations.containsKey(key)) {
@@ -229,4 +271,22 @@ public final class MText {
         return translationsMap.isEmpty();
     }
 
+    public static String getTranslationVersion(String lang) {
+        if (!"English".equals(lang)) {
+            File file = MagicFileSystem.getTranslationFile(lang);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), UTF_CHAR_SET))) {
+                String line = br.readLine();
+                if (line != null && line.startsWith(HEADER_CHAR)) {
+                    return line.substring(1).trim().split(HEADER_CHAR)[0];
+                }
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
+            }
+        }
+        return "";
+    }
+
+    public static boolean canUseCustomFonts() {
+        return useCustomFonts;
+    }
 }

@@ -124,12 +124,12 @@ class ScreenContentPanel extends JPanel implements IPlayerProfileListener {
     }
 
     @Override
-    public void PlayerProfileUpdated(PlayerProfile player) {
+    public void playerProfileUpdated(PlayerProfile player) {
         getDuelPlayerPanel(player).setPlayer(player);
     }
 
     @Override
-    public void PlayerProfileDeleted(PlayerProfile deletedPlayer) {
+    public void playerProfileDeleted(PlayerProfile deletedPlayer) {
         if (deletedPlayer.isHuman()) {
             final PlayerProfile playerProfile = PlayerProfiles.getDefaultHumanPlayer();
             DuelConfig.getInstance().setPlayerProfile(0, playerProfile);
@@ -142,7 +142,7 @@ class ScreenContentPanel extends JPanel implements IPlayerProfileListener {
     }
 
     @Override
-    public void PlayerProfileSelected(PlayerProfile player) {
+    public void playerProfileSelected(PlayerProfile player) {
         getDuelPlayerPanel(player).setPlayer(player);
         saveSelectedPlayerProfile(player);
     }

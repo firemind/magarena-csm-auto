@@ -1,7 +1,7 @@
 package magic.model.player;
 
 public interface IPlayerProfileListener {
-    void PlayerProfileUpdated(final PlayerProfile player);
-    void PlayerProfileDeleted(final PlayerProfile player);
-    void PlayerProfileSelected(final PlayerProfile player);
+    void playerProfileUpdated(final PlayerProfile player);
+    void playerProfileDeleted(final PlayerProfile player);
+    void playerProfileSelected(final PlayerProfile player);
 }

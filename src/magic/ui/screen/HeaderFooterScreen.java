@@ -1,8 +1,9 @@
 package magic.ui.screen;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import magic.ui.screen.widget.PlainMenuButton;
 import magic.ui.screen.widget.ScreenFooterPanel;
-import magic.ui.screen.widget.MenuButton;
 import magic.ui.screen.widget.ScreenHeaderPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -47,15 +48,19 @@ public abstract class HeaderFooterScreen extends MScreen {
         headerPanel.setContent(aPanel);
     }
 
-    protected final void addToFooter(MenuButton... btns) {
+    protected final void addToFooter(PlainMenuButton... btns) {
         footerPanel.addMiddleButtons(btns);
     }
 
-    protected final void setLeftFooter(MenuButton btn) {
+    protected void setFooterContent(JPanel panel) {
+        footerPanel.setFooterContent(panel);
+    }
+
+    protected final void setLeftFooter(PlainMenuButton btn) {
         footerPanel.setLeftButton(btn);
     }
 
-    protected final void setRightFooter(MenuButton btn) {
+    protected final void setRightFooter(PlainMenuButton btn) {
         footerPanel.setRightButton(btn);
     }
 
@@ -63,7 +68,7 @@ public abstract class HeaderFooterScreen extends MScreen {
         footerPanel.clearFooterButtons();
     }
 
-    protected final void addFooterGroup(MenuButton... btns) {
+    protected final void addFooterGroup(PlainMenuButton... btns) {
         footerPanel.addFooterGroup(btns);
     }
 
