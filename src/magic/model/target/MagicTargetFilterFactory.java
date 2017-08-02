@@ -91,6 +91,13 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicStackFilterImpl SPELL_OR_ABILITY_YOU_CONTROL = new MagicStackFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
+            return source.isFriend(target);
+        }
+    };
+
     public static final MagicStackFilterImpl SPELL_OR_ABILITY_OPPONENT_CONTROL = new MagicStackFilterImpl() {
         @Override
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
@@ -109,6 +116,13 @@ public class MagicTargetFilterFactory {
         @Override
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
             return target.isSpell() == false;
+        }
+    };
+
+    public static final MagicStackFilterImpl ACTIVATED_OR_TRIGGERED_ABILITY_OPP_CONTROL = new MagicStackFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicItemOnStack target) {
+            return target.isSpell() == false && source.isEnemy(target);
         }
     };
 
@@ -670,6 +684,13 @@ public class MagicTargetFilterFactory {
             return target.isCreature() ||
                 target.isArtifact() ||
                 target.isEnchantment();
+        }
+    };
+
+    public static final MagicPermanentFilterImpl ENCHANTMENT_OR_TAPPED_ARTIFACT_OR_CREATURE = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            return target.isEnchantment() || (target.isTapped() && target.isArtifact()) || (target.isTapped() && target.isCreature());
         }
     };
 
@@ -1882,6 +1903,13 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicCardFilterImpl NONLAND_CARD = new MagicCardFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
+            return !target.hasType(MagicType.Land);
+        }
+    };
+
     public static final MagicCardFilterImpl NONCREATURE_NONLAND_CARD = new MagicCardFilterImpl() {
         @Override
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
@@ -2102,6 +2130,13 @@ public class MagicTargetFilterFactory {
         @Override
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
             return !target.hasType(MagicType.Creature);
+        }
+    };
+
+    public static final MagicCardFilterImpl NONARTIFACT_CARD = new MagicCardFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicCard target) {
+            return !target.hasType(MagicType.Artifact);
         }
     };
 
@@ -2595,11 +2630,13 @@ public class MagicTargetFilterFactory {
         addp("creature or enchantment card", CREATURE_OR_ENCHANTMENT_CARD);
         addp("multicolored card", MULTICOLORED_CARD);
         addp("colorless card", COLORLESS_CARD);
+        addp("nonland card", NONLAND_CARD);
+        addp("noncreature card", NONCREATURE_CARD);
+        addp("nonartifact card", NONARTIFACT_CARD);
         addp("noncreature, nonland card", NONCREATURE_NONLAND_CARD);
+        addp("nonartifact, nonland card", NONARTIFACT_NONLAND_CARD);
         addp("red or green card", RED_OR_GREEN_CARD);
         addp("artifact, creature, or land card", ARTIFACT_OR_CREATURE_OR_LAND_CARD);
-        addp("noncreature card", NONCREATURE_CARD);
-        addp("nonartifact, nonland card", NONARTIFACT_NONLAND_CARD);
         addp("basic land card or a Desert card", BASIC_LAND_CARD_OR_DESERT_CARD);
         addp("basic land card or a Gate card", BASIC_LAND_CARD_OR_GATE_CARD);
         addp("Plains, Island, Swamp, Mountain or Forest card", LAND_CARD_WITH_BASIC_LAND_TYPE);
@@ -2875,6 +2912,7 @@ public class MagicTargetFilterFactory {
         add("artifact, enchantment, or land", ARTIFACT_OR_ENCHANTMENT_OR_LAND);
         add("artifact, creature, or land", ARTIFACT_OR_CREATURE_OR_LAND);
         add("artifact, creature, or enchantment", ARTIFACT_OR_CREATURE_OR_ENCHANTMENT);
+        add("enchantment, tapped artifact, or tapped creature", ENCHANTMENT_OR_TAPPED_ARTIFACT_OR_CREATURE);
         add("enchantment or land", ENCHANTMENT_OR_LAND);
         add("enchanted creature or enchantment creature", ENCHANTED_OR_ENCHANTMENT_CREATURE);
         add("noncreature artifact", NONCREATURE_ARTIFACT);
@@ -2905,9 +2943,11 @@ public class MagicTargetFilterFactory {
         add("spell", SPELL);
         add("spell an opponent controls", SPELL_YOU_DONT_CONTROL);
         add("spell or ability", SPELL_OR_ABILITY);
+        add("spell or ability you control", SPELL_OR_ABILITY_YOU_CONTROL);
         add("spell or ability an opponent controls", SPELL_OR_ABILITY_OPPONENT_CONTROL);
         add("activated ability", ACTIVATED_ABILITY);
         add("activated or triggered ability", ACTIVATED_OR_TRIGGERED_ABILITY);
+        add("activated or triggered ability you don't control", ACTIVATED_OR_TRIGGERED_ABILITY_OPP_CONTROL);
         add("spell, activated ability, or triggered ability", SPELL_OR_ABILITY);
         add("spell that targets a player", SPELL_THAT_TARGETS_PLAYER);
         add("spell with {X} in its mana cost", SPELL_WITH_X_COST);
@@ -2968,6 +3008,31 @@ public class MagicTargetFilterFactory {
         add("creature blocking SN", CREATURE_BLOCKING_SN);
     }
 
+    private static final String[] ENDING_WITH_S = new String[]{
+        "controls",
+        "less",
+        "plains",
+        "opponents",
+        "graveyards",
+        "colorless",
+        "aurochs",
+        "pegasus",
+        "this",
+        "toughness",
+        "fungus",
+        "homunculus",
+        "is",
+        "its",
+        "has",
+        "was",
+        "colors",
+        "targets",
+        "locus",
+        "counters",
+    };
+
+    private static final String PLURAL = "\\b(?!(" + String.join("|", ENDING_WITH_S) + ")\\b)([a-z]+)s\\b";
+
     public static String toSingular(final String arg) {
         final String[] parts = arg.toLowerCase(Locale.ENGLISH).split(" named ");
         parts[0] = parts[0]
@@ -2975,12 +3040,14 @@ public class MagicTargetFilterFactory {
             .replaceAll("\\belves\\b", "elf")
             .replaceAll("\\ballies\\b", "ally")
             .replaceAll("\\bmercenaries\\b", "mercenary")
-            .replaceAll("\\b(?!(controls|less|plains|opponents|graveyards|colorless|aurochs|pegasus|this|toughness|fungus|homunculus|is|locus|counters)\\b)([a-z]+)s\\b", "$2");
+            .replaceAll(PLURAL, "$2");
         return String.join(" named ", parts)
-            .replaceAll("\\band\\b", "or")
+            .replaceAll("\\band/or\\b", "or")
+            .replaceAll("\\band(?! control)\\b", "or")
             .replaceAll("\\bthem\\b", "it")
             .replaceAll("\\bin your hand\\b", "from your hand")
             .replaceAll("\\bin your graveyard\\b", "from your graveyard")
+            .replaceAll("\\bin a graveyard\\b", "from a graveyard")
             .replaceAll("\\bin all graveyards\\b", "from a graveyard")
             .replaceAll("\\bfrom all graveyards\\b", "from a graveyard")
             .replaceAll("\\bplayed by your opponents\\b", "an opponent controls")
@@ -3010,7 +3077,7 @@ public class MagicTargetFilterFactory {
         final Matcher matcher = OTHER.matcher(arg);
         final boolean other = matcher.find();
         final String processed = matcher.replaceFirst("");
-        final MagicTargetFilter<MagicPermanent> filter = (MagicTargetFilter<MagicPermanent>)single(processed);
+        final MagicTargetFilter<MagicPermanent> filter = (MagicPermanentFilterImpl)single(processed);
         if (filter.acceptType(MagicTargetType.Permanent) == false) {
             throw new RuntimeException("unknown permanent filter \"" + text + "\"");
         }
@@ -3020,19 +3087,19 @@ public class MagicTargetFilterFactory {
     @SuppressWarnings("unchecked")
     public static MagicTargetFilter<MagicCard> Card(final String text) {
         final String arg = toSingular(text);
-        return (MagicTargetFilter<MagicCard>)single(arg);
+        return (MagicCardFilterImpl)single(arg);
     }
 
     @SuppressWarnings("unchecked")
     public static MagicTargetFilter<MagicPlayer> Player(final String text) {
         final String arg = toSingular(text);
-        return (MagicTargetFilter<MagicPlayer>)single(arg);
+        return (MagicPlayerFilterImpl)single(arg);
     }
 
     @SuppressWarnings("unchecked")
     public static MagicTargetFilter<MagicItemOnStack> ItemOnStack(final String text) {
         final String arg = toSingular(text);
-        return (MagicTargetFilter<MagicItemOnStack>)single(arg);
+        return (MagicStackFilterImpl)single(arg);
     }
 
     public static MagicTargetFilter<?> single(final String arg) {
@@ -3150,12 +3217,12 @@ public class MagicTargetFilterFactory {
         final String withSuffix = prefix + " permanent";
         if (single.containsKey(withSuffix)) {
             @SuppressWarnings("unchecked")
-            final MagicTargetFilter<MagicPermanent> filter = (MagicTargetFilter<MagicPermanent>)single.get(withSuffix);
+            final MagicTargetFilter<MagicPermanent> filter = (MagicPermanentFilterImpl)single.get(withSuffix);
             return permanent(filter, control);
         }
         if (single.containsKey(prefix)) {
             @SuppressWarnings("unchecked")
-            final MagicTargetFilter<MagicPermanent> filter = (MagicTargetFilter<MagicPermanent>)single.get(prefix);
+            final MagicTargetFilter<MagicPermanent> filter = (MagicPermanentFilterImpl)single.get(prefix);
             return permanent(filter, control);
         }
         throw new RuntimeException("unknown target filter \"" + arg + "\"");
@@ -3183,7 +3250,7 @@ public class MagicTargetFilterFactory {
         final String withSuffix = prefix + " creature";
         if (single.containsKey(withSuffix)) {
             @SuppressWarnings("unchecked")
-            final MagicTargetFilter<MagicPermanent> filter = (MagicTargetFilter<MagicPermanent>)single.get(withSuffix);
+            final MagicTargetFilter<MagicPermanent> filter = (MagicPermanentFilterImpl)single.get(withSuffix);
             return permanent(filter, control);
         }
         throw new RuntimeException("unknown target filter \"" + arg + "\"");
@@ -3203,7 +3270,7 @@ public class MagicTargetFilterFactory {
         final String withSuffix = prefix + " planeswalker";
         if (single.containsKey(withSuffix)) {
             @SuppressWarnings("unchecked")
-            final MagicTargetFilter<MagicPermanent> filter = (MagicTargetFilter<MagicPermanent>)single.get(withSuffix);
+            final MagicTargetFilter<MagicPermanent> filter = (MagicPermanentFilterImpl)single.get(withSuffix);
             return permanent(filter, control);
         }
         throw new RuntimeException("unknown target filter \"" + arg + "\"");

@@ -6,7 +6,8 @@ import magic.model.MagicPermanent;
 import magic.model.MagicCopyable;
 import magic.model.MagicCopyMap;
 
-public class MagicSourceManaActivationResult implements MagicMappable<MagicSourceManaActivationResult>, MagicCopyable {
+// need MagicCopyable as it can be stored on the stack inside MagicBuilderPayManaCostResult
+public class MagicSourceManaActivationResult implements MagicCopyable, MagicMappable<MagicSourceManaActivationResult> {
 
     private final MagicPermanent permanent;
     private final MagicManaActivation activation;

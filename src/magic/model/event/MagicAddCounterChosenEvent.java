@@ -4,6 +4,7 @@ import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicSource;
+import magic.model.MagicCopyMap;
 import magic.model.action.ChangeCountersAction;
 import magic.model.choice.MagicTargetChoice;
 
@@ -13,16 +14,19 @@ public class MagicAddCounterChosenEvent extends MagicEvent {
         super(
             source,
             MagicTargetChoice.A_CREATURE_YOU_CONTROL,
-            (final MagicGame game, final MagicEvent event) -> {
-                event.processTargetPermanent(game, (final MagicPermanent perm) ->
-                    game.doAction(new ChangeCountersAction(
-                        perm,
-                        counterType,
-                        1
-                    ))
-                );
-            },
+            counterType,
+            EventAction,
             "Put a " + counterType.getName() + " counter on a creature$ you control."
         );
     }
+
+    private static final MagicEventAction EventAction = (final MagicGame game, final MagicEvent event) -> {
+        event.processTargetPermanent(game, (final MagicPermanent perm) ->
+            game.doAction(new ChangeCountersAction(
+                perm,
+                event.getRefCounterType(),
+                1
+            ))
+        );
+    };
 }

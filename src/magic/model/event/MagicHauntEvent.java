@@ -5,6 +5,7 @@ import magic.model.MagicGame;
 import magic.model.MagicLocationType;
 import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
+import magic.model.MagicCopyMap;
 import magic.model.action.AddTriggerAction;
 import magic.model.action.MoveCardAction;
 import magic.model.action.RemoveCardAction;
@@ -27,25 +28,25 @@ public class MagicHauntEvent extends MagicEvent {
             card,
             player,
             MagicTargetChoice.TARGET_CREATURE,
-            EVENT_ACTION(effect),
+            effect,
+            EVENT_ACTION,
             "Exile SN haunting target creature$."
         );
     }
 
-    private static final MagicEventAction EVENT_ACTION(final MagicSourceEvent effect) {
-        return (final MagicGame game, final MagicEvent event) -> {
-            final MagicCard card = event.getCard();
-            if (card.isInGraveyard()) {
-                event.processTargetPermanent(game, creatureToHaunt -> {
-                    // only exile if valid target
-                    game.doAction(new RemoveCardAction(card, MagicLocationType.Graveyard));
-                    game.doAction(new MoveCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
-                    game.doAction(new AddTriggerAction(
-                        creatureToHaunt,
-                        ThisDiesTrigger.createDelayed(card, event.getPlayer(), effect)
-                    ));
-                });
-            }
-        };
-    }
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        final MagicSourceEvent effect = event.getRefSourceEvent();
+        final MagicCard card = event.getCard();
+        if (card.isInGraveyard()) {
+            event.processTargetPermanent(game, creatureToHaunt -> {
+                // only exile if valid target
+                game.doAction(new RemoveCardAction(card, MagicLocationType.Graveyard));
+                game.doAction(new MoveCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
+                game.doAction(new AddTriggerAction(
+                    creatureToHaunt,
+                    ThisDiesTrigger.createDelayed(card, event.getPlayer(), effect)
+                ));
+            });
+        }
+    };
 }

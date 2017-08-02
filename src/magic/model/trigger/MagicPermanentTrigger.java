@@ -8,19 +8,29 @@ public class MagicPermanentTrigger implements Comparable<MagicPermanentTrigger> 
     private final long id;
     private final MagicPermanent permanent;
     private final MagicTrigger<?> trigger;
+    private final boolean isUntilEOT;
 
-    public MagicPermanentTrigger(final long aId,final MagicPermanent aPermanent,final MagicTrigger<?> aTrigger) {
+    public MagicPermanentTrigger(final long aId,final MagicPermanent aPermanent,final MagicTrigger<?> aTrigger, final boolean aIsUntilEOT) {
         id = aId;
         permanent = aPermanent;
         trigger = aTrigger;
+        isUntilEOT = aIsUntilEOT;
+    }
+
+    public MagicPermanentTrigger(final long aId,final MagicPermanent aPermanent,final MagicTrigger<?> aTrigger) {
+        this(aId, aPermanent, aTrigger, false);
     }
 
     public MagicPermanentTrigger(final MagicCopyMap copyMap,final MagicPermanentTrigger source) {
-        this(source.id, copyMap.copy(source.permanent), source.trigger);
+        this(source.id, copyMap.copy(source.permanent), source.trigger, source.isUntilEOT);
     }
 
     public long getId() {
         return id;
+    }
+
+    public boolean isUntilEOT() {
+        return isUntilEOT;
     }
 
     public MagicPermanent getPermanent() {

@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ import javax.swing.SwingUtilities;
 import magic.model.MagicCardDefinition;
 import magic.model.MagicRandom;
 import magic.ui.ICardFilterPanelListener;
+import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.widget.card.filter.CardFilterPanel;
 import magic.ui.widget.cards.table.CardTablePanelB;
@@ -40,7 +42,7 @@ public class ExplorerContentPanel extends JPanel
 
     private void setupExplorerPanel() {
 
-        MagicSystem.waitForAllCards();
+        MagicSystem.waitForPlayableCards();
 
         setOpaque(false);
 
@@ -124,10 +126,27 @@ public class ExplorerContentPanel extends JPanel
 
     public void selectRandomCard() {
         cardPoolTable.selectRandomCard();
+        cardPoolTable.requestFocus();
     }
 
     void setCardsTableStyle() {
         cardPoolTable.setStyle();
+    }
+
+    BufferedImage getCardImage(int index) {
+        return MagicImages.getCardImage(cardPoolTable.getCard(index));
+    }
+
+    int getCardsCount() {
+        return cardPoolTable.getRowCount();
+    }
+
+    void setCardAt(int index) {
+        cardPoolTable.selectCardAt(index);
+    }
+
+    int getSelectedCardIndex() {
+        return cardPoolTable.getSelectedCardIndex();
     }
 
     private class CardPoolMouseListener extends MouseAdapter {
@@ -144,7 +163,7 @@ public class ExplorerContentPanel extends JPanel
     public void showCardScriptScreen() {
         if (cardPoolTable.getSelectedCards().size() == 1) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            ScreenController.showCardScriptScreen(cardPoolTable.getSelectedCards().get(0));
+            ScreenController.showCardScreen(cardPoolTable.getSelectedCards().get(0));
             setCursor (Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }

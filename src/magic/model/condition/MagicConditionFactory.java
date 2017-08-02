@@ -18,6 +18,7 @@ import magic.model.target.MagicOtherPermanentTargetFilter;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetFilterFactory;
 import magic.model.target.MagicTargetType;
+import magic.model.target.MagicTarget;
 
 public class MagicConditionFactory {
 
@@ -173,11 +174,11 @@ public class MagicConditionFactory {
         };
     }
 
-    public static MagicCondition GraveyardTypeAtLeast(final MagicType type, final int n) {
+    public static MagicCondition GraveyardAtLeast(final MagicTargetFilter<MagicCard> filter, final int n) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return MagicTargetFilterFactory.card(type).from(MagicTargetType.Graveyard).filter(source).size() >= n;
+                return filter.filter(source).size() >= n;
             }
         };
     }
@@ -303,6 +304,15 @@ public class MagicConditionFactory {
         };
     }
 
+    public static MagicCondition YouControlOrGraveyardSubType(final MagicSubType filter) {
+        return new MagicCondition() {
+            @Override
+            public boolean accept(final MagicSource source) {
+                return source.getController().controlsPermanent(filter) || source.getController().getGraveyard().containsSubType(filter);
+            }
+        };
+    }
+
     public static MagicCondition PlayerControlsSource(final MagicPlayer player) {
         final long id = player.getId();
         return new MagicCondition() {
@@ -313,11 +323,11 @@ public class MagicConditionFactory {
         };
     }
 
-    public static MagicCondition YouHaveAtLeast(final MagicTargetFilter<MagicCard> filter, final int amt) {
+    public static MagicCondition YouHaveAtLeast(final MagicTargetFilter<? extends MagicTarget> filter, final int amt) {
         return new MagicCondition() {
             @Override
             public boolean accept(final MagicSource source) {
-                return filter.filter(source.getController()).size() >= amt;
+                return filter.filter(source).size() >= amt;
             }
         };
     }

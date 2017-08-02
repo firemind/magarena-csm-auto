@@ -1,0 +1,9 @@
+name=Psychic Transfer
+image=http://magiccards.info/scans/en/st/46.jpg
+value=2.000
+rarity=R
+type=Sorcery
+cost={4}{U}
+timing=main
+oracle=If the difference between your life total and target player's life total is 5 or less, exchange life totals with that player.
+requires_groovy_code

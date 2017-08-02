@@ -73,11 +73,123 @@ Thanks to
 
 Thank you for your support and have fun!
 
+Release 1.87 (July 31, 2017)
+============
+kelsioboy
+lodici
+melvin
+ShawnieBoy
+shinmai-rookie
+
+- added Spanish translation, updated Russian translation
+
+- added Hour of Devastation to sets
+
+- activated ability must have costs fully paid, if that is not possible the
+  player has to undo and try again
+
+- support importing other deck formats into deck editor
+  * gamepedia.com deck format
+  * old forge format
+  * new forge format
+  * forge duel decks format
+
+- support dragging and dropping a deck file onto the deck editor
+
+- allow unsupported cards in decks, they will be shown in greyscale
+
+- changed/added the following to the user interface:
+  * show cards loading screen for screens that uses card information
+  * copy card name on ctrl-c or command-c from selected row in explorer, deck editor, etc.
+
+- added the following to the card script:
+  * condition: You control a Desert or there is a Desert card in your graveyard
+  * cost: Exert SN
+  * effect: Exile all cards from <player>'s graveyard.
+  * effect: Tap <permanent>. It doesn't untap during its controller's untap step for as long as SN remains tapped.
+  * effect: Gain control of <permanents> for as long as you control SN.
+  * effect: Gain control of <permanents> for as long as you control SN and SN remains tapped.
+  * effect: Gain control of <permanents> for as long as SN remains on the battlefield.
+  * effect: Cast <card> without paying its mana cost.
+  * effect: <permanents> becomes the color of your choice until end of turn.
+  * ability: Afflict <n>
+  * ability: <spells> cost <cost> more to cast
+  * ability: <spell> you cast cost <cost> more to cast
+  * ability: You may have SN enter the battlefield as a copy of any <target>.
+  * ability: SN enters the battlefield with <amount> <counter type> counters on it if <condition>.
+  * ability: You may exert SN as it attacks. When you do, <effect>
+  * ability: You may exert SN as it attacks.
+  * ability: Whenever you exert a creature, <effect>.
+
+- fixed the following bugs:
+  * crash when AI unable to pay mana cost (issue #226)
+  * crash in MCTS due to skipping of phases (issue #815)
+  * crash on first launch of Card Explorer (issue #1169)
+  * crash on clicking deck stats tab (issue #1217)
+  * avatar selection page displays "Close" instead of "Avatar" (issue #1155)
+  * throbber freeze on loading missing cards when opening card explorer
+  * card explorer table style settings not imported to new version
+  * choice card popup hangs around (issue #1188)
+  * incorrect translations sort order (issue #1211)
+  * 'P' referring to [P]layed and [P]ower cannot be translated in some languages (issue #1209)
+  * "does not untap during your next untap step" only last until permanent's next untap step (issue #1106)
+  * Stolen Identity missing Cipher
+  * Breathstealer Crypt made its controller draw a card (issue #1170)
+  * Bonfire of the Damned deals 0 damage when cast as a Miracle (issue #1218)
+  * Brink of Disaster destroys itself instead of enchanted permanent (issue #1159)
+
+- added the following cards:
+Abrade, Accursed Horde, Adorned Pouncer, Aerial Guide, Aether Snap,
+Aetherwind Basker, Agent of Erebos, Ahn-Crop Champion, Ahn-Crop Crasher,
+Angel of Condemnation, Angel of the God-Pharaoh, Apocalypse Demon,
+Aven of Enduring Hope, Aven Reedstalker, Battlefield Scavenger,
+Beneath the Sands, Bitterblade Warrior, Bitterbow Sharpshooters,
+Bloodwater Entity, Blur of Blades, Brambleweft Behemoth,
+Burning-Fist Minotaur, Carrion Screecher, Carrion Thrash,
+Champion of Rhonas, Chaos Maw, Countervailing Winds, Crash Through,
+Crook of Condemnation, Cunning Survivor, Dagger of the Worthy,
+Dauntless Aven, Defiant Khenra, Desert of the Fervent,
+Desert of the Glorified, Desert of the Indomitable, Desert of the Mindful,
+Desert of the True, Desert's Hold, Destructive Force, Devoted Crop-Mate,
+Devotee of Strength, Disposal Mummy, Dreamspoiler Witches, Dune Diviner,
+Dunes of the Dead, Dutiful Servants, Eater of the Dead, Endless Sands,
+Eternal of Harsh Truths, Feral Prowler, Fervent Paincaster,
+Firebrand Archer, Frilled Sandwalla, Frontline Devastator, Gamble,
+Gideon, Martial Paragon, Gift of Strength, Gilded Cerodon,
+Glen Elendra Pranksters, Glory-Bound Initiate, Glorybringer,
+God-Pharaoh's Faithful, Greenwheel Liberator, Grisly Survivor,
+Gruesome Encore, Gust Walker, Harrier Naga, Hashep Oasis, Hazoret's Favor,
+Hooded Brawler, Hostile Desert, Hour of Revelation, Ifnir Deadlands,
+Inferno Jet, Ipnu Rivulet, Khenra Eternal, Lady Sun, Lethal Sting,
+Lifecraft Cavalry, Lifecrafter's Gift, Liliana, Death Wielder,
+Luminate Primordial, Lurching Rotbeast, Magmaroth, Manticore Eternal,
+Marauding Boneslasher, Merciless Eternal, Misstep, Moaning Wall,
+Molten Primordial, Mummy Paramount, Nahiri, the Harbinger,
+Narnam Renegade, Nef-Crop Entangler, Night Market Aeronaut,
+Nimble Obstructionist, Oketra's Avenger, Ominous Sphinx, Open Fire,
+Oracle of Bones, Overcome, Perilous Predicament, Pride Sovereign,
+Proven Combatant, Psychic Transfer, Puncturing Blow, Quarry Beetle,
+Rampaging Hippo, Ramunap Hydra, Ramunap Ruins, Razaketh's Rite,
+Razaketh, the Foulblooded, Resilient Khenra, Resolute Survivors,
+Return of the Nightstalkers, Rhet-Crop Spearmaster, Rhonas's Stalwart,
+Riddleform, Ruin Rat, Sand Strangler, Sandwurm Convergence,
+Scavenger Grounds, Scourge of Nel Toth, Scrapheap Scrounger,
+Scrounger of Souls, Seer of the Last Tomorrow, Sepulchral Primordial,
+Sewers of Estark, Shefet Dunes, Sidewinder Naga, Solitary Camel,
+Spellweaver Eternal, Steadfast Sentinel, Steward of Solidarity,
+Striped Riverwinder, Structural Collapse, Sunset Pyramid, Supreme Will,
+Tah-Crop Elite, Thalakos Dreamsower, Thorned Moloch, Torrential Gearhulk,
+Trueheart Twins, Unquenchable Thirst, Unraveling Mummy, Veilstone Amulet,
+Vizier of the True, Wall of Forgotten Pharaohs, War-Name Aspirant,
+Watchful Naga, Wildfire Eternal, Wild Research, Willbreaker,
+Without Weakness, Wretched Camel, Zealot of the God-Pharaoh
+
 Release 1.86 (June 30, 2017)
 ============
 lodici
 melvin
 ShawnieBoy
+LoubiTek
 
 - added French translation
 

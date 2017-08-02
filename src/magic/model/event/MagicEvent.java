@@ -11,6 +11,7 @@ import magic.model.action.MagicItemOnStackAction;
 import magic.model.action.MagicPermanentAction;
 import magic.model.action.MagicPlayerAction;
 import magic.model.action.MagicTargetAction;
+import magic.model.action.LoseGameAction;
 import magic.model.choice.MagicCardChoiceResult;
 import magic.model.choice.MagicChoice;
 import magic.model.choice.MagicDeclareAttackersResult;
@@ -30,29 +31,6 @@ public class MagicEvent implements MagicCopyable {
 
     public static final Object[] NO_CHOICE_RESULTS = new Object[0];
     public static final MagicCopyable NO_REF = new MagicInteger(-1);
-
-    static class MagicInteger implements MagicCopyable {
-        public final int value;
-
-        public MagicInteger(final int v) {
-            value = v;
-        }
-
-        @Override
-        public MagicCopyable copy(final MagicCopyMap copyMap) {
-            return this;
-        }
-
-        @Override
-        public int hashCode() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return Integer.toString(value);
-        }
-    }
 
     public static final MagicEvent NONE = new MagicEvent(MagicSource.NONE, MagicPlayer.NONE, NO_REF, MagicEventAction.NONE, "") {
         @Override
@@ -76,6 +54,7 @@ public class MagicEvent implements MagicCopyable {
     private final MagicEventAction action;
     private final String description;
     private final MagicCopyable ref;
+    private boolean isCost = false;
 
     private Object[] chosen;
     private MagicTarget chosenTarget;
@@ -288,6 +267,7 @@ public class MagicEvent implements MagicCopyable {
         ref = copyMap.copy(sourceEvent.ref);
         action = sourceEvent.action;
         description = sourceEvent.description;
+        isCost = sourceEvent.isCost;
     }
 
     @Override
@@ -359,8 +339,16 @@ public class MagicEvent implements MagicCopyable {
         return (MagicTarget)ref;
     }
 
-    public final MagicPermanentActivation getRefPermanentActivation() {
-        return (MagicPermanentActivation)ref;
+    public final MagicCounterType getRefCounterType() {
+        return (MagicCounterType)ref;
+    }
+
+    public final MagicManaCost getRefManaCost() {
+        return (MagicManaCost)ref;
+    }
+
+    public final MagicTuple getRefTuple() {
+        return (MagicTuple)ref;
     }
 
     public final int getRefInt() {
@@ -369,6 +357,10 @@ public class MagicEvent implements MagicCopyable {
 
     public final MagicPayedCost getRefPayedCost() {
         return (MagicPayedCost)ref;
+    }
+
+    public final MagicSourceEvent getRefSourceEvent() {
+        return (MagicSourceEvent)ref;
     }
 
     public final MagicCard getCard() {
@@ -727,8 +719,12 @@ public class MagicEvent implements MagicCopyable {
     public final void executeEvent(final MagicGame game,final Object[] choiceResults) {
         chosen = choiceResults;
         chosenTarget = getLegalTarget(game);
-        payManaCost(game);
-        action.executeEvent(game,this);
+        if (isCost() && chosenTarget == MagicTargetNone.getInstance()) {
+            game.doAction(new LoseGameAction(player, LoseGameAction.ILLEGAL_REASON));
+        } else {
+            payManaCost(game);
+            action.executeEvent(game,this);
+        }
         chosen = null;
         chosenTarget = null;
     }
@@ -767,6 +763,7 @@ public class MagicEvent implements MagicCopyable {
             action.hashCode(),
             description.hashCode(),
             MagicObjectImpl.getStateId(ref),
+            isCost ? 1L : -1L,
         });
     }
 
@@ -776,5 +773,13 @@ public class MagicEvent implements MagicCopyable {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setCost() {
+        isCost = true;
+    }
+
+    public boolean isCost() {
+        return isCost;
     }
 }

@@ -23,8 +23,12 @@ import magic.model.target.MagicTargetHint;
 import magic.model.target.MagicTargetNone;
 import magic.model.target.MagicTargetPicker;
 import magic.model.target.MagicTargetType;
+import magic.translate.MText;
 
 public class MagicTargetChoice extends MagicChoice {
+
+    private static final String NO_OPTIONS = "Unable to %s|Click {undo} to undo.";
+
     public static final MagicTargetChoice NONE =
         new MagicTargetChoice(MagicTargetFilterFactory.NONE,MagicTargetHint.None,"nothing") {
             @Override
@@ -351,24 +355,10 @@ public class MagicTargetChoice extends MagicChoice {
 
     public MagicTargetChoice(final MagicTargetHint aTargetHint, final String aTargetDescription) {
         super("Choose " + decapitalize(aTargetDescription) + '.');
-        targetHint        = aTargetHint;
+        targetHint   = aTargetHint;
         targetDescription = decapitalize(aTargetDescription);
-
-        if (targetDescription.matches("target .*")) {
-            targetFilter = MagicTargetFilterFactory.single(targetDescription.replaceFirst("target ", ""));
-            targeted     = true;
-        } else if (targetDescription.matches("another target .*")) {
-            targetFilter = new MagicOtherPermanentTargetFilter(MagicTargetFilterFactory.Permanent(targetDescription.replaceFirst("another target ", "")));
-            targeted     = true;
-        } else if (targetDescription.matches("another .*")) {
-            targetFilter = new MagicOtherPermanentTargetFilter(MagicTargetFilterFactory.Permanent(targetDescription.replaceFirst("another ", "")));
-            targeted     = false;
-        } else if (targetDescription.matches("a(n)? .*")) {
-            targetFilter = MagicTargetFilterFactory.single(targetDescription.replaceFirst("a(n)? ", ""));
-            targeted     = false;
-        } else {
-            throw new RuntimeException("unknown target choice: \"" + aTargetDescription + "\"");
-        }
+        targetFilter = MagicTargetFilterFactory.Target(targetDescription.replaceFirst("target ", ""));
+        targeted     = targetDescription.contains("target ");
     }
 
     public MagicTargetChoice(
@@ -377,7 +367,7 @@ public class MagicTargetChoice extends MagicChoice {
     ) {
         super("Choose " + aTargetDescription + '.');
         targetFilter = aTargetFilter;
-        targeted     = aTargetDescription.contains("target");
+        targeted     = aTargetDescription.contains("target ");
         targetHint   = MagicTargetHint.None;
         targetDescription = aTargetDescription;
     }
@@ -389,7 +379,7 @@ public class MagicTargetChoice extends MagicChoice {
     ) {
         super("Choose " + aTargetDescription + '.');
         targetFilter = aTargetFilter;
-        targeted     = aTargetDescription.contains("target");
+        targeted     = aTargetDescription.contains("target ");
         targetHint   = aTargetHint;
         targetDescription = aTargetDescription;
     }
@@ -422,6 +412,10 @@ public class MagicTargetChoice extends MagicChoice {
     @SuppressWarnings("unchecked")
     public final MagicTargetFilter<MagicPermanent> getPermanentFilter() {
         return (MagicTargetFilter<MagicPermanent>)targetFilter;
+    }
+
+    public final MagicTargetFilter<? extends MagicTarget> getFilter() {
+        return targetFilter;
     }
 
     public final boolean isTargeted() {
@@ -489,7 +483,12 @@ public class MagicTargetChoice extends MagicChoice {
         if (validChoices.size()==1) {
             // There are no valid choices.
             if (validChoices.contains(MagicTargetNone.getInstance())) {
-                return new Object[]{MagicTargetNone.getInstance()};
+                if (event.isCost()) {
+                    final String desc = decapitalize(event.getDescription()).replaceFirst("\\$", "");
+                    controller.showMessage(source, String.format(NO_OPTIONS, desc));
+                } else {
+                    return new Object[]{MagicTargetNone.getInstance()};
+                }
             }
             // Only valid choice is player.
             if (validChoices.contains(player)) {

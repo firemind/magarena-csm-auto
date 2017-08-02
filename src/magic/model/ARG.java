@@ -16,7 +16,6 @@ public class ARG {
 
     public static final String CHOICE = "(?<choice>(a|an|another|target) [^\\.]+?)";
     public static final String CARD   = "(?<choice>[^\\.]* card [^\\.]+?)";
-    public static final String GRAVEYARD = "(?<choice>[^\\.]* card [^\\.]+? graveyard)";
     public static final String THING = "(permanent|creature|artifact|land|player|opponent|spell or ability|spell|ability)";
     public static final String EVENQUOTES = "(?=([^\"]*'[^\"]*')*[^\"]*$)";
 
@@ -245,7 +244,16 @@ public class ARG {
         }
     }
 
+    public static final String GRAVEYARD_CARDS = "((?<choice>[^\\.]* card [^\\.]+? graveyard)|(?<group>[^\\.]* cards [^\\.]+? graveyard))";
     public static final String CARDS = "((?<choice>[^\\.]* card [^\\.]+?)|(?<group>[^\\.]* cards [^\\.]+?))";
+    public static String cards(final Matcher m) {
+        if (m.group("choice") != null) {
+            return m.group("choice");
+        } else {
+            return m.group("group");
+        }
+    }
+
     public static List<MagicCard> cards(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicCard> filter) {
         if (m.group("choice") != null) {
             return event.listTargetCard();

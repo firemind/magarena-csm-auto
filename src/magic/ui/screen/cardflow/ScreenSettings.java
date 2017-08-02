@@ -1,19 +1,34 @@
 package magic.ui.screen.cardflow;
 
 import magic.data.GeneralConfig;
+import magic.data.settings.StringSetting;
 import magic.ui.dialog.prefs.ImageSizePresets;
 
 class ScreenSettings {
 
-    private static final String DELIM = "~~";
+    private static final String DELIM = "¦";
 
     private ImageSizePresets sizePreset;
     private final boolean useOpaqueCardFlowImage;
+    private boolean isAnimationEnabled;
 
     public ScreenSettings() {
-        String settings = GeneralConfig.getInstance().getCardFlowScreenSettings();
+        String settings = GeneralConfig.get(StringSetting.CARDFLOW_SETTINGS);
         sizePreset = getImageSizePreset(settings);
         useOpaqueCardFlowImage = getUseOpaqueImageFlag(settings);
+        isAnimationEnabled = isAnimationEnabled(settings);
+    }
+
+    private boolean isAnimationEnabled(String settings) {
+        try {
+            return Boolean.valueOf(settings.split(DELIM)[2]);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            return true;
+        }
+    }
+
+    void setAnimationEnabled(boolean b) {
+        isAnimationEnabled = b;
     }
 
     private boolean getUseOpaqueImageFlag(String settings) {
@@ -41,14 +56,19 @@ class ScreenSettings {
     }
 
     void save() {
-        GeneralConfig.getInstance().setCardFlowScreenSettings(
+        GeneralConfig.set(StringSetting.CARDFLOW_SETTINGS,
             sizePreset.name() + DELIM
             + useOpaqueCardFlowImage + DELIM
+            + isAnimationEnabled + DELIM
         );
     }
 
     boolean useOpaqueImage() {
         return useOpaqueCardFlowImage;
+    }
+
+    boolean isAnimationEnabled() {
+        return isAnimationEnabled;
     }
 
 }

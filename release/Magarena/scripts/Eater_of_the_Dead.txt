@@ -1,0 +1,11 @@
+name=Eater of the Dead
+image=http://magiccards.info/scans/en/dk/6.jpg
+value=3.400
+rarity=U
+type=Creature
+subtype=Horror
+cost={4}{B}
+pt=3/4
+ability={0}: If SN is tapped, exile target creature card from a graveyard~and untap SN. Activate this ability with AI no more than three times each turn.
+timing=main
+oracle={0}: If Eater of the Dead is tapped, exile target creature card from a graveyard and untap Eater of the Dead.

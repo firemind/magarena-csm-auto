@@ -2,6 +2,7 @@ package magic.ui.screen.keywords;
 
 import java.awt.event.KeyEvent;
 import magic.data.GeneralConfig;
+import magic.data.settings.StringSetting;
 import magic.translate.MText;
 import magic.ui.ScreenController;
 import magic.ui.helpers.KeyEventAction;
@@ -21,19 +22,17 @@ public class KeywordsScreen extends HeaderFooterScreen {
     }
 
     private void doSaveSettings() {
-        final GeneralConfig config = GeneralConfig.getInstance();
-        config.setKeywordsSettings(ScreenLayout.getLayout().name());
-
+        GeneralConfig.set(StringSetting.KEYWORDS_SCREEN, ScreenLayout.getLayout().name());
     }
-    
+
     private void setContent() {
         setMainContent(ScreenLayout.getLayout() == ScreenLayout.Layout_A
                 ? new ContentPanelA()
                 : new ContentPanelB()
         );
         clearFooterButtons();
-        addToFooter(PlainMenuButton.buildLayoutButton(this::doChangeLayout));                
-        doSaveSettings();        
+        addToFooter(PlainMenuButton.buildLayoutButton(this::doChangeLayout));
+        doSaveSettings();
     }
 
     private void doChangeLayout() {

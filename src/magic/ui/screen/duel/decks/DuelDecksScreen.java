@@ -1,8 +1,8 @@
 package magic.ui.screen.duel.decks;
 
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 import magic.data.DuelConfig;
 import magic.data.MagicIcon;
 import magic.exception.InvalidDeckException;
@@ -17,8 +17,8 @@ import magic.ui.IDeckProvider;
 import magic.ui.MagicImages;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
+import magic.ui.helpers.MouseHelper;
 import magic.ui.screen.HeaderFooterScreen;
-import magic.ui.screen.MScreen;
 import magic.ui.screen.deck.editor.IDeckEditorClient;
 import magic.ui.screen.widget.DuelSettingsPanel;
 import magic.ui.screen.widget.PlainMenuButton;
@@ -43,16 +43,28 @@ public class DuelDecksScreen extends HeaderFooterScreen
     private static final String _S12 = "Deck View";
     private static final String _S13 = "Shows complete deck using tiled card images.";
     private static final String _S14 = "%s's deck is illegal.\n\n%s";
+    private static final String _S15 = "Invalid cards will not be included.";
+    private static final String _S16 = "Start a new duel anyway?";
+    private static final String _S17 = "Confirm new duel";
 
-    private final DuelSettingsPanel settingsPanel;
-    private final DuelDecksPanel screenContent;
-    private MagicGame nextGame = null;
-    private final StartGameButton nextGameButton;
+    // UI components
+    private DuelSettingsPanel settingsPanel;
+    private DuelDecksPanel screenContent;
+    private StartGameButton nextGameButton;
     private NewGameWorker worker;
-    private final OptionsPanel optionsPanel;
+    private OptionsPanel optionsPanel;
 
-    public DuelDecksScreen(final MagicDuel duel) {
+    private MagicGame nextGame;
+    private MagicDuel duel;
+
+    public DuelDecksScreen() {
         super(MText.get(_S1));
+        useCardsLoadingScreen(this::initUI);
+    }
+
+    private void initUI() {
+
+        duel = MagicDuel.instance;
 
         screenContent = new DuelDecksPanel(duel);
         nextGameButton = new StartGameButton(getStartDuelCaption(), getPlayGameAction());
@@ -160,21 +172,43 @@ public class DuelDecksScreen extends HeaderFooterScreen
         config.setCube(settingsPanel.getCube());
     }
 
+    private boolean confirmPlayWithInvalidDecks() {
+        final String message = String.format("<html><b>%s</b><br><br>%s</html>",
+            MText.get(_S15), MText.get(_S16)
+        );
+        final Object[] params = {message};
+        final int n = JOptionPane.showConfirmDialog(screenContent,
+            params,
+            MText.get(_S17),
+            JOptionPane.YES_NO_OPTION);
+        return n == JOptionPane.YES_OPTION;
+    }
+
+    private void doPlayGame() {
+        if (duel.getGamesPlayed() == 0 && duel.hasInvalidDecks()) {
+            if (!confirmPlayWithInvalidDecks()) {
+                return;
+            }
+        }
+        updateDuelConfig();
+        startNextGame();
+    }
+
     private AbstractAction getPlayGameAction() {
         return new AbstractAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                updateDuelConfig();
-                startNextGame();
-                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                MouseHelper.showBusyCursor();
+                doPlayGame();
+                MouseHelper.showDefaultCursor();
             }
         };
     }
 
     private void doRestartDuel() {
         try {
-            ScreenController.getFrame().restartDuel();
+            MagicDuel.restartDuel();
+            ScreenController.showDuelScreen();
         } catch (InvalidDeckException ex) {
             ScreenController.showWarningMessage(ex.getMessage());
         }
@@ -277,11 +311,7 @@ public class DuelDecksScreen extends HeaderFooterScreen
     }
 
     @Override
-    public boolean isScreenReadyToClose(MScreen nextScreen) {
-        if (super.isScreenReadyToClose(nextScreen)) {
-            CardsTableStyle.save();
-            return true;
-        }
-        return false;
+    protected boolean needsPlayableCards() {
+        return true;
     }
 }

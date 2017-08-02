@@ -1,0 +1,13 @@
+name=Oblivion
+image=http://magiccards.info/scans/en/hou/149b.jpg
+value=2.500
+rarity=U
+type=Sorcery
+cost={4}{B}
+ability=Aftermath
+effect=Target opponent discards two cards.
+split=Consign
+timing=main
+second_half
+oracle=Aftermath\nTarget opponent discards two cards.
+status=not supported: split-card

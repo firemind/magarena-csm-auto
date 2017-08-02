@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import magic.ui.ScreenController;
@@ -30,7 +31,6 @@ public abstract class MScreen {
 
     private JComponent contentPanel = TEMP_PANEL;
     private WikiPage wikiPage = WikiPage.HOME;
-    private ScreenLoaderWorker loadingWorker;
 
     public MScreen() {
         screen.setOpaque(false);
@@ -79,9 +79,6 @@ public abstract class MScreen {
     }
 
     public boolean isScreenReadyToClose(MScreen aScreen) {
-        if (loadingWorker != null && !loadingWorker.isDone()) {
-            loadingWorker.cancel(true);
-        }
         return true;
     }
 
@@ -93,8 +90,17 @@ public abstract class MScreen {
         this.wikiPage = wikiPage;
     }
 
-    protected boolean isCardDataRequired() {
+    protected boolean needsPlayableCards() {
         return false;
+    }
+
+    protected boolean needsMissingCards() {
+        return false;
+    }
+
+    private boolean needsCardsLoadingScreen() {
+        return needsPlayableCards() && !MagicSystem.loadPlayable.isDone()
+            || needsMissingCards() && !MagicSystem.loadMissing.isDone();
     }
 
     /**
@@ -102,20 +108,9 @@ public abstract class MScreen {
      *
      * @param r normally the screen's UI initialization code.
      */
-    protected final void useLoadingScreen(Runnable r) {
-
-        final boolean needsCardData =
-                isCardDataRequired() && !MagicSystem.loadCards.isDone();
-
-        if (needsCardData) {
-
-            ScreenLoadingPanel loadingPanel = new ScreenLoadingPanel(r, needsCardData);
-
-            loadingWorker = new ScreenLoaderWorker(loadingPanel);
-            loadingWorker.execute();
-
-            setMainContent(loadingPanel);
-
+    protected final void useCardsLoadingScreen(Runnable r) {
+        if (needsCardsLoadingScreen()) {
+            setMainContent(new CardsLoadingPanel(r, this));
         } else {
             r.run();
         }
@@ -175,6 +170,11 @@ public abstract class MScreen {
 
     public Font getFont() {
         return screen.getFont();
+    }
+
+    public boolean doFileDropAction(File aFile) {
+        System.err.println("doFileDropAction() not implemented in " + this.getClass().getSimpleName());
+        return false;
     }
 
 }

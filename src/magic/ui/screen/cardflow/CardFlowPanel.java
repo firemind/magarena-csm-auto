@@ -431,7 +431,9 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
     }
 
     public void addListener(ICardFlowListener aListener) {
-        listeners.add(aListener);
+        if (aListener != null) {
+            listeners.add(aListener);
+        }
     }
 
     public int getImagesCount() {
@@ -444,7 +446,12 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
                 flowDirection = FlowDirection.RIGHT;
                 activeImageIndex = activeImageIndex - 1;
                 timelinePulse = 0.0f;
-                timeline.play();
+                if (settings.isAnimationEnabled()) {
+                    timeline.play();
+                } else {
+                    onTimelinePulse(0, 1.0f);
+                    notifyOnNewActiveImage();
+                }
             }
         }
     }
@@ -455,7 +462,12 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
                 flowDirection = FlowDirection.LEFT;
                 activeImageIndex = activeImageIndex + 1;
                 timelinePulse = 0.0f;
-                timeline.play();
+                if (settings.isAnimationEnabled()) {
+                    timeline.play();
+                } else {
+                    onTimelinePulse(0, 1.0f);
+                    notifyOnNewActiveImage();
+                }
             }
         }
     }
@@ -499,6 +511,10 @@ class CardFlowPanel extends JPanel implements TimelineCallback {
     void setImageSize(ImageSizePresets preset) {
         this.sizePreset = preset;
         repaintCardFlowImage();
+    }
+
+    void setAnimation(boolean b) {
+        settings.setAnimationEnabled(b);
     }
 
 }

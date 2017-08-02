@@ -22,6 +22,8 @@ public class MagicDuel {
     private static final String WON = "duel.won";
     private static final String START = "duel.start";
 
+    public static MagicDuel instance;
+
     private final DuelConfig duelConfig;
     private final int playerIndex = 0;
     private final int opponentIndex = 1;
@@ -229,5 +231,37 @@ public class MagicDuel {
                 return getConfiguration().getPlayerProfile(1);
             }
         }
+    }
+
+    public static void restartDuel() {
+        if (instance != null) {
+            instance.restart();
+        }
+    }
+
+    public static void newDuel() {
+        instance = new MagicDuel(DuelConfig.getInstance());
+        instance.initialize();
+    }
+
+    public static boolean isDuelReady() {
+        return instance != null;
+    }
+
+    public boolean isNotFinished() {
+        return !isFinished();
+    }
+
+    public static void resumeDuel() {
+        final File duelFile = getLatestDuelFile();
+        if (duelFile.exists()) {
+            instance = new MagicDuel(DuelConfig.getInstance());
+            instance.load(duelFile);
+        }
+    }
+
+    public boolean hasInvalidDecks() {
+        return !getPlayer(0).getDeck().isValid()
+            || !getPlayer(1).getDeck().isValid();
     }
 }

@@ -1,6 +1,6 @@
 package magic.model;
 
-public enum MagicCounterType {
+public enum MagicCounterType implements MagicCopyable {
 // scores: (All assume owner and controller of permanent with counters on it)
 // 0=Ignore (for counters that are used positively and negatively, or counters that mark a rule change for that card while present)
 // 1=Count (counters that are only used positively (eg. Counting a spendable resource, negative impact if decreased to certain #, positive impact if increased to certain #))
@@ -67,6 +67,7 @@ public enum MagicCounterType {
     Hatchling("hatchling","{hch}",1),
     Healing("healing","{hea}",1),
     Hoofprint("hoofprint","{hpr}",1),
+    Hour("hour", "{hou}", 1),
     Hourglass("hourglass","{hgl}",0),
     Hunger("hunger","{hgr}",-1),
     Ice("ice","{ice}",0),

@@ -13,6 +13,7 @@ import magic.model.choice.MagicFromCardFilterChoice;
 import magic.model.choice.MagicMayChoice;
 import magic.model.choice.MagicOrChoice;
 import magic.model.choice.MagicTargetChoice;
+import magic.model.choice.MagicColorChoice;
 import magic.model.condition.MagicArtificialCondition;
 import magic.model.condition.MagicCondition;
 import magic.model.condition.MagicConditionFactory;
@@ -285,6 +286,25 @@ public enum MagicRuleEventAction {
             }
         }
     ),
+    ExilePlayerGraveyard(
+        "exile all cards from " + ARG.PLAYERS + "'s graveyard",
+        MagicTargetHint.Negative,
+        MagicTiming.Removal,
+        "Exile"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
+            return (game, event) -> {
+                for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
+                    final MagicCardList graveyard = new MagicCardList(it.getGraveyard());
+                    for (final MagicCard card : graveyard) {
+                        game.doAction(new ShiftCardAction(card, MagicLocationType.Graveyard, MagicLocationType.Exile));
+                    }
+                }
+            };
+        }
+    },
     ExileCards(
         "exile " + ARG.CARDS,
         MagicTargetHint.Negative,
@@ -1611,7 +1631,7 @@ public enum MagicRuleEventAction {
         }
     },
     SearchLibraryToBattlefield(
-        "search your library for (?<card>[^\\.]*)(,| and) put (it|that card) onto the battlefield" + ARG.MODS + "(.|,) ((T|t)hen|If you do,) shuffle your library",
+        "search your library for (?<card>[^\\.]*)(,| and) put (it|that card) onto the battlefield" + ARG.MODS + "(\\.|,) (Then|If you do,) shuffle your library",
         MagicTiming.Token,
         "Search"
     ) {
@@ -1627,7 +1647,7 @@ public enum MagicRuleEventAction {
         }
     },
     SearchLibraryToBattlefieldAlt(
-        "search your library for (?<card>[^\\.]*)(,| and) put (it|that card) onto the battlefield\\. Then shuffle your library\\." + ARG.MODS,
+        "search your library for (?<card>[^\\.]*)(,| and) put (it|that card) onto the battlefield(\\.|,) Then shuffle your library\\." + ARG.MODS,
         MagicTiming.Token,
         "Search"
     ) {
@@ -1637,7 +1657,7 @@ public enum MagicRuleEventAction {
         }
     },
     SearchMultiLibraryToBattlefield(
-        "search your library for up to " + ARG.AMOUNT + " (?<card>[^\\.]*)(,| and) put (them|those cards) onto the battlefield" + ARG.MODS + "(.|,) ((T|t)hen|If you do,) shuffle your library",
+        "search your library for up to " + ARG.AMOUNT + " (?<card>[^\\.]*)(,| and) put (them|those cards) onto the battlefield" + ARG.MODS + "(.|,) (Then|If you do,) shuffle your library",
         MagicTiming.Token,
         "Search"
     ) {
@@ -1675,7 +1695,7 @@ public enum MagicRuleEventAction {
         }
     },
     Reanimate(
-        "return " + ARG.GRAVEYARD + " to the battlefield" + ARG.MODS,
+        "return " + ARG.GRAVEYARD_CARDS + " to the battlefield" + ARG.MODS,
         MagicTargetHint.None,
         MagicGraveyardTargetPicker.PutOntoBattlefield,
         MagicTiming.Token,
@@ -1684,17 +1704,20 @@ public enum MagicRuleEventAction {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             final List<MagicPlayMod> mods = ARG.mods(matcher);
-            return (game, event) -> event.processTargetCard(game, (final MagicCard card) ->
-                game.doAction(new ReanimateAction(
-                    card,
-                    event.getPlayer(),
-                    mods
-                ))
-            );
+            final MagicTargetFilter<MagicCard> filter = ARG.cardsParse(matcher);
+            return (game, event) -> {
+                for (final MagicCard it : ARG.cards(event, matcher, filter)) {
+                    game.doAction(new ReanimateAction(
+                        it,
+                        event.getPlayer(),
+                        mods
+                    ));
+                }
+            };
         }
     },
     Reanimate2(
-        "put " + ARG.GRAVEYARD + " onto the battlefield under your control" + ARG.MODS,
+        "put " + ARG.GRAVEYARD_CARDS + " onto the battlefield under your control" + ARG.MODS,
         MagicTargetHint.None,
         MagicGraveyardTargetPicker.PutOntoBattlefield,
         MagicTiming.Token,
@@ -1734,6 +1757,27 @@ public enum MagicRuleEventAction {
             };
         }
     },
+    TapRemains(
+        "tap " + ARG.PERMANENTS + "\\. (It|That " + ARG.THING + ") doesn't untap during its controller's untap step for as long as SN remains tapped.",
+        MagicTargetHint.Negative,
+        MagicTapTargetPicker.Tap,
+        MagicTiming.Tapping,
+        "Tap"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new TapAction(it));
+                    game.doAction(new AddStaticAction(
+                        event.getPermanent(),
+                        MagicStatic.AsLongAsCond(it, MagicAbility.DoesNotUntap, MagicCondition.TAPPED_CONDITION)
+                    ));
+                }
+            };
+        }
+    },
     Tap(
         "tap " + ARG.PERMANENTS,
         MagicTargetHint.Negative,
@@ -1752,7 +1796,7 @@ public enum MagicRuleEventAction {
         }
     },
     Paralyze(
-        ARG.PERMANENTS + " doesn't untap during (your|its controller's) next untap step",
+        ARG.PERMANENTS + " doesn't untap during its controller's next untap step",
         MagicTargetHint.Negative,
         new MagicNoCombatTargetPicker(true, true, false),
         MagicTiming.Tapping,
@@ -1767,6 +1811,23 @@ public enum MagicRuleEventAction {
                         it,
                         MagicPermanentState.DoesNotUntapDuringNext
                     ));
+                }
+            };
+        }
+    },
+    Exert(
+        ARG.PERMANENTS + " doesn't untap during your next untap step",
+        MagicTargetHint.Negative,
+        new MagicNoCombatTargetPicker(true, true, false),
+        MagicTiming.Tapping,
+        "Paralyze"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(ChangeStateAction.DoesNotUntapDuringNext(it, event.getPlayer()));
                 }
             };
         }
@@ -2337,6 +2398,35 @@ public enum MagicRuleEventAction {
             };
         }
     },
+    BecomesColor(
+        ARG.PERMANENTS + " becomes the color of your choice(?<ueot> until end of turn)?\\.",
+        MagicTiming.Pump,
+        "Color"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) ->
+                game.addEvent(new MagicEvent(
+                    event.getSource(),
+                    event.getPlayer(),
+                    MagicColorChoice.ALL_INSTANCE,
+                    new MagicPermanentList(ARG.permanents(event, matcher, filter)),
+                    matcher.group("ueot") != null ? this:: ueot : this::forever,
+                    "Chosen color$."
+                ));
+        }
+        private void ueot(final MagicGame game, final MagicEvent event) {
+            for (final MagicPermanent it : event.getRefPermanentList()) {
+                game.doAction(new AddStaticAction(it, MagicStatic.BecomesColor(event.getChosenColor(), MagicStatic.UntilEOT)));
+            }
+        }
+        private void forever(final MagicGame game, final MagicEvent event) {
+            for (final MagicPermanent it : event.getRefPermanentList()) {
+                game.doAction(new AddStaticAction(it, MagicStatic.BecomesColor(event.getChosenColor(), MagicStatic.Forever)));
+            }
+        }
+    },
     BecomesAlt(
         "(?<duration>until end of turn, )" + ARG.PERMANENTS + " becomes( a| an)?( )?(?<pt>[0-9]+/[0-9]+)? (?<all>.*?)( (with|and gains) (?<ability>.*?))?(?<additionTo>((\\.)? It's| that's) still [^\\.]*)?",
         MagicTiming.Animate,
@@ -2680,6 +2770,75 @@ public enum MagicRuleEventAction {
             };
         }
     },
+    GainControlRemainsTapped(
+        "gain control of " + ARG.PERMANENTS + " for as long as you control SN and SN remains tapped",
+        MagicTargetHint.Negative,
+        MagicExileTargetPicker.create(),
+        MagicTiming.Removal,
+        "Control"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new AddStaticAction(
+                        event.getPermanent(),
+                        MagicStatic.ControlAsLongAsYouControlSourceAndSourceIsTapped(
+                            event.getPlayer(),
+                            it
+                        )
+                    ));
+                }
+            };
+        }
+    },
+    GainControlControl(
+        "gain control of " + ARG.PERMANENTS + " for as long as you control SN",
+        MagicTargetHint.Negative,
+        MagicExileTargetPicker.create(),
+        MagicTiming.Removal,
+        "Control"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new AddStaticAction(
+                        event.getPermanent(),
+                        MagicStatic.ControlAsLongAsYouControlSource(
+                            event.getPlayer(),
+                            it
+                        )
+                    ));
+                }
+            };
+        }
+    },
+    GainControlRemainsOnBattlefield(
+        "gain control of " + ARG.PERMANENTS + " for as long as SN remains on the battlefield",
+        MagicTargetHint.Negative,
+        MagicExileTargetPicker.create(),
+        MagicTiming.Removal,
+        "Control"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
+            return (game, event) -> {
+                for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
+                    game.doAction(new AddStaticAction(
+                        event.getPermanent(),
+                        MagicStatic.ControlAsLongAsSourceIsOnBattlefield(
+                            event.getPlayer(),
+                            it
+                        )
+                    ));
+                }
+            };
+        }
+    },
     GainControl(
         "gain control of " + ARG.PERMANENTS + "(?<ueot> until end of turn)?",
         MagicTargetHint.Negative,
@@ -2789,7 +2948,7 @@ public enum MagicRuleEventAction {
         }
     },
     Energy(
-        ARG.PLAYERS + "( )?get(s)? " + ARG.ENERGY,
+        ARG.PLAYERS + "( )?get(s)? " + ARG.ENERGY + "( for each " + ARG.WORDRUN + ")?",
         MagicTargetHint.Positive,
         MagicTiming.Pump,
         "Energy"
@@ -2797,10 +2956,13 @@ public enum MagicRuleEventAction {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             final int amount = ARG.energy(matcher);
+            final MagicAmount eachCount = MagicAmountParser.build(ARG.wordrun(matcher));
             final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
             return (game, event) -> {
+                final int multiplier = eachCount.getAmount(event);
+                final int total = amount * multiplier;
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Energy, amount));
+                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Energy, total));
                 }
             };
         }
@@ -2835,6 +2997,30 @@ public enum MagicRuleEventAction {
             return (game, event) -> {
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
                     game.doAction(new ChangeExtraTurnsAction(it, amount));
+                }
+            };
+        }
+    },
+    CastFreeSpell(
+        "cast " + ARG.CARDS + " without paying its mana cost(?<exile>\\. If (that card|a card cast this way) would be put into (your|a) graveyard this turn, exile it instead)?",
+        MagicTargetHint.None,
+        MagicGraveyardTargetPicker.PutOntoBattlefield,
+        MagicTiming.Token,
+        "Cast"
+    ) {
+        @Override
+        public MagicEventAction getAction(final Matcher matcher) {
+            final MagicTargetFilter<MagicCard> filter = ARG.cardsParse(matcher);
+            final MagicLocationType from = MagicLocationType.create(ARG.cards(matcher));
+            final MagicLocationType to = matcher.group("exile") != null ? MagicLocationType.Exile : MagicLocationType.Graveyard;
+            return (game, event) -> {
+                for (final MagicCard it : ARG.cards(event, matcher, filter)) {
+                    game.doAction(CastCardAction.WithoutManaCost(
+                        event.getPlayer(),
+                        it,
+                        from,
+                        to
+                    ));
                 }
             };
         }

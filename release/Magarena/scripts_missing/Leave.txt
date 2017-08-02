@@ -1,0 +1,11 @@
+name=Leave
+image=http://magiccards.info/scans/en/hou/153a.jpg
+value=2.500
+rarity=R
+type=Instant
+cost={1}{W}
+effect=Return any number of target permanents you own to your hand.
+split=Chance
+timing=removal
+oracle=Return any number of target permanents you own to your hand.
+status=not supported: split-card

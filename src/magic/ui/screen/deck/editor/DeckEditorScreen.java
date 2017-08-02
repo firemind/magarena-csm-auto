@@ -1,10 +1,14 @@
 package magic.ui.screen.deck.editor;
 
+import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import magic.data.DeckType;
 import magic.data.GeneralConfig;
@@ -13,14 +17,19 @@ import magic.data.MagicSetDefinitions;
 import magic.model.MagicDeck;
 import magic.translate.MText;
 import magic.ui.MagicLogs;
+import magic.ui.MagicSound;
 import magic.ui.ScreenController;
 import magic.ui.WikiPage;
+import magic.ui.dialog.DeckImportDialog;
+import magic.ui.helpers.ImageHelper;
 import magic.ui.screen.HeaderFooterScreen;
 import magic.ui.screen.MScreen;
 import magic.ui.screen.interfaces.IDeckConsumer;
 import magic.ui.screen.widget.PlainMenuButton;
 import magic.ui.widget.deck.DeckStatusPanel;
+import magic.utility.DeckParser;
 import magic.utility.DeckUtils;
+import magic.utility.FileIO;
 import magic.utility.MagicFileSystem;
 
 @SuppressWarnings("serial")
@@ -51,16 +60,23 @@ public class DeckEditorScreen extends HeaderFooterScreen implements IDeckConsume
     private static final String _S31 = "Deck name (must be a valid filename)";
     private static final String _S32 = "Save player deck";
 
+    private static final Logger LOGGER = Logger.getLogger(DeckEditorScreen.class.getName());
+
+    private static final ImageIcon IMPORT_ICON =
+        ImageHelper.getRecoloredIcon(MagicIcon.IMPORT, Color.BLACK, Color.WHITE);
+
     private ContentPanel contentPanel;
     private final DeckStatusPanel deckStatusPanel = new DeckStatusPanel();
     private final IDeckEditorClient deckClient;
     private final DeckEditorController controller = DeckEditorController.instance;
 
+    private String importText = "";
+
     public DeckEditorScreen(IDeckEditorClient client) {
         super(MText.get(_S14));
         this.deckClient = client;
         controller.init(this, client.getDeck());
-        useLoadingScreen(this::initUI);
+        useCardsLoadingScreen(this::initUI);
     }
 
     // CTR : open Deck Editor in standalone mode starting with an empty deck.
@@ -68,18 +84,18 @@ public class DeckEditorScreen extends HeaderFooterScreen implements IDeckConsume
         super(MText.get(_S14));
         this.deckClient = null;
         controller.init(this, getMostRecentEditedDeck());
-        useLoadingScreen(this::initUI);
+        useCardsLoadingScreen(this::initUI);
     }
 
     public DeckEditorScreen(MagicDeck aDeck) {
         super(MText.get(_S14));
         this.deckClient = null;
         controller.init(this, aDeck);
-        useLoadingScreen(this::initUI);
+        useCardsLoadingScreen(this::initUI);
     }
 
     @Override
-    protected boolean isCardDataRequired() {
+    protected boolean needsPlayableCards() {
         return true;
     }
 
@@ -115,31 +131,42 @@ public class DeckEditorScreen extends HeaderFooterScreen implements IDeckConsume
         }
     }
 
+    private void showDeckImportDialog(String text) {
+        DeckImportDialog dialog = new DeckImportDialog(text);
+        if (!dialog.isCancelled()) {
+            MagicDeck deck = dialog.getDeck();
+            if (deck.isNotEmpty()) {
+                setDeck(deck);
+                importText = dialog.getText();
+            } else {
+                MagicSound.BEEP.play();
+            }
+        }
+    }
+
+    private void showDeckImportDialog() {
+        showDeckImportDialog(importText);
+    }
+
     private void setFooterButtons() {
-        addToFooter(PlainMenuButton.build(this::showDecksScreen,
+        addFooterGroup(
+            PlainMenuButton.build(this::showDecksScreen,
                 MagicIcon.OPEN, MText.get(_S4), MText.get(_S5)
             ),
             PlainMenuButton.build(this::saveDeck,
                 MagicIcon.SAVE, MText.get(_S6), MText.get(_S7)
             ),
-            PlainMenuButton.build(this::showSampleHandScreen,
-                MagicIcon.HAND_ICON, MText.get(_S8), MText.get(_S9)
-            ),
+            PlainMenuButton.build(this::showDeckImportDialog,
+                IMPORT_ICON, "Import deck", "")
+        );
+        addFooterGroup(
             PlainMenuButton.build(this::showDeckTiledCardsScreen,
                 MagicIcon.TILED, MText.get(_S11), MText.get(_S12)
+            ),
+            PlainMenuButton.build(this::showSampleHandScreen,
+                MagicIcon.HAND_ICON, MText.get(_S8), MText.get(_S9)
             )
         );
-    }
-
-    private static MagicDeck getMostRecentEditedDeck() {
-        Path deckFilePath = GeneralConfig.getInstance().getMostRecentDeckFilePath();
-        if (deckFilePath != null) {
-            MagicDeck newDeck = tryLoadDeck(deckFilePath);
-            if (newDeck.isValid()) {
-                return newDeck;
-            }
-        }
-        return new MagicDeck();
     }
 
     private static MagicDeck tryLoadDeck(final Path deckFilePath) {
@@ -151,6 +178,10 @@ public class DeckEditorScreen extends HeaderFooterScreen implements IDeckConsume
             Logger.getLogger(DeckEditorScreen.class.getName()).log(Level.WARNING, null, ex);
             return new MagicDeck();
         }
+    }
+
+    private static MagicDeck getMostRecentEditedDeck() {
+        return tryLoadDeck(GeneralConfig.getInstance().getMostRecentDeckFilePath());
     }
 
     private PlainMenuButton getLeftActionButton() {
@@ -313,6 +344,37 @@ public class DeckEditorScreen extends HeaderFooterScreen implements IDeckConsume
 
     void deckUpdated(MagicDeck deck) {
         deckStatusPanel.setDeck(deck, false);
+    }
+
+    private String getDroppedFileContents(File aFile) {
+        try {
+            return FileIO.toStr(aFile);
+        } catch (IOException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+        }
+        return "";
+    }
+
+    @Override
+    public boolean doFileDropAction(File aFile) {
+        if (aFile.length() > 2048) {
+            showDeckImportDialog("File too big to be a valid deck file (greater than 2 MB).");
+            return true;
+        }
+        String text = getDroppedFileContents(aFile);
+        if (text.isEmpty()) {
+            return false;
+        }
+        importText = text;
+        MagicDeck deck = DeckParser.parseText(text);
+        if (deck.isNotEmpty()) {
+            setDeck(deck);
+            return true;
+        } else if (!deck.getDescription().isEmpty()) {
+            showDeckImportDialog(text);
+            return true;
+        }
+        return false;
     }
 
 }

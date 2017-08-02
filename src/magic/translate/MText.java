@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import magic.data.GeneralConfig;
+import magic.data.settings.BooleanSetting;
 import magic.utility.MagicFileSystem;
 import magic.utility.MagicSystem;
 
@@ -35,6 +36,18 @@ public final class MText {
 
     private static final String UTF_CHAR_SET = "UTF-8";
     private static final String HEADER_CHAR = "¦";
+
+    // Not sure if it is a bug or by design but if no UTF character is written
+    // then (on Windows 7 anyway) it ignores UTF_CHAR_SET and encodes as ANSI.
+    // If you subsequently overwrite the template strings with translations that do
+    // use unicode characters no error is thrown but the translations are not loaded
+    // either. Therefore since the template file uses a prefix character to highlight
+    // untranslated strings in the UI use a unicode character to force correct encoding.
+    private static final String UTF_PREFIX = "\u25AB"; // small white square ▫
+
+    // Delimiter used to separate an abbreviation and the whole word/phrase.
+    // Needs to be something that will never appear in a normal English sentence.
+    private static final String ABBREVIATOR = "|+";
 
     private static final CRC32 crc = new CRC32();
     private static final Map<Long, String> translationsMap = new HashMap<>();
@@ -66,24 +79,34 @@ public final class MText {
         }
     }
 
+    private static String getDisplayText(String text) {
+        return text.contains(ABBREVIATOR)
+            ? text.substring(0, text.indexOf(ABBREVIATOR))
+            : text;
+    }
+
+    private static boolean isTranslating() {
+        return !translationsMap.isEmpty();
+    }
+
     public static final String get(final String aString, final Object... args) {
-        if (translationsMap.isEmpty() == false) {
+        if (isTranslating()) {
             final Long stringId = getStringId(aString);
             if (translationsMap.containsKey(stringId)) {
                 return String.format(translationsMap.get(stringId), args);
             }
         }
-        return String.format(aString, args);
+        return getDisplayText(String.format(aString, args));
     }
 
     public static final String get(final String aString) {
-        if (translationsMap.isEmpty() == false) {
+        if (isTranslating()) {
             final Long stringId = getStringId(aString);
             if (translationsMap.containsKey(stringId)) {
                 return translationsMap.get(stringId);
             }
         }
-        return aString;
+        return getDisplayText(aString);
     }
 
     /**
@@ -189,14 +212,6 @@ public final class MText {
      */
     public static Map<Long, String> getUiStringsMap() throws URISyntaxException, IOException {
 
-        // Not sure if it is a bug or by design but if no UTF character is written
-        // then (on Windows 7 anyway) it ignores UTF_CHAR_SET and encodes as ANSI.
-        // If you subsequently overwrite the template strings with translations that do
-        // use unicode characters no error is thrown but the translations are not loaded
-        // either. Therefore since the template file uses a prefix character to highlight
-        // untranslated strings in the UI use a unicode character to force correct encoding.
-        final String UTF_PREFIX = "\u25AB"; // small white square ▫
-
         final Map<Long, String> stringsMap = new LinkedHashMap<>();
         annotations.clear();
 
@@ -213,8 +228,9 @@ public final class MText {
                     if (isFieldValid) {
                         f.setAccessible(true);
                         try {
-                            final Long stringId = getStringId((String) f.get(null));
-                            final String stringValue = UTF_PREFIX + StringEscapeUtils.escapeJava((String) f.get(null));
+                            final String fieldValue = (String) f.get(null);
+                            final Long stringId = getStringId(fieldValue);
+                            final String stringValue = UTF_PREFIX + StringEscapeUtils.escapeJava(getDisplayText(fieldValue));
                             if (stringsMap.containsKey(stringId) == false) {
                                 stringsMap.put(stringId, stringValue);
                                 if (f.getAnnotation(StringContext.class) != null) {
@@ -247,14 +263,14 @@ public final class MText {
 
     public static void createTranslationFile(File txtFile, Map<Long, String> stringsMap) throws FileNotFoundException, UnsupportedEncodingException {
         try (final PrintWriter writer = new PrintWriter(txtFile, UTF_CHAR_SET)) {
-            writer.println(getHeaderLineData());
+            writer.print(getHeaderLineData() + "\n");
             for (Map.Entry<Long, String> entry : stringsMap.entrySet()) {
                 final Long key = entry.getKey();
                 if (annotations.containsKey(key)) {
-                    writer.println(String.format("# %010d eg. %s", key, annotations.get(key)));
+                    writer.print(String.format("# %010d eg. %s\n", key, annotations.get(key)));
                 }
                 // CRC32 function returns 32 bit long = max 10 numerals. Pad if smaller.
-                writer.println(String.format("%010d = %s", key, entry.getValue()));
+                writer.print(String.format("%010d = %s\n", key, entry.getValue()));
             }
         }
     }
@@ -287,6 +303,23 @@ public final class MText {
     }
 
     public static boolean canUseCustomFonts() {
-        return useCustomFonts;
+        return useCustomFonts && GeneralConfig.get(BooleanSetting.CUSTOM_FONTS);
+    }
+
+    /**
+     * This is used to create a string consisting of an abbreviation and it's
+     * associated word or phrase. Only the abbreviation will be displayed in the
+     * UI or require translation whereas the whole string will be used to
+     * generate the CRC ID for the translation file entry.
+     *
+     * An example of where this is necessary is when "P" is used to mean
+     * games [P]layed or a creature's [P]ower. If the string "P" is used on its
+     * own then the CRC will be the same for both cases which is fine in English
+     * but the chances of "Played" and "Power" using the same abbreviation when
+     * translated is very unlikely. By combining the abbreviation and its
+     * meaning there is a much less chance of the CRCs being the same.
+     */
+    public static String abbreviate(String s1, String s2) {
+        return s1 + ABBREVIATOR + s2;
     }
 }

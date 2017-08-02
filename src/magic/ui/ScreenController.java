@@ -20,8 +20,11 @@ import magic.ui.dialog.prefs.PreferencesDialog;
 import magic.ui.helpers.MouseHelper;
 import magic.ui.screen.MScreen;
 import magic.ui.screen.about.AboutScreen;
+import magic.ui.screen.card.CardScreen;
 import magic.ui.screen.card.explorer.ExplorerScreen;
-import magic.ui.screen.card.script.CardScriptScreen;
+import magic.ui.screen.cardflow.CardFlowScreen;
+import magic.ui.screen.cardflow.ICardFlowListener;
+import magic.ui.screen.cardflow.ICardFlowProvider;
 import magic.ui.screen.deck.DeckScreen;
 import magic.ui.screen.deck.editor.DeckEditorScreen;
 import magic.ui.screen.deck.editor.DeckEditorSplitScreen;
@@ -54,8 +57,6 @@ import magic.ui.screen.player.PlayerScreen;
 import magic.ui.screen.readme.ReadmeScreen;
 import magic.ui.screen.stats.StatsScreen;
 import magic.ui.screen.test.TestScreen;
-import magic.ui.screen.cardflow.CardFlowScreen;
-import magic.ui.screen.cardflow.ICardFlowProvider;
 import magic.ui.widget.duel.choice.MulliganChoicePanel;
 import magic.utility.MagicSystem;
 
@@ -203,11 +204,11 @@ public final class ScreenController {
         showScreen(StatsScreen::new);
     }
 
-    public static void showDuelDecksScreen(final MagicDuel duel) {
+    public static void showDuelDecksScreen() {
         if (isDuelDecksScreenDisplayed()) {
             screens.pop();
         }
-        showScreen(() -> new DuelDecksScreen(duel));
+        showScreen(DuelDecksScreen::new);
     }
 
     public static void showMainMenuScreen() {
@@ -306,8 +307,8 @@ public final class ScreenController {
         showScreen(GameLogScreen::new);
     }
 
-    public static void showCardScriptScreen(final MagicCardDefinition card) {
-        showScreen(() -> new CardScriptScreen(card));
+    public static void showCardScreen(final MagicCardDefinition card) {
+        showScreen(() -> new CardScreen(card));
     }
 
     public static void showDecksScreen(final IDeckConsumer deckConsumer) {
@@ -353,12 +354,12 @@ public final class ScreenController {
         showScreen(WipMenuScreen::new);
     }
 
-    public static void showCardFlowScreen() {
-        showScreen(CardFlowScreen::new);
-    }
-
     public static void showCardFlowScreen(ICardFlowProvider provider, String screenTitle) {
         showScreen(() -> new CardFlowScreen(provider, screenTitle));
+    }
+
+    public static void showCardFlowScreen(ICardFlowProvider provider, ICardFlowListener listener, String screenTitle) {
+        showScreen(() -> new CardFlowScreen(provider, listener, screenTitle));
     }
 
     public static boolean isDeckScreenShowing() {
@@ -367,6 +368,26 @@ public final class ScreenController {
 
     public static boolean isActive(MScreen aScreen) {
         return screens.peek() == aScreen;
+    }
+
+    public static void showDuelScreen() {
+        if (MagicDuel.isDuelReady()) {
+            showDuelDecksScreen();
+            if (MagicSystem.isAiVersusAi()) {
+                if (MagicDuel.instance.isNotFinished()) {
+                    // run next game.
+                    showDuelGameScreen(MagicDuel.instance);
+                } else {
+                    MagicDuel.newDuel();
+                    showDuelScreen();
+                }
+            }
+        }
+    }
+
+    public static void closeDuelScreen() {
+        closeActiveScreen(false);
+        showDuelScreen();
     }
 
 }

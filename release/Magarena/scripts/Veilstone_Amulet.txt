@@ -1,0 +1,9 @@
+name=Veilstone Amulet
+image=http://magiccards.info/scans/en/fut/166.jpg
+value=3.808
+rarity=R
+type=Artifact
+cost={3}
+timing=artifact
+oracle=Whenever you cast a spell, creatures you control can't be the targets of spells or abilities your opponents control this turn.
+requires_groovy_code

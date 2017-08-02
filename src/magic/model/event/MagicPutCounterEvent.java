@@ -4,6 +4,8 @@ import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicSource;
+import magic.model.MagicCopyMap;
+import magic.model.MagicTuple;
 import magic.model.action.ChangeCountersAction;
 import magic.model.choice.MagicTargetChoice;
 import magic.model.target.MagicPumpTargetPicker;
@@ -15,8 +17,8 @@ public class MagicPutCounterEvent extends MagicEvent {
             source,
             MagicTargetChoice.POS_TARGET_CREATURE,
             MagicPumpTargetPicker.create(),
-            amount,
-            EventActionTarget(type),
+            new MagicTuple(amount, type),
+            EventActionTarget,
             "PN puts " + amount + " " + type.getName() + " counters on target creature$."
         );
     }
@@ -25,34 +27,32 @@ public class MagicPutCounterEvent extends MagicEvent {
         this(source, MagicCounterType.PlusOne, amount);
     }
 
-    private static final MagicEventAction EventActionTarget(final MagicCounterType type) {
-        return (final MagicGame game, final MagicEvent event) -> {
-            event.processTargetPermanent(game, (final MagicPermanent creature) -> {
-                game.doAction(new ChangeCountersAction(
-                    creature,
-                    type,
-                    event.getRefInt()
-                ));
-            });
-        };
-    }
+    private static final MagicEventAction EventActionTarget= (final MagicGame game, final MagicEvent event) -> {
+        event.processTargetPermanent(game, (final MagicPermanent creature) -> {
+            final MagicTuple tup = event.getRefTuple();
+            game.doAction(new ChangeCountersAction(
+                creature,
+                tup.getCounterType(1),
+                tup.getInt(0)
+            ));
+        });
+    };
 
     public static final MagicEvent Self(final MagicSource source, final MagicCounterType type, final int amount) {
         return new MagicEvent(
             source,
-            amount,
-            EventAction(type),
+            new MagicTuple(amount, type),
+            EventAction,
             "PN puts " + amount + " " + type.getName() + " counters on SN."
         );
     }
 
-    private static final MagicEventAction EventAction(final MagicCounterType type) {
-        return (final MagicGame game, final MagicEvent event) -> {
-            game.doAction(new ChangeCountersAction(
-                event.getPermanent(),
-                type,
-                event.getRefInt()
-            ));
-        };
-    }
+    private static final MagicEventAction EventAction = (final MagicGame game, final MagicEvent event) -> {
+        final MagicTuple tup = event.getRefTuple();
+        game.doAction(new ChangeCountersAction(
+            event.getPermanent(),
+            tup.getCounterType(1),
+            tup.getInt(0)
+        ));
+    };
 }

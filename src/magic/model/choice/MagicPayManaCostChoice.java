@@ -16,9 +16,17 @@ import magic.model.MagicPlayer;
 import magic.model.MagicRandom;
 import magic.model.MagicSource;
 import magic.model.event.MagicEvent;
+import magic.translate.MText;
+import magic.translate.StringContext;
 
 /** X must be at least one in a mana cost. */
 public class MagicPayManaCostChoice extends MagicChoice {
+
+    @StringContext(eg = "%s will be replaced with a mana cost icon.")
+    private static final String _S_CHOOSE = "Choose a mana ability to pay %s.";
+
+    @StringContext(eg = "%s will be replaced with a mana cost icon.")
+    private static final String _S_NO_OPTIONS = "Unable to pay %s.|Click {undo} to undo.";
 
     private final MagicManaCost cost;
 
@@ -71,13 +79,14 @@ public class MagicPayManaCostChoice extends MagicChoice {
 
         final Collection<Object> options = genOptions(game, player);
 
+        /*
         assert !options.isEmpty() :
             "No options to pay mana cost\n" +
             "fastMana = " + game.getFastMana() + "\n" +
             "source = " + source + "\n" +
             "player = " + player + "\n" +
             "event = " + event + "\n";
-
+        */
         return options;
     }
 
@@ -95,6 +104,12 @@ public class MagicPayManaCostChoice extends MagicChoice {
         final MagicSource source = event.getSource();
 
         controller.disableActionButton(false);
+
+        if (event.isSatisfied() == false) {
+            controller.showMessage(source, MText.get(_S_NO_OPTIONS, cost.getText()));
+            controller.waitForInput();
+            return MagicEvent.NO_CHOICE_RESULTS;
+        }
 
         final int x;
         if (cost.hasX()) {
@@ -139,7 +154,7 @@ public class MagicPayManaCostChoice extends MagicChoice {
                 sourcePermanent = validSources.iterator().next();
             } else {
                 controller.setValidChoices(validSources,false);
-                controller.showMessage(source,"Choose a mana source to pay "+costManaType.getText()+".");
+                controller.showMessage(source, MText.get(_S_CHOOSE, costManaType.getText()));
                 controller.waitForInput();
                 controller.clearValidChoices();
                 sourcePermanent = controller.getChoiceClicked();

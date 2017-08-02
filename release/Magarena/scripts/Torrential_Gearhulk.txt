@@ -1,0 +1,13 @@
+name=Torrential Gearhulk
+image=http://magiccards.info/scans/en/kld/67.jpg
+image_updated=2016-10-05
+value=2.500
+rarity=M
+type=Artifact,Creature
+subtype=Construct
+cost={4}{U}{U}
+pt=5/6
+ability=Flash;\
+        When SN enters the battlefield, you may cast target instant card from your graveyard without paying its mana cost. If that card would be put into your graveyard this turn, exile it instead.
+timing=flash
+oracle=Flash\nWhen Torrential Gearhulk enters the battlefield, you may cast target instant card from your graveyard without paying its mana cost. If that card would be put into your graveyard this turn, exile it instead.

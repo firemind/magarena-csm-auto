@@ -3,6 +3,8 @@ package magic.model.event;
 import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
+import magic.model.MagicCopyMap;
+import magic.model.MagicTuple;
 import magic.model.action.ChangeCountersAction;
 import magic.model.condition.MagicCondition;
 import magic.model.condition.MagicConditionFactory;
@@ -14,16 +16,21 @@ public class MagicRemoveCounterEvent extends MagicEvent {
     public MagicRemoveCounterEvent(final MagicPermanent permanent,final MagicCounterType counterType,final int amount) {
         super(
             permanent,
-            (final MagicGame game, final MagicEvent event) ->
-                game.doAction(new ChangeCountersAction(
-                    event.getPermanent(),
-                    counterType,
-                    -amount
-                )),
+            new MagicTuple(amount, counterType),
+            EVENT_ACTION,
             genDescription(permanent,counterType,amount)
         );
         cond = MagicConditionFactory.CounterAtLeast(counterType, amount);
     }
+
+    private static final MagicEventAction EVENT_ACTION = (final MagicGame game, final MagicEvent event) -> {
+        final MagicTuple tup = event.getRefTuple();
+        game.doAction(new ChangeCountersAction(
+            event.getPermanent(),
+            tup.getCounterType(1),
+            -tup.getInt(0)
+        ));
+    };
 
     @Override
     public boolean isSatisfied() {
@@ -39,5 +46,15 @@ public class MagicRemoveCounterEvent extends MagicEvent {
         }
         description.append(" from ").append(permanent.getName()).append('.');
         return description.toString();
+    }
+
+    @Override
+    public MagicEvent copy(final MagicCopyMap copyMap) {
+        final MagicTuple tup = getRefTuple();
+        return new MagicRemoveCounterEvent(
+            copyMap.copy(getPermanent()),
+            tup.getCounterType(1),
+            tup.getInt(0)
+        );
     }
 }

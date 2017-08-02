@@ -1,0 +1,11 @@
+name=Reason
+image=http://magiccards.info/scans/en/hou/154a.jpg
+value=2.500
+rarity=R
+type=Sorcery
+cost={U}
+effect=Scry 3.
+split=Believe
+timing=main
+oracle=Scry 3.
+status=not supported: split-card

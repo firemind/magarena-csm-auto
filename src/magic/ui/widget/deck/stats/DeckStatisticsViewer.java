@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,7 +12,6 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import magic.data.CardStatistics;
-import magic.data.GeneralConfig;
 import magic.data.MagicIcon;
 import magic.model.DuelPlayerConfig;
 import magic.model.MagicDeck;
@@ -31,6 +31,9 @@ public class DeckStatisticsViewer extends JPanel implements ChangeListener {
     private static final String _S1 = "Deck Statistics";
     private static final String _S2 = "%d card deck";
 
+    public static final ImageIcon ALERT_ICON = MagicImages.getIcon(MagicIcon.ALERT);
+    private static boolean isStatsVisible = true;
+
     private final ActionButtonTitleBar titleBar;
     private final ManaCurvePanel manaCurvePanel;
     private final ActionBarButton titlebarButton;
@@ -48,7 +51,7 @@ public class DeckStatisticsViewer extends JPanel implements ChangeListener {
 
         statsTable = new StatsTable();
         manaCurvePanel = new ManaCurvePanel();
-        setStatsVisible(GeneralConfig.getInstance().isStatsVisible());
+        setStatsVisible(isStatsVisible);
 
         setDeck(new MagicDeck());
 
@@ -77,9 +80,8 @@ public class DeckStatisticsViewer extends JPanel implements ChangeListener {
     }
 
     private void switchStatsVisibility() {
-        GeneralConfig config = GeneralConfig.getInstance();
-        config.setStatsVisible(!config.isStatsVisible());
-        setStatsVisible(config.isStatsVisible());
+        isStatsVisible = !isStatsVisible;
+        setStatsVisible(isStatsVisible);
         refreshLayout();
         firePropertyChange(CP_LAYOUT_CHANGED, true, false);
     }
@@ -111,10 +113,23 @@ public class DeckStatisticsViewer extends JPanel implements ChangeListener {
             || thisDeck.getDeckType() != aDeck.getDeckType();
     }
 
+    private void setInvalidDeckIcon(MagicDeck deck) {
+        if (deck.isNotValid() && deck.isNotEmpty()) {
+            titleBar.setIcon(ALERT_ICON);
+            titleBar.setToolTipText(
+                String.format("<html><b>Invalid deck</b><br>%s</html>",
+                    deck.getDescription().replace("\n", "<br>")
+                )
+            );
+        } else {
+            titleBar.setIcon(null);
+            titleBar.setToolTipText(null);
+        }
+    }
+
     public void setDeck(MagicDeck aDeck) {
-        statistics = new CardStatistics(
-            aDeck == null || !aDeck.isValid() ? new MagicDeck() : aDeck
-        );
+        setInvalidDeckIcon(aDeck);
+        statistics = new CardStatistics(aDeck == null ? new MagicDeck() : aDeck);
         statsTable.setStats(statistics);
         manaCurvePanel.setStats(statistics);
         if (isNewDeck(aDeck)) {

@@ -14,6 +14,7 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import magic.data.GeneralConfig;
+import magic.data.settings.IntegerSetting;
 import magic.utility.MagicResources;
 
 public enum MagicSound {
@@ -36,7 +37,6 @@ public enum MagicSound {
     private static final Set<MagicSound> uiSounds = EnumSet.range(ADD_CARD, CLICK);
     private static final Set<MagicSound> gameSounds = EnumSet.range(COMBAT, WIN);
 
-    private static final GeneralConfig config = GeneralConfig.getInstance();
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static volatile Clip clip;
     private static final LineListener closer = (event) -> {
@@ -65,9 +65,9 @@ public enum MagicSound {
 
     private int getVolume() {
         if (isUISound()) {
-            return config.getUiVolume();
+            return GeneralConfig.get(IntegerSetting.UI_VOLUME);
         } else if (isGameSound()) {
-            return config.getGameVolume();
+            return GeneralConfig.get(IntegerSetting.GAME_VOLUME);
         } else {
             return 100;
         }
@@ -125,9 +125,9 @@ public enum MagicSound {
         } catch (Exception ex) {
             System.err.println("WARNING. Unable to play clip " + url.toExternalForm() + ", " + ex.getMessage());
             // turn off all sound permanently.
-            config.setGameVolume(0);
-            config.setUiVolume(0);
-            config.save();
+            GeneralConfig.set(IntegerSetting.GAME_VOLUME, 0);
+            GeneralConfig.set(IntegerSetting.UI_VOLUME, 0);
+            GeneralConfig.saveToFile();
         }
     }
 
