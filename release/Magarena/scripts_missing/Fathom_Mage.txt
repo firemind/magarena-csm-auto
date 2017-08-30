@@ -1,5 +1,6 @@
 name=Fathom Mage
-image=http://magiccards.info/scans/en/gtc/162.jpg
+image=http://magiccards.info/scans/en/c16/198.jpg
+image_updated=2017-08-17
 value=3.973
 rarity=R
 type=Creature
@@ -7,7 +8,7 @@ subtype=Human,Wizard
 cost={2}{G}{U}
 pt=1/1
 ability=Evolve;\
-        Whenever a +1/+1 counter is placed on SN, you may draw a card.
+        Whenever a +1/+1 counter is put on SN, you may draw a card.
 timing=main
-oracle=Evolve\nWhenever a +1/+1 counter is placed on Fathom Mage, you may draw a card.
+oracle=Evolve\nWhenever a +1/+1 counter is put on Fathom Mage, you may draw a card.
 status=not supported: when-counter-placed

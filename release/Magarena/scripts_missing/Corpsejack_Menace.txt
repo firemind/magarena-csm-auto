@@ -1,12 +1,13 @@
 name=Corpsejack Menace
-image=http://magiccards.info/scans/en/rtr/152.jpg
+image=http://magiccards.info/scans/en/c16/190.jpg
+image_updated=2017-08-17
 value=4.051
 rarity=R
 type=Creature
 subtype=Fungus
 cost={2}{B}{G}
 pt=4/4
-ability=If one or more +1/+1 counters would be placed on a creature you control, twice that many +1/+1 counters are placed on it instead.
+ability=If one or more +1/+1 counters would be put on a creature you control, twice that many +1/+1 counters are put on it instead.
 timing=main
-oracle=If one or more +1/+1 counters would be placed on a creature you control, twice that many +1/+1 counters are placed on it instead.
+oracle=If one or more +1/+1 counters would be put on a creature you control, twice that many +1/+1 counters are put on it instead.
 status=not supported: when-counter-placed

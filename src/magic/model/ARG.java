@@ -8,6 +8,7 @@ import magic.model.action.MagicPlayMod;
 import magic.model.event.MagicEvent;
 import magic.model.stack.MagicItemOnStack;
 import magic.model.target.MagicTarget;
+import magic.model.target.MagicTargetHint;
 import magic.model.target.MagicTargetFilter;
 import magic.model.target.MagicTargetFilterFactory;
 
@@ -15,8 +16,10 @@ public class ARG {
     public static final String COLON = "\\s*:\\s*";
 
     public static final String CHOICE = "(?<choice>(a|an|another|target) [^\\.]+?)";
+    public static final String TARGET_CONTROLS = "(?<tpgroup>[^\\.]* (?<tpchoice>target (player|opponent)) controls)";
     public static final String CARD   = "(?<choice>[^\\.]* card [^\\.]+?)";
-    public static final String THING = "(permanent|creature|artifact|land|player|opponent|spell or ability|spell|ability)";
+    public static final String THING = "(permanent|creature|artifact|land|spell or ability|spell|ability)";
+    public static final String PLAYER = "(player|opponent)";
     public static final String EVENQUOTES = "(?=([^\"]*'[^\"]*')*[^\"]*$)";
 
     public static final String ENERGY = "(?<energy>(\\{E\\})+)";
@@ -26,7 +29,11 @@ public class ARG {
 
     public static final String NUMBER = "(?<number>[0-9]+)";
     public static int number(final Matcher m) {
-        return Integer.parseInt(m.group("number"));
+        if (m.group("number") == null) {
+            return 1;
+        } else {
+            return Integer.parseInt(m.group("number"));
+        }
     }
 
     public static final String AMOUNT = "(?<amount>(a|an|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|twenty|x|[0-9]+))";
@@ -40,6 +47,14 @@ public class ARG {
     public static final String AMOUNT2 = "(?<amount2>[^ ]+?)";
     public static int amount2(final Matcher m) {
         return EnglishToInt.convert(m.group("amount2"));
+    }
+    public static MagicAmount amount2Obj(final Matcher m) {
+        return MagicAmountParser.build(m.group("amount2"));
+    }
+
+    public static final String EACH = "( |, )?((for each|equal to|where X is) " + ARG.WORDRUN + ")?";
+    public static MagicAmount each(final Matcher m) {
+        return MagicAmountParser.build(ARG.wordrun(m));
     }
 
     public static final String COST = "(?<cost>.+)";
@@ -173,7 +188,7 @@ public class ARG {
         }
     }
 
-    public static final String PERMANENTS = "((?<rn>rn)|(?<sn>sn)|" + CHOICE + "|(?<group>[^\\.]+?))";
+    public static final String PERMANENTS = "((?<rn>rn)|(?<sn>sn)|" + CHOICE + "|" + TARGET_CONTROLS + "|(?<group>[^\\.]+?))";
     public static List<MagicPermanent> permanents(final MagicEvent event, final Matcher m, final MagicTargetFilter<MagicPermanent> filter) {
         if (m.group("rn") != null) {
             return Collections.singletonList(event.getRefPermanent());
@@ -181,6 +196,8 @@ public class ARG {
             return Collections.singletonList(event.getPermanent());
         } else if (m.group("choice") != null) {
             return event.listTargetPermanent();
+        } else if (m.group("tpchoice") != null) {
+            return filter.filter(event.getSource(), event.listTargetPlayer().get(0), MagicTargetHint.None);
         } else {
             return filter.filter(event);
         }
@@ -189,6 +206,8 @@ public class ARG {
     public static MagicTargetFilter<MagicPermanent> permanentsParse(final Matcher m) {
         if (m.group("group") != null) {
             return MagicTargetFilterFactory.Permanent(m.group("group"));
+        } else if (m.group("tpgroup") != null) {
+            return MagicTargetFilterFactory.Permanent(m.group("tpgroup").replaceFirst("target (player|opponent) controls", "you control"));
         } else {
             return MagicTargetFilterFactory.ANY;
         }

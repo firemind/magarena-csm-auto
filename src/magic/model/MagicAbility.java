@@ -446,11 +446,11 @@ public enum MagicAbility {
             card.add(new MagicEmbalmActivation(manaCost));
         }
     },
-    Eternalize("eternalize " + ARG.MANACOST, 10) {
+    Eternalize("eternalize( |—)" + ARG.COST, 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
-            card.add(new MagicEternalizeActivation(manaCost));
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg) + ", Exile SN from your graveyard");
+            card.add(new MagicEternalizeActivation(matchedCostEvents));
         }
     },
     Scavenge("scavenge " + ARG.MANACOST,10) {
@@ -544,7 +544,7 @@ public enum MagicAbility {
     Outlast("outlast "+ARG.COST,10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg));
+            final List<MagicMatchedCostEvent> matchedCostEvents = MagicRegularCostEvent.build(ARG.cost(arg) + ", {T}");
             card.add(new MagicOutlastActivation(matchedCostEvents));
         }
     },
@@ -635,10 +635,19 @@ public enum MagicAbility {
     },
 
     // abilities that involve SN
-    ShockLand("As SN enters the battlefield, you may pay 2 life\\. If you don't, SN enters the battlefield tapped\\.", -10) {
+    ShockLand("As SN enters the battlefield, you may " + ARG.COST + "\\. If you don't, SN enters the battlefield tapped\\.", -10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(RavnicaLandTrigger.create());
+            card.add(MagicETBEvent.tappedUnless(ARG.cost(arg)));
+        }
+    },
+    BlocksOrBecomesBlockedByOneOrMoreEffect("Whenever SN blocks or becomes blocked by one or more " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicSourceEvent sourceEvent = MagicRuleEventAction.create(ARG.effect(arg));
+            final MagicTargetFilter<MagicPermanent> filter = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
+            card.add(ThisBlocksTrigger.create(filter, sourceEvent));
+            card.add(ThisBecomesBlockedTrigger.create(filter, sourceEvent));
         }
     },
     BlocksOrBlockedByEffect("Whenever SN blocks or becomes blocked by " + ARG.WORDRUN + ", " + ARG.EFFECT, 20) {
@@ -711,7 +720,7 @@ public enum MagicAbility {
             ));
         }
     },
-    LeavesReturnExile("When SN leaves the battlefield, (each player returns|return) (the exiled card(s)? |all cards exiled with it )?to the battlefield (under (its|their) owner('s|s') control|all cards he or she owns exiled with SN).", 0) {
+    LeavesReturnExile("When SN leaves the battlefield, (each player returns|return) (the exiled card(s)? |all cards exiled with it |all cards exiled with SN )?to the battlefield (under (its|their) owner('s|s') control|all cards he or she owns exiled with SN).", 0) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(LeavesReturnExiledTrigger.create());
@@ -796,7 +805,7 @@ public enum MagicAbility {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final MagicCondition condition = MagicConditionParser.build(ARG.cond(arg));
-            card.add(new EntersTappedUnlessTrigger(MagicConditionFactory.Unless(condition)));
+            card.add(MagicETBEvent.tappedUnless(MagicConditionFactory.Unless(condition)));
         }
     },
     EntersAsCopy("You may have SN enter the battlefield as a copy of any " + ARG.WORDRUN + "\\.", 0) {
@@ -1191,65 +1200,34 @@ public enum MagicAbility {
             ));
         }
     },
-    DamageToYou("When(ever)? " + ARG.WORDRUN + " deals damage to you, " + ARG.EFFECT, 10) {
+    DamageToYou("When(ever)? " + ARG.WORDRUN + " deals(?<combat> combat)? damage to you, " + ARG.EFFECT, 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(DamageIsDealtTrigger.DamageToYou(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Any
+                arg.group("combat") != null ? MagicDamage.Combat : MagicDamage.Any
             ));
         }
     },
-    CombatDamageToYou("When(ever)? " + ARG.WORDRUN + " deals combat damage to you, " + ARG.EFFECT, 10) {
-        @Override
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToYou(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Combat
-            ));
-        }
-    },
-    DamageToTarget("When(ever)? " + ARG.WORDRUN + " deals damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
+    DamageToTarget("When(ever)? " + ARG.WORDRUN + " deals(?<combat> combat)? damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(DamageIsDealtTrigger.DamageToTarget(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicTargetFilterFactory.Target(ARG.wordrun2(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Any
+                MagicEventFactory.create(ARG.effect(arg)),
+                arg.group("combat") != null ? MagicDamage.Combat : MagicDamage.Any
             ));
         }
     },
-    CombatDamageToTarget("When(ever)? " + ARG.WORDRUN + " deals combat damage to " + ARG.WORDRUN2 + ", " + ARG.EFFECT, 10) {
-        @Override
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToTarget(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicTargetFilterFactory.Target(ARG.wordrun2(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Combat
-            ));
-        }
-    },
-    DamageToAny("When(ever)? " + ARG.WORDRUN + " deals damage, " + ARG.EFFECT, 10) {
+    DamageToAny("When(ever)? " + ARG.WORDRUN + " deals(?<combat> combat)? damage, " + ARG.EFFECT, 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(DamageIsDealtTrigger.DamageToAny(
                 MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
                 MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Any
-            ));
-        }
-    },
-    CombatDamageToAny("When(ever)? " + ARG.WORDRUN + " deals combat damage, " + ARG.EFFECT, 10) {
-        @Override
-        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
-            card.add(DamageIsDealtTrigger.DamageToAny(
-                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
-                MagicRuleEventAction.create(ARG.effect(arg)),
-                MagicDamage.Combat
+                arg.group("combat") != null ? MagicDamage.Combat : MagicDamage.Any
             ));
         }
     },
@@ -1333,6 +1311,14 @@ public enum MagicAbility {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(AtBeginOfCombatTrigger.createYour(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    EndCombatEffect("At end of combat, " + ARG.EFFECT, 10) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(AtEndOfCombatTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }
@@ -1494,7 +1480,7 @@ public enum MagicAbility {
             ));
         }
     },
-    WhenConditionEffect("When " + ARG.COND + ", " + ARG.EFFECT, 0) {
+    WhenConditionEffect("When(ever)? " + ARG.COND + ", " + ARG.EFFECT, 0) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicStatic.StateTrigger(
@@ -1576,7 +1562,7 @@ public enum MagicAbility {
     },
 
     // activated permanent abilities
-    ActivatedAbility("[^\"]+:(?! Add)" + ARG.ANY, 10) {
+    ActivatedAbility("[^\"‘]+:(?! Add)" + ARG.ANY, 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(MagicPermanentActivation.create(arg.group()));
@@ -1785,15 +1771,14 @@ public enum MagicAbility {
             card.add(MagicHandCastActivation.reduction(cardDef, MagicAmountFactory.One));
         }
     },
-    /*
     Suspend("suspend " + ARG.NUMBER + "( |—)" + ARG.MANACOST, 0) {
+        @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final int n = ARG.number(arg);
             final MagicManaCost manaCost = MagicManaCost.create(ARG.manacost(arg));
             card.add(new MagicSuspendActivation(n, manaCost));
         }
     },
-    */
     ;
 
     public static final Set<MagicAbility> PROTECTION_FLAGS = EnumSet.range(ProtectionFromBlack, ProtectionFromEverything);
@@ -1889,6 +1874,7 @@ public enum MagicAbility {
 
     private static final Pattern SUB_ABILITY_LIST = Pattern.compile(
         "(?:has |have )?\"([^\"]+)\"(?:, and | and )?|" +
+        "(?:has |have )?‘([^']+)'(?:, and | and )?|" +
         "(?:has |have )?([A-Za-z][^,]+)(?:, and | and )|" +
         "(?:has |have )?([A-Za-z][^,]+)"
     );
@@ -1899,7 +1885,8 @@ public enum MagicAbility {
         while (m.find()) {
             final String part = m.group(1) != null ? m.group(1) :
                                 m.group(2) != null ? m.group(2) :
-                                m.group(3);
+                                m.group(3) != null ? m.group(3) :
+                                m.group(4);
             final String name = renameThis(part);
             getAbility(name).addAbility(abilityList, name);
         }

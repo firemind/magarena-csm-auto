@@ -54,6 +54,7 @@ import magic.model.trigger.MagicTrigger;
 import magic.model.trigger.MagicTriggerType;
 import magic.model.trigger.OtherEntersBattlefieldTrigger;
 import magic.model.trigger.PreventDamageTrigger;
+import magic.model.trigger.AtUpkeepTrigger;
 import magic.ui.MagicSound;
 
 public class MagicGame {
@@ -555,6 +556,9 @@ public class MagicGame {
     }
 
     public void doAction(final MagicAction action) {
+        if (action.isLegal(this) == false) {
+            return;
+        }
         actions.add(action);
         try {
             action.doAction(this);
@@ -578,8 +582,12 @@ public class MagicGame {
         triggers.add(new MagicPermanentTrigger(1, MagicPermanent.NONE, AtEndOfTurnTrigger.Monarch));
         triggers.add(new MagicPermanentTrigger(2, MagicPermanent.NONE, DamageIsDealtTrigger.Monarch));
 
+        // add Suspend trigger
+        triggers.add(new MagicPermanentTrigger(3, MagicPermanent.NONE, AtUpkeepTrigger.Suspend));
+
         // prevent damage replacement
-        triggers.add(new MagicPermanentTrigger(Long.MAX_VALUE, MagicPermanent.NONE, PreventDamageTrigger.GlobalPreventDamageToTarget));
+        triggers.add(new MagicPermanentTrigger(4, MagicPermanent.NONE, PreventDamageTrigger.ProtectionShield));
+        triggers.add(new MagicPermanentTrigger(Long.MAX_VALUE, MagicPermanent.NONE, PreventDamageTrigger.PreventDamageShield));
 
         for (final MagicPlayer player : players) {
         for (final MagicPermanent perm : player.getPermanents()) {
@@ -1117,7 +1125,8 @@ public class MagicGame {
         // update log with messages from state-based actions
         logMessages();
 
-        // put pending triggers on stack
+        // put pending triggers on stack in APNAP order
+        pendingStack.sortAPNAP(getTurnPlayer());
         while (pendingStack.isEmpty() == false) {
             doAction(new PutItemOnStackAction(pendingStack.peek()));
             doAction(new DequeueTriggerAction());
@@ -1278,12 +1287,13 @@ public class MagicGame {
         return statics.remove(permanent);
     }
 
-    public void addStatic(final MagicPermanent permanent, final MagicStatic mstatic) {
-        addStatic(new MagicPermanentStatic(getUniqueId(),permanent,mstatic));
+    public MagicPermanentStatic addStatic(final MagicPermanent permanent, final MagicStatic mstatic) {
+        return addStatic(new MagicPermanentStatic(getUniqueId(),permanent,mstatic));
     }
 
-    public void addStatic(final MagicPermanentStatic permanentStatic) {
+    public MagicPermanentStatic addStatic(final MagicPermanentStatic permanentStatic) {
         statics.add(permanentStatic);
+        return permanentStatic;
     }
 
     public void addStatics(final Collection<MagicPermanentStatic> aStatics) {

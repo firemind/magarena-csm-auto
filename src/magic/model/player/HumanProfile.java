@@ -22,6 +22,21 @@ public class HumanProfile extends PlayerProfile {
     }
 
     @Override
+    public boolean isArtificial() {
+        return false;
+    }
+
+    @Override
+    public boolean isHuman() {
+        return true;
+    }
+
+    @Override
+    public int getExtraLife() {
+        return 0;
+    }
+
+    @Override
     public void save() {
         saveProperties(new SortedProperties());
     }

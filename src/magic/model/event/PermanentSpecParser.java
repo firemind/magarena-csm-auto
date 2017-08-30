@@ -21,16 +21,28 @@ public class PermanentSpecParser {
     public final boolean duration;
     public final boolean additionTo;
 
-    public PermanentSpecParser(final Matcher matcher) {
-        final String[] ptStr = matcher.group("pt") == null ? null :
-            matcher.group("pt").split("/");
-        pt = ptStr == null ? null :
-            new int[]{Integer.parseInt(ptStr[0]), Integer.parseInt(ptStr[1])};
+    public static final String BECOMES = " (become(s)?( a| an)?(?<legendary> legendary)?( )?(?<pt>[0-9]+/[0-9]+)? (?<all>.*?)|has|have)(( with)? base power and toughness (?<pt2>[0-9]+/[0-9]+))?( (with|and gains) (?<ability>.*?))?";
 
-        final List<String> tokens = new LinkedList<>(Arrays.asList(matcher.group("all").split(", | and | ")));
+    public static final String ADDITIONTO = "(?<additionTo>((\\.)? It's| that's|\\. They're| that are) still [^\\.]*)?";
+
+    public static final String DURATION = "(?<duration> until end of turn)?";
+
+    public PermanentSpecParser(final Matcher matcher) {
+        final String ptStr = matcher.group("pt") != null ? matcher.group("pt") :
+                             matcher.group("pt2") != null ? matcher.group("pt2") :
+                             null;
+        final String[] ptTok = ptStr == null ? null : ptStr.split("/");
+        pt = ptTok == null ? null : new int[]{Integer.parseInt(ptTok[0]), Integer.parseInt(ptTok[1])};
+
+        final List<String> tokens = matcher.group("all") == null ?
+            new LinkedList<>() :
+            new LinkedList<>(Arrays.asList(matcher.group("all").split(", | and | ")));
         colors = MagicColor.prefixColors(tokens);
         subTypes = MagicSubType.prefixSubTypes(tokens);
         types = MagicType.prefixTypes(tokens);
+        if (matcher.group("legendary") != null) {
+            types.add(MagicType.Legendary);
+        }
 
         if (tokens.isEmpty() == false) {
             throw new RuntimeException("unmatched becomes specification " + tokens);

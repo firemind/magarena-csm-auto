@@ -1,5 +1,6 @@
 name=Aeon Chronicler
-image=http://magiccards.info/scans/en/pc/32.jpg
+image=http://magiccards.info/scans/en/c16/82.jpg
+image_updated=2017-08-17
 value=3.833
 rarity=R
 type=Creature
@@ -11,4 +12,4 @@ ability=SN's power and toughness are each equal to the number of cards in your h
         Whenever a time counter is removed from SN while it's exiled, draw a card.
 timing=main
 oracle=Aeon Chronicler's power and toughness are each equal to the number of cards in your hand.\nSuspend X—{X}{3}{U}. X can't be 0.\nWhenever a time counter is removed from Aeon Chronicler while it's exiled, draw a card.
-status=not supported: suspend
+status=not supported: when-counter-removed

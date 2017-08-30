@@ -73,6 +73,81 @@ Thanks to
 
 Thank you for your support and have fun!
 
+Release 1.88 (August 27, 2017)
+============
+kelsioboy
+melvin
+ShawnieBoy
+
+- added Commander 2017 to sets
+
+- added the following to the card script:
+  * condition: SN is in the command zone or on the battlefield
+  * cost: Put a card an opponent owns from exile into that player's graveyard
+  * effect: <cost>. If you do, <effect>
+  * effect: <cost>. If you can't, <effect>
+  * effect: you get an emblem with <abilities>
+  * effect: exile SN with three time counters on it
+  * effect: remove all <type> counters from <permanents>
+  * effect: <permanent> has base power and toughness p/t until end of turn
+  * effect: <permanent> becomes the basic land type of your choice until end of turn
+  * effect: until end of turn, <permanent> loses all abilities and has base power and toughness p/t
+  * ability: Suspend <n>-<cost>
+  * ability: At end of combat, <effect>
+  * ability: Whenever SN blocks or becomes becomes blocked by one or more <permanents>, <effect>
+
+- fixed the following bugs:
+  * crash due to collision of game state (issue #815)
+  * crash due to a spell able to target a later spell (issue #1223)
+  * crash due to running out of memory trying to discard a large hand down to 7 (issue #721)
+  * pending triggers did not on the stack in APNAP order (issue #423)
+  * casting without paying mana cost not affected by cost modifications
+  * changing target of spell did not trigger on target triggers
+  * Clone type cards causes cast triggers to trigger twice (issue #991)
+  * Auger Spree's effect gave +4/+4, should be +4/-4
+  * Stormchaser Chimera and Putrid Cyclops reveal before scry (issue #1250)
+  * Phantom Centaur loses counter when blocking a black creature (issue #153)
+  * Amulet of Vigor doesn't work for certain enters tapped abilities (issue #750)
+  * Brimaz, King of Oreskos crash due to token blocking a non-existent creature (issue #1156)
+  * March of the Machines overrides power and toughness of already animated artifact (issue #202)
+  * Heightened Awareness should discard as it enters without trigger (issue #1003)
+
+- added the following cards:
+Akoum Flameseeker, Alms Beast, Ammit Eternal, Ancestral Vision,
+Arahbo, Roar of the World, Arc Blade, Arm with Aether, Banewhip Punisher,
+Barrin's Codex, Blind Zealot, Bloodforged Battle-Axe, Blood Frenzy,
+Bloodline Necromancer, Bloodsworn Steward, Bonds of Faith,
+Bontu's Last Reckoning, Champion of Wits, Clockwork Hydra, Coastal Wizard,
+Commando Raid, Confound, Contempt, Corpulent Corpse, Creeperhulk,
+Crested Sunmare, Crimson Honor Guard, Cryptic Cruiser, Cyclical Evolution,
+Damnable Pact, Dawn Charm, Dawnglare Invoker, Dawning Purist,
+Despoiler of Souls, Disappear, Disrupt Decorum, Durkwood Baloth,
+Duskrider Peregrine, Earthshaker Khenra, Edgar Markov, Encircling Fissure,
+Errant Ephemeron, Exemplar of Strength, Exsanguinate, Fell the Mighty,
+Festering March, Flowstone Sculpture, Galecaster Colossus, Giant Dustwasp,
+Goblin Vandal, Graven Abomination, Graven Dominator, Greater Werewolf,
+Greenbelt Rampager, Hammer of Ruin, Hapatra's Mark, Heroes Remembered,
+Hindering Light, Horde of Notions, Hungry Lynx, Hydromorph Guardian,
+Hydromorph Gull, Infiltrator il-Kor, Inkfathom Witch, Instigator,
+Intervene, Ith, High Arcanist, Ivory Giant, Jinx, Jushi Apprentice,
+Kefnet's Last Word, Keldon Halberdier, Knight of Sursi, Lash Out,
+Lightwielder Paladin, Marsh Flitter, Merciless Javelineer,
+Mind Raker, Mindstab, Mirror Sheen, Mtenda Griffin, Murk Strider,
+Nahiri, the Lithomancer, Nantuko Shaman, Naya Charm, Noosegraf Mob,
+Oath of Gideon, Ob Nixilis Reignited, Olivia, Mobilized for War,
+Oracle of Dust, Patron of the Vein, Petrified Plating, Plunder,
+Polis Crusher, Polymorphist's Jest, Primeval Light, Processor Assault,
+Qasali Slingers, Reality Shift, Reality Strobe, Rebuff the Wicked,
+Restore Balance, Rhonas's Last Stand, Rift Bolt, Riftwing Cloudskate,
+River Hoopoe, Ruin Processor, Sarkhan, the Dragonspeaker,
+Scalelord Reckoner, Scroll of Origins, Search for Tomorrow,
+Sensei Golden-Tail, Shade of Trokair, Shimmering Mirage, Shivan Meteor,
+Sigil of Sleep, Sinuous Striker, Snow Hound, Stormchaser Chimera,
+Sunscourge Champion, Tezzeret the Schemer, The Wretched, Tidal Influence,
+Tomoya the Revealer, Turn Aside, Ulamog's Reclaimer, Vigilant Martyr,
+Viscerid Deepwalker, Void Attendant, Wall of Nets, Wasitora, Nekoru Queen,
+Wasteland Strangler, Wheel of Fate, Zombie Cannibal
+
 Release 1.87 (July 31, 2017)
 ============
 kelsioboy

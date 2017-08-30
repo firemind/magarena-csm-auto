@@ -109,10 +109,6 @@ public class CardDefinitions {
 
         cardDef.setIndex(cdefIndex.getAndIncrement());
 
-        if (cardDef.isPlayable()) {
-            cardDef.add(new MagicHandCastActivation(cardDef));
-        }
-
         playableCards.put(cardDef.getAsciiName(), cardDef);
     }
 

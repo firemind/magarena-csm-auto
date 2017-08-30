@@ -1,0 +1,10 @@
+name=Ancestral Vision
+image=http://magiccards.info/scans/en/jvc/21.jpg
+value=2.500
+rarity=R
+type=Sorcery
+color=u
+ability=Suspend 4—{U}
+effect=Target player draws three cards.
+timing=main
+oracle=Suspend 4—{U}\nTarget player draws three cards.
