@@ -133,6 +133,9 @@ cards/unknown.txt:
 cards/unknown_oracle.txt:
 	grep oracle= `grep -L status= -r release/Magarena/scripts_missing` | sed 's/oracle=/\n/;s/release/\nrelease/' > $@
 
+cards/unknown_%.txt:
+	grep oracle $$(grep -L status $$(grep /$*/ -r release/Magarena/scripts_missing/ -l)) > $@
+
 cards/groovy_oracle.txt:
 	grep oracle= `grep requires_groovy_code -r release/Magarena/scripts -l` | sed 's/oracle=/\n/;s/release/\nrelease/' > $@
 
@@ -550,7 +553,7 @@ check_meta: cards/scriptable.txt
 
 # every image is to a jpg file or attachment
 check_image:
-	grep '^image=' -r release/Magarena/scripts | grep -v "jpg$$" | grep -v "png$$" | grep -v attachment.php | ${NO_OUTPUT}
+	grep '^image=' -r release/Magarena/scripts | grep -v "jpg\(?[0-9]*\)\?$$" | grep -v "png$$" | grep -v attachment.php | ${NO_OUTPUT}
 
 # every card that requires groovy code has a corresponding groovy script file
 # every groovy script file has a corresponding card script that requires groovy code

@@ -1,8 +1,8 @@
 name=Ajani Unyielding
-image=http://magiccards.info/scans/en/aer/127.jpg
+image=https://magiccards.info/scans/en/aer/127.jpg
 value=2.500
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Ajani
 cost={4}{G}{W}
 loyalty=4

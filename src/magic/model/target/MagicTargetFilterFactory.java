@@ -593,14 +593,6 @@ public class MagicTargetFilterFactory {
         }
     };
 
-    public static final MagicPermanentFilterImpl NONLAND_PERMANENT_YOU_CONTROL = new MagicPermanentFilterImpl() {
-        @Override
-        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
-            return !target.isLand() && target.isController(player);
-        }
-    };
-
-
     public static final MagicPermanentFilterImpl NONLAND_NONTOKEN_PERMANENT = new MagicPermanentFilterImpl() {
         @Override
         public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
@@ -2866,7 +2858,7 @@ public class MagicTargetFilterFactory {
         add("creature with power 5 or greater", CREATURE_POWER_5_OR_MORE);
         add("creature with power greater than SN's power", CREATURE_POWER_GREATER_THAN_SN);
         add("creature with power less than SN's power", CREATURE_POWER_LESS_THAN_SN);
-        add("creature with power less than or equal to SN's power", CREATURE_POWER_LESS_THAN_SN);
+        add("creature with power less than or equal to SN's power", CREATURE_POWER_LESS_THAN_EQUAL_SN);
         add("creature an opponent controls with power less than SN's power", CREATURE_OPP_POWER_LESS_THAN_SN);
         add("creature with toughness 2 or less", CREATURE_TOUGHNESS_2_OR_LESS);
         add("creature with toughness 3 or less", CREATURE_TOUGHNESS_3_OR_LESS);

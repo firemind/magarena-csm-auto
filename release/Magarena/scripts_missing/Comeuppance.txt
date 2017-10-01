@@ -1,5 +1,5 @@
 name=Comeuppance
-image=http://magiccards.info/scans/en/c14/4.jpg
+image=https://magiccards.info/scans/en/c14/4.jpg
 value=2.500
 rarity=R
 type=Instant
@@ -7,3 +7,4 @@ cost={3}{W}
 effect=Prevent all damage that would be dealt to you and planeswalkers you control this turn by sources you don't control. If damage from a creature source is prevented this way, SN deals that much damage to that creature. If damage from a noncreature source is prevented this way, SN deals that much damage to the source's controller.
 timing=removal
 oracle=Prevent all damage that would be dealt to you and planeswalkers you control this turn by sources you don't control. If damage from a creature source is prevented this way, Comeuppance deals that much damage to that creature. If damage from a noncreature source is prevented this way, Comeuppance deals that much damage to the source's controller.
+status=needs groovy

@@ -1057,7 +1057,18 @@ public enum MagicAbility {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(BecomesStateTrigger.create(
+                MagicTargetFilterFactory.CREATURE_YOU_CONTROL,
                 MagicPermanentState.Exerted,
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    ExploreTrigger("Whenever " + ARG.WORDRUN + " explores, " + ARG.EFFECT, 10) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesStateTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicPermanentState.Explores,
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }

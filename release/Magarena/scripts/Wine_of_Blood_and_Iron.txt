@@ -1,0 +1,9 @@
+name=Wine of Blood and Iron
+image=https://magiccards.info/scans/en/sok/161.jpg
+value=2.872
+rarity=R
+type=Artifact
+cost={3}
+timing=artifact
+oracle={4}: Target creature gets +X/+0 until end of turn, where X is its power. Sacrifice Wine of Blood and Iron at the beginning of the next end step.
+requires_groovy_code

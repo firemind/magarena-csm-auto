@@ -1,0 +1,11 @@
+name=Callous Giant
+image=https://magiccards.info/scans/en/in/139.jpg
+value=3.394
+rarity=R
+type=Creature
+subtype=Giant
+cost={4}{R}{R}
+pt=4/4
+timing=main
+oracle=If a source would deal 3 or less damage to Callous Giant, prevent that damage.
+requires_groovy_code

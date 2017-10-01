@@ -1,9 +1,9 @@
 name=Venser, the Sojourner
-image=http://magiccards.info/scans/en/som/135.jpg
+image=https://magiccards.info/scans/en/som/135.jpg
 image_updated=2017-01-11
 value=3.946
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Venser
 cost={3}{W}{U}
 loyalty=3

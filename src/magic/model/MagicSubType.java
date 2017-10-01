@@ -33,6 +33,7 @@ public enum MagicSubType {
     Contraption,
     Equipment,
     Fortification,
+    Treasure,
     Vehicle,
 
     //enchantment subtypes
@@ -46,7 +47,7 @@ public enum MagicSubType {
     Trap,
 
     //planeswalker subtypes
-    Ajani, Arlinn, Ashiok, Bolas, Chandra, Dack, Daretti, Domri, Dovin, Elspeth, Freyalise, Garruk, Gideon, Jace, Karn, Kaya, Kiora, Koth,
+    Ajani, Arlinn, Ashiok, Bolas, Chandra, Dack, Daretti, Domri, Dovin, Elspeth, Freyalise, Garruk, Gideon, Huatli, Jace, Karn, Kaya, Kiora, Koth,
     Liliana, Nahiri, Narset, Nissa, Nixilis, Ral, Saheeli, Samut, Sarkhan, Sorin, Teferi, Tezzeret, Venser, Tamiyo, Tibalt, Ugin, Vraska, Xenagos,
 
     //special handling for Assembly_Worker
@@ -63,7 +64,7 @@ public enum MagicSubType {
     Bat, Bear, Beast, Beeble, Berserker, Bird, Blinkmoth, Boar, Bringer, Brushwagg,
     Camarid, Camel, Caribou, Carrier, Cat, Centaur, Cephalid, Chimera, Citizen,
     Cleric, Cockatrice, Construct, Coward, Crab, Crocodile, Cyclops, Dauthi, Demon,
-    Deserter, Devil, Djinn, Dragon, Drake, Dreadnought, Drone, Druid, Dryad, Dwarf,
+    Deserter, Devil, Dinosaur, Djinn, Dragon, Drake, Dreadnought, Drone, Druid, Dryad, Dwarf,
     Efreet, Elder, Eldrazi, Elemental, Elephant, Elf, Elk, Eye, Faerie, Ferret,
     Fish, Flagbearer, Fox, Frog, Fungus, Gargoyle, Germ, Giant, Gnome, Goat,
     Goblin, God, Golem, Gorgon, Graveborn, Gremlin, Griffin, Hag, Harpy, Hellion, Hippo,
@@ -80,7 +81,7 @@ public enum MagicSubType {
     Siren, Skeleton, Slith, Sliver, Slug, Snake, Soldier, Soltari, Spawn, Specter,
     Spellshaper, Sphinx, Spider, Spike, Spirit, Splinter, Sponge, Squid, Squirrel,
     Starfish, Surrakar, Survivor, Tetravite, Thalakos, Thopter, Thrull, Treefolk,
-    Triskelavite, Troll, Turtle, Unicorn, Vampire, Vedalken, Viashino, Volver,
+    Trilobite, Triskelavite, Troll, Turtle, Unicorn, Vampire, Vedalken, Viashino, Volver,
     Wall, Warrior, Weird, Werewolf, Whale, Wizard, Wolf, Wolverine, Wombat, Worm,
     Wraith, Wurm, Yeti, Zombie, Zubera,
 
@@ -107,22 +108,6 @@ public enum MagicSubType {
     public static final Set<MagicSubType> FILTER_SUBTYPES = EnumSet.range(Plains,Zubera);
 
     private MagicSubType() {
-    }
-
-    public boolean hasType(MagicObject obj) {
-               if (ALL_LANDS.contains(this)) {
-            return obj.hasType(MagicType.Land);
-        } else if (ALL_ARTIFACTS.contains(this)) {
-            return obj.hasType(MagicType.Artifact);
-        } else if (ALL_ENCHANTMENTS.contains(this)) {
-            return obj.hasType(MagicType.Enchantment);
-        } else if (ALL_CREATURES.contains(this)) {
-            return obj.hasType(MagicType.Creature) || obj.hasType(MagicType.Tribal);
-        } else if (ALL_PLANESWALKERS.contains(this)) {
-            return obj.hasType(MagicType.Planeswalker);
-        } else {
-            throw new RuntimeException("Unknown type of subtype " + this);
-        }
     }
 
     public static MagicSubType getSubType(final String name) {
