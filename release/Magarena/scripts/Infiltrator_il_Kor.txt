@@ -1,0 +1,12 @@
+name=Infiltrator il-Kor
+image=https://magiccards.info/scans/en/fut/37.jpg
+value=3.364
+rarity=C
+type=Creature
+subtype=Kor,Rogue
+cost={4}{U}
+pt=3/1
+ability=Shadow;\
+        Suspend 2—{1}{U}
+timing=main
+oracle=Shadow\nSuspend 2—{1}{U}

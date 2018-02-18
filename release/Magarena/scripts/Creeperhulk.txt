@@ -1,0 +1,12 @@
+name=Creeperhulk
+image=https://magiccards.info/scans/en/c14/42.jpg
+value=2.500
+rarity=R
+type=Creature
+subtype=Plant,Elemental
+cost={3}{G}{G}
+pt=5/5
+ability=Trample;\
+        {1}{G}: Until end of turn, target creature you control has base power and toughness 5/5 and gains trample.
+timing=main
+oracle=Trample\n{1}{G}: Until end of turn, target creature you control has base power and toughness 5/5 and gains trample.

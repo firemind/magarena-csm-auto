@@ -1,0 +1,12 @@
+name=Inkfathom Witch
+image=https://magiccards.info/scans/en/pc2/97.jpg
+value=2.870
+rarity=U
+type=Creature
+subtype=Merfolk,Wizard
+cost={1}{U/B}
+pt=1/1
+ability=Fear;\
+        {2}{U}{B}: Each unblocked creature has base power and toughness 4/1 until end of turn. Activate this ability only during combat after blockers are declared.
+timing=main
+oracle=Fear\n{2}{U}{B}: Each unblocked creature has base power and toughness 4/1 until end of turn.

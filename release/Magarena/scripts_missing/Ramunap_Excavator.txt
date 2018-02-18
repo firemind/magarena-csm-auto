@@ -1,5 +1,5 @@
 name=Ramunap Excavator
-image=http://magiccards.info/scans/en/hou/129.jpg
+image=https://magiccards.info/scans/en/hou/129.jpg
 value=2.500
 rarity=R
 type=Creature
@@ -9,3 +9,4 @@ pt=2/3
 ability=You may play land cards from your graveyard.
 timing=main
 oracle=You may play land cards from your graveyard.
+status=not supported: may-play-card

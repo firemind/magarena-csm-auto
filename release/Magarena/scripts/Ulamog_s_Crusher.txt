@@ -1,5 +1,5 @@
 name=Ulamog's Crusher
-image=http://magiccards.info/scans/en/mm2/7.jpg
+image=https://magiccards.info/scans/en/mm2/7.jpg
 value=4.109
 rarity=C
 type=Creature
@@ -7,6 +7,6 @@ subtype=Eldrazi
 cost={8}
 pt=8/8
 ability=Annihilator 2;\
-        SN attacks each turn if able.
+        SN attacks each combat if able.
 timing=main
-oracle=Annihilator 2\nUlamog's Crusher attacks each turn if able.
+oracle=Annihilator 2\nUlamog's Crusher attacks each combat if able.

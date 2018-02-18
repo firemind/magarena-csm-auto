@@ -1,0 +1,13 @@
+name=Stormchaser Chimera
+image=https://magiccards.info/scans/en/cn2/207.jpg
+image_updated=2017-08-29
+value=3.500
+rarity=U
+type=Creature
+subtype=Chimera
+cost={2}{U}{R}
+pt=2/3
+ability=Flying
+timing=main
+oracle=Flying\n{2}{U}{R}: Scry 1, then reveal the top card of your library. Stormchaser Chimera gets +X/+0 until end of turn, where X is that card's converted mana cost.
+requires_groovy_code

@@ -1,12 +1,12 @@
 name=Trygon Predator
-image=http://magiccards.info/scans/en/ema/209.jpg
+image=https://magiccards.info/scans/en/ema/209.jpg
 value=4.577
 rarity=U
 type=Creature
 subtype=Beast
 cost={1}{G}{U}
 pt=2/3
-ability=Flying
+ability=Flying;\
+        Whenever SN deals combat damage to a player, you may destroy target artifact or enchantment that player controls.
 timing=main
-requires_groovy_code
 oracle=Flying\nWhenever Trygon Predator deals combat damage to a player, you may destroy target artifact or enchantment that player controls.

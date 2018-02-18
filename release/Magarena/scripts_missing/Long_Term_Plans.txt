@@ -1,5 +1,5 @@
 name=Long-Term Plans
-image=http://magiccards.info/scans/en/sc/38.jpg
+image=https://magiccards.info/scans/en/sc/38.jpg
 value=3.662
 rarity=U
 type=Instant
@@ -7,3 +7,4 @@ cost={2}{U}
 effect=Search your library for a card, shuffle your library, then put that card third from the top.
 timing=removal
 oracle=Search your library for a card, shuffle your library, then put that card third from the top.
+status=needs groovy

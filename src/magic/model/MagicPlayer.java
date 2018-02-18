@@ -52,6 +52,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     private final DuelPlayerConfig playerConfig;
     private final int index;
+    private final int startingLife;
 
     private int stateFlags;
     private int life;
@@ -81,10 +82,11 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     private long[] keys;
 
-    MagicPlayer(final int aLife,final DuelPlayerConfig playerConfig,final int aIndex) {
-        this.playerConfig = playerConfig;
+    MagicPlayer(final int aLife,final DuelPlayerConfig aPlayerConfig,final int aIndex) {
+        playerConfig = aPlayerConfig;
         index = aIndex;
-        life = aLife;
+        startingLife = aLife;
+        life = startingLife;
 
         hand=new MagicCardList();
         library=new MagicCardList();
@@ -100,6 +102,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
         playerConfig = sourcePlayer.playerConfig;
         index = sourcePlayer.index;
+        startingLife = sourcePlayer.startingLife;
         life = sourcePlayer.life;
         lifeGainThisTurn = sourcePlayer.lifeGainThisTurn;
         lifeLossThisTurn = sourcePlayer.lifeLossThisTurn;
@@ -162,10 +165,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
             nonCreatureSpellsCast,
             spellsCastLastTurn,
             creaturesAttackedThisTurn,
-            hand.getUnorderedStateId(),
+            hand.getStateId(),
             library.getStateId(),
             graveyard.getStateId(),
-            exile.getUnorderedStateId(),
+            exile.getStateId(),
             permanents.getStateId(),
             builderCost.getMinimumAmount(),
             activationPriority.getPriority(),
@@ -334,6 +337,10 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     public int getStartingHandSize() {
         return startingHandSize;
+    }
+
+    public int getStartingLife() {
+        return startingLife;
     }
 
     public int getNumExcessCards() {

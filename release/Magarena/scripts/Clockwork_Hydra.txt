@@ -1,0 +1,14 @@
+name=Clockwork Hydra
+image=https://magiccards.info/scans/en/ts/253.jpg
+image_updated=2016-11-28
+value=3.539
+rarity=U
+type=Artifact,Creature
+subtype=Hydra
+cost={5}
+pt=0/0
+ability=SN enters the battlefield with four +1/+1 counters on it.;\
+        Whenever SN attacks or blocks, remove a +1/+1 counter from SN. If you do, SN deals 1 damage to target creature or player.;\
+        {T}: Put a +1/+1 counter on SN.
+timing=main
+oracle=Clockwork Hydra enters the battlefield with four +1/+1 counters on it.\nWhenever Clockwork Hydra attacks or blocks, remove a +1/+1 counter from it. If you do, Clockwork Hydra deals 1 damage to target creature or player.\n{T}: Put a +1/+1 counter on Clockwork Hydra.

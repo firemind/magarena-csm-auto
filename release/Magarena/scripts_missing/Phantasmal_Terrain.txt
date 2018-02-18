@@ -1,5 +1,5 @@
 name=Phantasmal Terrain
-image=http://magiccards.info/scans/en/in/65.jpg
+image=https://magiccards.info/scans/en/in/65.jpg
 value=3.000
 rarity=C
 type=Enchantment
@@ -11,3 +11,4 @@ ability=Enchant land;\
 timing=aura
 enchant=default,land
 oracle=Enchant land\nAs Phantasmal Terrain enters the battlefield, choose a basic land type.\nEnchanted land is the chosen type.
+status=needs groovy

@@ -1,0 +1,12 @@
+name=Errant Ephemeron
+image=https://magiccards.info/scans/en/mma/41.jpg
+value=2.500
+rarity=C
+type=Creature
+subtype=Illusion
+cost={6}{U}
+pt=4/4
+ability=Flying;\
+        Suspend 4—{1}{U}
+timing=main
+oracle=Flying\nSuspend 4—{1}{U}

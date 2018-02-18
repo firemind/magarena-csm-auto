@@ -1,0 +1,11 @@
+name=Ancestral Vision
+image=https://magiccards.info/scans/en/ima/42.jpg
+image_updated=2017-04-12
+value=2.500
+rarity=R
+type=Sorcery
+color=u
+ability=Suspend 4—{U}
+effect=Target player draws three cards.
+timing=main
+oracle=Suspend 4—{U}\nTarget player draws three cards.

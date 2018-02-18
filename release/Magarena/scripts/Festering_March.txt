@@ -1,0 +1,10 @@
+name=Festering March
+image=https://magiccards.info/scans/en/fut/65.jpg
+value=3.149
+rarity=U
+type=Sorcery
+cost={3}{B}{B}
+ability=Suspend 3—{2}{B}
+effect=Creatures your opponents control get -1/-1 until end of turn.~Exile SN with three time counters on it.
+timing=main
+oracle=Creatures your opponents control get -1/-1 until end of turn. Exile Festering March with three time counters on it.\nSuspend 3—{2}{B}

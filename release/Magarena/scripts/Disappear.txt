@@ -1,0 +1,12 @@
+name=Disappear
+image=https://magiccards.info/scans/en/ud/30.jpg
+value=2.870
+rarity=U
+type=Enchantment
+subtype=Aura
+cost={2}{U}{U}
+ability=Enchant creature;\
+        {U}: Return enchanted creature to its owner's hand~and return SN to its owner's hand.
+timing=aura
+enchant=bounce,creature
+oracle=Enchant creature\n{U}: Return enchanted creature and Disappear to their owners' hands.

@@ -1,0 +1,10 @@
+name=Turn Aside
+image=https://magiccards.info/scans/en/emn/78.jpg
+image_updated=2016-09-09
+value=3.722
+rarity=C
+type=Instant
+cost={U}
+effect=Counter target spell that targets a permanent you control.
+timing=counter
+oracle=Counter target spell that targets a permanent you control.

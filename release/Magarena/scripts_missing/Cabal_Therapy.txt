@@ -1,11 +1,11 @@
 name=Cabal Therapy
-image=http://magiccards.info/scans/en/ema/83.jpg
+image=https://magiccards.info/scans/en/ema/83.jpg
 value=4.542
 rarity=U
 type=Sorcery
 cost={B}
 ability=Flashback—Sacrifice a creature.
-effect=Name a nonland card. Target player reveals his or her hand and discards all cards with that name.
+effect=Choose a nonland card name. Target player reveals his or her hand and discards all cards with that name.
 timing=main
-oracle=Name a nonland card. Target player reveals his or her hand and discards all cards with that name.\nFlashback—Sacrifice a creature.
+oracle=Choose a nonland card name. Target player reveals his or her hand and discards all cards with that name.\nFlashback—Sacrifice a creature.
 status=not supported: name-card

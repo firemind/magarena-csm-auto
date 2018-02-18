@@ -1,5 +1,5 @@
 name=Yidris, Maelstrom Wielder
-image=http://magiccards.info/scans/en/c16/50.jpg
+image=https://magiccards.info/scans/en/c16/50.jpg
 image_updated=2016-12-28
 value=2.500
 rarity=M
@@ -11,3 +11,4 @@ ability=Trample;\
         Whenever SN deals combat damage to a player, as you cast spells from your hand this turn, they gain cascade.
 timing=main
 oracle=Trample\nWhenever Yidris, Maelstrom Wielder deals combat damage to a player, as you cast spells from your hand this turn, they gain cascade.
+status=not supported: spell-modification

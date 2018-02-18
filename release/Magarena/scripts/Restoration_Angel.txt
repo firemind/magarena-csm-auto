@@ -1,5 +1,6 @@
 name=Restoration Angel
-image=http://magiccards.info/scans/en/avr/32.jpg
+image=https://magiccards.info/scans/en/ima/28.jpg
+image_updated=2017-04-12
 value=4.453
 rarity=R
 type=Creature

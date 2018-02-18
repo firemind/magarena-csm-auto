@@ -50,6 +50,17 @@ public class AiProfile extends PlayerProfile {
         return ap;
     }
 
+    @Override
+    public boolean isArtificial() {
+        return true;
+    }
+
+    @Override
+    public boolean isHuman() {
+        return false;
+    }
+
+    @Override
     public int getExtraLife() {
         return extraLife;
     }

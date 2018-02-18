@@ -1,0 +1,10 @@
+name=Unchecked Growth
+image=https://magiccards.info/scans/en/bok/148.jpg
+value=2.735
+rarity=U
+type=Instant
+subtype=Arcane
+cost={2}{G}
+timing=removal
+oracle=Target creature gets +4/+4 until end of turn. If it's a Spirit, it gains trample until end of turn.
+requires_groovy_code

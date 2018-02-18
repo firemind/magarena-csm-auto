@@ -1,9 +1,9 @@
 name=Liliana, the Last Hope
-image=http://magiccards.info/scans/en/emn/93.jpg
+image=https://magiccards.info/scans/en/emn/93.jpg
 image_updated=2016-09-05
 value=2.500
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Liliana
 cost={1}{B}{B}
 loyalty=3

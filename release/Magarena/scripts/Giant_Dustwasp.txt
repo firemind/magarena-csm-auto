@@ -1,0 +1,12 @@
+name=Giant Dustwasp
+image=https://magiccards.info/scans/en/mma/145.jpg
+value=3.265
+rarity=C
+type=Creature
+subtype=Insect
+cost={3}{G}{G}
+pt=3/3
+ability=Flying;\
+        Suspend 4—{1}{G}
+timing=main
+oracle=Flying\nSuspend 4—{1}{G}

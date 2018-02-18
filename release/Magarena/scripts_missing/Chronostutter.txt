@@ -1,5 +1,5 @@
 name=Chronostutter
-image=http://magiccards.info/scans/en/m15/48.jpg
+image=https://magiccards.info/scans/en/m15/48.jpg
 value=2.000
 rarity=C
 type=Instant
@@ -7,3 +7,4 @@ cost={5}{U}
 effect=Put target creature into its owner's library second from the top.
 timing=removal
 oracle=Put target creature into its owner's library second from the top.
+status=needs groovy

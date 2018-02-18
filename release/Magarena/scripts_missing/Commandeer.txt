@@ -1,5 +1,5 @@
 name=Commandeer
-image=http://magiccards.info/scans/en/cs/29.jpg
+image=https://magiccards.info/scans/en/cs/29.jpg
 value=4.415
 rarity=R
 type=Instant
@@ -8,3 +8,4 @@ ability=You may exile two blue cards from your hand rather than pay SN's mana co
 effect=Gain control of target noncreature spell. You may choose new targets for it.
 timing=removal
 oracle=You may exile two blue cards from your hand rather than pay Commandeer's mana cost.\nGain control of target noncreature spell. You may choose new targets for it.
+status=not supported: spell-modification

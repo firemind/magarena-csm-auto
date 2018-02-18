@@ -1,5 +1,5 @@
 name=Petrified Wood-Kin
-image=http://magiccards.info/scans/en/gp/91.jpg
+image=https://magiccards.info/scans/en/gp/91.jpg
 value=3.728
 rarity=R
 type=Creature
@@ -11,3 +11,4 @@ ability=SN can't be countered.;\
         Protection from instants
 timing=main
 oracle=Petrified Wood-Kin can't be countered.\nBloodthirst X\nProtection from instants
+status=not supported: no-info

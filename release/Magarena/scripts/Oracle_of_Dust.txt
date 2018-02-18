@@ -1,0 +1,13 @@
+name=Oracle of Dust
+image=https://magiccards.info/scans/en/bfz/63.jpg
+image_updated=2015-11-08
+value=2.500
+rarity=C
+type=Creature
+subtype=Eldrazi,Processor
+cost={4}{U}
+pt=3/5
+ability=Devoid;\
+        {2}, Put a card an opponent owns from exile into that player's graveyard: Draw a card, then discard a card.
+timing=main
+oracle=Devoid\n{2}, Put a card an opponent owns from exile into that player's graveyard: Draw a card, then discard a card.

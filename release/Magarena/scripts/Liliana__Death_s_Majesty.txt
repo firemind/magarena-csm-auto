@@ -1,8 +1,8 @@
 name=Liliana, Death's Majesty
-image=http://magiccards.info/scans/en/akh/97.jpg
+image=https://magiccards.info/scans/en/akh/97.jpg
 value=2.500
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Liliana
 cost={3}{B}{B}
 loyalty=5

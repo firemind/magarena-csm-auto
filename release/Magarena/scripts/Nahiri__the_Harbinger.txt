@@ -1,8 +1,8 @@
 name=Nahiri, the Harbinger
-image=http://magiccards.info/scans/en/soi/247.jpg
+image=https://magiccards.info/scans/en/soi/247.jpg
 value=2.500
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Nahiri
 cost={2}{R}{W}
 loyalty=4

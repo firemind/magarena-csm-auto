@@ -1,5 +1,5 @@
 name=Chronomantic Escape
-image=http://magiccards.info/scans/en/fut/4.jpg
+image=https://magiccards.info/scans/en/fut/4.jpg
 value=3.709
 rarity=U
 type=Sorcery
@@ -7,4 +7,4 @@ cost={4}{W}{W}
 effect=Until your next turn, creatures can't attack you. Exile SN with three time counters on it.~Suspend 3—{2}{W}
 timing=main
 oracle=Until your next turn, creatures can't attack you. Exile Chronomantic Escape with three time counters on it.\nSuspend 3—{2}{W}
-status=not supported: suspend
+status=needs groovy

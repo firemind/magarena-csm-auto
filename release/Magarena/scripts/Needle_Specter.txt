@@ -1,0 +1,13 @@
+name=Needle Specter
+image=https://magiccards.info/scans/en/eve/39.jpg
+value=3.617
+rarity=R
+type=Creature
+subtype=Specter
+cost={1}{B}{B}
+pt=1/1
+ability=Flying;\
+        Wither
+timing=main
+oracle=Flying\nWither\nWhenever Needle Specter deals combat damage to a player, that player discards that many cards.
+requires_groovy_code

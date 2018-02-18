@@ -1,0 +1,15 @@
+name=Mirri, Weatherlight Duelist
+image=https://magiccards.info/scans/en/c17/43.jpg
+image_updated=2017-10-03
+value=2.500
+rarity=M
+type=Legendary,Creature
+subtype=Cat,Warrior
+cost={1}{G}{W}
+pt=3/2
+ability=First strike;\
+        Whenever SN attacks, each opponent can't block with more than one creature this combat.;\
+        As long as SN is tapped, no more than one creature can attack you each combat.
+timing=main
+oracle=First strike\nWhenever Mirri, Weatherlight Duelist attacks, each opponent can't block with more than one creature this combat.\nAs long as Mirri, Weatherlight Duelist is tapped, no more than one creature can attack you each combat.
+status=not supported: blocking-restriction

@@ -1,0 +1,9 @@
+name=Exsanguinate
+image=https://magiccards.info/scans/en/som/61.jpg
+value=4.048
+rarity=U
+type=Sorcery
+cost={X}{B}{B}
+effect=Each opponent loses X life. You gain life equal to the life lost this way.
+timing=main
+oracle=Each opponent loses X life. You gain life equal to the life lost this way.

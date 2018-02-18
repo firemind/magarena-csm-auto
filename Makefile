@@ -103,12 +103,6 @@ cards/groovy.txt: $(wildcard release/Magarena/scripts/*.txt)
 cards/non-groovy.txt: $(wildcard release/Magarena/scripts/*.txt)
 	grep -ho "name=.*" `grep requires_groovy_code -L release/Magarena/scripts/*.txt` | sed 's/name=//' | sort > $@
 
-%_full.txt: scripts/extract_candidates.awk %.txt cards/groovy.txt cards/mtg-data.txt
-	awk -f $^ | sed 's/\t/\n/g'  > $@
-
-cards/candidates_full.txt: scripts/extract_candidates.awk cards/scored_by_dec.tsv cards/unimplementable.tsv cards/mtg-data.txt
-	awk -f $^ | sort -rg | sed 's/\t/\n/g' > $@
-
 cards/unimplementable.tsv.add: cards/candidates_full.txt
 	grep "|" $^ | sed 's/NAME://;s/|/\t/' >> $(basename $@)
 	make $^
@@ -138,6 +132,12 @@ cards/unknown.txt:
 
 cards/unknown_oracle.txt:
 	grep oracle= `grep -L status= -r release/Magarena/scripts_missing` | sed 's/oracle=/\n/;s/release/\nrelease/' > $@
+
+cards/unknown_%.txt:
+	grep oracle $$(grep -L status $$(grep /$*/ -r release/Magarena/scripts_missing/ -l)) > $@
+
+cards/groovy_oracle.txt:
+	grep oracle= `grep requires_groovy_code -r release/Magarena/scripts -l` | sed 's/oracle=/\n/;s/release/\nrelease/' > $@
 
 cards/staples_unknown.txt: cards/staples.txt cards/unknown.txt
 	join -t"|" <(sort $(word 1,$^)) <(sort $(word 2,$^)) > $@
@@ -227,6 +227,7 @@ inf: $(MAG)
 
 circleci:
 	make clean $(MAG)
+	make debug
 	$(eval MAG_ID := $(shell date +%s))
 	make games=50 ai1=MMABC ai2=MCTS ${MAG_ID}.t || (cat ${MAG_ID}.out && tail -20 ${MAG_ID}.log && false)
 	$(eval MAG_ID := $(shell date +%s))
@@ -406,14 +407,6 @@ upload/Magarena-%.zip: Magarena-%.zip
 			-s "$^" \
 			$^
 
-cards/cards.orig.xml:
-	wget `curl 'http://www.slightlymagic.net/forum/viewtopic.php?f=27&t=1347' | grep -o "http[^<]*dl.dropbox[^<]*.zip\"" | sed 's/"//'`
-	unzip mtg-data-2015*.zip mtg-data/cards.xml mtg-data/meta.xml mtg-data/setinfo.xml
-	mv mtg-data/cards.xml $@
-	mv mtg-data/* cards
-	rmdir mtg-data
-	unzip mtg-data-txt*.zip -d cards
-
 # correct phyrexian mana from {P/.} -> {./P}
 cards/cards.xml: cards/cards.orig.xml
 	sed "s/{P\/\(.\)}/{\1\/P}/g;s/’/'/g" $^ > $@
@@ -443,11 +436,6 @@ cards/current-magic-excel.txt:
 
 code_clones:
 	java -jar ~/App/simian/bin/simian.jar release/Magarena/scripts/*.groovy > $@
-
-cards/mtg-data:
-	curl https://dl.dropbox.com/u/2771470/index.html | grep -o 'href="mtg.*.zip' | head -1 | sed 's/href="//' | xargs -I'{}' wget https://dl.dropbox.com/u/2771470/'{}'
-	unzip -j mtg-data*.zip -d cards
-	rm mtg-data*.zip
 
 unique_property:
 	 grep "=" release/Magarena/scripts/*.txt| cut -d'=' -f1  | sort | uniq -c | sort -n
@@ -566,7 +554,7 @@ check_meta: cards/scriptable.txt
 
 # every image is to a jpg file or attachment
 check_image:
-	grep '^image=' -r release/Magarena/scripts | grep -v "jpg$$" | grep -v "png$$" | grep -v attachment.php | ${NO_OUTPUT}
+	grep '^image=' -r release/Magarena/scripts | grep -v "jpg\(?[0-9]*\)\?$$" | grep -v "png$$" | grep -v attachment.php | ${NO_OUTPUT}
 
 # every card that requires groovy code has a corresponding groovy script file
 # every groovy script file has a corresponding card script that requires groovy code
@@ -630,7 +618,7 @@ check_unused_condition:
 	rm declared-conds used-conds
 
 check_unused_filter:
-	grep "Impl [A-Z]\+[^ =]*" src/magic/model/target/MagicTargetFilterFactory.java -o | sed 's/Impl //' | sort | uniq > declared-filters
+	grep "Impl [A-Z][A-Z0-9a-z_]*" src/magic/model/target/MagicTargetFilterFactory.java -o | sed 's/Impl //' | sort | uniq > declared-filters
 	for i in `cat declared-filters`; do grep $$i -r src release/Magarena/scripts | grep -v "public static final" | grep -o $$i; done | sort | uniq > used-filters
 	diff declared-filters used-filters | ${NO_OUTPUT}
 	rm declared-filters used-filters
@@ -644,7 +632,7 @@ check_unused_choice:
 check_mana_or_combat:
 	diff \
 	<(grep mana_or_combat -lr release/Magarena/scripts) \
-	<(grep "mana pool.*becomes a" -r release/Magarena/scripts -l)
+	<(grep "mana pool[^\"]*becomes a" -r release/Magarena/scripts -l)
 
 # all cards except lands should have either color, or cost, or both
 check_color_or_cost:
@@ -974,3 +962,29 @@ requires_scripted_candidate: cards/existing_master.txt
 	rm groovy_scripted.txt requires_scripted.txt requires_scripted_candidate.txt
 	make requires_scripted_candidate.txt
 	diff requires_scripted_candidate.ignore requires_scripted_candidate.txt
+
+generate-diff:
+	mkdir diff
+	for i in release/Magarena/scripts_missing/*.txt; do \
+		diff -Nau \
+		-I'value=' \
+		-I'rarity=' \
+		-I'status=' \
+		-I'image=' \
+		-I'image_updated=' \
+		-I'transform=' \
+		-I'split=' \
+		-I'flip=' \
+		-I'timing=' \
+		-I'loyalty=' \
+		-I'enchant=' \
+		-I'hidden' \
+		-I'second_half' \
+		$$i scripts-builder/OUTPUT/scripts_missing/`basename $$i` > diff/`basename $$i txt`diff; \
+	done
+
+edit-diff:
+	for i in diff/*.diff; do editdiff $$i; done
+
+apply-diff:
+	for i in diff/*.diff; do patch -p0 < $$i; done

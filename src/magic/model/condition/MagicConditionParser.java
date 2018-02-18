@@ -300,6 +300,12 @@ public enum MagicConditionParser {
             return MagicConditionFactory.SelfIs(filter);
         }
     },
+    Eminence("SN is in the command zone or on the battlefield") {
+        @Override
+        public MagicCondition toCondition(final Matcher arg) {
+            return MagicCondition.EMINENCE;
+        }
+    },
     EquippedIsA("equipped creature is( a| an)? " + ARG.WORDRUN) {
         @Override
         public MagicCondition toCondition(final Matcher arg) {
@@ -683,26 +689,21 @@ public enum MagicConditionParser {
             return MagicCondition.CREATURE_DIED_THIS_TURN;
         }
     },
-    YouGainedLifeOrMore("you gained "+ARG.NUMBER+" or more life this turn") {
+    YouGainedLifeOrMore("you gained( "+ARG.NUMBER+" or more)? life this turn") {
         @Override
         public MagicCondition toCondition(final Matcher arg) {
             final int amount = ARG.number(arg);
             return MagicConditionFactory.YouGainLifeOrMore(amount);
         }
     },
-    OpponentGainedLife("an opponent gained life this turn") {
+    OpponentGainedLife("an opponent gained( "+ARG.NUMBER+" or more)? life this turn") {
         @Override
         public MagicCondition toCondition(final Matcher arg) {
-            return MagicConditionFactory.OpponentGainLifeOrMore(1);
+            final int amount = ARG.number(arg);
+            return MagicConditionFactory.OpponentGainLifeOrMore(amount);
         }
     },
-    OpponentLostLife("an opponent lost life this turn") {
-        @Override
-        public MagicCondition toCondition(final Matcher arg) {
-            return MagicConditionFactory.OpponentLoseLifeOrMore(1);
-        }
-    },
-    OpponentLostLifeOrMore("an opponent lost "+ARG.NUMBER+" or more life this turn") {
+    OpponentLostLifeOrMore("an opponent lost( "+ARG.NUMBER+" or more)? life this turn") {
         @Override
         public MagicCondition toCondition(final Matcher arg) {
             final int amount = ARG.number(arg);

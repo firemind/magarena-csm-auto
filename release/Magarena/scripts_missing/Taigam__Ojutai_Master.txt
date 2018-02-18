@@ -1,0 +1,14 @@
+name=Taigam, Ojutai Master
+image=https://magiccards.info/scans/en/c17/46.jpg
+image_updated=2017-10-03
+value=2.500
+rarity=R
+type=Legendary,Creature
+subtype=Human,Monk
+cost={2}{W}{U}
+pt=3/4
+ability=Instant, sorcery, and Dragon spells you control can't be countered by spells or abilities.;\
+        Whenever you cast an instant or sorcery spell from your hand, if SN attacked this turn, that spell gains rebound.
+timing=main
+oracle=Instant, sorcery, and Dragon spells you control can't be countered by spells or abilities.\nWhenever you cast an instant or sorcery spell from your hand, if Taigam, Ojutai Master attacked this turn, that spell gains rebound.
+status=not supported: spell-modification

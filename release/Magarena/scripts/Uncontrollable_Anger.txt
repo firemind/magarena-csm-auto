@@ -1,5 +1,5 @@
 name=Uncontrollable Anger
-image=http://magiccards.info/scans/en/cns/155.jpg
+image=https://magiccards.info/scans/en/cns/155.jpg
 value=2.500
 rarity=U
 type=Enchantment
@@ -7,7 +7,7 @@ subtype=Aura
 cost={2}{R}{R}
 ability=Flash;\
         Enchant creature;\
-        Enchanted creature gets +2/+2 and attacks each turn if able.
+        Enchanted creature gets +2/+2 and attacks each combat if able.
 timing=pumpFlash
 enchant=pump,creature
-oracle=Flash\nEnchant creature\nEnchanted creature gets +2/+2 and attacks each turn if able.
+oracle=Flash\nEnchant creature\nEnchanted creature gets +2/+2 and attacks each combat if able.

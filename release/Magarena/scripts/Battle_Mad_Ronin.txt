@@ -1,5 +1,5 @@
 name=Battle-Mad Ronin
-image=http://magiccards.info/scans/en/chk/156.jpg
+image=https://magiccards.info/scans/en/chk/156.jpg
 value=2.743
 rarity=C
 type=Creature
@@ -7,6 +7,6 @@ subtype=Human,Samurai
 cost={1}{R}
 pt=1/1
 ability=Bushido 2;\
-        SN attacks each turn if able.
+        SN attacks each combat if able.
 timing=main
-oracle=Bushido 2\nBattle-Mad Ronin attacks each turn if able.
+oracle=Bushido 2\nBattle-Mad Ronin attacks each combat if able.

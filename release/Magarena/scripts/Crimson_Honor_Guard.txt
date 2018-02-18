@@ -1,0 +1,13 @@
+name=Crimson Honor Guard
+image=https://magiccards.info/scans/en/c17/23.jpg
+image_updated=2017-10-03
+value=2.500
+rarity=R
+type=Creature
+subtype=Vampire,Knight
+cost={3}{R}{R}
+pt=4/5
+ability=Trample;\
+        At the beginning of each player's end step, SN deals 4 damage to that player.
+timing=main
+oracle=Trample\nAt the beginning of each player's end step, Crimson Honor Guard deals 4 damage to that player unless he or she controls a commander.

@@ -1,0 +1,12 @@
+name=Durkwood Baloth
+image=https://magiccards.info/scans/en/ima/160.jpg
+image_updated=2017-04-12
+value=3.237
+rarity=C
+type=Creature
+subtype=Beast
+cost={4}{G}{G}
+pt=5/5
+ability=Suspend 5—{G}
+timing=main
+oracle=Suspend 5—{G}

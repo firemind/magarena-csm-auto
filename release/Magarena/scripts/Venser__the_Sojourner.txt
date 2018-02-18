@@ -1,14 +1,14 @@
 name=Venser, the Sojourner
-image=http://magiccards.info/scans/en/som/135.jpg
+image=https://magiccards.info/scans/en/som/135.jpg
 image_updated=2017-01-11
 value=3.946
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Venser
 cost={3}{W}{U}
 loyalty=3
 ability=+2: Exile target permanent you own. Return it to the battlefield under its owner's control at the beginning of the next end step.;\
-        −1: Creatures can't be blocked this turn.
+        −1: Creatures can't be blocked this turn.;\
+        −8: You get an emblem with "Whenever you cast a spell, exile target permanent."
 timing=main
 oracle=+2: Exile target permanent you own. Return it to the battlefield under your control at the beginning of the next end step.\n−1: Creatures can't be blocked this turn.\n−8: You get an emblem with "Whenever you cast a spell, exile target permanent."
-requires_groovy_code

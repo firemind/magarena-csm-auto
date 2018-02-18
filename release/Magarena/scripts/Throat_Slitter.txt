@@ -1,12 +1,12 @@
 name=Throat Slitter
-image=http://magiccards.info/scans/en/pc2/37.jpg
+image=https://magiccards.info/scans/en/pc2/37.jpg
 value=3.115
 rarity=U
 type=Creature
 subtype=Rat,Ninja
 cost={4}{B}
 pt=2/2
-ability=Ninjutsu {2}{B}
+ability=Ninjutsu {2}{B};\
+        Whenever SN deals combat damage to a player, destroy target nonblack creature that player controls.
 timing=main
 oracle=Ninjutsu {2}{B}\nWhenever Throat Slitter deals combat damage to a player, destroy target nonblack creature that player controls.
-requires_groovy_code

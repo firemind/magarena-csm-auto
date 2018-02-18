@@ -1,5 +1,5 @@
 name=Topple
-image=http://magiccards.info/scans/en/ne/24.jpg
+image=https://magiccards.info/scans/en/ne/24.jpg
 value=3.654
 rarity=C
 type=Sorcery
@@ -7,3 +7,4 @@ cost={2}{W}
 effect=Exile target creature with the greatest power among creatures on the battlefield.
 timing=main
 oracle=Exile target creature with the greatest power among creatures on the battlefield.
+status=needs groovy

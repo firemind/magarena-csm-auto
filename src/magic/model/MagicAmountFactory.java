@@ -118,6 +118,15 @@ public class MagicAmountFactory {
             }
         };
 
+    public static MagicAmount SN_Toughness =
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                final MagicPermanent perm = (MagicPermanent)source;
+                return perm.getToughness();
+            }
+        };
+
     public static MagicAmount LifeTotal =
         new MagicAmount() {
             @Override
@@ -161,6 +170,18 @@ public class MagicAmountFactory {
             @Override
             public int getAmount(final MagicSource source, final MagicPlayer player) {
                 throw new RuntimeException("getAmount(source, player) called on NegXCost");
+            }
+        };
+
+    public static MagicAmount RN_Power =
+        new MagicAmount() {
+            @Override
+            public int getAmount(final MagicEvent event) {
+                return event.getRefPermanent().getPower();
+            }
+            @Override
+            public int getAmount(final MagicSource source, final MagicPlayer player) {
+                throw new RuntimeException("getAmount(source, player) called on RNPower");
             }
         };
 

@@ -224,8 +224,8 @@ public class MagicCard
         return getCardDefinition().getCostEvent(this);
     }
 
-    public Iterable<MagicEvent> getAdditionalCostEvent() {
-        return getCardDefinition().getAdditionalCostEvent(this);
+    public Iterable<MagicEvent> getWithoutManaCostEvent() {
+        return getCardDefinition().getWithoutManaCostEvent(this);
     }
 
     public boolean isGameKnown() {
@@ -460,6 +460,12 @@ public class MagicCard
         // Card in opponent's graveyard
         if (targetFilter.acceptType(MagicTargetType.OpponentsGraveyard) &&
             player.getOpponent().getGraveyard().contains(this)) {
+            return true;
+        }
+
+        // Card in opponent's exile
+        if (targetFilter.acceptType(MagicTargetType.OpponentsExile) &&
+            player.getOpponent().getExile().contains(this)) {
             return true;
         }
 

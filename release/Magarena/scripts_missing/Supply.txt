@@ -1,11 +1,11 @@
 name=Supply
-image=http://magiccards.info/scans/en/di/157a.jpg
+image=https://magiccards.info/scans/en/di/157a.jpg
 value=4.020
 rarity=U
 type=Sorcery
 cost={X}{G}{W}
-effect=Put X 1/1 green Saproling creature tokens onto the battlefield.
+effect=Create X 1/1 green Saproling creature tokens.
 split=Demand
 timing=main
-oracle=Put X 1/1 green Saproling creature tokens onto the battlefield.
+oracle=Create X 1/1 green Saproling creature tokens.
 status=not supported: split-card

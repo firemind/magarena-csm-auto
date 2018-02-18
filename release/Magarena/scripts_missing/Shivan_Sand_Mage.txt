@@ -1,5 +1,5 @@
 name=Shivan Sand-Mage
-image=http://magiccards.info/scans/en/fut/108.jpg
+image=https://magiccards.info/scans/en/fut/108.jpg
 value=2.530
 rarity=U
 type=Creature
@@ -12,4 +12,4 @@ ability=When SN enters the battlefield, choose one — \
         Suspend 4—{R}
 timing=main
 oracle=When Shivan Sand-Mage enters the battlefield, choose one —\n• Remove two time counters from target permanent or suspended card.\n• Put two time counters on target permanent with a time counter on it or suspended card.\nSuspend 4—{R}
-status=not supported: suspend
+status=needs groovy

@@ -1,0 +1,10 @@
+name=Mindstab
+image=https://magiccards.info/scans/en/ts/119.jpg
+value=2.625
+rarity=C
+type=Sorcery
+cost={5}{B}
+ability=Suspend 4—{B}
+effect=Target player discards three cards.
+timing=main
+oracle=Target player discards three cards.\nSuspend 4—{B}

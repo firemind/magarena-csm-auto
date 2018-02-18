@@ -1,0 +1,10 @@
+name=Arc Blade
+image=https://magiccards.info/scans/en/fut/94.jpg
+value=3.403
+rarity=U
+type=Sorcery
+cost={3}{R}{R}
+ability=Suspend 3—{2}{R}
+effect=SN deals 2 damage to target creature or player.~Exile SN with three time counters on it.
+timing=main
+oracle=Arc Blade deals 2 damage to target creature or player. Exile Arc Blade with three time counters on it.\nSuspend 3—{2}{R}

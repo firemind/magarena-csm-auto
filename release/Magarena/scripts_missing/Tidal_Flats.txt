@@ -1,5 +1,5 @@
 name=Tidal Flats
-image=http://magiccards.info/scans/en/fe/54.jpg
+image=https://magiccards.info/scans/en/fe/54.jpg
 value=2.615
 rarity=C
 type=Enchantment
@@ -7,3 +7,4 @@ cost={U}
 ability={U}{U}: For each attacking creature without flying, its controller may pay {1}. If he or she doesn't, creatures you control blocking that creature gain first strike until end of turn.
 timing=enchantment
 oracle={U}{U}: For each attacking creature without flying, its controller may pay {1}. If he or she doesn't, creatures you control blocking that creature gain first strike until end of turn.
+status=needs groovy

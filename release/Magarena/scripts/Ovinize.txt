@@ -1,9 +1,9 @@
 name=Ovinize
-image=http://magiccards.info/scans/en/pc/57.jpg
+image=https://magiccards.info/scans/en/pc/57.jpg
 value=4.148
 rarity=U
 type=Instant
 cost={1}{U}
+effect=Until end of turn, target creature loses all abilities and has base power and toughness 0/1.
 timing=removal
 oracle=Until end of turn, target creature loses all abilities and has base power and toughness 0/1.
-requires_groovy_code=Humble

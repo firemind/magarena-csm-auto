@@ -1,0 +1,10 @@
+name=Naya Charm
+image=https://magiccards.info/scans/en/c16/214.jpg
+image_updated=2017-08-17
+value=3.769
+rarity=U
+type=Instant
+cost={R}{G}{W}
+effect=Choose one — (1) SN deals 3 damage to target creature. (2) Return target card from a graveyard to its owner's hand. (3) Tap all creatures target player controls.
+timing=removal
+oracle=Choose one —\n• Naya Charm deals 3 damage to target creature.\n• Return target card from a graveyard to its owner's hand.\n• Tap all creatures target player controls.

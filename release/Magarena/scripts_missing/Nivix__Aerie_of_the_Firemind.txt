@@ -1,5 +1,5 @@
 name=Nivix, Aerie of the Firemind
-image=http://magiccards.info/scans/en/gp/160.jpg
+image=https://magiccards.info/scans/en/gp/160.jpg
 value=1.478
 rarity=U
 type=Land
@@ -7,3 +7,4 @@ ability={T}: Add {C} to your mana pool.;\
         {2}{U}{R}, {T}: Exile the top card of your library. Until your next turn, you may cast that card if it's an instant or sorcery card.
 timing=land
 oracle={T}: Add {C} to your mana pool.\n{2}{U}{R}, {T}: Exile the top card of your library. Until your next turn, you may cast that card if it's an instant or sorcery card.
+status=not supported: may-play-card

@@ -1,5 +1,5 @@
 name=Rain of Gore
-image=http://magiccards.info/scans/en/di/126.jpg
+image=https://magiccards.info/scans/en/di/126.jpg
 value=3.938
 rarity=R
 type=Enchantment
@@ -7,4 +7,5 @@ cost={B}{R}
 ability=If a spell or ability would cause its controller to gain life, that player loses that much life instead.
 timing=enchantment
 oracle=If a spell or ability would cause its controller to gain life, that player loses that much life instead.
-status=needs groovy
+status=not supported: no-info
+# Shouldn't trigger from Lifelink via combat damage - no way to determine

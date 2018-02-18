@@ -1,0 +1,12 @@
+name=Vigilant Martyr
+image=https://magiccards.info/scans/en/mr/249.jpg
+value=3.732
+rarity=U
+type=Creature
+subtype=Human,Cleric
+cost={W}
+pt=1/1
+ability=Sacrifice SN: Regenerate target creature.;\
+        {W}{W}, {T}, Sacrifice SN: Counter target spell that targets an enchantment.
+timing=main
+oracle=Sacrifice Vigilant Martyr: Regenerate target creature.\n{W}{W}, {T}, Sacrifice Vigilant Martyr: Counter target spell that targets an enchantment.

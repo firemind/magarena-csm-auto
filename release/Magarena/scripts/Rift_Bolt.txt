@@ -1,0 +1,11 @@
+name=Rift Bolt
+image=https://magiccards.info/scans/en/ima/143.jpg
+image_updated=2017-04-12
+value=3.982
+rarity=U
+type=Sorcery
+cost={2}{R}
+ability=Suspend 1—{R}
+effect=SN deals 3 damage to target creature or player.
+timing=main
+oracle=Rift Bolt deals 3 damage to target creature or player.\nSuspend 1—{R}

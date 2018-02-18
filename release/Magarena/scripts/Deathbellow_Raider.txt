@@ -1,12 +1,12 @@
 name=Deathbellow Raider
-image=http://magiccards.info/scans/en/ths/117.jpg
+image=https://magiccards.info/scans/en/ths/117.jpg
 value=3.567
 rarity=C
 type=Creature
 subtype=Minotaur,Berserker
 cost={1}{R}
 pt=2/3
-ability=SN attacks each turn if able.;\
+ability=SN attacks each combat if able.;\
         {2}{B}: Regenerate SN.
 timing=main
-oracle=Deathbellow Raider attacks each turn if able.\n{2}{B}: Regenerate Deathbellow Raider.
+oracle=Deathbellow Raider attacks each combat if able.\n{2}{B}: Regenerate Deathbellow Raider.

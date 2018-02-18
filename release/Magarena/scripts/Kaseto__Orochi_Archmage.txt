@@ -1,0 +1,12 @@
+name=Kaseto, Orochi Archmage
+image=https://magiccards.info/scans/en/c15/47.jpg
+image_updated=2016-02-29
+value=2.500
+rarity=M
+type=Legendary,Creature
+subtype=Snake,Wizard
+cost={1}{G}{U}
+pt=2/2
+timing=main
+oracle={G}{U}: Target creature can't be blocked this turn. If that creature is a Snake, it gets +2/+2 until end of turn.
+requires_groovy_code

@@ -1,0 +1,9 @@
+name=Fell the Mighty
+image=https://magiccards.info/scans/en/c14/7.jpg
+value=2.500
+rarity=R
+type=Sorcery
+cost={4}{W}
+timing=main
+oracle=Destroy all creatures with power greater than target creature's power.
+requires_groovy_code

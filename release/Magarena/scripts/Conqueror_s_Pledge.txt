@@ -1,0 +1,10 @@
+name=Conqueror's Pledge
+image=https://magiccards.info/scans/en/zen/8.jpg
+value=3.887
+rarity=R
+type=Sorcery
+cost={2}{W}{W}{W}
+ability=Kicker {6}
+timing=main
+oracle=Kicker {6}\nCreate six 1/1 white Kor Soldier creature tokens. If Conqueror's Pledge was kicked, create twelve of those tokens instead.
+requires_groovy_code

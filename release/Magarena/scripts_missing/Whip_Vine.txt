@@ -1,5 +1,5 @@
 name=Whip Vine
-image=http://magiccards.info/scans/en/ai/90.jpg
+image=https://magiccards.info/scans/en/ai/90.jpg
 value=2.803
 rarity=C
 type=Creature
@@ -11,3 +11,4 @@ ability=Defender; reach;\
         {T}: Tap target creature with flying blocked by SN. That creature doesn't untap during its controller's untap step for as long as SN remains tapped.
 timing=smain
 oracle=Defender, reach\nYou may choose not to untap Whip Vine during your untap step.\n{T}: Tap target creature with flying blocked by Whip Vine. That creature doesn't untap during its controller's untap step for as long as Whip Vine remains tapped.
+status=needs groovy

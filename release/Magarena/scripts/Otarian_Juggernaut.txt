@@ -1,5 +1,5 @@
 name=Otarian Juggernaut
-image=http://magiccards.info/scans/en/od/305.jpg
+image=https://magiccards.info/scans/en/od/305.jpg
 value=1.720
 rarity=R
 type=Artifact,Creature
@@ -7,6 +7,6 @@ subtype=Juggernaut
 cost={4}
 pt=2/3
 ability=SN can't be blocked by Walls.;\
-        As long as seven or more cards are in your graveyard, SN gets +3/+0 and attacks each turn if able.
+        As long as seven or more cards are in your graveyard, SN gets +3/+0 and attacks each combat if able.
 timing=main
-oracle=Otarian Juggernaut can't be blocked by Walls.\nThreshold — As long as seven or more cards are in your graveyard, Otarian Juggernaut gets +3/+0 and attacks each turn if able.
+oracle=Otarian Juggernaut can't be blocked by Walls.\nThreshold — As long as seven or more cards are in your graveyard, Otarian Juggernaut gets +3/+0 and attacks each combat if able.

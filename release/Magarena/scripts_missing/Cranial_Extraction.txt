@@ -1,11 +1,11 @@
 name=Cranial Extraction
-image=http://magiccards.info/scans/en/chk/105.jpg
+image=https://magiccards.info/scans/en/chk/105.jpg
 value=4.311
 rarity=R
 type=Sorcery
 subtype=Arcane
 cost={3}{B}
-effect=Name a nonland card. Search target player's graveyard, hand, and library for all cards with that name and exile them. Then that player shuffles his or her library.
+effect=Choose a nonland card name. Search target player's graveyard, hand, and library for all cards with that name and exile them. Then that player shuffles his or her library.
 timing=main
-oracle=Name a nonland card. Search target player's graveyard, hand, and library for all cards with that name and exile them. Then that player shuffles his or her library.
+oracle=Choose a nonland card name. Search target player's graveyard, hand, and library for all cards with that name and exile them. Then that player shuffles his or her library.
 status=not supported: name-card

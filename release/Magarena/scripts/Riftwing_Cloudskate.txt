@@ -1,0 +1,13 @@
+name=Riftwing Cloudskate
+image=https://magiccards.info/scans/en/mma/62.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Illusion
+cost={3}{U}{U}
+pt=2/2
+ability=Flying;\
+        When SN enters the battlefield, return target permanent to its owner's hand.;\
+        Suspend 3—{1}{U}
+timing=main
+oracle=Flying\nWhen Riftwing Cloudskate enters the battlefield, return target permanent to its owner's hand.\nSuspend 3—{1}{U}

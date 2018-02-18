@@ -1,7 +1,8 @@
 name=Bladewing the Risen
-image=http://magiccards.info/scans/en/cmd/185.jpg
+image=https://magiccards.info/scans/en/ima/193.jpg
+image_updated=2017-04-12
 value=4.090
-rarity=R
+rarity=U
 type=Legendary,Creature
 subtype=Zombie,Dragon
 cost={3}{B}{B}{R}{R}

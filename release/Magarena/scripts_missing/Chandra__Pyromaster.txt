@@ -1,8 +1,8 @@
 name=Chandra, Pyromaster
-image=http://magiccards.info/scans/en/m15/134.jpg
+image=https://magiccards.info/scans/en/m15/134.jpg
 value=4.667
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Chandra
 cost={2}{R}{R}
 loyalty=4

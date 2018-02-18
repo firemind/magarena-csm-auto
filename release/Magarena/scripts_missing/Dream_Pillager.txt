@@ -1,5 +1,5 @@
 name=Dream Pillager
-image=http://magiccards.info/scans/en/c15/25.jpg
+image=https://magiccards.info/scans/en/c15/25.jpg
 image_updated=2016-02-29
 value=2.500
 rarity=R
@@ -11,3 +11,4 @@ ability=Flying;\
         Whenever SN deals combat damage to a player, exile that many cards from the top of your library. Until end of turn, you may cast nonland cards exiled this way.
 timing=main
 oracle=Flying\nWhenever Dream Pillager deals combat damage to a player, exile that many cards from the top of your library. Until end of turn, you may cast nonland cards exiled this way.
+status=not supported: may-play-card

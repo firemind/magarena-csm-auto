@@ -1,9 +1,9 @@
 name=Sanguimancy
-image=http://magiccards.info/scans/en/bng/81.jpg
+image=https://magiccards.info/scans/en/bng/81.jpg
 value=3.395
 rarity=U
 type=Sorcery
 cost={4}{B}
+effect=You draw X cards and you lose X life, where X is your devotion to black.
 timing=draw
-requires_groovy_code
 oracle=You draw X cards and you lose X life, where X is your devotion to black.

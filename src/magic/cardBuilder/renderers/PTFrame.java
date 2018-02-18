@@ -319,9 +319,10 @@ public class PTFrame {
         if (cardDef.isHidden()) {
             if (cardDef.hasSubType(MagicSubType.Eldrazi)){
                 typeSymbol = ResourceManager.getImage(CardResource.eldraziSymbol);
-            }
-            else if (cardDef.isPlaneswalker() && !cardDef.getTransformedDefinition().isPlaneswalker()){
+            } else if (cardDef.isPlaneswalker() && !cardDef.getTransformedDefinition().isPlaneswalker()) {
                 typeSymbol = ResourceManager.getImage(CardResource.planeswalkerTypeSymbol);
+            } else if (cardDef.isLand()) {
+                typeSymbol = ResourceManager.getImage(CardResource.landTransformSymbol);
             } else {
                 typeSymbol = ResourceManager.getImage(CardResource.nightSymbol);
             }
@@ -329,6 +330,8 @@ public class PTFrame {
             typeSymbol = ResourceManager.getImage(CardResource.sparkSymbol);
         } else if (cardDef.getTransformedDefinition().hasSubType(MagicSubType.Eldrazi)) {
             typeSymbol = ResourceManager.getImage(CardResource.moonSymbol);
+        } else if (cardDef.getTransformedDefinition().hasType(MagicType.Land)) {
+            typeSymbol = ResourceManager.getImage(CardResource.compassSymbol);
         }
         if (cardDef.isPlaneswalker()) {
             g2d.drawImage(typeSymbol, 21, 18, null);

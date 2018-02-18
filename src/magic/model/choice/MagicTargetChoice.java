@@ -142,20 +142,11 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice NEG_TARGET_ARTIFACT_OR_CREATURE =
         MagicTargetChoice.Negative("target artifact or creature");
 
-    public static final MagicTargetChoice TARGET_ARTIFACT_OR_ENCHANTMENT_YOUR_OPPONENT_CONTROLS =
-        new MagicTargetChoice("target artifact or enchantment an opponent controls");
-
     public static final MagicTargetChoice POS_TARGET_ARTIFACT_CREATURE =
         MagicTargetChoice.Positive("target artifact creature");
 
     public static final MagicTargetChoice TARGET_ENCHANTMENT =
         new MagicTargetChoice("target enchantment");
-
-    public static final MagicTargetChoice TARGET_ENCHANTMENT_YOU_CONTROL =
-        new MagicTargetChoice("target enchantment you control");
-
-    public static final MagicTargetChoice TARGET_ENCHANTMENT_YOUR_OPPONENT_CONTROLS =
-        new MagicTargetChoice("target enchantment an opponent controls");
 
     public static final MagicTargetChoice NEG_TARGET_ENCHANTMENT =
         MagicTargetChoice.Negative("target enchantment");
@@ -220,9 +211,6 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice POS_TARGET_CREATURE_OR_PLAYER =
         MagicTargetChoice.Positive("target creature or player");
 
-    public static final MagicTargetChoice NEG_TARGET_VAMPIRE =
-        MagicTargetChoice.Negative("target Vampire");
-
     public static final MagicTargetChoice SACRIFICE_PERMANENT =
         new MagicTargetChoice("a permanent to sacrifice");
 
@@ -262,12 +250,6 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice TARGET_CARD_FROM_OPPONENTS_GRAVEYARD =
         new MagicTargetChoice("target card from an opponent's graveyard");
 
-    public static final MagicTargetChoice TARGET_CREATURE_CARD_FROM_OPPONENTS_GRAVEYARD =
-        new MagicTargetChoice("target creature card from an opponent's graveyard");
-
-    public static final MagicTargetChoice TARGET_INSTANT_OR_SORCERY_CARD_FROM_OPPONENTS_GRAVEYARD =
-        new MagicTargetChoice("target instant or sorcery card from an opponent's graveyard");
-
     public static final MagicTargetChoice TARGET_CREATURE_CARD_FROM_ALL_GRAVEYARDS =
         new MagicTargetChoice("target creature card from a graveyard");
 
@@ -301,11 +283,11 @@ public class MagicTargetChoice extends MagicChoice {
     public static final MagicTargetChoice TARGET_CREATURE_YOUR_OPPONENT_CONTROLS =
         new MagicTargetChoice("target creature an opponent controls");
 
-    public static final MagicTargetChoice TARGET_ARTIFACT_YOUR_OPPONENT_CONTROLS =
-        new MagicTargetChoice("target artifact an opponent controls");
-
     public static final MagicTargetChoice ANOTHER_CREATURE_YOU_CONTROL =
         new MagicTargetChoice("another creature you control");
+
+    public static final MagicTargetChoice A_CARD_FROM_OPPONENTS_EXILE =
+        new MagicTargetChoice(MagicTargetFilterFactory.CARD_FROM_OPPONENTS_EXILE, "a card an opponent owns from exile");
 
     private final String targetDescription;
     private final MagicTargetFilter<? extends MagicTarget> targetFilter;
@@ -477,6 +459,8 @@ public class MagicTargetChoice extends MagicChoice {
             controller.focusViewers(1);
         } else if (targetFilter.acceptType(MagicTargetType.OpponentsGraveyard)) {
             controller.focusViewers(2);
+        } else if (targetFilter.acceptType(MagicTargetType.OpponentsExile)) {
+            controller.focusViewers(4);
         }
         final MagicTargetHint usedTargetHint=getTargetHint(GeneralConfig.getInstance().getSmartTarget());
         final Set<Object> validChoices=new HashSet<Object>(game.getLegalTargets(player,source,this,usedTargetHint));

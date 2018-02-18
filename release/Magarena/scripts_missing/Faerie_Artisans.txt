@@ -1,5 +1,5 @@
 name=Faerie Artisans
-image=http://magiccards.info/scans/en/c16/8.jpg
+image=https://magiccards.info/scans/en/c16/8.jpg
 image_updated=2016-12-02
 value=2.500
 rarity=R
@@ -11,3 +11,4 @@ ability=Flying;\
         Whenever a nontoken creature enters the battlefield under an opponent's control, create a token that's a copy of that creature except it's an artifact in addition to its other types. Then exile all other tokens created with SN.
 timing=main
 oracle=Flying\nWhenever a nontoken creature enters the battlefield under an opponent's control, create a token that's a copy of that creature except it's an artifact in addition to its other types. Then exile all other tokens created with Faerie Artisans.
+status=not supported: no-info

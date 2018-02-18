@@ -1,0 +1,12 @@
+name=Knight of Sursi
+image=https://magiccards.info/scans/en/fut/10.jpg
+value=3.113
+rarity=C
+type=Creature
+subtype=Human,Knight
+cost={3}{W}
+pt=2/2
+ability=Flying, flanking;\
+        Suspend 3—{W}
+timing=main
+oracle=Flying, flanking\nSuspend 3—{W}

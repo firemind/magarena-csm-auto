@@ -1,7 +1,8 @@
 name=Scourge of Valkas
-image=http://magiccards.info/scans/en/m14/151.jpg
+image=https://magiccards.info/scans/en/ima/145.jpg
+image_updated=2017-04-12
 value=3.652
-rarity=M
+rarity=R
 type=Creature
 subtype=Dragon
 cost={2}{R}{R}{R}

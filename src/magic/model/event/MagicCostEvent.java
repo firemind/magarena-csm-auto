@@ -127,7 +127,7 @@ public enum MagicCostEvent {
             return new MagicExileTopLibraryEvent(source, ARG.amount(arg));
         }
     },
-    ExileCards("Exile ((?<another>another )|" + ARG.AMOUNT + " )?(?<any>.*card.*)") {
+    ExileCards("Exile ((?<another>another )|" + ARG.AMOUNT + " )?(other )?(?<any>.*card.*)") {
         @Override
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             final int amt = ARG.amount(arg);
@@ -304,6 +304,12 @@ public enum MagicCostEvent {
         @Override
         public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
             return new MagicMillEvent(source, ARG.amount(arg));
+        }
+    },
+    Processor("Put a card an opponent owns from exile into that player's graveyard") {
+        @Override
+        public MagicEvent toEvent(final Matcher arg, final MagicSource source) {
+            return new MagicProcessorEvent(source);
         }
     }
     ;

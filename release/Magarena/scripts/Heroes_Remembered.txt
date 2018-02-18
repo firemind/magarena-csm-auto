@@ -1,0 +1,10 @@
+name=Heroes Remembered
+image=https://magiccards.info/scans/en/pc/7.jpg
+value=3.620
+rarity=R
+type=Sorcery
+cost={6}{W}{W}{W}
+ability=Suspend 10—{W}
+effect=You gain 20 life.
+timing=main
+oracle=You gain 20 life.\nSuspend 10—{W}

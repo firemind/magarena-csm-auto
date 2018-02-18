@@ -1,5 +1,5 @@
 name=Silas Renn, Seeker Adept
-image=http://magiccards.info/scans/en/c16/43.jpg
+image=https://magiccards.info/scans/en/c16/43.jpg
 image_updated=2016-12-28
 value=2.500
 rarity=M
@@ -12,3 +12,4 @@ ability=Deathtouch;\
         Partner
 timing=main
 oracle=Deathtouch\nWhenever Silas Renn, Seeker Adept deals combat damage to a player, choose target artifact card in your graveyard. You may cast that card this turn.\nPartner
+status=not supported: may-play-card

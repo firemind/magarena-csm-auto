@@ -1,0 +1,9 @@
+name=Mirror Sheen
+image=https://magiccards.info/scans/en/eve/105.jpg
+value=3.217
+rarity=R
+type=Enchantment
+cost={1}{U/R}{U/R}
+ability={1}{U/R}{U/R}: Copy target instant or sorcery spell that targets you. You may choose new targets for the copy.
+timing=enchantment
+oracle={1}{U/R}{U/R}: Copy target instant or sorcery spell that targets you. You may choose new targets for the copy.

@@ -1,11 +1,11 @@
 name=Bloodrock Cyclops
-image=http://magiccards.info/scans/en/10e/192.jpg
+image=https://magiccards.info/scans/en/10e/192.jpg
 value=3.329
 rarity=C
 type=Creature
 subtype=Cyclops
 cost={2}{R}
 pt=3/3
-ability=SN attacks each turn if able.
+ability=SN attacks each combat if able.
 timing=main
-oracle=Bloodrock Cyclops attacks each turn if able.
+oracle=Bloodrock Cyclops attacks each combat if able.

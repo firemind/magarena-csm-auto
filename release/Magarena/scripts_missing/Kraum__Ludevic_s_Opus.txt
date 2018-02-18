@@ -1,5 +1,5 @@
 name=Kraum, Ludevic's Opus
-image=http://magiccards.info/scans/en/c16/34.jpg
+image=https://magiccards.info/scans/en/c16/34.jpg
 image_updated=2016-12-21
 value=2.500
 rarity=R
@@ -12,3 +12,4 @@ ability=Flying, haste;\
         Partner
 timing=main
 oracle=Flying, haste\nWhenever an opponent casts his or her second spell each turn, draw a card.\nPartner
+status=needs groovy

@@ -1,5 +1,5 @@
 name=Eternal Scourge
-image=http://magiccards.info/scans/en/emn/7.jpg
+image=https://magiccards.info/scans/en/emn/7.jpg
 image_updated=2016-09-05
 value=2.500
 rarity=R
@@ -11,3 +11,4 @@ ability=You may cast SN from exile.;\
         When SN becomes the target of a spell or ability an opponent controls, exile SN.
 timing=main
 oracle=You may cast Eternal Scourge from exile.\nWhen Eternal Scourge becomes the target of a spell or ability an opponent controls, exile Eternal Scourge.
+status=not supported: cast-from-exile

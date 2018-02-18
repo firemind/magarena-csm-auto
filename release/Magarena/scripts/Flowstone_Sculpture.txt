@@ -1,0 +1,14 @@
+name=Flowstone Sculpture
+image=https://magiccards.info/scans/en/tp/278.jpg
+value=2.500
+rarity=R
+type=Artifact,Creature
+subtype=Shapeshifter
+cost={6}
+pt=4/4
+ability={2}, Discard a card: Put a +1/+1 counter on SN.;\
+        {2}, Discard a card: SN gains flying.;\
+        {2}, Discard a card: SN gains first strike.;\
+        {2}, Discard a card: SN gains trample.
+timing=main
+oracle={2}, Discard a card: Put a +1/+1 counter on Flowstone Sculpture or Flowstone Sculpture gains flying, first strike, or trample.

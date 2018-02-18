@@ -55,8 +55,8 @@ Thanks to
   frank for extensive play testing and bug reporting
   PalladiaMors, PhazedOut, Aunukia, nado18, Erkcan Özcan, kdesmond, a.
   benedict balbuena, spartan vi, Braullynn, mecheng, pcastellazzi, rasdel,
-  Tyrael, hong yie, ember hauler, Hector Marin, drooone, jericho.pumpkin,
-  Mike, and Guest for implementing new cards
+  Fulmene, Tyrael, hong yie, ember hauler, Hector Marin, drooone,
+  jericho.pumpkin, Mike, and Guest for implementing new cards
   ShawnieBoy for implementing new cards, the M logo, and general image enhancements
   PalladiaMors for the Portuguese UI translation
   kannikkiy for the Russian UI translation
@@ -72,6 +72,204 @@ Thanks to
   everyone on the CCGHQ forum, http://slightlymagic.net/forum/
 
 Thank you for your support and have fun!
+
+Release 1.91 (January 27, 2017)
+============
+Fulmene
+Melody
+melvin
+ShawnieBoy
+
+- update Mac launcher to work on SE 9 and require at least SE 8
+
+- added the following cards:
+Aetherflux Reservoir, Aetherworks Marvel, Ajani Unyielding,
+Ajani, Valiant Protector, Cartouche of Strength, Combustible Gearhulk,
+Confiscation Coup, Deadlock Trap, Eager Construct, Empyreal Voyager,
+Exquisite Archangel, Fatal Push, Gideon of the Trials,
+Gonti's Machinations, Hazardous Conditions, Heart-Piercer Manticore,
+In Oketra's Name, Kari Zev's Expertise, Kefnet the Mindful,
+Liberating Combustion, Liliana's Influence, Maulfist Revolutionary,
+Metallurgic Summonings, Midnight Oil, Morbid Curiosity,
+Nissa, Vital Force, Oviya Pashiri, Sage Lifecrafter, Pia's Revolution,
+Rashmi, Eternities Crafter, Rishkar's Expertise, Scrap Trawler,
+Sequestered Stash, Skyship Plunderer, Soul-Scar Mage, Soulstinger,
+Sram's Expertise, Supernatural Stamina, Tezzeret, Master of Metal,
+Tezzeret's Simulacrum, Verdant Crescendo, Welding Sparks,
+Yahenni's Expertise
+
+Release 1.90 (October 29, 2017)
+============
+kelsioboy
+melvin
+ShawnieBoy
+xin
+
+- improve the French translation
+
+- fixed the following bugs:
+  * incorrect images for C17
+  * missing priority after combat damage step (issue #1311)
+  * Garruk, Apex Predator's emblem did not pump the attacking creature (issue #1390)
+
+- added the following cards:
+Arctic Foxes, Avarice Amulet, Built to Last, Built to Smash,
+Conqueror's Pledge, Crown of Doom, Depala, Pilot Exemplar,
+Great Oak Guardian, Incite, Kaseto, Orochi Archmage, Needle Specter,
+Toshiro Umezawa, Unchecked Growth, Undergrowth Champion,
+Vigil for the Lost
+
+Release 1.89 (September 30, 2017)
+============
+kelsioboy
+melvin
+ShawnieBoy
+
+- add Iconic Masters and Ixalan to sets
+
+- remove Planeswalker Uniqueness rule, add Legendary to planeswalkers
+
+- added the following to the card script:
+  * effect: SN explores.
+  * ability: Whenever <permanent> explores, <effect>, closes #1276
+
+- fixed the following bugs:
+  * crash in MCTS AI when using Brainstorm (issue #1311)
+  * crash when card image is unreadable (issue #1318)
+  * crash when Java's version string is not in expected format (issue #1338)
+  * crash when using ESC to close "Setup Card Images" dialog while cards are loading (issue #1340)
+  * log message for cascade shows too many cards
+  * exert trigger on your permanents fires when opponent exerts (issue #1339)
+  * creature with power less than or equal to SN's power did not those that are equal
+  * 9/9 blue Kraken creature token is named Whale (issue #1303)
+  * 4/4 red and green Giant Warrior creature token missing haste ability (issue #1287)
+  * The Wretched did not gain control of the creatures blocking it (issue #1284)
+
+- added the following cards:
+Adanto Vanguard, Ancient Brontodon, Anointed Deacon, Atzocan Archer,
+Bellowing Aegisaur, Bishop of Rebirth, Bishop of the Bloodstained,
+Bishop's Soldier, Blight Keeper, Blinding Fog, Blossom Dryad,
+Brazen Buccaneers, Bright Reprisal, Callous Giant, Call to the Feast,
+Captain Lannery Storm, Captivating Crew, Carnage Tyrant,
+Castaway's Despair, Charging Monstrosaur, Colossal Dreadmaw,
+Contract Killing, Costly Plunder, Crash the Ramparts, Crushing Canopy,
+Cytoplast Root-Kin, Daring Saboteur, Dark Nourishment, Deadeye Plunderers,
+Deadeye Tormentor, Deathless Ancient, Deeproot Champion, Deeproot Warrior,
+Deeproot Waters, Defiant Vanguard, Depths of Desire, Desperate Castaways,
+Dinosaur Stampede, Dire Fleet Captain, Dire Fleet Hoarder, Dive Down,
+Djeru, With Eyes Open, Drover of the Mighty, Duskborne Skymarcher,
+Dusk Legion Dreadnought, Elaborate Firecannon, Emissary of Sunrise,
+Emperor's Vanguard, Encampment Keeper, Fathom Fleet Firebrand,
+Feed the Clan, Fell Flagship, Fiery Cannonade, Forgestoker Dragon,
+Frenzied Raptor, Garruk, Apex Predator, Gilded Sentinel,
+Glorifier of Dusk, Goring Ceratops, Grazing Whiptail, Grisly Anglerfish,
+Grizzled Angler, Headwater Sentries, Heartless Pillage,
+Hierophant's Chalice, Hour of Promise, Huatli's Snubhorn,
+Imperial Aerosaur, Imperial Lancer, Inspiring Cleric, Ixalli's Diviner,
+Ixalli's Keeper, Jace's Sentinel, Jade Guardian, Jungle Delver,
+Kinjalli's Caller, Kinjalli's Sunwing, Legion's Judgment,
+Life Goes On, Lightning-Rig Crew, Lookout's Dispersal,
+Looming Altisaur, Lurking Chupacabra, Makeshift Munitions,
+Marauding Looter, Merfolk Branchwalker, Navigator's Ruin, Nest Robber,
+One With the Wind, Otepec Huntmaster, Overflowing Insight,
+Paladin of the Bloodstained, Pious Interdiction, Pirate's Cutlass,
+Pirate's Prize, Predator's Howl, Prosperous Pirates, Prying Blade,
+Pterodon Knight, Queen's Agent, Queen's Bay Soldier, Queen's Commission,
+Raging Swordtooth, Raiders' Wake, Rallying Roar, Ranging Raptors,
+Raptor Companion, Raptor Hatchling, Ravenous Daggertooth, Regisaur Alpha,
+Repeating Barrage, Revel in Riches, Rigging Runner, Rile, Ripjaw Raptor,
+Ritual of Rejuvenation, River Sneak, River's Rebuke, Run Aground,
+Ruthless Knave, Sailor of Means, Sanctum Seeker, Seekers' Squire,
+Sentinel Totem, Shadowed Caravel, Shaper Apprentice, Shapers of Nature,
+Shapers' Sanctuary, Sheltering Light, Shield of the Avatar,
+Shining Aerosaur, Shipwreck Looter, Shore Keeper, Siren Lookout,
+Skittering Heartstopper, Skyblade of the Legion, Skymarch Bloodletter,
+Slash of Talons, Sleek Schooner, Snapping Sailback, Spires of Orazca,
+Spreading Rot, Star of Extinction, Start Your Engines, Steadfast Armasaur,
+Storm Fleet Aerialist, Storm Fleet Arsonist, Storm Fleet Pyromancer,
+Storm Fleet Spy, Storm Sculptor, Sun-Crowned Hunters, Sunrise Seeker,
+Swashbuckling, Tempest Caller, Territorial Hammerskull, Thaumatic Compass,
+Thrash of Raptors, Thundering Spineback, Tilonalli's Knight,
+Tishana's Wayfinder, Unfriendly Fire, Vanquish the Weak, Verdant Rebirth,
+Vicious Conquistador, Vona, Butcher of Magan, Vraska's Contempt,
+Wakening Sun's Avatar, Waker of the Wilds, Walk the Plank,
+Wanted Scoundrels, Watertrap Weaver, Wildgrowth Walker, Wily Goblin,
+Wind Strider, Wine of Blood and Iron
+
+Release 1.88 (August 27, 2017)
+============
+kelsioboy
+melvin
+ShawnieBoy
+
+- added Commander 2017 to sets
+
+- added the following to the card script:
+  * condition: SN is in the command zone or on the battlefield
+  * cost: Put a card an opponent owns from exile into that player's graveyard
+  * effect: <cost>. If you do, <effect>
+  * effect: <cost>. If you can't, <effect>
+  * effect: you get an emblem with <abilities>
+  * effect: exile SN with three time counters on it
+  * effect: remove all <type> counters from <permanents>
+  * effect: <permanent> has base power and toughness p/t until end of turn
+  * effect: <permanent> becomes the basic land type of your choice until end of turn
+  * effect: until end of turn, <permanent> loses all abilities and has base power and toughness p/t
+  * ability: Suspend <n>-<cost>
+  * ability: At end of combat, <effect>
+  * ability: Whenever SN blocks or becomes becomes blocked by one or more <permanents>, <effect>
+
+- fixed the following bugs:
+  * crash due to collision of game state (issue #815)
+  * crash due to a spell able to target a later spell (issue #1223)
+  * crash due to running out of memory trying to discard a large hand down to 7 (issue #721)
+  * pending triggers did not on the stack in APNAP order (issue #423)
+  * casting without paying mana cost not affected by cost modifications
+  * changing target of spell did not trigger on target triggers
+  * Clone type cards causes cast triggers to trigger twice (issue #991)
+  * Auger Spree's effect gave +4/+4, should be +4/-4
+  * Stormchaser Chimera and Putrid Cyclops reveal before scry (issue #1250)
+  * Phantom Centaur loses counter when blocking a black creature (issue #153)
+  * Amulet of Vigor doesn't work for certain enters tapped abilities (issue #750)
+  * Brimaz, King of Oreskos crash due to token blocking a non-existent creature (issue #1156)
+  * March of the Machines overrides power and toughness of already animated artifact (issue #202)
+  * Heightened Awareness should discard as it enters without trigger (issue #1003)
+
+- added the following cards:
+Akoum Flameseeker, Alms Beast, Ammit Eternal, Ancestral Vision,
+Arahbo, Roar of the World, Arc Blade, Arm with Aether, Banewhip Punisher,
+Barrin's Codex, Blind Zealot, Bloodforged Battle-Axe, Blood Frenzy,
+Bloodline Necromancer, Bloodsworn Steward, Bonds of Faith,
+Bontu's Last Reckoning, Champion of Wits, Clockwork Hydra, Coastal Wizard,
+Commando Raid, Confound, Contempt, Corpulent Corpse, Creeperhulk,
+Crested Sunmare, Crimson Honor Guard, Cryptic Cruiser, Cyclical Evolution,
+Damnable Pact, Dawn Charm, Dawnglare Invoker, Dawning Purist,
+Despoiler of Souls, Disappear, Disrupt Decorum, Durkwood Baloth,
+Duskrider Peregrine, Earthshaker Khenra, Edgar Markov, Encircling Fissure,
+Errant Ephemeron, Exemplar of Strength, Exsanguinate, Fell the Mighty,
+Festering March, Flowstone Sculpture, Galecaster Colossus, Giant Dustwasp,
+Goblin Vandal, Graven Abomination, Graven Dominator, Greater Werewolf,
+Greenbelt Rampager, Hammer of Ruin, Hapatra's Mark, Heroes Remembered,
+Hindering Light, Horde of Notions, Hungry Lynx, Hydromorph Guardian,
+Hydromorph Gull, Infiltrator il-Kor, Inkfathom Witch, Instigator,
+Intervene, Ith, High Arcanist, Ivory Giant, Jinx, Jushi Apprentice,
+Kefnet's Last Word, Keldon Halberdier, Knight of Sursi, Lash Out,
+Lightwielder Paladin, Marsh Flitter, Merciless Javelineer,
+Mind Raker, Mindstab, Mirror Sheen, Mtenda Griffin, Murk Strider,
+Nahiri, the Lithomancer, Nantuko Shaman, Naya Charm, Noosegraf Mob,
+Oath of Gideon, Ob Nixilis Reignited, Olivia, Mobilized for War,
+Oracle of Dust, Patron of the Vein, Petrified Plating, Plunder,
+Polis Crusher, Polymorphist's Jest, Primeval Light, Processor Assault,
+Qasali Slingers, Reality Shift, Reality Strobe, Rebuff the Wicked,
+Restore Balance, Rhonas's Last Stand, Rift Bolt, Riftwing Cloudskate,
+River Hoopoe, Ruin Processor, Sarkhan, the Dragonspeaker,
+Scalelord Reckoner, Scroll of Origins, Search for Tomorrow,
+Sensei Golden-Tail, Shade of Trokair, Shimmering Mirage, Shivan Meteor,
+Sigil of Sleep, Sinuous Striker, Snow Hound, Stormchaser Chimera,
+Sunscourge Champion, Tezzeret the Schemer, The Wretched, Tidal Influence,
+Tomoya the Revealer, Turn Aside, Ulamog's Reclaimer, Vigilant Martyr,
+Viscerid Deepwalker, Void Attendant, Wall of Nets, Wasitora, Nekoru Queen,
+Wasteland Strangler, Wheel of Fate, Zombie Cannibal
 
 Release 1.87 (July 31, 2017)
 ============

@@ -1,0 +1,13 @@
+name=Kess, Dissident Mage
+image=https://magiccards.info/scans/en/c17/39.jpg
+image_updated=2017-10-03
+value=2.500
+rarity=M
+type=Legendary,Creature
+subtype=Human,Wizard
+cost={1}{U}{B}{R}
+pt=3/4
+ability=Flying;\
+        During each of your turns, you may cast an instant or sorcery card from your graveyard. If a card cast this way would be put into your graveyard this turn, exile it instead.
+timing=main
+oracle=Flying\nDuring each of your turns, you may cast an instant or sorcery card from your graveyard. If a card cast this way would be put into your graveyard this turn, exile it instead.

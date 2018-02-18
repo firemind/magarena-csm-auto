@@ -1,5 +1,5 @@
 name=Multani's Presence
-image=http://magiccards.info/scans/en/ul/109.jpg
+image=https://magiccards.info/scans/en/ul/109.jpg
 value=3.730
 rarity=U
 type=Enchantment
@@ -7,3 +7,4 @@ cost={G}
 ability=Whenever a spell you've cast is countered, draw a card.
 timing=enchantment
 oracle=Whenever a spell you've cast is countered, draw a card.
+status=not supported: when-countered

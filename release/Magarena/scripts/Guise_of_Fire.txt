@@ -1,12 +1,12 @@
 name=Guise of Fire
-image=http://magiccards.info/scans/en/avr/137.jpg
+image=https://magiccards.info/scans/en/avr/137.jpg
 value=1.500
 rarity=C
 type=Enchantment
 subtype=Aura
 cost={R}
 ability=Enchant creature;\
-        Enchanted creature gets +1/-1 and attacks each turn if able.
+        Enchanted creature gets +1/-1 and attacks each combat if able.
 timing=aura
 enchant=must attack,neg creature
-oracle=Enchant creature\nEnchanted creature gets +1/-1 and attacks each turn if able.
+oracle=Enchant creature\nEnchanted creature gets +1/-1 and attacks each combat if able.

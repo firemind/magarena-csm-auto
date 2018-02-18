@@ -1,5 +1,5 @@
 name=Renegade Krasis
-image=http://magiccards.info/scans/en/dgm/47.jpg
+image=https://magiccards.info/scans/en/dgm/47.jpg
 value=3.792
 rarity=R
 type=Creature
@@ -10,3 +10,4 @@ ability=Evolve;\
         Whenever SN evolves, put a +1/+1 counter on each other creature you control with a +1/+1 counter on it.
 timing=main
 oracle=Evolve\nWhenever Renegade Krasis evolves, put a +1/+1 counter on each other creature you control with a +1/+1 counter on it.
+status=not supported: when-evolve

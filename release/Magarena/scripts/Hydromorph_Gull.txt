@@ -1,0 +1,12 @@
+name=Hydromorph Gull
+image=https://magiccards.info/scans/en/tr/40.jpg
+value=2.500
+rarity=U
+type=Creature
+subtype=Elemental,Bird
+cost={3}{U}{U}
+pt=3/3
+ability=Flying;\
+        {U}, Sacrifice SN: Counter target spell that targets a creature you control.
+timing=main
+oracle=Flying\n{U}, Sacrifice Hydromorph Gull: Counter target spell that targets a creature you control.

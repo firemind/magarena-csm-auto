@@ -1,5 +1,6 @@
 name=Fury Charm
-image=http://magiccards.info/scans/en/mma/114.jpg
+image=https://magiccards.info/scans/en/ima/130.jpg
+image_updated=2017-04-12
 value=3.706
 rarity=C
 type=Instant
@@ -7,4 +8,4 @@ cost={1}{R}
 effect=Choose one — (1) Destroy target artifact. (2) Target creature gets +1/+1 and gains trample until end of turn. (3) Remove two time counters from target permanent or suspended card.
 timing=removal
 oracle=Choose one —\n• Destroy target artifact.\n• Target creature gets +1/+1 and gains trample until end of turn.\n• Remove two time counters from target permanent or suspended card.
-status=not supported: suspend
+status=needs groovy

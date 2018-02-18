@@ -1,5 +1,5 @@
 name=Die Young
-image=http://magiccards.info/scans/en/kld/76.jpg
+image=https://magiccards.info/scans/en/kld/76.jpg
 image_updated=2016-10-05
 value=2.500
 rarity=C
@@ -8,3 +8,4 @@ cost={1}{B}
 effect=Choose target creature. You get {E}{E}, then you may pay any amount of {E}. The creature gets -1/-1 until end of turn for each {E} paid this way.
 timing=main
 oracle=Choose target creature. You get {E}{E}, then you may pay any amount of {E}. The creature gets -1/-1 until end of turn for each {E} paid this way.
+status=not supported: any-number-of

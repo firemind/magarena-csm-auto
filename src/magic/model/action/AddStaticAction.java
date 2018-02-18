@@ -8,14 +8,29 @@ public class AddStaticAction extends MagicAction {
 
     private final MagicPermanent permanent;
     private final MagicStatic mstatic;
+    private final boolean force;
 
-    public AddStaticAction(final MagicPermanent aPermanent, final MagicStatic aStatic) {
+    private AddStaticAction(final MagicPermanent aPermanent, final MagicStatic aStatic, final boolean aForce) {
         permanent = aPermanent;
         mstatic = aStatic;
+        force = aForce;
+    }
+
+    public AddStaticAction(final MagicPermanent aPermanent, final MagicStatic aStatic) {
+        this(aPermanent, aStatic, false);
     }
 
     public AddStaticAction(final MagicStatic aStatic) {
         this(MagicPermanent.NONE, aStatic);
+    }
+
+    public static AddStaticAction Force(final MagicPermanent aPermanent,final MagicStatic aStatic) {
+        return new AddStaticAction(aPermanent, aStatic, true);
+    }
+
+    @Override
+    public boolean isLegal(final MagicGame game) {
+        return permanent == MagicPermanent.NONE || permanent.isValid() || force;
     }
 
     @Override

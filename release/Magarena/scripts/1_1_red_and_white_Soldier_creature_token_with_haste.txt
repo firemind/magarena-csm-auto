@@ -1,10 +1,10 @@
 name=1/1 red and white Soldier creature token with haste
 token=Soldier
-image=http://magiccards.info/extras/token/gatecrash/soldier.jpg
+image=https://magiccards.info/extras/token/gatecrash/soldier.jpg
 value=1
 type=Creature
 subtype=Soldier
 color=rw
 pt=1/1
-ability=haste
-oracle=haste
+ability=Haste
+oracle=Haste

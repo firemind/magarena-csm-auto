@@ -884,15 +884,6 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
-    public static MagicCondition WAS_NONCREATURE_ARTIFACT = new MagicCondition() {
-        @Override
-        public boolean accept(final MagicSource source) {
-            final MagicPermanent permanent = (MagicPermanent)source;
-            return permanent.getCardDefinition().hasType(MagicType.Artifact) &&
-                !permanent.getCardDefinition().hasType(MagicType.Creature);
-        }
-    };
-
     public static MagicCondition WAS_KICKED = new MagicCondition() {
         @Override
         public boolean accept(final MagicSource source) {
@@ -934,6 +925,14 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         @Override
         public boolean accept(final MagicSource source) {
             return source.getController().isMonarch();
+        }
+    };
+
+    public static MagicCondition EMINENCE = new MagicCondition() {
+        @Override
+        public boolean accept(final MagicSource source) {
+            final MagicPermanent permanent = (MagicPermanent)source;
+            return permanent.isValid();
         }
     };
 }

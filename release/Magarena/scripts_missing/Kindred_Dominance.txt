@@ -1,0 +1,11 @@
+name=Kindred Dominance
+image=https://magiccards.info/scans/en/c17/18.jpg
+image_updated=2017-10-03
+value=2.500
+rarity=R
+type=Sorcery
+cost={5}{B}{B}
+effect=Choose a creature type. Destroy all creatures that aren't of the chosen type.
+timing=main
+oracle=Choose a creature type. Destroy all creatures that aren't of the chosen type.
+status=not supported: choose-creature-type

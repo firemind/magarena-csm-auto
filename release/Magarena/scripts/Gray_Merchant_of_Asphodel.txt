@@ -1,12 +1,11 @@
 name=Gray Merchant of Asphodel
-image=http://magiccards.info/scans/en/c14/146.jpg
+image=https://magiccards.info/scans/en/c14/146.jpg
 value=3.809
 rarity=C
 type=Creature
 subtype=Zombie
 cost={3}{B}{B}
 pt=2/4
+ability=When SN enters the battlefield, each opponent loses life equal to your devotion to black. You gain life equal to the life lost this way.
 timing=main
-requires_groovy_code
-# Need to determine the amount of life lost by opponents - some cards prevent life from being lost. See Platinum Emperion
 oracle=When Gray Merchant of Asphodel enters the battlefield, each opponent loses X life, where X is your devotion to black. You gain life equal to the life lost this way.

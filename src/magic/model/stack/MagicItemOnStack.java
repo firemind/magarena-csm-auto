@@ -167,7 +167,7 @@ public abstract class MagicItemOnStack extends MagicObjectImpl implements MagicT
 
     @Override
     public boolean isValidTarget(final MagicSource aSource) {
-        return aSource != this.source && aSource != this;
+        return !(aSource instanceof MagicItemOnStack) || aSource.getId() > getId();
     }
 
     @Override

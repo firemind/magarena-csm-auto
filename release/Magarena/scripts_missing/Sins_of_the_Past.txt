@@ -1,5 +1,5 @@
 name=Sins of the Past
-image=http://magiccards.info/scans/en/rav/106.jpg
+image=https://magiccards.info/scans/en/rav/106.jpg
 value=3.338
 rarity=R
 type=Sorcery
@@ -7,3 +7,4 @@ cost={4}{B}{B}
 effect=Until end of turn, you may cast target instant or sorcery card from your graveyard without paying its mana cost. If that card would be put into your graveyard this turn, exile it instead. Exile SN.
 timing=main
 oracle=Until end of turn, you may cast target instant or sorcery card from your graveyard without paying its mana cost. If that card would be put into your graveyard this turn, exile it instead. Exile Sins of the Past.
+status=not supported: may-play-card

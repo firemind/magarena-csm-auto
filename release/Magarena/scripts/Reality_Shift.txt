@@ -1,0 +1,9 @@
+name=Reality Shift
+image=https://magiccards.info/scans/en/frf/46.jpg
+value=2.500
+rarity=U
+type=Instant
+cost={1}{U}
+timing=removal
+oracle=Exile target creature. Its controller manifests the top card of his or her library.
+requires_groovy_code

@@ -1,13 +1,13 @@
 name=Archdemon of Greed
-image=http://magiccards.info/scans/en/dka/71b.jpg
+image=https://magiccards.info/scans/en/dka/71b.jpg
 value=3.273
 rarity=R
 type=Creature
 subtype=Demon
 color=b
 pt=9/9
-ability=Flying, trample
-requires_groovy_code
+ability=Flying, trample;\
+        At the beginning of your upkeep, sacrifice a Human. If you can't, tap SN~and SN deals 9 damage to you.
 transform=Ravenous Demon
 timing=main
 hidden

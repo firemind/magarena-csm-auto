@@ -1,12 +1,12 @@
 name=Caustic Wasps
-image=http://magiccards.info/scans/en/mm/234.jpg
+image=https://magiccards.info/scans/en/mm/234.jpg
 value=3.231
 rarity=U
 type=Creature
 subtype=Insect
 cost={2}{G}
 pt=1/1
-ability=Flying
+ability=Flying;\
+        Whenever SN deals combat damage to a player, you may destroy target artifact that player controls.
 timing=main
-requires_groovy_code
 oracle=Flying\nWhenever Caustic Wasps deals combat damage to a player, you may destroy target artifact that player controls.

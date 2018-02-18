@@ -1,8 +1,9 @@
 name=Liliana of the Veil
-image=http://magiccards.info/scans/en/isd/105.jpg
+image=https://magiccards.info/scans/en/mm3/76.jpg
+image_updated=2017-08-08
 value=4.287
 rarity=M
-type=Planeswalker
+type=Legendary,Planeswalker
 subtype=Liliana
 cost={1}{B}{B}
 loyalty=3
