@@ -1,22 +1,24 @@
 package magic.ai;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import magic.data.LRUCache;
 import magic.exception.GameException;
+import magic.firemind.CombatScoreLog;
 import magic.model.MagicGame;
 import magic.model.MagicGameLog;
+import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
 import magic.model.choice.MagicBuilderPayManaCostResult;
+import magic.model.choice.MagicDeclareAttackersChoice;
+import magic.model.choice.MagicDeclareAttackersResult;
 import magic.model.event.MagicEvent;
 
 /*
@@ -92,12 +94,14 @@ public class MCTSAI extends MagicAI {
     }
 
     private final boolean CHEAT;
+    private final boolean LOGCOMBAT;
 
     //cache nodes to reuse them in later decision
     private final LRUCache<Long, MCTSGameTree> CACHE = new LRUCache<Long, MCTSGameTree>(1000);
 
-    public MCTSAI(final boolean cheat) {
+    public MCTSAI(final boolean cheat, final boolean logcombat) {
         CHEAT = cheat;
+        LOGCOMBAT = logcombat;
     }
 
     private void log(final String message) {
@@ -172,7 +176,36 @@ public class MCTSAI extends MagicAI {
             }
         }
 
+        if(LOGCOMBAT){
+            for (final MCTSGameTree node : root) {
+              Object choice[] = RCHOICES.get(node.getChoice());
+              for(Object c : choice){
+                if(c instanceof magic.model.choice.MagicDeclareAttackersResult){
+                    MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+
+                    CombatScoreLog.logAttacks(
+                            node.getV(),
+                            node.getNumSim(),
+                            scorePlayer.getLife(),
+                            opp.getLife(),
+                            (MagicDeclareAttackersResult) c,
+                            scorePlayer.
+                                    getPermanents().
+                                    stream().
+                                    filter(MagicPermanent::canAttack).
+                                    toArray(),
+                            opp.
+                                    getPermanents().
+                                    stream().
+                                    filter(MagicPermanent::canBlock).
+                                    toArray());
+                }
+              }
+            }
+        }
+
         log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
+
 
         return startGame.map(RCHOICES.get(bestC));
     }
@@ -634,17 +667,20 @@ class MCTSGameTree implements Iterable<MCTSGameTree> {
 
     static boolean checkNode(final MCTSGameTree curr, final List<Object[]> choices) {
         if (curr.getMaxChildren() != choices.size()) {
+            System.out.println("max children changed");
             return false;
         }
         for (int i = 0; i < choices.size(); i++) {
             final String checkStr = obj2String(choices.get(i)[0]);
             if (!curr.choicesStr[i].equals(checkStr)) {
+                System.out.println(curr.choicesStr[i] +"["+i+"] =/= "+checkStr);
                 return false;
             }
         }
         for (final MCTSGameTree child : curr) {
             final String checkStr = obj2String(choices.get(child.getChoice())[0]);
             if (!child.desc.equals(checkStr)) {
+                System.out.println(child.desc +" != "+checkStr);
                 return false;
             }
         }

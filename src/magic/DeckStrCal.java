@@ -5,6 +5,7 @@ import magic.ai.MagicAIImpl;
 import magic.data.DeckGenerators;
 import magic.data.DuelConfig;
 import magic.exception.handler.ConsoleExceptionHandler;
+import magic.firemind.CombatScoreLog;
 import magic.headless.HeadlessGameController;
 import magic.model.DuelPlayerConfig;
 import magic.model.MagicDeckProfile;
@@ -114,6 +115,7 @@ public class DeckStrCal {
     }
 
     private static MagicDuel setupDuel() {
+        CombatScoreLog.initialize();
         // Set the random seed
         if (seed != 0) {
             MagicRandom.setRNGState(seed);
