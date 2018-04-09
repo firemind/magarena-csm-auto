@@ -5,10 +5,7 @@ import magic.data.LRUCache;
 import magic.exception.GameException;
 import magic.firemind.CombatPredictionClient;
 import magic.firemind.CombatScoreLog;
-import magic.model.MagicGame;
-import magic.model.MagicGameLog;
-import magic.model.MagicPermanent;
-import magic.model.MagicPlayer;
+import magic.model.*;
 import magic.model.choice.MagicBuilderPayManaCostResult;
 import magic.model.choice.MagicDeclareAttackersResult;
 import magic.model.event.MagicEvent;
@@ -93,7 +90,7 @@ public class GMCTSAI extends MagicAI {
     private final boolean CHEAT;
 
     //cache nodes to reuse them in later decision
-    private final LRUCache<Long, MCTSGameTree> CACHE = new LRUCache<Long, MCTSGameTree>(1000);
+    private final LRUCache<Long, GMCTSGameTree> CACHE = new LRUCache<Long, GMCTSGameTree>(1000);
 
     public GMCTSAI(final boolean cheat) {
         CHEAT = cheat;
@@ -115,17 +112,16 @@ public class GMCTSAI extends MagicAI {
         final MagicEvent event = aiGame.getNextEvent();
 //        final List<Object[]> RCHOICES = orderedChoices(event.getArtificialChoiceResults(aiGame), aiGame );
 
-        final List<Object[]> RCHOICES;
-        List<Object[]> tmpChoices = event.getArtificialChoiceResults(aiGame);
+        final List<Object[]> RCHOICES = event.getArtificialChoiceResults(aiGame);
 
-        final int size = tmpChoices.size();
+        final int size = RCHOICES.size();
 
         // No choice
         assert size > 0 : "ERROR! No choice found at start of MCTS";
 
         // Single choice
         if (size == 1) {
-            return startGame.map(tmpChoices.get(0));
+            return startGame.map(RCHOICES.get(0));
         }
 
 //        if(isCombatChoice(tmpChoices)) {
@@ -142,10 +138,9 @@ public class GMCTSAI extends MagicAI {
 //        }else{
 //            RCHOICES = tmpChoices;
 //        }
-        RCHOICES = orderedChoices(tmpChoices, aiGame);
-
+//        RCHOICES = orderedChoices(tmpChoices, aiGame);
         //root represents the start state
-        final MCTSGameTree root = MCTSGameTree.getNode(CACHE, aiGame, RCHOICES);
+        final GMCTSGameTree root = GMCTSGameTree.getNode(CACHE, aiGame, RCHOICES);
 
         log("GMCTS cached=" + root.getNumSim());
 
@@ -180,10 +175,10 @@ public class GMCTSAI extends MagicAI {
         assert root.size() > 0 : "ERROR! Root has no children but there are " + size + " choices";
 
         //select the best child/choice
-        final MCTSGameTree first = root.first();
+        final GMCTSGameTree first = root.first();
         double maxD = first.getDecision();
         int bestC = first.getChoice();
-        for (final MCTSGameTree node : root) {
+        for (final GMCTSGameTree node : root) {
             final double D = node.getDecision();
             final int C = node.getChoice();
             if (D > maxD) {
@@ -198,7 +193,7 @@ public class GMCTSAI extends MagicAI {
         return startGame.map(RCHOICES.get(bestC));
     }
 
-    private Runnable genSimulationTask(final MagicGame rootGame, final LinkedList<MCTSGameTree> path, final BlockingQueue<Runnable> queue) {
+    private Runnable genSimulationTask(final MagicGame rootGame, final LinkedList<GMCTSGameTree> path, final BlockingQueue<Runnable> queue) {
         return new Runnable() {
             @Override
             public void run() {
@@ -209,13 +204,13 @@ public class GMCTSAI extends MagicAI {
         };
     }
 
-    private Runnable genBackpropagationTask(final double score, final LinkedList<MCTSGameTree> path) {
+    private Runnable genBackpropagationTask(final double score, final LinkedList<GMCTSGameTree> path) {
         return new Runnable() {
             @Override
             public void run() {
-                final Iterator<MCTSGameTree> iter = path.descendingIterator();
-                MCTSGameTree child = null;
-                MCTSGameTree parent = null;
+                final Iterator<GMCTSGameTree> iter = path.descendingIterator();
+                GMCTSGameTree child = null;
+                GMCTSGameTree parent = null;
                 while (iter.hasNext()) {
                     child = parent;
                     parent = iter.next();
@@ -229,7 +224,7 @@ public class GMCTSAI extends MagicAI {
 
     public void TreeUpdate(
         final Runnable updateTask,
-        final MCTSGameTree root,
+        final GMCTSGameTree root,
         final MagicGame aiGame,
         final ExecutorService executor,
         final BlockingQueue<Runnable> queue,
@@ -255,7 +250,7 @@ public class GMCTSAI extends MagicAI {
         //pass in a clone of the state,
         //genNewTreeNode grows the tree by one node
         //and returns the path from the root to the new node
-        final LinkedList<MCTSGameTree> path = growTree(root, rootGame, RCHOICES);
+        final LinkedList<GMCTSGameTree> path = growTree(root, rootGame, RCHOICES);
 
         assert path.size() >= 2 : "ERROR! length of MCTS path is " + path.size();
 
@@ -275,9 +270,9 @@ public class GMCTSAI extends MagicAI {
         }
 
         // virtual loss + game theoretic value propagation
-        final Iterator<MCTSGameTree> iter = path.descendingIterator();
-        MCTSGameTree child = null;
-        MCTSGameTree parent = null;
+        final Iterator<GMCTSGameTree> iter = path.descendingIterator();
+        GMCTSGameTree child = null;
+        GMCTSGameTree parent = null;
         while (iter.hasNext()) {
             child = parent;
             parent = iter.next();
@@ -313,7 +308,7 @@ public class GMCTSAI extends MagicAI {
 
     private String outputChoice(
         final MagicPlayer scorePlayer,
-        final MCTSGameTree root,
+        final GMCTSGameTree root,
         final long START_TIME,
         final int bestC,
         final int sims,
@@ -333,7 +328,7 @@ public class GMCTSAI extends MagicAI {
                    " time=" + duration);
         out.append('\n');
 
-        for (final MCTSGameTree node : root) {
+        for (final GMCTSGameTree node : root) {
             if (node.getChoice() == bestC) {
                 out.append("* ");
             } else {
@@ -356,16 +351,15 @@ public class GMCTSAI extends MagicAI {
                 out.append("?");
             }
             out.append(']');
-            out.append(CR2String(RCHOICES.get(node.getChoice())));
             out.append('\n');
         }
         return out.toString().trim();
     }
 
-    private LinkedList<MCTSGameTree> growTree(final MCTSGameTree root, final MagicGame game, final List<Object[]> RCHOICES) {
-        final LinkedList<MCTSGameTree> path = new LinkedList<MCTSGameTree>();
+    private LinkedList<GMCTSGameTree> growTree(final GMCTSGameTree root, final MagicGame game, final List<Object[]> RCHOICES) {
+        final LinkedList<GMCTSGameTree> path = new LinkedList<GMCTSGameTree>();
         boolean found = false;
-        MCTSGameTree curr = root;
+        GMCTSGameTree curr = root;
         path.add(curr);
 
         for (List<Object[]> choices = getNextChoices(game, RCHOICES);
@@ -373,12 +367,6 @@ public class GMCTSAI extends MagicAI {
              choices = getNextChoices(game, RCHOICES)) {
 
             assert choices.size() > 0 : "ERROR! No choice at start of genNewTreeNode";
-
-            assert !curr.hasDetails() || MCTSGameTree.checkNode(curr, choices) :
-                "ERROR! Inconsistent node found" + "\n" +
-                game + " " +
-                printPath(path) + " " +
-                MCTSGameTree.printNode(curr, choices);
 
             final MagicEvent event = game.getNextEvent();
 
@@ -388,40 +376,46 @@ public class GMCTSAI extends MagicAI {
                 curr.setIsAI(game.getScorePlayer() == event.getPlayer());
                 curr.setMaxChildren(choices.size());
 //                System.out.println("Setting "+ choices.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
-                assert curr.setChoicesStr(choices);
             }
 
             //look for first non root AI node along this path and add it to cache
             if (!found && curr != root && curr.isAI()) {
                 found = true;
 //                assert curr.isCached() || printPath(path);
-                MCTSGameTree.addNode(CACHE, game, curr);
+                if(!curr.isCached())
+                  GMCTSGameTree.addNode(CACHE, game, curr);
+
             }
 
             //there are unexplored children of node
             //assume we explore children of a node in increasing order of the choices
             if (curr.size() < choices.size()) {
-                final int idx = curr.size();
-                final Object[] choice = choices.get(idx);
-                final String choiceStr = MCTSGameTree.obj2String(choice[0]);
-                game.executeNextEvent(choice);
-                final MCTSGameTree child = new MCTSGameTree(curr, idx, game.getScore());
-                assert (child.desc = choiceStr).equals(child.desc);
-                curr.addChild(child);
-                path.add(child);
+                if(choices.size() > 3 && isCombatChoice(choices)) {
+//                    System.out.println("adding preweighted choices");
+                    for (final Map.Entry<Object[], Float> scoredChoice : scoredChoices(choices, game)) {
+                        final GMCTSGameTree child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
+//                        System.out.println("New UCT: "+child.getModifiedUCT());
+                        curr.addChild(child);
+                    }
+                    path.add(curr.first());
+
+                }else {
+                    final int idx = curr.size();
+                    final Object[] choice = choices.get(idx);
+                    game.executeNextEvent(choice);
+                    final GMCTSGameTree child = new GMCTSGameTree(curr, idx, game.getScore());
+                    curr.addChild(child);
+                    path.add(child);
+                }
                 return path;
 
             //all the children are in the tree, find the "best" child to explore
             } else {
 
-                assert curr.size() == choices.size() : "ERROR! Different number of choices in node and game" +
-                    printPath(path) + MCTSGameTree.printNode(curr, choices);
-
-                MCTSGameTree next = null;
+                GMCTSGameTree next = null;
                 double bestS = Double.NEGATIVE_INFINITY ;
-                for (final MCTSGameTree child : curr) {
-                    final double raw = child.getUCT();
-                    final double S = child.modify(raw);
+                for (final GMCTSGameTree child : curr) {
+                    final double S = child.getModifiedUCT();
                     if (S > bestS) {
                         bestS = S;
                         next = child;
@@ -440,8 +434,6 @@ public class GMCTSAI extends MagicAI {
 //                    }
                     game.executeNextEvent(choices.get(curr.getChoice()));
                 } catch (final IndexOutOfBoundsException ex) {
-                    printPath(path);
-                    MCTSGameTree.printNode(curr, choices);
                     throw new GameException(ex, game);
                 }
                 path.add(curr);
@@ -451,14 +443,14 @@ public class GMCTSAI extends MagicAI {
         return path;
     }
 
-    private List<Object[]> nextOrderedChoices(MagicGame game, List<Object[]> RCHOICES) {
-        List<Object[]> ordered =  orderedChoices(getNextChoices(game, RCHOICES), game);
-//        System.out.println("Ordered "+ ordered.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
-        return ordered;
-    }
+//    private List<Object[]> nextOrderedChoices(MagicGame game, List<Object[]> RCHOICES) {
+//        List<Object[]> ordered =  orderedChoices(getNextChoices(game, RCHOICES), game);
+////        System.out.println("Ordered "+ ordered.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
+//        return ordered;
+//    }
 
     //returns a reward in the range [0, 1]
-    private double randomPlay(final MCTSGameTree node, final MagicGame game) {
+    private double randomPlay(final GMCTSGameTree node, final MagicGame game) {
         //terminal node, no need for random play
         if (game.isFinished()) {
             if (game.getLosingPlayer() == game.getScorePlayer()) {
@@ -495,6 +487,7 @@ public class GMCTSAI extends MagicAI {
           if(choice.length > 0 && choice[0] instanceof magic.model.choice.MagicDeclareAttackersResult){
               assert choice.length == 1 : "should only have one combat choice";
               isCombat=true;
+              return true;
           }else{
               isNonCombat=true;
           }
@@ -525,14 +518,14 @@ public class GMCTSAI extends MagicAI {
             }
 
             //get simulation choice and execute
-            final Object[] choice;
-            Object[] bestCombatChoice= findBestCombatChoice(game, event.getArtificialChoiceResults(game), 0.5);
-            if(bestCombatChoice == null){
-               choice = event.getSimulationChoiceResult(game);
-            }else{
-               choice = bestCombatChoice;
-//               System.out.println("combat choice: "+ Arrays.toString(bestCombatChoice));
-            }
+            final List<Object[]> artificialChoiceResults = event.getArtificialChoiceResults(game);
+            final Object[] choice = artificialChoiceResults.get(MagicRandom.nextRNGInt(artificialChoiceResults.size()));
+//            Object[] bestCombatChoice= findBestCombatChoice(game, artificialChoiceResults, 0.6);
+//            if(bestCombatChoice == null){
+//            }else{
+//               choice = bestCombatChoice;
+////               System.out.println("combat choice: "+ Arrays.toString(bestCombatChoice));
+//            }
             assert choice != null : "ERROR! No choice found during MCTS sim";
             game.executeNextEvent(choice);
 
@@ -549,62 +542,80 @@ public class GMCTSAI extends MagicAI {
         return new int[]{aiChoices, oppChoices};
     }
 
-    private PriorityQueue<Map.Entry<Object[], Float>> prioritizedChoices(List<Object[]> choices, MagicGame game){
-        PriorityQueue<Map.Entry<Object[], Float>> choiceQueue =
-                new PriorityQueue<>(Comparator.comparing(Map.Entry::getValue));
-        List<CombatPredictionClient.CombatRep> combatReps = new ArrayList<>();
-        MagicPlayer scorePlayer = game.getScorePlayer();
-        MagicPlayer opp = game.getPlayers()[(scorePlayer.getIndex() + 1) % 2];
-        List<Float> availableAttackersIds = combatPredictionClient.extractCardIds(scorePlayer.
-                            getPermanents().
-                            stream().
-                            filter(MagicPermanent::canAttack).
-                            toArray());
-        List<Float> blockersIds = combatPredictionClient.extractCardIds(opp.
-                            getPermanents().
-                            stream().
-                            filter(MagicPermanent::canBlock).
-                            toArray());
-        for(Object[] combatChoice : choices) {
-            Object c = combatChoice[0];
-
+    private List<Map.Entry<Object[], Float>> scoredChoices(List<Object[]> choices, MagicGame game){
+//        System.out.println("Scorig "+choices.size()+" choices");
+        List<Map.Entry<Object[], Float>> mapped = new ArrayList<>(choices.size());
+        final List<CombatPredictionClient.CombatRep> combatReps = new ArrayList<>();
+        final MagicPlayer scorePlayer = game.getScorePlayer();
+        final MagicPlayer opp = game.getPlayers()[(scorePlayer.getIndex() + 1) % 2];
+        final List<Float> availableAttackersIds = combatPredictionClient.extractCardIds(scorePlayer.
+                getPermanents().
+                stream().
+                filter(MagicPermanent::canAttack).
+                toArray());
+        final List<Float> blockersIds = combatPredictionClient.extractCardIds(opp.
+                getPermanents().
+                stream().
+                filter(MagicPermanent::canBlock).
+                toArray());
+        for (Object[] combatChoice : choices) {
+//            System.out.println(Arrays.toString(combatChoice));
             combatReps.add(combatPredictionClient.new CombatRep(
                     scorePlayer.getLife(),
                     opp.getLife(),
-                    (MagicDeclareAttackersResult) c,
+                    (MagicDeclareAttackersResult) combatChoice[0],
                     availableAttackersIds,
                     blockersIds
-                    ));
+            ));
         }
-        int ix=0;
-        for(Float score: combatPredictionClient.predictWin(combatReps)){
-            // add small offset based on index to ensure consistent ordering
-            choiceQueue.add(Maps.immutableEntry(choices.get(ix), -score+0.0000001f*ix));
-            ix++;
+        int ix = 0;
+        for (Float score : combatPredictionClient.predictWin(combatReps)) {
+//            System.out.println(score);
+            mapped.add(Maps.immutableEntry(choices.get(ix++), score));
         }
-        return choiceQueue;
+        return mapped;
     }
 
-    private List<Object[]> orderedChoices(List<Object[]> choices, MagicGame game) {
-        if(choices.size() < 4 || !isCombatChoice(choices))
-            return choices;
-        PriorityQueue<Map.Entry<Object[], Float>> q =  prioritizedChoices(choices, game);
-//            System.out.println("Ordered scores "+ q.stream().map(Map.Entry::getValue).map(Object::toString).collect(Collectors.joining(", ")));
-        return q.stream().map(Map.Entry::getKey).collect(Collectors.toList());
-    }
+//    private PriorityQueue<Map.Entry<Object[], Float>> prioritizedChoices(List<Object[]> choices, MagicGame game){
+//        final PriorityQueue<Map.Entry<Object[], Float>> choiceQueue =
+//                new PriorityQueue<>(Comparator.comparing(e->-e.getValue()));
+//        if(isCombatChoice(choices)) {
+//
+//            for(Map.Entry<Object[], Float> choice : scoredChoices(choices, game)){
+//                // add small offset based on number of creatures attacking to ensure consistent ordering and favor more aggressive play
+//                choiceQueue.offer(Maps.immutableEntry(choice.getKey(), choice.getValue()+ 0.0000001f * ((MagicDeclareAttackersResult) choice.getKey()[0]).size()));
+//            }
+//        }else{
+//            for(Object[] choice : choices) {
+//                final MagicGame tmpGame = new MagicGame(game, game.getScorePlayer());
+//                tmpGame.executeNextEvent(choice);
+//                choiceQueue.add(Maps.immutableEntry(choice, sigmoid(1.0f*tmpGame.getScore())));
+//            }
+//        }
+//        return choiceQueue;
+//    }
+//    public static float sigmoid(float x) {
+//      return (float) (1/( 1 + Math.pow(Math.E,(-1*x))));
+//    }
+//    private List<Object[]> orderedChoices(List<Object[]> choices, MagicGame game) {
+//        if(choices.size() < 7 || !isCombatChoice(choices))
+//            return choices;
+////        PriorityQueue<Map.Entry<Object[], Float>> q =  prioritizedChoices(choices, game);
+////            System.out.println("Ordered scores "+ q.stream().map(Map.Entry::getValue).map(Object::toString).collect(Collectors.joining(", ")));
+//        return prioritizedChoices(choices, game).stream().map(Map.Entry::getKey).collect(Collectors.toList());
+//    }
 
-    private Object[] findBestCombatChoice(MagicGame game, List<Object[]> choices, double scoreThreshold) {
-        if(choices.size() < 3 || !isCombatChoice(choices))
-            return null;
-        Object[] bestCombatChoice=null;
-        PriorityQueue<Map.Entry<Object[], Float>> queued = prioritizedChoices(choices, game);
-//            System.out.println(queued.stream().map(Map.Entry::getValue).map(Object::toString).collect(Collectors.joining(", ")));
-        Map.Entry<Object[], Float> choiceMap = queued.peek();
-        if(-choiceMap.getValue() > scoreThreshold) {
-            bestCombatChoice = choiceMap.getKey();
-        }
-        return bestCombatChoice;
-    }
+//    private Object[] findBestCombatChoice(MagicGame game, List<Object[]> choices, double scoreThreshold) {
+//        if(choices.size() < 5 || !isCombatChoice(choices))
+//            return null;
+//        PriorityQueue<Map.Entry<Object[], Float>> queued = prioritizedChoices(choices, game);
+////            System.out.println(queued.stream().map(Map.Entry::getValue).map(Object::toString).collect(Collectors.joining(", ")));
+//        Map.Entry<Object[], Float> choiceMap = queued.peek();
+//        if((choiceMap.getValue()) > scoreThreshold) {
+//            return choiceMap.getKey();
+//        }
+//        return null;
+//    }
 
     private List<Object[]> getNextChoices(final MagicGame game, final List<Object[]> RCHOICES) {
         //disable fast choices
@@ -626,7 +637,7 @@ public class GMCTSAI extends MagicAI {
                     choices.add(game.map(choice));
                 }
             } else {
-                choices = orderedChoices(event.getArtificialChoiceResults(game), game);
+                choices = event.getArtificialChoiceResults(game);
             }
             assert choices != null;
 
@@ -645,32 +656,218 @@ public class GMCTSAI extends MagicAI {
         //game is finished
         return Collections.emptyList();
     }
-
-    private static String CR2String(final Object[] choiceResults) {
-        final StringBuilder buffer=new StringBuilder();
-        if (choiceResults!=null) {
-            buffer.append(" (");
-            boolean first=true;
-            for (final Object choiceResult : choiceResults) {
-                if (first) {
-                    first=false;
-                } else {
-                    buffer.append(',');
-                }
-                buffer.append(choiceResult);
-            }
-            buffer.append(')');
-        }
-        return buffer.toString();
-    }
-
-    private boolean printPath(final List<MCTSGameTree> path) {
-        final StringBuilder sb = new StringBuilder();
-        for (final MCTSGameTree p : path) {
-            sb.append(" -> ").append(p.desc);
-        }
-        log(sb.toString());
-        return true;
-    }
 }
 
+
+//each tree node stores the choice from the parent that leads to this node
+class GMCTSGameTree implements Iterable<GMCTSGameTree> {
+
+    private final GMCTSGameTree parent;
+    private final LinkedList<GMCTSGameTree> children = new LinkedList<GMCTSGameTree>();
+    private final int choice;
+    private boolean isAI;
+    private boolean isCached;
+    private int maxChildren = -1;
+    private int numLose;
+    private int numSim;
+    private int evalScore;
+    private int steps;
+    private double sum;
+//    private double S;
+
+    //min sim for using robust max
+    private int maxChildSim = MCTSAI.MIN_SIM;
+
+    GMCTSGameTree(final GMCTSGameTree parent, final int choice, final int evalScore) {
+        this.evalScore = evalScore;
+        this.choice = choice;
+        this.parent = parent;
+    }
+
+    GMCTSGameTree(final GMCTSGameTree parent, final int choice, final double initScore) {
+        this.evalScore = -1;
+        this.sum = initScore;
+        this.numSim = 1;
+        this.choice = choice;
+        this.parent = parent;
+    }
+
+    private static boolean log(final String message) {
+        MagicGameLog.log(message);
+        return true;
+    }
+
+    static void addNode(final LRUCache<Long, GMCTSGameTree> cache, final MagicGame game, final GMCTSGameTree node) {
+        final long gid = game.getStateId();
+        cache.put(gid, node);
+        node.setCached();
+        assert log("ADDED: " + game.getIdString());
+    }
+
+    static GMCTSGameTree getNode(final LRUCache<Long, GMCTSGameTree> cache, final MagicGame game, final List<Object[]> choices) {
+        final long gid = game.getStateId();
+        final GMCTSGameTree candidate = cache.get(gid);
+
+        if (candidate != null) {
+            assert log("CACHE HIT");
+            assert log("HIT  : " + game.getIdString());
+            //assert printNode(candidate, choices);
+            return candidate;
+        } else {
+            assert log("CACHE MISS");
+            assert log("MISS : " + game.getIdString());
+            final GMCTSGameTree root = new GMCTSGameTree(null, -1, -1);
+            return root;
+        }
+    }
+
+    boolean isCached() {
+        return isCached;
+    }
+
+    private void setCached() {
+        isCached = true;
+    }
+
+    boolean hasDetails() {
+        return maxChildren != -1;
+    }
+
+    void setMaxChildren(final int mc) {
+        maxChildren = mc;
+    }
+
+    boolean isAI() {
+        return isAI;
+    }
+
+    boolean isOpp() {
+        return !isAI;
+    }
+
+    void setIsAI(final boolean ai) {
+        this.isAI = ai;
+    }
+
+    boolean isSolved() {
+        return evalScore == Integer.MAX_VALUE || evalScore == Integer.MIN_VALUE;
+    }
+
+    void recordVirtualLoss() {
+        numSim++;
+    }
+
+    void removeVirtualLoss() {
+        numSim--;
+    }
+
+    void updateScore(final GMCTSGameTree child, final double delta) {
+//        final double oldMean = (numSim > 0) ? sum/numSim : 0;
+        assert !(delta < 0 || delta > 1) : "invalid delta "+delta;
+        sum += delta;
+        numSim += 1;
+//        final double newMean = sum/numSim;
+//        S += (delta - oldMean) * (delta - newMean);
+
+        //if child has sufficient simulations, backup using robust max instead of average
+        if (child != null && child.getNumSim() > maxChildSim) {
+            maxChildSim = child.getNumSim();
+            sum = child.sum;
+            numSim = child.numSim;
+        }
+    }
+
+    double getModifiedUCT() {
+//        final double v = getV();
+//        final double sc = v*v + MCTSAI.UCB1_C * Math.log(parent.getNumSim()) / getNumSim();
+        final double sc = getV() + MCTSAI.UCB1_C * Math.sqrt(Math.log(parent.getNumSim()) / getNumSim());
+        if ((!parent.isAI() && isAIWin()) || (parent.isAI() && isAILose())) {
+            return sc - 2.0;
+        } else if ((parent.isAI() && isAIWin()) || (!parent.isAI() && isAILose())) {
+            return sc + 2.0;
+        } else {
+            return sc;
+        }
+    }
+
+    boolean isAIWin() {
+        return evalScore == Integer.MAX_VALUE;
+    }
+
+    boolean isAILose() {
+        return evalScore == Integer.MIN_VALUE;
+    }
+
+    void incLose(final int lsteps) {
+        numLose++;
+        steps = Math.max(steps, lsteps);
+        if (numLose == maxChildren) {
+            if (isAI) {
+                setAILose(steps);
+            } else {
+                setAIWin(steps);
+            }
+        }
+    }
+
+    int getChoice() {
+        return choice;
+    }
+
+    int getSteps() {
+        return steps;
+    }
+
+    void setAIWin(final int aSteps) {
+        evalScore = Integer.MAX_VALUE;
+        steps = aSteps;
+    }
+
+    void setAILose(final int aSteps) {
+        evalScore = Integer.MIN_VALUE;
+        steps = aSteps;
+    }
+
+    double getDecision() {
+        //boost decision score of win nodes by BOOST
+        final int BOOST = 1000000;
+        if (isAIWin()) {
+            return BOOST + getNumSim();
+        } else if (isAILose()) {
+            return getNumSim();
+        } else {
+            return getNumSim();
+        }
+    }
+
+    int getNumSim() {
+        return numSim;
+    }
+
+    private double getSum() {
+        // AI is max player, other is min player
+        return parent.isAI() ? sum : -sum;
+    }
+
+    double getV() {
+        return getSum() / numSim;
+    }
+
+    void addChild(final GMCTSGameTree child) {
+        assert children.size() < maxChildren : "ERROR! Number of children nodes exceed maxChildren";
+        children.add(child);
+    }
+
+    GMCTSGameTree first() {
+        return children.peek();
+    }
+
+    @Override
+    public Iterator<GMCTSGameTree> iterator() {
+        return children.iterator();
+    }
+
+    int size() {
+        return children.size();
+    }
+}

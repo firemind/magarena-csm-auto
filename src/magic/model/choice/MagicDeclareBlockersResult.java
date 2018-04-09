@@ -58,11 +58,11 @@ public class MagicDeclareBlockersResult extends LinkedList<MagicCombatCreature[]
         builder.append(score);
         for (final MagicCombatCreature[] creatures : this) {
             if (creatures.length>1) {
-                builder.append(' ');
+                builder.append(" <");
                 builder.append(creatures[0].getName());
-                builder.append('=');
-                builder.append(creatures[1].getName());
-                builder.append(creatures.length > 2 ? "+" + (creatures.length-2) : "");
+                builder.append(">=");
+                for(int i=1;i<creatures.length;i++)
+                  builder.append(creatures[1].getName()+(i+1==creatures.length ? "" : ','));
             }
         }
         return builder.toString();

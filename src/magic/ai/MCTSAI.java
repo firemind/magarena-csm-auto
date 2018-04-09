@@ -1,5 +1,6 @@
 package magic.ai;
 
+import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -16,9 +17,7 @@ import magic.model.MagicGame;
 import magic.model.MagicGameLog;
 import magic.model.MagicPermanent;
 import magic.model.MagicPlayer;
-import magic.model.choice.MagicBuilderPayManaCostResult;
-import magic.model.choice.MagicDeclareAttackersChoice;
-import magic.model.choice.MagicDeclareAttackersResult;
+import magic.model.choice.*;
 import magic.model.event.MagicEvent;
 
 /*
@@ -179,27 +178,58 @@ public class MCTSAI extends MagicAI {
         if(LOGCOMBAT){
             for (final MCTSGameTree node : root) {
               Object choice[] = RCHOICES.get(node.getChoice());
-              for(Object c : choice){
-                if(c instanceof magic.model.choice.MagicDeclareAttackersResult){
-                    MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+              if(choice[0] instanceof magic.model.choice.MagicDeclareAttackersResult){
+                 if(choice.length > 1){
+                    throw new InvalidParameterException("Only one combat choice expected");
+                 }
+                 MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
 
-                    CombatScoreLog.logAttacks(
-                            node.getV(),
-                            node.getNumSim(),
-                            scorePlayer.getLife(),
-                            opp.getLife(),
-                            (MagicDeclareAttackersResult) c,
-                            scorePlayer.
-                                    getPermanents().
-                                    stream().
-                                    filter(MagicPermanent::canAttack).
-                                    toArray(),
-                            opp.
-                                    getPermanents().
-                                    stream().
-                                    filter(MagicPermanent::canBlock).
-                                    toArray());
-                }
+                 CombatScoreLog.logAttacks(
+                        node.getV(),
+                        node.getNumSim(),
+                        node.getParent().getNumSim(),
+                        scorePlayer.getLife(),
+                        opp.getLife(),
+                        (MagicDeclareAttackersResult) choice[0],
+                        scorePlayer.
+                                getPermanents().
+                                stream().
+                                filter(MagicPermanent::canAttack).
+                                toArray(),
+                        opp.
+                                getPermanents().
+                                stream().
+                                filter(MagicPermanent::canBlock).
+                                toArray());
+              }else if(choice[0] instanceof magic.model.choice.MagicDeclareBlockersResult){
+                  for(Object c: choice){
+                      System.out.println(c.getClass());
+                  }
+                  MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+
+                  CombatScoreLog.logBlocks(
+                          node.getV(),
+                          node.getNumSim(),
+                          node.getParent().getNumSim(),
+                          scorePlayer.getLife(),
+                          opp.getLife(),
+                          opp.
+                                  getPermanents().
+                                  stream().
+                                  filter(MagicPermanent::isAttacking).
+                                  toArray(),
+                          Arrays.copyOf(choice, choice.length, MagicDeclareBlockersResult[].class),
+                          scorePlayer.
+                                  getPermanents().
+                                  stream().
+                                  filter(MagicPermanent::canBlock).
+                                  toArray(),
+
+                          opp.
+                                  getPermanents().
+                                  stream().
+                                filter(MagicPermanent::isCreature).
+                                toArray());
               }
             }
         }
@@ -733,6 +763,7 @@ class MCTSGameTree implements Iterable<MCTSGameTree> {
     private int getMaxChildren() {
         return maxChildren;
     }
+    public MCTSGameTree getParent() { return this.parent; }
 
     boolean isAI() {
         return isAI;
