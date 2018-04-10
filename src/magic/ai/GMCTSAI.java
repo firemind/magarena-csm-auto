@@ -390,7 +390,7 @@ public class GMCTSAI extends MagicAI {
             //there are unexplored children of node
             //assume we explore children of a node in increasing order of the choices
             if (curr.size() < choices.size()) {
-                if(choices.size() > 3 && isCombatChoice(choices)) {
+                if(choices.size() > 6 && isCombatChoice(choices)) {
 //                    System.out.println("adding preweighted choices");
                     for (final Map.Entry<Object[], Float> scoredChoice : scoredChoices(choices, game)) {
                         final GMCTSGameTree child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
@@ -544,16 +544,16 @@ public class GMCTSAI extends MagicAI {
 
     private List<Map.Entry<Object[], Float>> scoredChoices(List<Object[]> choices, MagicGame game){
 //        System.out.println("Scorig "+choices.size()+" choices");
-        List<Map.Entry<Object[], Float>> mapped = new ArrayList<>(choices.size());
-        final List<CombatPredictionClient.CombatRep> combatReps = new ArrayList<>();
+        final List<Map.Entry<Object[], Float>> mapped = new ArrayList<>(choices.size());
+        final List<CombatPredictionClient.CombatRep> combatReps = new ArrayList<>(choices.size());
         final MagicPlayer scorePlayer = game.getScorePlayer();
         final MagicPlayer opp = game.getPlayers()[(scorePlayer.getIndex() + 1) % 2];
-        final List<Float> availableAttackersIds = combatPredictionClient.extractCardIds(scorePlayer.
+        final List<Float> availableAttackersIds = combatPredictionClient.extractPT(scorePlayer.
                 getPermanents().
                 stream().
                 filter(MagicPermanent::canAttack).
                 toArray());
-        final List<Float> blockersIds = combatPredictionClient.extractCardIds(opp.
+        final List<Float> blockersIds = combatPredictionClient.extractPT(opp.
                 getPermanents().
                 stream().
                 filter(MagicPermanent::canBlock).

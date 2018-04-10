@@ -3,6 +3,8 @@ package magic.firemind;
 import io.grpc.ManagedChannel;
 import io.grpc.internal.IoUtils;
 import io.grpc.netty.NettyChannelBuilder;
+import magic.model.MagicPowerToughness;
+import magic.model.choice.MagicCombatCreature;
 import magic.model.choice.MagicDeclareAttackersResult;
 import org.tensorflow.framework.DataType;
 import org.tensorflow.framework.TensorProto;
@@ -26,13 +28,11 @@ public class CombatPredictionClient {
     private ManagedChannel channel;
     private PredictionServiceGrpc.PredictionServiceBlockingStub blockingStub;
     private final Model.ModelSpec modelSpec;
-    private List<String> cardMapping = new ArrayList<>(Arrays.asList(
-            "Willow Elf", "Grizzly Bears", "Kalonian Tusker",
-            "Nessian Courser", "Spined Wurm", "Elvish Warrior",
-            "Rumbling Baloth", "Plated Wurm", "Barbtooth Wurm"));
+    private final static int MAX_CREATURE_INPUTS = 10;
+    private final static int MAX_PT_INPUTS = MAX_CREATURE_INPUTS*2;
 
     TensorShapeProto.Dim lifesDim1 = TensorShapeProto.Dim.newBuilder().setSize(2).build();
-    TensorShapeProto.Dim attackersDim1 = TensorShapeProto.Dim.newBuilder().setSize(10).build();
+    TensorShapeProto.Dim attackersDim1 = TensorShapeProto.Dim.newBuilder().setSize(MAX_PT_INPUTS).build();
     org.tensorflow.framework.DataType dt = DataType.DT_FLOAT;
 
     public CombatPredictionClient() {
@@ -46,35 +46,52 @@ public class CombatPredictionClient {
                 .setName("default").setSignatureName("serving_default").build();
     }
 
-    public List<Float> extractCardIds(Object[] attackers){
-        Float [] list = new Float[cardMapping.size()];
-        Arrays.fill(list, 0.0f);
+    public List<Float> extractPT(Object[] attackers){
+        final Float [] list = new Float[MAX_PT_INPUTS];
+        int ix=0;
         for(Object attacker : attackers){
-            list[cardMapping.indexOf(attacker.toString())] += 1.0f;
+            final MagicPermanent p = (MagicPermanent) attacker;
+            final MagicPowerToughness pt = p.getPowerToughness();
+            list[ix++] = 1.0f*pt.getPositivePower();
+            list[ix++] = 1.0f*pt.getPositiveToughness();
         }
+        while(ix < MAX_PT_INPUTS)
+            list[ix++] = 0.0f;
+
 //        System.out.println(Arrays.stream(list).map(e->e.toString()).collect(Collectors.joining(", ")));
         return Arrays.asList(list);
     }
 
-    public List<Float> extractCardIds(MagicDeclareAttackersResult attackers){
-        return  extractCardIds(attackers.stream().map((MagicPermanent o ) -> o.getName() ).toArray());
+    public List<Float> extractPT(MagicDeclareAttackersResult attackers){
+        final Float [] list = new Float[MAX_PT_INPUTS];
+        int ix=0;
+        for(MagicPermanent attacker : attackers){
+            final MagicPowerToughness pt = attacker.getPowerToughness();
+            list[ix++] = 1.0f*pt.getPositivePower();
+            list[ix++] = 1.0f*pt.getPositiveToughness();
+        }
+        while(ix < MAX_PT_INPUTS)
+            list[ix++] = 0.0f;
+
+//        System.out.println(Arrays.stream(list).map(e->e.toString()).collect(Collectors.joining(", ")));
+        return Arrays.asList(list);
     }
 
     public List<Float> predictWin(List<CombatRep> combatReps) {
-        TensorShapeProto.Dim batchDim = TensorShapeProto.Dim.newBuilder().setSize(combatReps.size()).build();
+        final TensorShapeProto.Dim batchDim = TensorShapeProto.Dim.newBuilder().setSize(combatReps.size()).build();
 
-        TensorShapeProto lifesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(lifesDim1).build();
-        TensorShapeProto creaturesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackersDim1).build();
-        TensorProto.Builder lifesBuilder = TensorProto.newBuilder();
-        TensorProto.Builder attackersBuilder = TensorProto.newBuilder();
-        TensorProto.Builder availableAttackersBuilder = TensorProto.newBuilder();
-        TensorProto.Builder blockersBuilder = TensorProto.newBuilder();
+        final TensorShapeProto lifesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(lifesDim1).build();
+        final TensorShapeProto creaturesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackersDim1).build();
+        final TensorProto.Builder lifesBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder attackersBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder availableAttackersBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder blockersBuilder = TensorProto.newBuilder();
         for(CombatRep combatRep: combatReps) {
             lifesBuilder
                 .addFloatVal(combatRep.lifePlayer)
                 .addFloatVal(combatRep.lifeOpponent);
             attackersBuilder
-                    .addAllFloatVal(extractCardIds(combatRep.attackers));
+                    .addAllFloatVal(extractPT(combatRep.attackers));
             availableAttackersBuilder
                     .addAllFloatVal(combatRep.availableCreatures);
             blockersBuilder
