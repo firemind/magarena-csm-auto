@@ -1,0 +1,13 @@
+name=Purity
+image=https://magiccards.info/scans/en/lw/37.jpg
+value=4.011
+rarity=R
+type=Creature
+subtype=Elemental,Incarnation
+cost={3}{W}{W}{W}
+pt=6/6
+ability=Flying;\
+        When SN is put into a graveyard from anywhere, shuffle it into its owner's library.
+timing=main
+requires_groovy_code
+oracle=Flying\nIf noncombat damage would be dealt to you, prevent that damage. You gain life equal to the damage prevented this way.\nWhen Purity is put into a graveyard from anywhere, shuffle it into its owner's library.

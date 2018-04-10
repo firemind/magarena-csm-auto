@@ -1,0 +1,9 @@
+name=Liliana's Defeat
+image=https://magiccards.info/scans/en/hou/68.jpg
+value=2.500
+rarity=U
+type=Sorcery
+cost={B}
+timing=main
+requires_groovy_code
+oracle=Destroy target black creature or black planeswalker. If that permanent was a Liliana planeswalker, her controller loses 3 life.

@@ -1,0 +1,12 @@
+name=Woebringer Demon
+image=https://magiccards.info/scans/en/rav/113.jpg
+value=3.344
+rarity=R
+type=Creature
+subtype=Demon
+cost={3}{B}{B}
+pt=4/4
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Flying\nAt the beginning of each player's upkeep, that player sacrifices a creature. If the player can't, sacrifice Woebringer Demon.

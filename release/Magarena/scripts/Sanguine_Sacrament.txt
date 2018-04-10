@@ -1,0 +1,9 @@
+name=Sanguine Sacrament
+image=https://magiccards.info/scans/en/xln/33.jpg
+value=2.500
+rarity=R
+type=Instant
+cost={X}{W}{W}
+timing=removal
+requires_groovy_code
+oracle=You gain twice X life. Put Sanguine Sacrament on the bottom of its owner's library.

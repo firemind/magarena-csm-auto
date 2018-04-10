@@ -633,6 +633,12 @@ public enum MagicAbility {
             ));
         }
     },
+    Ascend("ascend",0) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicStatic.Ascend);
+        }
+    },
 
     // abilities that involve SN
     ShockLand("As SN enters the battlefield, you may " + ARG.COST + "\\. If you don't, SN enters the battlefield tapped\\.", -10) {
@@ -1731,8 +1737,8 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final String[] ptStr = ARG.ptStr(arg);
             final MagicPowerToughness pt = new MagicPowerToughness(
-                MagicAmountParser.getX(ptStr[0], 1),
-                MagicAmountParser.getX(ptStr[1], 1)
+                MagicAmountParser.getXSign(ptStr[0], 1),
+                MagicAmountParser.getXSign(ptStr[1], 1)
             );
             final MagicTargetFilter<MagicPermanent> affected = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
             final MagicAmount count = MagicAmountParser.build(ARG.wordrun2(arg));

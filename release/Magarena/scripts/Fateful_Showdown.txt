@@ -1,0 +1,10 @@
+name=Fateful Showdown
+image=https://magiccards.info/scans/en/kld/114.jpg
+image_updated=2016-10-05
+value=2.500
+rarity=R
+type=Instant
+cost={2}{R}{R}
+timing=removal
+requires_groovy_code
+oracle=Fateful Showdown deals damage to target creature or player equal to the number of cards in your hand. Discard all the cards in your hand, then draw that many cards.
