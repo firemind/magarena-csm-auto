@@ -1,0 +1,9 @@
+name=Debt to the Deathless
+image=https://magiccards.info/scans/en/dgm/64.jpg
+value=3.784
+rarity=U
+type=Sorcery
+cost={X}{W}{W}{B}{B}
+timing=main
+oracle=Each opponent loses two times X life. You gain life equal to the life lost this way.
+requires_groovy_code

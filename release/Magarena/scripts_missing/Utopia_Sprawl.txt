@@ -1,14 +1,15 @@
 name=Utopia Sprawl
-image=https://magiccards.info/scans/en/di/99.jpg
+image=https://magiccards.info/scans/en/a25/192.jpg
+image_updated=2018-04-25
 value=3.974
-rarity=C
+rarity=U
 type=Enchantment
 subtype=Aura
 cost={G}
 ability=Enchant Forest;\
         As SN enters the battlefield, choose a color.;\
-        Whenever enchanted Forest is tapped for mana, its controller adds one mana of the chosen color to his or her mana pool.
+        Whenever enchanted Forest is tapped for mana, its controller adds an additional one mana of the chosen color.
 timing=aura
 enchant=default,forest
-oracle=Enchant Forest\nAs Utopia Sprawl enters the battlefield, choose a color.\nWhenever enchanted Forest is tapped for mana, its controller adds one mana of the chosen color to his or her mana pool.
+oracle=Enchant Forest\nAs Utopia Sprawl enters the battlefield, choose a color.\nWhenever enchanted Forest is tapped for mana, its controller adds an additional one mana of the chosen color.
 status=not supported: non-activated-mana-ability

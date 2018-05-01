@@ -1,0 +1,10 @@
+name=Lurking Predators
+image=https://magiccards.info/scans/en/c16/156.jpg
+image_updated=2017-08-17
+value=4.177
+rarity=R
+type=Enchantment
+cost={4}{G}{G}
+timing=enchantment
+oracle=Whenever an opponent casts a spell, reveal the top card of your library. If it's a creature card, put it onto the battlefield. Otherwise, you may put that card on the bottom of your library.
+requires_groovy_code

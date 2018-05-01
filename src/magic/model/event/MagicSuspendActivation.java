@@ -8,7 +8,6 @@ import magic.model.MagicLocationType;
 import magic.model.MagicManaCost;
 import magic.model.MagicPayedCost;
 import magic.model.MagicSource;
-import magic.model.MagicCardDefinition;
 import magic.model.action.ChangeCountersAction;
 import magic.model.action.ShiftCardAction;
 
@@ -57,6 +56,6 @@ public class MagicSuspendActivation extends MagicCardAbilityActivation {
     private void suspend(final MagicGame game, final MagicEvent event) {
         final MagicCard card = event.getCard();
         game.doAction(new ShiftCardAction(card, MagicLocationType.OwnersHand, MagicLocationType.Exile));
-        game.doAction(new ChangeCountersAction(card, MagicCounterType.Time, event.getRefInt()));
+        game.doAction(new ChangeCountersAction(card.getController(), card, MagicCounterType.Time, event.getRefInt()));
     }
 }

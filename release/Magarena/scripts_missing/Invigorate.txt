@@ -1,10 +1,11 @@
 name=Invigorate
-image=https://magiccards.info/scans/en/ema/174.jpg
+image=https://magiccards.info/scans/en/a25/173.jpg
+image_updated=2018-04-25
 value=2.500
 rarity=U
 type=Instant
 cost={2}{G}
-effect=If you control a Forest, rather than pay SN's mana cost, you may have an opponent gain 3 life.~Target creature gets +4/+4 until end of turn.
+effect=If you control a Forest, rather than pay this spell's mana cost, you may have an opponent gain 3 life.~Target creature gets +4/+4 until end of turn.
 timing=removal
-oracle=If you control a Forest, rather than pay Invigorate's mana cost, you may have an opponent gain 3 life.\nTarget creature gets +4/+4 until end of turn.
+oracle=If you control a Forest, rather than pay this spell's mana cost, you may have an opponent gain 3 life.\nTarget creature gets +4/+4 until end of turn.
 status=needs groovy

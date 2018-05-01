@@ -4,7 +4,6 @@ import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicSource;
-import magic.model.MagicCopyMap;
 import magic.model.action.ChangeCountersAction;
 import magic.model.choice.MagicTargetChoice;
 
@@ -23,6 +22,7 @@ public class MagicAddCounterChosenEvent extends MagicEvent {
     private static final MagicEventAction EventAction = (final MagicGame game, final MagicEvent event) -> {
         event.processTargetPermanent(game, (final MagicPermanent perm) ->
             game.doAction(new ChangeCountersAction(
+                event.getPlayer(),
                 perm,
                 event.getRefCounterType(),
                 1

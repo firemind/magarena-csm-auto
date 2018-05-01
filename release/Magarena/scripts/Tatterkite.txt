@@ -1,0 +1,12 @@
+name=Tatterkite
+image=https://magiccards.info/scans/en/shm/264.jpg
+value=3.026
+rarity=U
+type=Artifact,Creature
+subtype=Scarecrow
+cost={3}
+pt=2/1
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Flying\nTatterkite can't have counters put on it.

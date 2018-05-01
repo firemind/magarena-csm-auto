@@ -447,7 +447,7 @@ public enum MagicRuleEventAction {
         "Exile",
         (game, event) -> {
             game.doAction(new ChangeCardDestinationAction(event.getCardOnStack(), MagicLocationType.Exile));
-            game.doAction(new ChangeCountersAction(event.getCardOnStack().getCard(), MagicCounterType.Time, 3));
+            game.doAction(new ChangeCountersAction(event.getPlayer(), event.getCardOnStack().getCard(), MagicCounterType.Time, 3));
         }
     ),
     ExilePlayerGraveyard(
@@ -1093,7 +1093,7 @@ public enum MagicRuleEventAction {
                 //continue to the second part if
                 //  there is no target OR
                 //  there is a target and it is legal
-                if (matcher.group("choice") == null || players.isEmpty() == false) {
+                if (matcher.group("choice") == null || !players.isEmpty()) {
                     game.doAction(new ChangeLifeAction(event.getPlayer(), total2));
                 }
             };
@@ -1362,17 +1362,18 @@ public enum MagicRuleEventAction {
         }
     },
     PutCounter(
-        "put " + ARG.AMOUNT + " (?<type>[^ ]+) counter(s)? on " + ARG.PERMANENTS
+        "put " + ARG.AMOUNT + " " + ARG.WORD1 + " counter(s)? on " + ARG.PERMANENTS
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             final MagicAmount count = ARG.amountObj(matcher);
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(matcher.group("type"));
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(matcher));
             final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
             return (game, event) -> {
                 final int amount = count.getAmount(event);
                 for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
                     game.doAction(new ChangeCountersAction(
+                        event.getPlayer(),
                         it,
                         counterType,
                         amount
@@ -1383,7 +1384,7 @@ public enum MagicRuleEventAction {
 
         @Override
         public MagicTargetHint getHint(final Matcher matcher) {
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(matcher.group("type"));
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(matcher));
             if (counterType.getName().contains("-") || counterType.getScore() < 0) {
                 return MagicTargetHint.Negative;
             } else {
@@ -1393,7 +1394,7 @@ public enum MagicRuleEventAction {
 
         @Override
         protected MagicTargetPicker<?> getPicker(final Matcher matcher) {
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(matcher.group("type"));
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(matcher));
             if (counterType.getName().contains("-")) {
                 final String[] pt = counterType.getName().split("/");
                 return new MagicWeakenTargetPicker(-Integer.parseInt(pt[0]), -Integer.parseInt(pt[1]));
@@ -1406,7 +1407,7 @@ public enum MagicRuleEventAction {
 
         @Override
         public MagicTiming getTiming(final Matcher matcher) {
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(matcher.group("type"));
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(matcher));
             if (counterType.getName().contains("-")) {
                 return MagicTiming.Removal;
             } else {
@@ -1426,19 +1427,20 @@ public enum MagicRuleEventAction {
         (game, event) -> game.doAction(new AddTurnTriggerAction(event.getPermanent(), AtEndOfCombatTrigger.Clockwork))
     ),
     RemoveCounter(
-        "remove " + ARG.AMOUNT + " (?<type>[^ ]+) counter(s)? from " + ARG.PERMANENTS,
+        "remove " + ARG.AMOUNT + " " + ARG.WORD1 + " counter(s)? from " + ARG.PERMANENTS,
         MagicTiming.Pump,
         "-Counters"
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
             final MagicAmount count = ARG.amountObj(matcher);
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(matcher.group("type"));
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(matcher));
             final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
             return (game, event) -> {
                 final int amount = count.getAmount(event);
                 for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
                     game.doAction(new ChangeCountersAction(
+                        event.getPlayer(),
                         it,
                         counterType,
                         -amount
@@ -1448,18 +1450,19 @@ public enum MagicRuleEventAction {
         }
     },
     RemoveAllCounter(
-        "remove all (?<type>[^ ]+) counter(s)? from " + ARG.PERMANENTS,
+        "remove all " + ARG.WORD1 + " counter(s)? from " + ARG.PERMANENTS,
         MagicTiming.Pump,
         "-Counters"
     ) {
         @Override
         public MagicEventAction getAction(final Matcher matcher) {
-            final MagicCounterType counterType = MagicCounterType.getCounterRaw(matcher.group("type"));
+            final MagicCounterType counterType = MagicCounterType.getCounterRaw(ARG.word1(matcher));
             final MagicTargetFilter<MagicPermanent> filter = ARG.permanentsParse(matcher);
             return (game, event) -> {
                 for (final MagicPermanent it : ARG.permanents(event, matcher, filter)) {
                     final int amount = it.getCounters(counterType);
                     game.doAction(new ChangeCountersAction(
+                        event.getPlayer(),
                         it,
                         counterType,
                         -amount
@@ -2521,7 +2524,7 @@ public enum MagicRuleEventAction {
             return (game, event) -> {
                 final MagicPermanent SN = event.getPermanent();
                 if (MagicCondition.NOT_MONSTROUS_CONDITION.accept(SN)) {
-                    game.doAction(new ChangeCountersAction(SN, MagicCounterType.PlusOne, amount));
+                    game.doAction(new ChangeCountersAction(event.getPlayer(), SN, MagicCounterType.PlusOne, amount));
                     game.doAction(ChangeStateAction.Set(SN, MagicPermanentState.Monstrous));
                 }
             };
@@ -3161,7 +3164,7 @@ public enum MagicRuleEventAction {
             final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
             return (game, event) -> {
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Poison, amount));
+                    game.doAction(new ChangeCountersAction(event.getPlayer(), it, MagicCounterType.Poison, amount));
                 }
             };
         }
@@ -3181,7 +3184,7 @@ public enum MagicRuleEventAction {
                 final int multiplier = eachCount.getPositiveAmount(event);
                 final int total = amount * multiplier;
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Energy, total));
+                    game.doAction(new ChangeCountersAction(event.getPlayer(), it, MagicCounterType.Energy, total));
                 }
             };
         }
@@ -3198,7 +3201,7 @@ public enum MagicRuleEventAction {
             final MagicTargetFilter<MagicPlayer> filter = ARG.playersParse(matcher);
             return (game, event) -> {
                 for (final MagicPlayer it : ARG.players(event, matcher, filter)) {
-                    game.doAction(new ChangeCountersAction(it, MagicCounterType.Experience, amount));
+                    game.doAction(new ChangeCountersAction(event.getPlayer(), it, MagicCounterType.Experience, amount));
                 }
             };
         }
@@ -3365,7 +3368,7 @@ public enum MagicRuleEventAction {
     }
 
     public boolean isIndependent() {
-        return pattern.toString().contains("sn") == false;
+        return !pattern.toString().contains("sn");
     }
 
     public MagicChoice getChoice(final Matcher matcher) {
@@ -3446,7 +3449,7 @@ public enum MagicRuleEventAction {
                 final MagicSourceEvent riderSourceEvent = build(riderWithoutPrefix);
 
                 //rider cannot have choices
-                if (hasReference == false && riderSourceEvent.getChoice().isValid()) {
+                if (!hasReference && riderSourceEvent.getChoice().isValid()) {
                     throw new RuntimeException("rider should not have choice: \"" + part[i] + "\"");
                 }
                 if (riderSourceEvent.getEventChoice() instanceof MagicMayChoice) {
@@ -3543,8 +3546,7 @@ public enum MagicRuleEventAction {
         final String[] parts = replaceThis.replaceAll("\\b(T|t)arget\\b", "|$1arget|").split("\\|");
         parts[0] = parts[0].replaceAll("\\b(T|t)hat " + ARG.THING + "( |\\.|'s|\\b)" + ARG.EVENQUOTES, "RN$3");
         parts[0] = parts[0].replaceAll("\\b(T|t)hat " + ARG.PLAYER + "( |\\.)" + ARG.EVENQUOTES, "RN$3");
-        final String result = String.join("", parts);
-        return result;
+        return String.join("", parts);
     }
 
     private static String concat(final String part0, final String[] parts) {
@@ -3610,18 +3612,18 @@ public enum MagicRuleEventAction {
             choiceFact,
             picker,
             (game, event) -> {
-                if (ifCond.accept(event) == false) {
+                if (!ifCond.accept(event)) {
                     return;
                 }
 
                 final MagicEvent costEvent = matchedCost.getEvent(event.getSource());
 
-                if ((hasCost == false  || costEvent.isSatisfied()) &&
-                    (optional == false || event.isYes())) {
+                if ((!hasCost || costEvent.isSatisfied()) &&
+                    (!optional || event.isYes())) {
                     if (hasCost) {
                         game.addEvent(costEvent);
                     }
-                    if (elseAction == false) {
+                    if (!elseAction) {
                         action.executeEvent(game, event);
                     }
                 } else {

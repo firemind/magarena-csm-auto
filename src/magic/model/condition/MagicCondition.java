@@ -31,7 +31,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         game.doAction(new PlayAbilityAction(event.getPermanent()));
 
     public static List<MagicMatchedCostEvent> build(final String costs) {
-        final List<MagicMatchedCostEvent> matched = new LinkedList<MagicMatchedCostEvent>();
+        final List<MagicMatchedCostEvent> matched = new LinkedList<>();
         final String[] splitCosts = costs.split("(,)? and ");
         for (String cost : splitCosts) {
             matched.add(MagicConditionParser.build(cost));
@@ -689,7 +689,7 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         }
     };
 
-    public static MagicCondition YOU_30_OR_MORE_OPPPONENT_10_OR_LESS_LIFE = new MagicCondition() {
+    public static MagicCondition YOU_30_OR_MORE_OPPONENT_10_OR_LESS_LIFE = new MagicCondition() {
         @Override
         public boolean accept(MagicSource source) {
             return YOU_30_OR_MORE_LIFE.accept(source) &&
@@ -940,6 +940,14 @@ public abstract class MagicCondition implements MagicMatchedCostEvent {
         public boolean accept(final MagicSource source) {
             final MagicPermanent permanent = (MagicPermanent)source;
             return permanent.isValid();
+        }
+    };
+
+    public static MagicCondition LEGENDARY_SORCERY = new MagicCondition() {
+        @Override
+        public boolean accept(final MagicSource source) {
+            final MagicPlayer player = source.getController();
+            return player.controlsPermanent(MagicTargetFilterFactory.LEGENDARY_CREATURE_OR_PLANESWALKER);
         }
     };
 }

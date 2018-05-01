@@ -1,0 +1,9 @@
+name=Goblin Festival
+image=https://magiccards.info/scans/en/ud/83.jpg
+value=3.217
+rarity=R
+type=Enchantment
+cost={1}{R}
+timing=enchantment
+oracle={2}: Goblin Festival deals 1 damage to target creature or player. Flip a coin. If you lose the flip, choose one of your opponents. That player gains control of Goblin Festival.
+requires_groovy_code

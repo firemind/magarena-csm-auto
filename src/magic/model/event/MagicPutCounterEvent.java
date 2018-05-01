@@ -4,7 +4,6 @@ import magic.model.MagicCounterType;
 import magic.model.MagicGame;
 import magic.model.MagicPermanent;
 import magic.model.MagicSource;
-import magic.model.MagicCopyMap;
 import magic.model.MagicTuple;
 import magic.model.action.ChangeCountersAction;
 import magic.model.choice.MagicTargetChoice;
@@ -31,6 +30,7 @@ public class MagicPutCounterEvent extends MagicEvent {
         event.processTargetPermanent(game, (final MagicPermanent creature) -> {
             final MagicTuple tup = event.getRefTuple();
             game.doAction(new ChangeCountersAction(
+                event.getPlayer(),
                 creature,
                 tup.getCounterType(1),
                 tup.getInt(0)
@@ -50,6 +50,7 @@ public class MagicPutCounterEvent extends MagicEvent {
     private static final MagicEventAction EventAction = (final MagicGame game, final MagicEvent event) -> {
         final MagicTuple tup = event.getRefTuple();
         game.doAction(new ChangeCountersAction(
+            event.getPlayer(),
             event.getPermanent(),
             tup.getCounterType(1),
             tup.getInt(0)

@@ -1,0 +1,9 @@
+name=Master the Way
+image=https://magiccards.info/scans/en/ktk/188.jpg
+value=3.500
+rarity=U
+type=Sorcery
+cost={3}{U}{R}
+timing=main
+oracle=Draw a card. Master the Way deals damage to target creature or player equal to the number of cards in your hand.
+requires_groovy_code

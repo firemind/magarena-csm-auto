@@ -1,0 +1,9 @@
+name=Molten Influence
+image=https://magiccards.info/scans/en/od/207.jpg
+value=3.784
+rarity=R
+type=Instant
+cost={1}{R}
+timing=counter
+oracle=Counter target instant or sorcery spell unless its controller has Molten Influence deal 4 damage to him or her.
+requires_groovy_code

@@ -1,0 +1,11 @@
+name=Chameleon Spirit
+image=https://magiccards.info/scans/en/mm/65.jpg
+value=3.700
+rarity=U
+type=Creature
+subtype=Illusion,Spirit
+cost={3}{U}
+pt=*/*
+timing=main
+oracle=As Chameleon Spirit enters the battlefield, choose a color.\nChameleon Spirit's power and toughness are each equal to the number of permanents of the chosen color your opponents control.
+requires_groovy_code

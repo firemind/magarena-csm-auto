@@ -1,13 +1,13 @@
 name=Coalition Relic
-image=https://magiccards.info/scans/en/fut/161.jpg
-image_updated=2016-11-28
+image=https://magiccards.info/scans/en/a25/223.jpg
+image_updated=2018-04-25
 value=4.310
 rarity=R
 type=Artifact
 cost={3}
-ability={T}: Add one mana of any color to your mana pool.;\
+ability={T}: Add one mana of any color.;\
         {T}: Put a charge counter on SN.;\
-        At the beginning of your precombat main phase, remove all charge counters from SN. Add one mana of any color to your mana pool for each charge counter removed this way.
+        At the beginning of your precombat main phase, remove all charge counters from SN. Add one mana of any color for each charge counter removed this way.
 timing=artifact
-oracle={T}: Add one mana of any color to your mana pool.\n{T}: Put a charge counter on Coalition Relic.\nAt the beginning of your precombat main phase, remove all charge counters from Coalition Relic. Add one mana of any color to your mana pool for each charge counter removed this way.
+oracle={T}: Add one mana of any color.\n{T}: Put a charge counter on Coalition Relic.\nAt the beginning of your precombat main phase, remove all charge counters from Coalition Relic. Add one mana of any color for each charge counter removed this way.
 status=not supported: add-multiple-mana

@@ -1,12 +1,12 @@
 name=Prophetic Prism
-image=https://magiccards.info/scans/en/kld/229.jpg
-image_updated=2017-09-01
+image=https://magiccards.info/scans/en/a25/229.jpg
+image_updated=2018-04-25
 value=3.865
 rarity=C
 type=Artifact
 cost={2}
 ability=When SN enters the battlefield, draw a card.;\
-        {1}, {T}: Add one mana of any color to your mana pool.
+        {1}, {T}: Add one mana of any color.
 timing=artifact
-oracle=When Prophetic Prism enters the battlefield, draw a card.\n{1}, {T}: Add one mana of any color to your mana pool.
+oracle=When Prophetic Prism enters the battlefield, draw a card.\n{1}, {T}: Add one mana of any color.
 status=not supported: mana-ability-with-choice

@@ -209,7 +209,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     @Override
     public Set<MagicSourceActivation<? extends MagicSource>> getSourceActivations() {
-        Set<MagicSourceActivation<? extends MagicSource>> set = new TreeSet<MagicSourceActivation<? extends MagicSource>>();
+        Set<MagicSourceActivation<? extends MagicSource>> set = new TreeSet<>();
         for (final MagicCard card : hand) {
             set.addAll(card.getSourceActivations());
         }
@@ -440,29 +440,36 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     }
 
     void showRandomizedHandAndLibrary() {
-        // empty hand, move unknown into library, known into knownCards
-        final int handSize = hand.size();
-        final MagicCardList knownCards = new MagicCardList();
-        while (hand.size() > 0) {
-            final MagicCard card = hand.getCardAtTop();
-            removeCardFromHand(card);
-            if (card.isKnown()) {
-                knownCards.add(card);
-            } else {
-                library.addToTop(card);
+        final MagicCardList unknownCards = new MagicCardList();
+        // gather all unknown cards
+        for (final MagicCard card : hand) {
+            if (card.isUnknown()) {
+                unknownCards.add(card);
+            }
+        }
+        for (final MagicCard card : library) {
+            if (card.isUnknown()) {
+                unknownCards.add(card);
             }
         }
 
-        // shuffle library
-        library.shuffle(MagicRandom.nextRNGInt());
-        library.setAIKnown(true);
+        unknownCards.shuffle(MagicRandom.nextRNGInt());
+        unknownCards.setAIKnown(true);
 
-        // put cards into hand
-        for (int i = 0; i < handSize - knownCards.size(); i++) {
-            addCardToHand(library.removeCardAtTop());
+        // fill in unknown cards
+        for (int i = 0; i < hand.size(); i++) {
+            final MagicCard card = hand.get(i);
+            if (card.isUnknown()) {
+                hand.set(i, unknownCards.removeCardAtTop());
+            }
         }
-        for (final MagicCard card : knownCards) {
-            addCardToHand(card);
+
+        // fill in unknown cards
+        for (int i = 0; i < library.size(); i++) {
+            final MagicCard card = library.get(i);
+            if (card.isUnknown()) {
+                library.set(i, unknownCards.removeCardAtTop());
+            }
         }
     }
 
@@ -472,7 +479,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
         startingHandSize = handSize;
         final MagicDeck deck = playerConfig.getDeck();
         Thread thread = Thread.currentThread();
-        for (int i = 0; i < deck.size() && thread.isInterrupted() == false; i++) {
+        for (int i = 0; i < deck.size() && !thread.isInterrupted(); i++) {
             final MagicCardDefinition cardDefinition = deck.get(i);
             if (cardDefinition.isValid()) {
                 final long id = currGame.getUniqueId();
@@ -504,7 +511,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
     }
 
     public List<MagicCard> filterCards(final MagicTargetFilter<MagicCard> filter) {
-        final List<MagicCard> targets = new ArrayList<MagicCard>();
+        final List<MagicCard> targets = new ArrayList<>();
 
         // Cards in graveyard
         if (filter.acceptType(MagicTargetType.Graveyard)) {
@@ -540,16 +547,16 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     public void addPermanent(final MagicPermanent permanent) {
         final boolean added = permanents.add(permanent);
-        assert added == true : permanent + " cannot be added to " + this;
+        assert added : permanent + " cannot be added to " + this;
     }
 
     public void removePermanent(final MagicPermanent permanent) {
         final boolean removed = permanents.remove(permanent);
-        assert removed == true : permanent + " cannot be removed from " + this;
+        assert removed : permanent + " cannot be removed from " + this;
     }
 
     public List<MagicSourceManaActivation> getManaActivations(final MagicGame game) {
-        final List<MagicSourceManaActivation> activations=new ArrayList<MagicSourceManaActivation>();
+        final List<MagicSourceManaActivation> activations= new ArrayList<>();
         for (final MagicPermanent permanent : permanents) {
             if (!permanent.producesMana()) {
                 continue;
@@ -928,14 +935,18 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     @Override
     public void changeCounters(final MagicCounterType counterType,final int amount) {
-        if (counterType == MagicCounterType.Poison) {
-            poison += amount;
-        } else if (counterType == MagicCounterType.Experience) {
-            experience += amount;
-        } else if (counterType == MagicCounterType.Energy) {
-            energy += amount;
-        } else {
-            throw new RuntimeException(counterType + " cannot be modified on player");
+        switch (counterType) {
+            case Poison:
+                poison += amount;
+                break;
+            case Experience:
+                experience += amount;
+                break;
+            case Energy:
+                energy += amount;
+                break;
+            default:
+                throw new RuntimeException(counterType + " cannot be modified on player");
         }
     }
 
