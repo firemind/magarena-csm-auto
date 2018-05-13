@@ -1,0 +1,12 @@
+name=Priest of Titania
+image=https://magiccards.info/scans/en/c14/210.jpg
+value=2.500
+rarity=C
+type=Creature
+subtype=Elf,Druid
+cost={1}{G}
+pt=1/1
+ability={T}: Add {G} for each Elf on the battlefield.
+timing=main
+oracle={T}: Add {G} for each Elf on the battlefield.
+status=not supported: add-multiple-mana
