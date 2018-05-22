@@ -176,6 +176,15 @@ public class DeckStrCal {
         }
     }
 
+    private static void compareHands(String expected, String actual){
+        if(!expected.equals(actual)){
+            System.err.println("Hands to not match");
+            System.err.println(expected);
+            System.err.println("----");
+            System.err.println(actual);
+        }
+    }
+
     private static void runDuel() {
         final MagicDuel testDuel = setupDuel();
 
@@ -192,9 +201,30 @@ public class DeckStrCal {
         );
 
         int played = 0;
+        int p1Seed = 1234;
+        int p2Seed = 4321;
+        String hand1 ="";
+        String hand2 ="";
         while (testDuel.getGamesPlayed() < testDuel.getGamesTotal()) {
-            final MagicGame game=testDuel.nextGame();
+
+            if(played % 2 == 0){
+                p1Seed = MagicRandom.nextRNGInt();
+                p2Seed = MagicRandom.nextRNGInt();
+            }else{
+                int tmp = p1Seed;
+                p1Seed = p2Seed;
+                p2Seed = tmp;
+            }
+            final MagicGame game=testDuel.nextGame(p1Seed, p2Seed, played != 0);
+            if(played % 2 == 0){
+                hand1 = game.getPlayer(0).getHand().toString();
+                hand2 = game.getPlayer(1).getHand().toString();
+            }else{
+                compareHands(hand2, game.getPlayer(0).getHand().toString());
+                compareHands(hand1, game.getPlayer(1).getHand().toString());
+            }
             game.setArtificial(true);
+
 
             //maximum duration of a game is 60 minutes
             final HeadlessGameController controller = new HeadlessGameController(game, 3600000);

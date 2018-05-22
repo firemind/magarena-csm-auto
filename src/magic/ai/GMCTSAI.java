@@ -3,11 +3,13 @@ package magic.ai;
 import com.google.common.collect.Maps;
 import magic.data.LRUCache;
 import magic.exception.GameException;
+import magic.exception.handler.ExceptionReport;
 import magic.firemind.CombatPredictionClient;
 import magic.firemind.CombatScoreLog;
 import magic.model.*;
 import magic.model.choice.MagicBuilderPayManaCostResult;
 import magic.model.choice.MagicDeclareAttackersResult;
+import magic.model.choice.MagicDeclareBlockersResult;
 import magic.model.event.MagicEvent;
 
 import java.util.*;
@@ -351,6 +353,7 @@ public class GMCTSAI extends MagicAI {
                 out.append("?");
             }
             out.append(']');
+            out.append(CR2String(RCHOICES.get(node.getChoice())));
             out.append('\n');
         }
         return out.toString().trim();
@@ -390,7 +393,7 @@ public class GMCTSAI extends MagicAI {
             //there are unexplored children of node
             //assume we explore children of a node in increasing order of the choices
             if (curr.size() < choices.size()) {
-                if(choices.size() > 6 && isCombatChoice(choices)) {
+                if(choices.size() > 2 && isCombatChoice(choices)) {
 //                    System.out.println("adding preweighted choices");
                     for (final Map.Entry<Object[], Float> scoredChoice : scoredChoices(choices, game)) {
                         final GMCTSGameTree child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
@@ -484,7 +487,7 @@ public class GMCTSAI extends MagicAI {
         boolean isNonCombat=false;
         boolean isCombat=false;
         for(Object[] choice : choices){
-          if(choice.length > 0 && choice[0] instanceof magic.model.choice.MagicDeclareAttackersResult){
+          if(choice.length > 0 && (choice[0] instanceof magic.model.choice.MagicDeclareAttackersResult || choice[0] instanceof magic.model.choice.MagicDeclareBlockersResult)){
               assert choice.length == 1 : "should only have one combat choice";
               isCombat=true;
               return true;
@@ -545,33 +548,83 @@ public class GMCTSAI extends MagicAI {
     private List<Map.Entry<Object[], Float>> scoredChoices(List<Object[]> choices, MagicGame game){
 //        System.out.println("Scorig "+choices.size()+" choices");
         final List<Map.Entry<Object[], Float>> mapped = new ArrayList<>(choices.size());
-        final List<CombatPredictionClient.CombatRep> combatReps = new ArrayList<>(choices.size());
-        final MagicPlayer scorePlayer = game.getScorePlayer();
-        final MagicPlayer opp = game.getPlayers()[(scorePlayer.getIndex() + 1) % 2];
-        final List<Float> availableAttackersIds = combatPredictionClient.extractPT(scorePlayer.
-                getPermanents().
-                stream().
-                filter(MagicPermanent::canAttack).
-                toArray());
-        final List<Float> blockersIds = combatPredictionClient.extractPT(opp.
-                getPermanents().
-                stream().
-                filter(MagicPermanent::canBlock).
-                toArray());
-        for (Object[] combatChoice : choices) {
-//            System.out.println(Arrays.toString(combatChoice));
-            combatReps.add(combatPredictionClient.new CombatRep(
-                    scorePlayer.getLife(),
-                    opp.getLife(),
-                    (MagicDeclareAttackersResult) combatChoice[0],
-                    availableAttackersIds,
-                    blockersIds
-            ));
+        List<Float> scores;
+        if(choices.get(0)[0] instanceof magic.model.choice.MagicDeclareAttackersResult){
+            final List<CombatPredictionClient.AttackRep> combatReps = new ArrayList<>(choices.size());
+            final MagicPlayer scorePlayer = game.getScorePlayer();
+            final MagicPlayer opp = game.getPlayers()[(scorePlayer.getIndex() + 1) % 2];
+            final List<Float> availableAttackersIds = combatPredictionClient.extractPT(scorePlayer.
+                    getPermanents().
+                    stream().
+                    filter(MagicPermanent::canAttack).
+                    toArray());
+            final List<Float> blockersIds = combatPredictionClient.extractPT(opp.
+                    getPermanents().
+                    stream().
+                    filter(MagicPermanent::canBlock).
+                    toArray());
+            for (Object[] combatChoice : choices) {
+    //            System.out.println(Arrays.toString(combatChoice));
+                combatReps.add(combatPredictionClient.new AttackRep(
+                        scorePlayer.getLife(),
+                        opp.getLife(),
+                        (MagicDeclareAttackersResult) combatChoice[0],
+                        availableAttackersIds,
+                        blockersIds
+                ));
+            }
+            scores = combatPredictionClient.predictAttackWin(combatReps);
+        }else if(choices.get(0)[0] instanceof magic.model.choice.MagicDeclareBlockersResult){
+//            System.err.println(ExceptionReport.getGameDetails(game));
+            final List<CombatPredictionClient.BlockRep> combatReps = new ArrayList<>(choices.size());
+            final MagicPlayer opp = game.getTurnPlayer();
+            final MagicPlayer scorePlayer = game.getPlayers()[(opp.getIndex() + 1) % 2];
+            Object[] attackers = opp.
+                    getPermanents().
+                    stream().
+                    filter(MagicPermanent::isAttacking).
+                    toArray();
+            Object[] availableBlockers = scorePlayer.
+                    getPermanents().
+                    stream().
+                    filter(MagicPermanent::canBlock).
+                    toArray();
+//            System.err.println(Arrays.toString(availableBlockers));
+//            System.err.println(Arrays.toString(opp.
+//                    getPermanents().
+//                    stream().
+//                    filter(MagicPermanent::canBlock).
+//                    toArray()));
+            final List<Float> attackerIds = combatPredictionClient.extractPT(attackers);
+            final List<Float> availableBlockerIds = combatPredictionClient.extractPT(availableBlockers);
+            final List<Float> oppCreatureIds = combatPredictionClient.extractPT(opp.
+                    getPermanents().
+                    toArray());
+            for (Object[] combatChoice : choices) {
+    //            System.out.println(Arrays.toString(combatChoice));
+                combatReps.add(combatPredictionClient.new BlockRep(
+                        scorePlayer.getLife(),
+                        opp.getLife(),
+                        attackerIds,
+                        availableBlockerIds,
+                        combatPredictionClient.extractBlock(
+                                (MagicDeclareBlockersResult) combatChoice[0],
+                                attackers,
+                                availableBlockers
+                        ),
+                        oppCreatureIds
+                ));
+            }
+            scores = combatPredictionClient.predictBlockWin(combatReps);
+        }else {
+            System.out.println("Unknown combat choice "+choices.get(0)[0].toString());
+            return null;
         }
         int ix = 0;
-        for (Float score : combatPredictionClient.predictWin(combatReps)) {
-//            System.out.println(score);
-            mapped.add(Maps.immutableEntry(choices.get(ix++), score));
+        for (Float score : scores) {
+            Object[] choice = choices.get(ix++);
+//            System.err.println(Arrays.toString(choice) + " => "+score);
+            mapped.add(Maps.immutableEntry(choice, score));
         }
         return mapped;
     }
@@ -617,6 +670,23 @@ public class GMCTSAI extends MagicAI {
 //        return null;
 //    }
 
+    private static String CR2String(final Object[] choiceResults) {
+        final StringBuilder buffer=new StringBuilder();
+        if (choiceResults!=null) {
+            buffer.append(" (");
+            boolean first=true;
+            for (final Object choiceResult : choiceResults) {
+                if (first) {
+                    first=false;
+                } else {
+                    buffer.append(',');
+                }
+                buffer.append(choiceResult);
+            }
+            buffer.append(')');
+        }
+        return buffer.toString();
+    }
     private List<Object[]> getNextChoices(final MagicGame game, final List<Object[]> RCHOICES) {
         //disable fast choices
         game.setFastChoices(false);
@@ -686,8 +756,10 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
 
     GMCTSGameTree(final GMCTSGameTree parent, final int choice, final double initScore) {
         this.evalScore = -1;
-        this.sum = initScore;
-        this.numSim = 1;
+        // the weight in number of games
+        int initScoreWeight = 3;
+        this.sum = initScore* initScoreWeight;
+        this.numSim = initScoreWeight;
         this.choice = choice;
         this.parent = parent;
     }

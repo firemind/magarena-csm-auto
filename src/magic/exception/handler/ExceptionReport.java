@@ -64,7 +64,7 @@ public class ExceptionReport {
         return sb.toString();
     }
 
-    private static String getGameDetails(final MagicGame game) {
+    public static String getGameDetails(final MagicGame game) {
 
         final StringBuilder report = new StringBuilder();
 

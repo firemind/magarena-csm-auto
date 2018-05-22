@@ -464,7 +464,7 @@ public class MagicPlayer extends MagicObjectImpl implements MagicSource, MagicTa
 
     // creating the MagicCard is potentially slow due to card ability loading,
     // check for thread.isInterrupted to terminate early when interrupted
-    void createHandAndLibrary(final int handSize) {
+    public void createHandAndLibrary(final int handSize) {
         startingHandSize = handSize;
         final MagicDeck deck = playerConfig.getDeck();
         Thread thread = Thread.currentThread();
