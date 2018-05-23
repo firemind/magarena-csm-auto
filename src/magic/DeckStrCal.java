@@ -117,7 +117,7 @@ public class DeckStrCal {
     }
 
     private static MagicDuel setupDuel() {
-        CombatScoreLog.initialize();
+        CombatScoreLog.initialize(ai[0].getAI().getId()+"|"+ai[1].getAI().getId());
         // Set the random seed
         if (seed != 0) {
             MagicRandom.setRNGState(seed);

@@ -1,20 +1,18 @@
 package magic.ai;
 
+import java.security.InvalidParameterException;
 import com.google.common.collect.Maps;
 import magic.data.LRUCache;
 import magic.exception.GameException;
-import magic.exception.handler.ExceptionReport;
 import magic.firemind.CombatPredictionClient;
 import magic.firemind.CombatScoreLog;
 import magic.model.*;
-import magic.model.choice.MagicBuilderPayManaCostResult;
 import magic.model.choice.MagicDeclareAttackersResult;
 import magic.model.choice.MagicDeclareBlockersResult;
 import magic.model.event.MagicEvent;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 /*
 AI using Monte Carlo Tree Search
@@ -65,6 +63,7 @@ public class GMCTSAI extends MagicAI {
     static double UCB1_C = 0.4;
     static double RATIO_K = 1.0;
     private int sims = 0;
+    public static final String version = "0.1";
 
     private CombatPredictionClient combatPredictionClient;
     static {
@@ -90,13 +89,19 @@ public class GMCTSAI extends MagicAI {
     }
 
     private final boolean CHEAT;
+    private final boolean LOGCOMBAT;
 
     //cache nodes to reuse them in later decision
     private final LRUCache<Long, GMCTSGameTree> CACHE = new LRUCache<Long, GMCTSGameTree>(1000);
 
-    public GMCTSAI(final boolean cheat) {
+    public GMCTSAI(final boolean cheat, final boolean logcombat) {
         CHEAT = cheat;
         combatPredictionClient = new CombatPredictionClient();
+        LOGCOMBAT = logcombat;
+    }
+
+    public String getId(){
+        return "GMCTS-"+version;
     }
 
     private void log(final String message) {
@@ -189,10 +194,91 @@ public class GMCTSAI extends MagicAI {
             }
         }
 
+        if(LOGCOMBAT){
+            logCombatSamples(startGame, scorePlayer, RCHOICES, root);
+        }
+
         log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
 
 
         return startGame.map(RCHOICES.get(bestC));
+    }
+
+    public static void logCombatSamples(MagicGame startGame, MagicPlayer scorePlayer, List<Object[]> RCHOICES, GMCTSGameTree root) {
+        for (final GMCTSGameTree node : root) {
+          Object choice[] = RCHOICES.get(node.getChoice());
+          if(choice[0] instanceof MagicDeclareAttackersResult){
+             if(choice.length > 1){
+                throw new InvalidParameterException("Only one combat choice expected");
+             }
+             MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+
+             CombatScoreLog.logAttacks(
+                     "GMCTS",
+                    node.getV(),
+                    node.getNumSim(),
+                    node.getParent().getNumSim(),
+                    scorePlayer.getLife(),
+                    opp.getLife(),
+                    (MagicDeclareAttackersResult) choice[0],
+                    scorePlayer.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::canAttack).
+                            toArray(),
+                    opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::canBlock).
+                            toArray(),
+                     scorePlayer.getHandSize(),
+                     opp.getHandSize(),
+                     opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::isLand).
+                            filter(MagicPermanent::isUntapped).
+                            count());
+          }else if(choice[0] instanceof MagicDeclareBlockersResult){
+              for(Object c: choice){
+                  System.out.println(c.getClass());
+              }
+              MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+
+              CombatScoreLog.logBlocks(
+                      "GMCTS",
+                      node.getV(),
+                      node.getNumSim(),
+                      node.getParent().getNumSim(),
+                      scorePlayer.getLife(),
+                      opp.getLife(),
+                      opp.
+                              getPermanents().
+                              stream().
+                              filter(MagicPermanent::isAttacking).
+                              toArray(),
+                      Arrays.copyOf(choice, choice.length, MagicDeclareBlockersResult[].class),
+                      scorePlayer.
+                              getPermanents().
+                              stream().
+                              filter(MagicPermanent::canBlock).
+                              toArray(),
+
+                      opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::isCreature).
+                            toArray(),
+                     scorePlayer.getHandSize(),
+                     opp.getHandSize(),
+                     opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::isLand).
+                            filter(MagicPermanent::isUntapped).
+                            count());
+          }
+        }
     }
 
     private Runnable genSimulationTask(final MagicGame rootGame, final LinkedList<GMCTSGameTree> path, final BlockingQueue<Runnable> queue) {
@@ -419,7 +505,7 @@ public class GMCTSAI extends MagicAI {
                 double bestS = Double.NEGATIVE_INFINITY ;
                 for (final GMCTSGameTree child : curr) {
                     final double S = child.getModifiedUCT();
-                    if (S > bestS) {
+                    if (S > bestS || next == null) {
                         bestS = S;
                         next = child;
                     }
@@ -924,6 +1010,7 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
     double getV() {
         return getSum() / numSim;
     }
+    public GMCTSGameTree getParent() { return this.parent; }
 
     void addChild(final GMCTSGameTree child) {
         assert children.size() < maxChildren : "ERROR! Number of children nodes exceed maxChildren";

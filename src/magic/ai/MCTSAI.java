@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 import magic.data.LRUCache;
 import magic.exception.GameException;
 import magic.firemind.CombatScoreLog;
-import magic.model.MagicGame;
-import magic.model.MagicGameLog;
-import magic.model.MagicPermanent;
-import magic.model.MagicPlayer;
+import magic.model.*;
 import magic.model.choice.*;
 import magic.model.event.MagicEvent;
 
@@ -69,6 +66,7 @@ public class MCTSAI extends MagicAI {
     static double UCB1_C = 0.4;
     static double RATIO_K = 1.0;
     private int sims = 0;
+    public static final String version = "1.0";
 
     static {
         if (System.getProperty("min_sim") != null) {
@@ -101,6 +99,10 @@ public class MCTSAI extends MagicAI {
     public MCTSAI(final boolean cheat, final boolean logcombat) {
         CHEAT = cheat;
         LOGCOMBAT = logcombat;
+    }
+
+    public String getId(){
+        return "MCTS-"+version;
     }
 
     private void log(final String message) {
@@ -176,68 +178,88 @@ public class MCTSAI extends MagicAI {
         }
 
         if(LOGCOMBAT){
-            for (final MCTSGameTree node : root) {
-              Object choice[] = RCHOICES.get(node.getChoice());
-              if(choice[0] instanceof magic.model.choice.MagicDeclareAttackersResult){
-                 if(choice.length > 1){
-                    throw new InvalidParameterException("Only one combat choice expected");
-                 }
-                 MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
-
-                 CombatScoreLog.logAttacks(
-                        node.getV(),
-                        node.getNumSim(),
-                        node.getParent().getNumSim(),
-                        scorePlayer.getLife(),
-                        opp.getLife(),
-                        (MagicDeclareAttackersResult) choice[0],
-                        scorePlayer.
-                                getPermanents().
-                                stream().
-                                filter(MagicPermanent::canAttack).
-                                toArray(),
-                        opp.
-                                getPermanents().
-                                stream().
-                                filter(MagicPermanent::canBlock).
-                                toArray());
-              }else if(choice[0] instanceof magic.model.choice.MagicDeclareBlockersResult){
-                  for(Object c: choice){
-                      System.out.println(c.getClass());
-                  }
-                  MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
-
-                  CombatScoreLog.logBlocks(
-                          node.getV(),
-                          node.getNumSim(),
-                          node.getParent().getNumSim(),
-                          scorePlayer.getLife(),
-                          opp.getLife(),
-                          opp.
-                                  getPermanents().
-                                  stream().
-                                  filter(MagicPermanent::isAttacking).
-                                  toArray(),
-                          Arrays.copyOf(choice, choice.length, MagicDeclareBlockersResult[].class),
-                          scorePlayer.
-                                  getPermanents().
-                                  stream().
-                                  filter(MagicPermanent::canBlock).
-                                  toArray(),
-
-                          opp.
-                                  getPermanents().
-                                  stream().
-                                filter(MagicPermanent::isCreature).
-                                toArray());
-              }
-            }
+            logCombatSamples(startGame, scorePlayer, RCHOICES, root);
         }
 
         log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
 
 
         return startGame.map(RCHOICES.get(bestC));
+    }
+
+    public static void logCombatSamples(MagicGame startGame, MagicPlayer scorePlayer, List<Object[]> RCHOICES, MCTSGameTree root) {
+        for (final MCTSGameTree node : root) {
+          Object choice[] = RCHOICES.get(node.getChoice());
+          if(choice[0] instanceof MagicDeclareAttackersResult){
+             if(choice.length > 1){
+                throw new InvalidParameterException("Only one combat choice expected");
+             }
+             MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+
+             CombatScoreLog.logAttacks(
+                     "MCTS",
+                    node.getV(),
+                    node.getNumSim(),
+                    node.getParent().getNumSim(),
+                    scorePlayer.getLife(),
+                    opp.getLife(),
+                    (MagicDeclareAttackersResult) choice[0],
+                    scorePlayer.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::canAttack).
+                            toArray(),
+                    opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::canBlock).
+                            toArray(),
+                     scorePlayer.getHandSize(),
+                     opp.getHandSize(),
+                     opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::isLand).
+                            filter(MagicPermanent::isUntapped).
+                            count()
+                     );
+          }else if(choice[0] instanceof MagicDeclareBlockersResult){
+              MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+
+              CombatScoreLog.logBlocks(
+                      "MCTS",
+                      node.getV(),
+                      node.getNumSim(),
+                      node.getParent().getNumSim(),
+                      scorePlayer.getLife(),
+                      opp.getLife(),
+                      opp.
+                              getPermanents().
+                              stream().
+                              filter(MagicPermanent::isAttacking).
+                              toArray(),
+                      Arrays.copyOf(choice, choice.length, MagicDeclareBlockersResult[].class),
+                      scorePlayer.
+                              getPermanents().
+                              stream().
+                              filter(MagicPermanent::canBlock).
+                              toArray(),
+
+                      opp.
+                              getPermanents().
+                              stream().
+                              filter(MagicPermanent::isCreature).
+                              toArray(),
+                     scorePlayer.getHandSize(),
+                     opp.getHandSize(),
+                     opp.
+                            getPermanents().
+                            stream().
+                            filter(MagicPermanent::isLand).
+                            filter(MagicPermanent::isUntapped).
+                            count());
+          }
+        }
     }
 
     private Runnable genSimulationTask(final MagicGame rootGame, final LinkedList<MCTSGameTree> path, final BlockingQueue<Runnable> queue) {

@@ -19,6 +19,7 @@ public class CombatScoreLog {
 
     public static final String ATTACK_LOG_FILE = "combatAttackScores.log";
     public static final String BLOCK_LOG_FILE = "combatBlockScores.log";
+    private static String duelConfig;
 
     private static final String attackLog = (System.getProperty(ATTACK_LOG_FILE) != null) ?
         System.getProperty(ATTACK_LOG_FILE) :
@@ -31,7 +32,8 @@ public class CombatScoreLog {
     private static PrintWriter attackWriter;
     private static PrintWriter blockWriter;
 
-    public static void initialize() {
+    public static void initialize(String duelConfig) {
+        CombatScoreLog.duelConfig = duelConfig;
         try {
             attackWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(attackLog, true), StandardCharsets.UTF_8));
             blockWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(blockLog, true), StandardCharsets.UTF_8));
@@ -40,7 +42,7 @@ public class CombatScoreLog {
         }
     }
 
-    public static void logAttacks(double winPercentage, int numSim, int numParentSim, int lifePlayer, int lifeOpponent, MagicDeclareAttackersResult attackers, Object[] availableCreatures, Object[] blockers) {
+    public static void logAttacks(String ai, double winPercentage, int numSim, int numParentSim, int lifePlayer, int lifeOpponent, MagicDeclareAttackersResult attackers, Object[] availableCreatures, Object[] blockers, int cardsInHand, int oppCardsInHand, long oppOpenMana) {
 
 
         String message = winPercentage+";"+
@@ -50,7 +52,12 @@ public class CombatScoreLog {
                 lifeOpponent+";"+
                 attackers.toString()+";"
                 + Arrays.toString(availableCreatures)+";"+
-                Arrays.toString(blockers);
+                Arrays.toString(blockers)+";"+
+                cardsInHand+";"+
+                oppCardsInHand+";"+
+                oppOpenMana+";"+
+                ai +";"+
+                duelConfig;
         if (attackWriter!= null) {
             attackWriter.println(message);
             attackWriter.flush();
@@ -58,7 +65,7 @@ public class CombatScoreLog {
 
     }
 
-    public static void logBlocks(double winPercentage, int numSim, int numParentSim, int lifePlayer, int lifeOpponent, Object[] attackers, MagicDeclareBlockersResult[] blocks, Object[] availableBlockers, Object[] oppCreatures) {
+    public static void logBlocks(String ai, double winPercentage, int numSim, int numParentSim, int lifePlayer, int lifeOpponent, Object[] attackers, MagicDeclareBlockersResult[] blocks, Object[] availableBlockers, Object[] oppCreatures, int cardsInHand, int oppCardsInHand, long oppOpenMana) {
 
         String message = winPercentage+";"+
                 numSim+";"+
@@ -68,7 +75,12 @@ public class CombatScoreLog {
                 Arrays.toString(attackers)+";"+
                 Arrays.toString(blocks)+";"+
                 Arrays.toString(availableBlockers)+";"+
-                Arrays.toString(oppCreatures);
+                Arrays.toString(oppCreatures)+";"+
+                cardsInHand+";"+
+                oppCardsInHand+";"+
+                oppOpenMana+";"+
+                ai+";"+
+                duelConfig;
         if (blockWriter!= null) {
             blockWriter.println(message);
             blockWriter.flush();

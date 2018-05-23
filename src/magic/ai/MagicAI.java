@@ -19,4 +19,8 @@ public abstract class MagicAI {
         return maxThreads;
     }
 
+    public String getId(){
+        return "?";
+    }
+
 }
