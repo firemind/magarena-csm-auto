@@ -34,6 +34,10 @@ public class MagicDeclareBlockersResult extends LinkedList<MagicCombatCreature[]
             final int size=creatures.length;
             final MagicCombatCreature[] mappedCreatures=new MagicCombatCreature[size];
             for (int index=size-1;index>=0;index--) {
+                if(creatures[index] == null) {
+                    System.err.println("creature is null: ");
+                    System.err.println(Arrays.toString(creatures));
+                }
                 mappedCreatures[index]=new MagicCombatCreature(game,creatures[index]);
             }
             result.add(mappedCreatures);
@@ -62,7 +66,7 @@ public class MagicDeclareBlockersResult extends LinkedList<MagicCombatCreature[]
                 builder.append(creatures[0].getName());
                 builder.append(">=");
                 for(int i=1;i<creatures.length;i++)
-                  builder.append(creatures[1].getName()+(i+1==creatures.length ? "" : ','));
+                  builder.append(creatures[i].getName()+(i+1==creatures.length ? "" : ','));
             }
         }
         return builder.toString();

@@ -93,9 +93,29 @@ public abstract class MagicChoice {
     /** Gets the available options for AI. */
     abstract Collection<?> getArtificialOptions(final MagicGame game,final MagicEvent event);
 
+    Collection<?> getAlternativeArtificialOptions(final MagicGame game,final MagicEvent event){
+        return getArtificialOptions(game,  event) ;
+    }
+
     /** Gets the choice results for AI. */
     public List<Object[]> getArtificialChoiceResults(final MagicGame game, final MagicEvent event) {
         final Collection<?> options=getArtificialOptions(game,event);
+        final int size=options.size();
+        if (size == 0) {
+            return Collections.singletonList(new Object[]{MagicTargetNone.getInstance()});
+        } else if (size == 1) {
+            return Collections.singletonList(new Object[]{options.iterator().next()});
+        } else {
+            final List<Object[]> choiceResultsList=new ArrayList<Object[]>(size);
+            for (final Object option : options) {
+                choiceResultsList.add(new Object[]{option});
+            }
+            return choiceResultsList;
+        }
+    }
+
+    public List<Object[]> getAlternativeArtificialChoiceResults(MagicGame game, MagicEvent event) {
+        final Collection<?> options=getAlternativeArtificialOptions(game,event);
         final int size=options.size();
         if (size == 0) {
             return Collections.singletonList(new Object[]{MagicTargetNone.getInstance()});
@@ -120,6 +140,10 @@ public abstract class MagicChoice {
         return choices.get(MagicRandom.nextRNGInt(choices.size()));
     }
 
+    public Object[] getAlternativeSimulationChoiceResult(final MagicGame game, final MagicEvent event) {
+        return getSimulationChoiceResult(game,  event) ;
+    }
+
     /** Gets the choice results of the player. */
     public abstract Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException;
 
@@ -130,4 +154,5 @@ public abstract class MagicChoice {
     public static boolean isNoChoice(final Object choiceResult) {
         return choiceResult == NO_CHOICE;
     }
+
 }

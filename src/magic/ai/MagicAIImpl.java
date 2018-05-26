@@ -3,9 +3,10 @@ package magic.ai;
 public enum MagicAIImpl {
     MMAB("minimax", new MMAB(false)),
     MMABC("minimax (cheat)", new MMAB(true)),
-    MCTS("monte carlo tree search", new MCTSAI(false, false)),
-    MCTSC("monte carlo tree search (cheat)", new MCTSAI(true, false)),
-    MCTSL("monte carlo tree search with combat logging", new MCTSAI(false, true)),
+    MCTS("monte carlo tree search", new MCTSAI(false, false, false)),
+    AMCTS("alt. monte carlo tree search", new MCTSAI(false, false, true)),
+    MCTSC("monte carlo tree search (cheat)", new MCTSAI(true, false, false)),
+    MCTSL("monte carlo tree search with combat logging", new MCTSAI(false, true, false)),
     GMCTS("guided monte carlo tree search", new GMCTSAI(false, false)),
     GMCTSL("guided monte carlo tree search logging", new GMCTSAI(false, true)),
     VEGAS("vegas", new VegasAI(false)),

@@ -92,13 +92,15 @@ public class MCTSAI extends MagicAI {
 
     private final boolean CHEAT;
     private final boolean LOGCOMBAT;
+    private final boolean ALTCHOICES;
 
     //cache nodes to reuse them in later decision
     private final LRUCache<Long, MCTSGameTree> CACHE = new LRUCache<Long, MCTSGameTree>(1000);
 
-    public MCTSAI(final boolean cheat, final boolean logcombat) {
+    public MCTSAI(final boolean cheat, final boolean logcombat, final boolean altchoices) {
         CHEAT = cheat;
         LOGCOMBAT = logcombat;
+        ALTCHOICES= altchoices;
     }
 
     public String getId(){
@@ -118,7 +120,12 @@ public class MCTSAI extends MagicAI {
             aiGame.hideHiddenCards();
         }
         final MagicEvent event = aiGame.getNextEvent();
-        final List<Object[]> RCHOICES = event.getArtificialChoiceResults(aiGame);
+        final List<Object[]> RCHOICES;
+        if(ALTCHOICES) {
+            RCHOICES = event.getArtificialChoiceResults(aiGame);
+        }else {
+            RCHOICES = event.getAlternativeArtificialChoiceResults(aiGame);
+        }
 
         final int size = RCHOICES.size();
 
@@ -387,7 +394,7 @@ public class MCTSAI extends MagicAI {
         final StringBuilder out = new StringBuilder();
         final long duration = System.currentTimeMillis() - START_TIME;
 
-        out.append("MCTS" +
+        out.append((ALTCHOICES ? "AMCTS" : "MCTS") +
                    " cheat=" + CHEAT +
                    " index=" + scorePlayer.getIndex() +
                    " life=" + scorePlayer.getLife() +

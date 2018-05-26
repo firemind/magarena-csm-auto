@@ -159,6 +159,11 @@ public class MagicMayChoice extends MagicChoice {
     }
 
     @Override
+    public List<Object[]> getAlternativeArtificialChoiceResults(final MagicGame game, final MagicEvent event) {
+        return getArtificialChoiceResults(game, event);
+    }
+
+    @Override
     public Object[] getPlayerChoiceResults(final IUIGameController controller, final MagicGame game, final MagicEvent event) throws UndoClickedException {
         final MagicPlayer player = event.getPlayer();
         final MagicSource source = event.getSource();
