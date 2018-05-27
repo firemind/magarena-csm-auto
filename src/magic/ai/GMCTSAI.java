@@ -13,6 +13,7 @@ import magic.model.event.MagicEvent;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /*
 AI using Monte Carlo Tree Search
@@ -90,14 +91,16 @@ public class GMCTSAI extends MagicAI {
 
     private final boolean CHEAT;
     private final boolean LOGCOMBAT;
+    private final boolean ALTCHOICES;
 
     //cache nodes to reuse them in later decision
     private final LRUCache<Long, GMCTSGameTree> CACHE = new LRUCache<Long, GMCTSGameTree>(1000);
 
-    public GMCTSAI(final boolean cheat, final boolean logcombat) {
+    public GMCTSAI(final boolean cheat, final boolean logcombat, final boolean altchoices) {
         CHEAT = cheat;
         combatPredictionClient = new CombatPredictionClient();
         LOGCOMBAT = logcombat;
+        ALTCHOICES= altchoices;
     }
 
     public String getId(){
@@ -118,8 +121,12 @@ public class GMCTSAI extends MagicAI {
         }
         final MagicEvent event = aiGame.getNextEvent();
 //        final List<Object[]> RCHOICES = orderedChoices(event.getArtificialChoiceResults(aiGame), aiGame );
-
-        final List<Object[]> RCHOICES = event.getArtificialChoiceResults(aiGame);
+        final List<Object[]> RCHOICES;
+        if(ALTCHOICES) {
+            RCHOICES = event.getAlternativeArtificialChoiceResults(aiGame);
+        }else {
+            RCHOICES = event.getArtificialChoiceResults(aiGame);
+        }
 
         final int size = RCHOICES.size();
 
@@ -517,10 +524,10 @@ public class GMCTSAI extends MagicAI {
                 //update the game state and path
                 try {
 
-//                    if(choices.size() <= curr.getChoice()) {
-//                        System.out.println("Choices " + choices.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
-//                        System.out.println("Curr: " + curr.getChoice());
-//                    }
+                    if(choices.size() <= curr.getChoice()) {
+                        System.out.println("Choices " + choices.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
+                        System.out.println("Curr: " + curr.getChoice());
+                    }
                     game.executeNextEvent(choices.get(curr.getChoice()));
                 } catch (final IndexOutOfBoundsException ex) {
                     throw new GameException(ex, game);
@@ -607,7 +614,7 @@ public class GMCTSAI extends MagicAI {
             }
 
             //get simulation choice and execute
-            final List<Object[]> artificialChoiceResults = event.getArtificialChoiceResults(game);
+            final List<Object[]> artificialChoiceResults = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) : event.getArtificialChoiceResults(game);
             final Object[] choice = artificialChoiceResults.get(MagicRandom.nextRNGInt(artificialChoiceResults.size()));
 //            Object[] bestCombatChoice= findBestCombatChoice(game, artificialChoiceResults, 0.6);
 //            if(bestCombatChoice == null){
@@ -793,7 +800,7 @@ public class GMCTSAI extends MagicAI {
                     choices.add(game.map(choice));
                 }
             } else {
-                choices = event.getArtificialChoiceResults(game);
+                choices = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) :  event.getArtificialChoiceResults(game);
             }
             assert choices != null;
 

@@ -38,7 +38,6 @@ public class MagicDeclareBlockersChoice extends MagicChoice {
 
     @Override
     Collection<Object> getAlternativeArtificialOptions(final MagicGame game,final MagicEvent event) {
-        System.err.println("using alternative");
         final MagicAlternativeDeclareBlockersResultBuilder builder = new MagicAlternativeDeclareBlockersResultBuilder(game, event.getPlayer(), game.getFastBlocker());
         return builder.getResults();
     }

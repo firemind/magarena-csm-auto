@@ -5,29 +5,54 @@ import com.google.common.collect.Maps;
 
 import java.lang.reflect.Array;
 import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Stack;
 
-public class MagicBlock extends HashMap<MagicCombatCreature, List<Entry<MagicCombatCreature,Integer>>> {
+public class MagicBlock extends TreeMap<MagicCombatCreature, List<Entry<MagicCombatCreature,Integer>>> {
+    public static final Comparator<MagicCombatCreature> ATTACKER_COMPARATOR=new Comparator<MagicCombatCreature>() {
+        @Override
+        public int compare(final MagicCombatCreature attacker1,final MagicCombatCreature attacker2) {
+            return Long.signum(attacker1.permanent.getStateId() - attacker2.permanent.getStateId());
+//            return attacker1.permanent.compareTo(attacker2.permanent);
+        }
+    };
+    public static final Comparator<MagicCombatCreature> BLOCKER_COMPARATOR=new Comparator<MagicCombatCreature>() {
+        @Override
+        public int compare(final MagicCombatCreature attacker1,final MagicCombatCreature attacker2) {
+            return Long.signum(attacker1.permanent.getStateId() - attacker2.permanent.getStateId());
+//            return attacker1.permanent.compareTo(attacker2.permanent);
+        }
+    };
     public MagicBlock() {
-        super();
+        super(ATTACKER_COMPARATOR);
     }
     public MagicBlock(MagicBlock magicBlock) {
         super(magicBlock);
     }
 
     void addBlock(MagicCombatCreature attacker, MagicCombatCreature blocker, Integer n){
+        if(blocker == null)
+            throw new RuntimeException("no blocker");
+//        System.err.println("Adding blocker: "+attacker+" => "+blocker.toString());
         this.computeIfAbsent(attacker, (k)-> new ArrayList<>());
         List<Entry<MagicCombatCreature,Integer>> list = this.get(attacker);
         list.add(Maps.immutableEntry(blocker, n));
     }
 
+    void addBlocks(MagicCombatCreature attacker, List<MagicCombatCreature> blockers){
+        if(blockers.isEmpty())
+            throw new RuntimeException("no blockers");
+//        System.err.println("Adding blockers: "+blockers.toString());
+        this.computeIfAbsent(attacker, (k)-> new ArrayList<>());
+        List<Entry<MagicCombatCreature,Integer>> list = this.get(attacker);
+        for(MagicCombatCreature blocker:blockers)
+          list.add(Maps.immutableEntry(blocker, 1));
+    }
+
     public MagicBlock dup(){
-        return new MagicBlock(this);
+        MagicBlock newBlock = new MagicBlock();
+        newBlock.merge(this);
+        return newBlock;
     }
 
     public MagicBlock merge(MagicBlock other){
@@ -38,7 +63,35 @@ public class MagicBlock extends HashMap<MagicCombatCreature, List<Entry<MagicCom
         return this;
     }
 
+    public String toString(){
+
+        String s="Block: ";
+        for(MagicCombatCreature attacker : keySet()){
+            s+= "\n* "+attacker.getName();
+            s+= "\n  * "+get(attacker).toString();
+        }
+        return s;
+    }
+
+    public MagicDeclareBlockersResult toDeclareBlockersResult() {
+        MagicDeclareBlockersResult result=new MagicDeclareBlockersResult(0,0);
+        for(MagicCombatCreature attacker : keySet()){
+            List<Entry<MagicCombatCreature,Integer>> blockers = get(attacker);
+            if(blockers.isEmpty())
+                throw new RuntimeException("no blockers");
+            MagicCombatCreature[] b = new MagicCombatCreature[blockers.size()+1];
+            b[0] = attacker;
+            for(int i=1; i < b.length; i++ )
+                b[i] = blockers.get(i-1).getKey();
+            result.add(b);
+        }
+        return result;
+    }
+
     public class Partition extends ArrayList<Integer>{
+        public Partition(){
+            super();
+        }
         public Partition(Partition other){
             super(other);
         }
@@ -46,7 +99,9 @@ public class MagicBlock extends HashMap<MagicCombatCreature, List<Entry<MagicCom
         public Stack<Map.Entry<Integer, List<Integer>>> grouped(){
             Stack<Map.Entry<Integer, List<Integer>>> groups = new Stack<>();
             for(Integer i : this){
-               Map.Entry<Integer, List<Integer>> list = groups.peek();
+               Map.Entry<Integer, List<Integer>> list = null;
+               if(!groups.empty())
+                   list = groups.peek();
                if(list == null || !list.getKey().equals(i)){
                    list = Maps.immutableEntry(i, new ArrayList<>());
                    groups.push(list);

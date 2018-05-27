@@ -20,6 +20,7 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     private static final double MIN_WARN    = 1e5;
     private static final double RANDOM_THRESH = 1e5;
     private static final double LIMIT_THRESH = 100;
+    private static final double DUP_THRESH = 1;
     private static final double NUM_SAMPLES = 1e4;
 
     private final MagicGame game;
@@ -49,7 +50,7 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     }
 
     Collection<Object> getResults() {
-        return results == null ? EMPTY_RESULT : results;
+        return results.isEmpty() ? EMPTY_RESULT : results;
     }
 
     private void buildBlockersFast() {
@@ -210,18 +211,45 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
 
         if (max_blocks > RANDOM_THRESH) {
             buildBlockersFast();
+        } else if (countDups() > DUP_THRESH) {
+//            System.err.println("Found duplicates: "+dupCount);
+            buildAllBlockerCombosWithoutDups();
         } else if (max_blocks > LIMIT_THRESH) {
-            System.err.println("Building blockers for attacker");
             buildBlockersForAttacker(0);
         } else {
-            System.err.println("Building all possible blocking combos");
             buildAllBlockerCombos();
         }
         if(results.isEmpty())
           System.err.println("Results is empty!");
     }
 
+    private int countDups(){
+        int dups = 0;
+        for(MagicCombatCreature a: attackers.keySet())
+            dups += (attackers.get(a).size()-1);
+        for(MagicCombatCreature b: blockers.keySet())
+            dups += (blockers.get(b).size()-1);
+        return dups;
+    }
     private void buildAllBlockerCombos() {
+        List<MagicBlock> blocks = new ArrayList<>();
+        blocks.add(new MagicBlock());
+        for(MagicCombatCreature blocker:  blockers.keySet()){
+            List<MagicBlock> perBlocker = new ArrayList<>();
+            for(MagicCombatCreature attacker : attackers.keySet()){
+                if(Arrays.asList(attacker.candidateBlockers).contains(blocker)) {
+                    MagicBlock block = new MagicBlock();
+                    block.addBlock(attacker, blocker, 1);
+                    perBlocker.add(block);
+                }
+            }
+            mergeBlockingCombos(perBlocker, blocks);
+        }
+        for(MagicBlock block: blocks)
+            results.add(block.toDeclareBlockersResult());
+    }
+
+    private void buildAllBlockerCombosWithoutDups() {
         List<MagicBlock> blocks = new ArrayList<>();
         blocks.add(new MagicBlock());
         for(MagicCombatCreature blocker:  blockers.keySet()){
@@ -233,16 +261,85 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
             mergeBlockingCombos(perBlocker, blocks);
         }
         attackerDupUnroll(blocks, attackers);
-        for(List<List<MagicCombatCreature>> block : blocks){
-           MagicDeclareBlockersResult baseBlock = new MagicDeclareBlockersResult(result, position++, 0);
-           for(List<MagicCombatCreature> b : block){
-               baseBlock.add(b.toArray(new MagicCombatCreature[b.size()]));
-           }
-           results.add(baseBlock);
-        }
+
     }
 
     private void attackerDupUnroll(List<MagicBlock> blocks, TreeMap<MagicCombatCreature,List<MagicCombatCreature>> attackers) {
+//        System.err.println("Unrolling blocks "+blocks.size());
+        for(MagicBlock block: blocks){
+            List<MagicBlock> newBlockVariants = new ArrayList<>();
+            newBlockVariants.add(new MagicBlock());
+            Map<MagicCombatCreature, Stack<MagicCombatCreature>> blockerMap = createBlockerMap();
+//            System.err.println(block);
+//            System.err.println(blockerMap.keySet());
+//            System.err.println(blockerMap.values());
+            for(MagicCombatCreature attacker : block.keySet()){
+//                System.err.println("attacker: "+attacker.toString());
+                List<MagicBlock> perAttackerVariants = new ArrayList<>();
+                List<MagicCombatCreature> mappedBlockers = extractSpecificBlockers(block.get(attacker), blockerMap);
+                int nAttackers = attackers.get(attacker).size();
+                int nBlockers  = mappedBlockers.size();
+                for(MagicBlock.Partition partition: MagicBlock.getPartitions(nBlockers, 1, Math.min(nBlockers, nAttackers))){
+                    List<MagicBlock> toAdd = makeAttackParts(attacker, mappedBlockers, partition.grouped(), 0);
+                    perAttackerVariants.addAll(toAdd);
+                }
+                newBlockVariants = newBlockVariants.stream().flatMap((variant) ->
+                        perAttackerVariants.stream().map((ta) ->
+                                ta.dup().merge(variant))
+                ).collect(Collectors.toCollection(ArrayList::new));
+            }
+            for(MagicBlock finalBlock : newBlockVariants){
+               results.add(finalBlock.toDeclareBlockersResult());
+            }
+//            System.err.println("results at "+results.size());
+        }
+    }
+
+    private List<MagicBlock> makeAttackParts(MagicCombatCreature attacker, List<MagicCombatCreature> blockerPool, Stack<Map.Entry<Integer,List<Integer>>> groupedPartitions, int aix) {
+        ArrayList<MagicCombatCreature> poolDup = new ArrayList<>(blockerPool);
+        Map.Entry<Integer, List<Integer>> part = groupedPartitions.pop();
+        List<MagicBlock> blocks = new ArrayList<>();
+        for(List<MagicCombatCreature> bcombo : getCombinations(poolDup, part.getKey()*part.getValue().size())){
+            int caix = aix;
+            MagicBlock block = new MagicBlock();
+            for(int bix=0; bix <part.getValue().size(); bix++){
+                block.addBlocks(attackers.get(attacker).get(caix++), bcombo.subList(bix*part.getKey(), (bix+1)*part.getKey()));
+            }
+            if(groupedPartitions.empty()){
+                blocks.add(block);
+            }else{
+                Stack<Map.Entry<Integer,List<Integer>>> dupStack = new Stack<>();
+                dupStack.addAll(groupedPartitions);
+                for(MagicBlock nextBlock : makeAttackParts(attacker, blockerPool.stream().filter(e -> !bcombo.remove(e)).collect(Collectors.toCollection(ArrayList::new)), dupStack, caix)){
+                    blocks.add(nextBlock.merge(block));
+                }
+            }
+        }
+        return blocks;
+    }
+
+    private List<MagicCombatCreature> extractSpecificBlockers(List<Map.Entry<MagicCombatCreature,Integer>> entries, Map<MagicCombatCreature,Stack<MagicCombatCreature>> blockerMap) {
+//        System.err.println(entries);
+//        System.err.println(blockerMap);
+        List<MagicCombatCreature> all = new ArrayList<>();
+        for(Map.Entry<MagicCombatCreature,Integer> blocker : entries){
+            Stack<MagicCombatCreature> list = blockerMap.get(blocker.getKey());
+            for(int i=0;i<blocker.getValue();i++)
+                if(list.isEmpty())
+                    throw new RuntimeException("Requesting "+blocker.getKey()+" from empty list. others"+blockerMap);
+                all.add(list.pop());
+        }
+        return all;
+    }
+
+    private Map<MagicCombatCreature, Stack<MagicCombatCreature>> createBlockerMap(){
+        Map<MagicCombatCreature, Stack<MagicCombatCreature>> blockerMap = new TreeMap<>(MagicBlock.BLOCKER_COMPARATOR);
+        for(MagicCombatCreature blocker : blockers.keySet()){
+            Stack<MagicCombatCreature> stack = new Stack<MagicCombatCreature>();
+            stack.addAll(blockers.get(blocker));
+            blockerMap.put(blocker, stack);
+        }
+        return blockerMap;
     }
 
     private void mergeBlockingCombos(List<MagicBlock> perBlocker,List<MagicBlock> previousBlocks) {
@@ -253,37 +350,8 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
         }
     }
 
-    private List<List<MagicCombatCreature>> mergeBlock(List<List<MagicCombatCreature>> newBlocks,List<List<MagicCombatCreature>> prev) {
-        List<List<MagicCombatCreature>> mergedBlocks = new ArrayList<>();
-        for(List<MagicCombatCreature> p : prev){
-            mergedBlocks.add(new ArrayList<>(p));
-        }
-        for(List<MagicCombatCreature> newBlock : newBlocks) {
-            List<MagicCombatCreature> mergedBlock = null;
-            for(List<MagicCombatCreature> p : mergedBlocks) {
-                if (prev.size() > 1 && p.get(0) == newBlock.get(0)) {
-                   mergedBlock = p;
-                   break;
-                }
-            }
-            if(mergedBlock == null) {
-                mergedBlock = new ArrayList<>();
-                mergedBlock.add(newBlock.get(0));
-                mergedBlocks.add(mergedBlock);
-            }
-            mergedBlock.addAll(newBlock.subList(1, newBlock.size()));
-
-        }
-        return mergedBlocks;
-    }
 
     private void addAllBlocksForNumBlockers(List<MagicBlock> perBlocker, int numBlockDuplicates, MagicCombatCreature blocker) {
-        List<MagicCombatCreature> blockerDups = blockers.get(blocker);
-//        if(numBlockDuplicates > 1) {
-//            System.err.println("helper(res, 1, " + numBlockDuplicates + ", new ArrayList<Integer>(), " + numBlockDuplicates+ ")");
-//            System.err.println(partitions.stream().map(Object::toString)
-//                    .collect(Collectors.joining(", ")));
-//        }
         int totalBlockableAttackers = 0;
         ArrayList<MagicCombatCreature> attackPool = new ArrayList<>();
         for(MagicCombatCreature attacker : attackers.keySet()){
@@ -296,34 +364,6 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
             List<MagicBlock> toAdd = makeBlockParts(blocker, attackPool, partition.grouped());
             perBlocker.addAll(toAdd);
         }
-//                int maxBlockableAttackers = Math.min(attackerDups.size(), numBlockDuplicates);
-//                List<List<Integer>> res = new ArrayList<List<Integer>>();
-//                for(int numBlockableAttackers=1; numBlockableAttackers<=maxBlockableAttackers;numBlockableAttackers++){
-//                    partitions(res, 1, numBlockDuplicates, new ArrayList<Integer>(), numBlockableAttackers);
-//                    if(numBlockableAttackers > 1) {
-//                        System.err.println("helper(res, 1, " + numBlockDuplicates + ", new ArrayList<Integer>(), " + numBlockableAttackers + ")");
-//                        System.err.println(res.stream().map(Object::toString)
-//                                .collect(Collectors.joining(", ")));
-//                    }
-//                }
-//                for(List<Integer> combo: res){
-//                    List<List<MagicCombatCreature>> b = new ArrayList<>();
-//                    int i = 0;
-//                    int offset=0;
-//                    for(Integer n : combo){
-//                        List<MagicCombatCreature> e = new ArrayList<>();
-//                        e.add(attackerDups.get(i));
-//                        e.addAll(blockerDups.subList(offset, offset+n));
-//                        if(n > 1) {
-//                            System.err.println(e.stream().map(MagicCombatCreature::getName)
-//                                    .collect(Collectors.joining(", ")));
-//                        }
-//                        b.add(e);
-//                        offset += n;
-//                        i++;
-//                    }
-//                    perBlocker.add(b);
-//                }
     }
 
     private List<MagicBlock> makeBlockParts(MagicCombatCreature blocker, ArrayList<MagicCombatCreature> attackPool, Stack<Map.Entry<Integer,List<Integer>>> groupedPartitions) {
@@ -355,7 +395,8 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
             return result;
 
         ArrayList<MagicCombatCreature> item = new ArrayList<MagicCombatCreature>();
-        dfs(list, n, k, 0, item, result); // because it need to begin from 1
+//        System.err.println("dfs(["+list.stream().map(MagicCombatCreature::getName).collect(Collectors.joining(", "))+"], "+n+", "+k+", 0, "+item+", result)");
+        dfs(list, n, k, 0, item, result);
 
         return result;
     }
@@ -367,44 +408,11 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
             return;
         }
 
-        for (int i = start; i <= n; i++) {
+        for (int i = start; i < n; i++) {
             item.add(list.get(i));
             dfs(list, n, k, i + 1, item, res);
             item.remove(item.size() - 1);
         }
     }
-
-
-}
-
-//                    MagicDeclareBlockersResult baseBlock = new MagicDeclareBlockersResult(result, position++, 0);
-//                    baseBlock.add(new MagicCombatCreature[]{attacker});
-//                for(int maxb=1;maxb<=numBlockDuplicates;maxb++){
-//                    for(int ai=0;ai<numAttackDuplicates;ai++) {
-//                        for(Object res : new ArrayList<>(results)){
-//                            MagicDeclareBlockersResult withDuplicate = new MagicDeclareBlockersResult((MagicDeclareBlockersResult) res, position++, 0);
-//                            for(MagicCombatCreature attackerDup : attackers.get(attacker).stream().limit(ai+1).collect(Collectors.toList())){
-//                                MagicCombatCreature[] block = null;
-//                                for(MagicCombatCreature[] blockByAttacker : withDuplicate){
-//                                    if(blockByAttacker[0] == attackerDup){
-//                                        block = blockByAttacker;
-//                                        break;
-//                                    }
-//                                }
-//                                if(block == null) {
-//                                    block = new MagicCombatCreature[maxb+1];
-//                                    block[0] = attackerDup;
-//                                    block[1] = blocker;
-//                                    withDuplicate.add(block);
-//                                }else {
-//                                    block[maxb] = blockers.get(blocker).get(maxb - 1);
-//                                }
-//                            }
-//                            results.add(withDuplicate);
-//                        }
-//                    }
-//                }
-    }
-
 
 }

@@ -122,9 +122,9 @@ public class MCTSAI extends MagicAI {
         final MagicEvent event = aiGame.getNextEvent();
         final List<Object[]> RCHOICES;
         if(ALTCHOICES) {
-            RCHOICES = event.getArtificialChoiceResults(aiGame);
-        }else {
             RCHOICES = event.getAlternativeArtificialChoiceResults(aiGame);
+        }else {
+            RCHOICES = event.getArtificialChoiceResults(aiGame);
         }
 
         final int size = RCHOICES.size();
@@ -606,7 +606,7 @@ public class MCTSAI extends MagicAI {
                     choices.add(game.map(choice));
                 }
             } else {
-                choices = event.getArtificialChoiceResults(game);
+                choices = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) :  event.getArtificialChoiceResults(game);
             }
             assert choices != null;
 
