@@ -80,6 +80,9 @@ public class CombatPredictionClient {
             final MagicPowerToughness pt = attacker.getPowerToughness();
             list[ix++] = 1.0f*pt.getPositivePower();
             list[ix++] = 1.0f*pt.getPositiveToughness();
+            if(ix >= MAX_PT_INPUTS){
+                break;
+            }
         }
         while(ix < MAX_PT_INPUTS)
             list[ix++] = 0.0f;
@@ -110,7 +113,7 @@ public class CombatPredictionClient {
             }
             assert aix >= 0;
             if (b.length > 1) {
-                for (int i = 1; i < b.length; i++) {
+                for (int i = 1; i < Math.min(b.length,(MAX_ATTACKER_INPUTS+1)*(MAX_BLOCKER_INPUTS)); i++) {
                     MagicCombatCreature blocker = b[i];
                     int bix = -1;
                     tmp = 0;
