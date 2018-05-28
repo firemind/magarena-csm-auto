@@ -851,7 +851,7 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
     GMCTSGameTree(final GMCTSGameTree parent, final int choice, final double initScore) {
         this.evalScore = -1;
         // the weight in number of games
-        int initScoreWeight = 3;
+        int initScoreWeight = 5;
         this.sum = initScore* initScoreWeight;
         this.numSim = initScoreWeight;
         this.choice = choice;
