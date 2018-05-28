@@ -3,6 +3,7 @@
 /nbproject/
 /manifest.mf
 release/duels/
+release/aitestresults/
 release/Magarena/decks/firemind/*.dec
 release/Magarena/decks/*.dec
 release/Magarena/reports
