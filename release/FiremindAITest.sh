@@ -11,7 +11,7 @@ fi
 if [ ! -z $DECK2 ]; then
   DECK2_PARAM="--deck2 Magarena/decks/prebuilt/$DECK2.dec"
 fi
-java -cp Magarena.jar magic.DeckStrCal \
+java -cp Magarena.jar magic.AiStrCal \
   --ai1 $AI1 \
   --str1 $AI1S \
   --ai2 $AI2 \
