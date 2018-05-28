@@ -4,8 +4,9 @@ import java.io.File;
 import magic.ai.MagicAIImpl;
 import magic.data.DeckGenerators;
 import magic.data.DuelConfig;
+import magic.data.GeneralConfig;
+import magic.data.settings.IntegerSetting;
 import magic.exception.handler.ConsoleExceptionHandler;
-import magic.firemind.CombatScoreLog;
 import magic.headless.HeadlessGameController;
 import magic.model.DuelPlayerConfig;
 import magic.model.MagicDeckProfile;
@@ -34,73 +35,84 @@ public class DeckStrCal {
         for (int i = 0; i < args.length; i += 2) {
             final String curr = args[i];
             final String next = args[i+1];
-            if ("--games".equals(curr)) {
-                try { //parse CLI option
-                    games = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! number of games not an integer");
+            switch (curr) {
+                case "--games":
+                    try { //parse CLI option
+                        games = Integer.parseInt(next);
+                    } catch (final NumberFormatException ex) {
+                        System.err.println("ERROR! number of games not an integer");
+                        validArgs = false;
+                    }
+                    break;
+                case "--str1":
+                    try { //parse CLI option
+                        str[0] = Integer.parseInt(next);
+                    } catch (final NumberFormatException ex) {
+                        System.err.println("ERROR! AI strength not an integer");
+                        validArgs = false;
+                    }
+                    break;
+                case "--str2":
+                    try { //parse CLI option
+                        str[1] = Integer.parseInt(next);
+                    } catch (final NumberFormatException ex) {
+                        System.err.println("ERROR! AI strength not an integer");
+                        validArgs = false;
+                    }
+                    break;
+                case "--deck1":
+                    deck[0] = next;
+                    break;
+                case "--deck2":
+                    deck[1] = next;
+                    break;
+                case "--profile":
+                    profile = next;
+                    break;
+                case "--ai1":
+                    try { //parse CLI option
+                        ai[0] = MagicAIImpl.valueOf(next);
+                    } catch (final IllegalArgumentException ex) {
+                        System.err.println("Error: " + next + " is not valid AI");
+                        validArgs = false;
+                    }
+                    break;
+                case "--ai2":
+                    try { //parse CLI option
+                        ai[1] = MagicAIImpl.valueOf(next);
+                    } catch (final IllegalArgumentException ex) {
+                        System.err.println("Error: " + next + " is not valid AI");
+                        validArgs = false;
+                    }
+                    break;
+                case "--life":
+                    try { //parse CLI option
+                        life = Integer.parseInt(next);
+                    } catch (final NumberFormatException ex) {
+                        System.err.println("ERROR! starting life is not an integer");
+                        validArgs = false;
+                    }
+                    break;
+                case "--repeat":
+                    try { //parse CLI option
+                        repeat = Integer.parseInt(next);
+                    } catch (final NumberFormatException ex) {
+                        System.err.println("ERROR! repeat is not an integer");
+                        validArgs = false;
+                    }
+                    break;
+                case "--seed":
+                    try { //parse CLI option
+                        seed = Integer.parseInt(next);
+                    } catch (final NumberFormatException ex) {
+                        System.err.println("ERROR! seed is not an integer");
+                        validArgs = false;
+                    }
+                    break;
+                default:
+                    System.err.println("Error: unknown option " + curr);
                     validArgs = false;
-                }
-            } else if ("--str1".equals(curr)) {
-                try { //parse CLI option
-                    str[0] = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! AI strength not an integer");
-                    validArgs = false;
-                }
-            } else if ("--str2".equals(curr)) {
-                try { //parse CLI option
-                    str[1] = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! AI strength not an integer");
-                    validArgs = false;
-                }
-            } else if ("--deck1".equals(curr)) {
-                deck[0] = next;
-            } else if ("--deck2".equals(curr)) {
-                deck[1] = next;
-            } else if ("--profile".equals(curr)) {
-                profile = next;
-            } else if ("--ai1".equals(curr)) {
-                try { //parse CLI option
-                    ai[0] = MagicAIImpl.valueOf(next);
-                    ai[0].getAI().setMaxThreads(2);
-                } catch (final IllegalArgumentException ex) {
-                    System.err.println("Error: " + next + " is not valid AI");
-                    validArgs = false;
-                }
-            } else if ("--ai2".equals(curr)) {
-                try { //parse CLI option
-                    ai[1] = MagicAIImpl.valueOf(next);
-                    ai[1].getAI().setMaxThreads(2);
-                } catch (final IllegalArgumentException ex) {
-                    System.err.println("Error: " + next + " is not valid AI");
-                    validArgs = false;
-                }
-            } else if ("--life".equals(curr)) {
-                try { //parse CLI option
-                    life = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! starting life is not an integer");
-                    validArgs = false;
-                }
-            } else if ("--repeat".equals(curr)) {
-                try { //parse CLI option
-                    repeat = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! repeat is not an integer");
-                    validArgs = false;
-                }
-            } else if ("--seed".equals(curr)) {
-                try { //parse CLI option
-                    seed = Integer.parseInt(next);
-                } catch (final NumberFormatException ex) {
-                    System.err.println("ERROR! seed is not an integer");
-                    validArgs = false;
-                }
-            } else {
-                System.err.println("Error: unknown option " + curr);
-                validArgs = false;
+                    break;
             }
         }
 
@@ -117,7 +129,6 @@ public class DeckStrCal {
     }
 
     private static MagicDuel setupDuel() {
-        CombatScoreLog.initialize(ai[0].getAI().getId()+"|"+ai[1].getAI().getId());
         // Set the random seed
         if (seed != 0) {
             MagicRandom.setRNGState(seed);
@@ -176,15 +187,6 @@ public class DeckStrCal {
         }
     }
 
-    private static void compareHands(String expected, String actual){
-        if(!expected.equals(actual)){
-            System.err.println("Hands to not match");
-            System.err.println(expected);
-            System.err.println("----");
-            System.err.println(actual);
-        }
-    }
-
     private static void runDuel() {
         final MagicDuel testDuel = setupDuel();
 
@@ -201,32 +203,10 @@ public class DeckStrCal {
         );
 
         int played = 0;
-        int p1Seed = 1234;
-        int p2Seed = 4321;
-        String hand1 ="";
-        String hand2 ="";
         while (testDuel.getGamesPlayed() < testDuel.getGamesTotal()) {
-
-            if(played % 2 == 0){
-                p1Seed = MagicRandom.nextRNGInt();
-                p2Seed = MagicRandom.nextRNGInt();
-            }else{
-                int tmp = p1Seed;
-                p1Seed = p2Seed;
-                p2Seed = tmp;
-            }
-            final MagicGame game=testDuel.nextGame(p1Seed, p2Seed, played != 0);
-            if(played % 2 == 0){
-                hand1 = game.getPlayer(0).getHand().toString();
-                hand2 = game.getPlayer(1).getHand().toString();
-            }else{
-                compareHands(hand2, game.getPlayer(0).getHand().toString());
-                compareHands(hand1, game.getPlayer(1).getHand().toString());
-            }
+            final MagicGame game=testDuel.nextGame();
             game.setArtificial(true);
 
-
-            //maximum duration of a game is 60 minutes
             final HeadlessGameController controller = new HeadlessGameController(game, 3600000);
 
             controller.runGame();
