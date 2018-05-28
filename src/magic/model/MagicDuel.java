@@ -106,8 +106,8 @@ public class MagicDuel {
         final MagicPlayer opponent = new MagicPlayer(duelConfig.getStartingLife(opponentIndex), duelConfig.getPlayerConfig(opponentIndex), opponentIndex);
         if(flipDecks){
             MagicDeck tmp = new MagicDeck(player.getConfig().getDeck());
-            player.getConfig().setDeck(opponent.getConfig().getDeck());
-            opponent.getConfig().setDeck(new MagicDeck(tmp));
+            player.getConfig().getDeck().setContent(opponent.getConfig().getDeck());
+            opponent.getConfig().getDeck().setContent(new MagicDeck(tmp));
         }
 
         //determine who starts first

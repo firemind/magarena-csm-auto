@@ -614,8 +614,9 @@ public class GMCTSAI extends MagicAI {
             }
 
             //get simulation choice and execute
-            final List<Object[]> artificialChoiceResults = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) : event.getArtificialChoiceResults(game);
-            final Object[] choice = artificialChoiceResults.get(MagicRandom.nextRNGInt(artificialChoiceResults.size()));
+//            final List<Object[]> artificialChoiceResults = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) : event.getArtificialChoiceResults(game);
+            final Object[] choice = event.getSimulationChoiceResult(game);
+//            final Object[] choice = artificialChoiceResults.get(MagicRandom.nextRNGInt(artificialChoiceResults.size()));
 //            Object[] bestCombatChoice= findBestCombatChoice(game, artificialChoiceResults, 0.6);
 //            if(bestCombatChoice == null){
 //            }else{
