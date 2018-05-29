@@ -3,8 +3,8 @@ AI1=GMCTS
 AI2=MCTS
 AI1S=${1:-1}
 AI2S=${2:-1}
-DECK1=${3-VanillaGreen}
-DECK2=${4-VanillaWhite}
+DECK1=${3-FrenchVanillaGreen}
+DECK2=${4-FrenchVanillaWhite}
 if [ ! -z $DECK1 ]; then
   DECK1_PARAM="--deck1 Magarena/decks/prebuilt/$DECK1.dec"
 fi

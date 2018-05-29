@@ -1,9 +1,9 @@
 #java -ea -cp Magarena.jar magic.DeckStrCal \
 AI1=GMCTS
 AI2=MCTS
-AI1S=${1:-1}
-AI2S=${2:-1}
-POOL=${3-Magarena/decks/prebuilt/}
+AI1S=${1:-4}
+AI2S=${2:-4}
+POOL=${3-Magarena/decks/aisandbox/}
 java -cp Magarena.jar magic.AiStrCal \
   --ai1 $AI1 \
   --str1 $AI1S \

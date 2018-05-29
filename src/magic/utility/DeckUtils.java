@@ -56,6 +56,12 @@ public class DeckUtils {
         return decksPath;
     }
 
+    public static Path getAiSandboxDecksFolder() {
+        Path decksPath = getDecksFolder().resolve("aisandbox");
+        MagicFileSystem.verifyDirectoryPath(decksPath);
+        return decksPath;
+    }
+
     public static void createDeckFolder() {
         final File deckFolderFile = getDecksFolder().toFile();
         if (!deckFolderFile.exists() && !deckFolderFile.mkdir()) {
@@ -181,6 +187,9 @@ public class DeckUtils {
         }
         if (isSamePath(deckFolder, getFiremindDecksFolder())) {
             return DeckType.Firemind;
+        }
+        if (isSamePath(deckFolder, getAiSandboxDecksFolder())) {
+            return DeckType.Custom;
         }
         if (isSamePath(deckFolder, MagicFileSystem.getDataPath(DataPath.DECKS))) {
             return DeckType.Custom;
