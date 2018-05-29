@@ -10,6 +10,6 @@ java -cp Magarena.jar magic.AiStrCal \
   --ai2 $AI2 \
   --str2 $AI2S \
   --deckpool $POOL\
-  --games 2 | tee -a aitestresults/$AI1-$AI1S-$AI2-$AI2S.log
+  --games 2 2>&1 | tee -a aitestresults/$AI1-$AI1S-$AI2-$AI2S.log
 
 #  --deck2 Magarena/decks/prebuilt/Black_and_White.dec \
