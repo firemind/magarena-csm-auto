@@ -23,8 +23,7 @@ public enum MagicAmountParser {
     Devotion("your devotion to " + ARG.COLOR) {
         @Override
         public MagicAmount toAmount(final Matcher arg) {
-            final MagicColor color = MagicColor.getColor(ARG.color(arg));
-            return MagicAmountFactory.Devotion(color);
+            return MagicAmountFactory.Devotion(ARG.color(arg));
         }
     },
     Equipment("Equipment attached to (it|SN)") {
@@ -140,7 +139,7 @@ public enum MagicAmountParser {
 
     public abstract MagicAmount toAmount(final Matcher arg);
 
-    public static final int getX(final String text, final int X) {
+    public static final int getXSign(final String text, final int X) {
         if (text.equalsIgnoreCase("x")) {
             return X;
         } else if (text.equalsIgnoreCase("-x")) {

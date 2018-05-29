@@ -1,9 +1,10 @@
 name=Rishadan Port
-image=https://magiccards.info/scans/en/mm/324.jpg
+image=https://magiccards.info/scans/en/a25/246.jpg
+image_updated=2018-04-27
 value=4.599
 rarity=R
 type=Land
-ability={T}: Add {C} to your mana pool.;\
+ability={T}: Add {C}.;\
         {1}, {T}: Tap target land.
 timing=land
-oracle={T}: Add {C} to your mana pool.\n{1}, {T}: Tap target land.
+oracle={T}: Add {C}.\n{1}, {T}: Tap target land.

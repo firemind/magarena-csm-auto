@@ -1,0 +1,12 @@
+name=Corpsejack Menace
+image=https://magiccards.info/scans/en/ima/197.jpg
+image_updated=2017-04-12
+value=4.051
+rarity=U
+type=Creature
+subtype=Fungus
+cost={2}{B}{G}
+pt=4/4
+timing=main
+requires_groovy_code
+oracle=If one or more +1/+1 counters would be put on a creature you control, twice that many +1/+1 counters are put on it instead.

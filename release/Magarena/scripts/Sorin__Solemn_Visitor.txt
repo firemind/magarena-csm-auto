@@ -1,0 +1,13 @@
+name=Sorin, Solemn Visitor
+image=https://magiccards.info/scans/en/ktk/202.jpg
+value=3.750
+rarity=M
+type=Legendary,Planeswalker
+subtype=Sorin
+cost={2}{W}{B}
+loyalty=4
+ability=−2: Create a 2/2 black Vampire creature token with flying.;\
+        −6: You get an emblem with "At the beginning of each opponent's upkeep, that player sacrifices a creature."
+timing=main
+requires_groovy_code
+oracle=+1: Until your next turn, creatures you control get +1/+0 and gain lifelink.\n−2: Create a 2/2 black Vampire creature token with flying.\n−6: You get an emblem with "At the beginning of each opponent's upkeep, that player sacrifices a creature."

@@ -1,10 +1,11 @@
 name=Twilight Mire
-image=https://magiccards.info/scans/en/eve/180.jpg
+image=https://magiccards.info/scans/en/a25/248.jpg
+image_updated=2018-04-25
 value=4.375
 rarity=R
 type=Land
-ability={T}: Add {C} to your mana pool.;\
-        {B/G}, {T}: Add {B}{B}, {B}{G}, or {G}{G} to your mana pool.
+ability={T}: Add {C}.;\
+        {B/G}, {T}: Add {B}{B}, {B}{G}, or {G}{G}.
 timing=land
-oracle={T}: Add {C} to your mana pool.\n{B/G}, {T}: Add {B}{B}, {B}{G}, or {G}{G} to your mana pool.
+oracle={T}: Add {C}.\n{B/G}, {T}: Add {B}{B}, {B}{G}, or {G}{G}.
 status=not supported: add-multiple-mana

@@ -1,12 +1,12 @@
 name=Simic Growth Chamber
-image=https://magiccards.info/scans/en/c16/326.jpg
-image_updated=2017-08-17
+image=https://magiccards.info/scans/en/ima/249.jpg
+image_updated=2017-04-12
 value=2.500
 rarity=U
 type=Land
 ability=SN enters the battlefield tapped.;\
         When SN enters the battlefield, return a land you control to its owner's hand.;\
-        {T}: Add {G}{U} to your mana pool.
+        {T}: Add {G}{U}.
 timing=land
-oracle=Simic Growth Chamber enters the battlefield tapped.\nWhen Simic Growth Chamber enters the battlefield, return a land you control to its owner's hand.\n{T}: Add {G}{U} to your mana pool.
+oracle=Simic Growth Chamber enters the battlefield tapped.\nWhen Simic Growth Chamber enters the battlefield, return a land you control to its owner's hand.\n{T}: Add {G}{U}.
 status=not supported: add-multiple-mana

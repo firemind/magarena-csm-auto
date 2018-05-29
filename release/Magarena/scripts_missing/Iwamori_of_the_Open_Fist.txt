@@ -1,13 +1,14 @@
 name=Iwamori of the Open Fist
-image=https://magiccards.info/scans/en/bok/130.jpg
+image=https://magiccards.info/scans/en/a25/174.jpg
+image_updated=2018-04-25
 value=3.917
-rarity=R
+rarity=U
 type=Legendary,Creature
 subtype=Human,Monk
 cost={2}{G}{G}
 pt=5/5
 ability=Trample;\
-        When SN enters the battlefield, each opponent may put a legendary creature card from his or her hand onto the battlefield.
+        When SN enters the battlefield, each opponent may put a legendary creature card from their hand onto the battlefield.
 timing=main
-oracle=Trample\nWhen Iwamori of the Open Fist enters the battlefield, each opponent may put a legendary creature card from his or her hand onto the battlefield.
+oracle=Trample\nWhen Iwamori of the Open Fist enters the battlefield, each opponent may put a legendary creature card from their hand onto the battlefield.
 status=needs groovy

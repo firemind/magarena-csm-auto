@@ -1,0 +1,9 @@
+name=Nissa's Defeat
+image=https://magiccards.info/scans/en/hou/123.jpg
+value=2.500
+rarity=U
+type=Sorcery
+cost={2}{G}
+timing=main
+requires_groovy_code
+oracle=Destroy target Forest, green enchantment, or green planeswalker. If that permanent was a Nissa planeswalker, draw a card.

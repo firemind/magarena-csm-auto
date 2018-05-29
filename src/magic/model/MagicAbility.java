@@ -633,6 +633,12 @@ public enum MagicAbility {
             ));
         }
     },
+    Ascend("ascend",0) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(MagicStatic.Ascend);
+        }
+    },
 
     // abilities that involve SN
     ShockLand("As SN enters the battlefield, you may " + ARG.COST + "\\. If you don't, SN enters the battlefield tapped\\.", -10) {
@@ -744,7 +750,7 @@ public enum MagicAbility {
             card.add(FromGraveyardIntoLibraryTrigger.create());
         }
     },
-    LibraryInteadOfGraveyard("If SN would be put into a graveyard from anywhere, reveal SN and shuffle it into its owner's library instead\\.",10) {
+    LibraryInsteadOfGraveyard("If SN would be put into a graveyard from anywhere, reveal SN and shuffle it into its owner's library instead\\.",10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(ThisPutIntoGraveyardTrigger.LibraryInsteadOfGraveyard);
@@ -1113,7 +1119,7 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             //Does nothing but allows text to be part of ability property
             //HauntAbility contains actual effects
-            //Not currently compatable with Instants or Sorceries
+            //Not currently compatible with Instants or Sorceries
         }
     },
     HauntAbility("When SN enters the battlefield or the creature it haunts dies, " + ARG.EFFECT, 0) {
@@ -1491,6 +1497,36 @@ public enum MagicAbility {
             ));
         }
     },
+    WhenACounterIsPutOnPermanent("Whenever a " + ARG.WORD1 + " counter is put on " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ACounterIsPutTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicCounterType.getCounterRaw(ARG.word1(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenOneOrMoreCountersArePutOnPermanent("Whenever one or more " + ARG.WORD1 + " counters are put on " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OneOrMoreCountersArePutTrigger.create(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicCounterType.getCounterRaw(ARG.word1(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenYouPutOneOrMoreCountersOnPermanent("Whenever you put one or more " + ARG.WORD1 + " counters on " + ARG.WORDRUN + ", " + ARG.EFFECT, 10) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(OneOrMoreCountersArePutTrigger.createYou(
+                MagicTargetFilterFactory.Permanent(ARG.wordrun(arg)),
+                MagicCounterType.getCounterRaw(ARG.word1(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
     WhenConditionEffect("When(ever)? " + ARG.COND + ", " + ARG.EFFECT, 0) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
@@ -1535,28 +1571,28 @@ public enum MagicAbility {
     },
 
     // mana abilities
-    SacAddMana("Sacrifice SN: Add " + ARG.MANA + " to your mana pool\\.",10) {
+    SacAddMana("Sacrifice SN: Add " + ARG.MANA + "\\.",10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicManaType> manatype = MagicManaType.getList(ARG.mana(arg));
             card.add(new MagicSacrificeManaActivation(manatype));
         }
     },
-    TapSacAddMana("\\{T\\}, Sacrifice SN: Add " + ARG.MANA + " to your mana pool\\.",10) {
+    TapSacAddMana("\\{T\\}, Sacrifice SN: Add " + ARG.MANA + "\\.",10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicManaType> manatype = MagicManaType.getList(ARG.mana(arg));
             card.add(new MagicSacrificeTapManaActivation(manatype));
         }
     },
-    ManaActivation("(?<cost>[^\"]+): Add " + ARG.MANA + " to your mana pool\\.", 10) {
+    ManaActivation("(?<cost>[^\"]+): Add " + ARG.MANA + "\\.", 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicManaType> manatype = MagicManaType.getList(ARG.mana(arg));
             card.add(MagicManaActivation.create(ARG.cost(arg), manatype));
         }
     },
-    ManaActivationEffect("(?<cost>[^\"]+): Add " + ARG.MANA + " to your mana pool\\. " + ARG.EFFECT, 10) {
+    ManaActivationEffect("(?<cost>[^\"]+): Add " + ARG.MANA + "\\. " + ARG.EFFECT, 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final List<MagicManaType> manatype = MagicManaType.getList(ARG.mana(arg));
@@ -1731,8 +1767,8 @@ public enum MagicAbility {
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final String[] ptStr = ARG.ptStr(arg);
             final MagicPowerToughness pt = new MagicPowerToughness(
-                MagicAmountParser.getX(ptStr[0], 1),
-                MagicAmountParser.getX(ptStr[1], 1)
+                MagicAmountParser.getXSign(ptStr[0], 1),
+                MagicAmountParser.getXSign(ptStr[1], 1)
             );
             final MagicTargetFilter<MagicPermanent> affected = MagicTargetFilterFactory.Permanent(ARG.wordrun(arg));
             final MagicAmount count = MagicAmountParser.build(ARG.wordrun2(arg));

@@ -50,6 +50,10 @@ public interface IRenderableCard {
         return hasType(MagicType.Planeswalker);
     }
 
+    default boolean isLegendary() {
+        return hasType(MagicType.Legendary);
+    }
+
     default boolean isLand() {
         return hasType(MagicType.Land);
     }
@@ -101,7 +105,7 @@ public interface IRenderableCard {
     }
 
     default Set<MagicType> getTypes() {
-        Set<MagicType> types = new HashSet<MagicType>();
+        Set<MagicType> types = new HashSet<>();
         for (MagicType type : MagicType.values()) {
             if (hasType(type)) {
                 types.add(type);

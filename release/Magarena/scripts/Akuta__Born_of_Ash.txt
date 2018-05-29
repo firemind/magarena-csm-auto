@@ -1,0 +1,12 @@
+name=Akuta, Born of Ash
+image=https://magiccards.info/scans/en/sok/61.jpg
+value=3.661
+rarity=R
+type=Legendary,Creature
+subtype=Spirit
+cost={2}{B}{B}
+pt=3/2
+ability=Haste;\
+        Sacrifice a Swamp: Return SN from your graveyard to the battlefield. Activate this ability only during your upkeep and only if you have more cards in hand than each opponent.
+timing=fmain
+oracle=Haste\nAt the beginning of your upkeep, if you have more cards in hand than each opponent, you may sacrifice a Swamp. If you do, return Akuta, Born of Ash from your graveyard to the battlefield.

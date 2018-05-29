@@ -1,0 +1,12 @@
+name=Exquisite Archangel
+image=https://magiccards.info/scans/en/aer/18.jpg
+value=2.500
+rarity=M
+type=Creature
+subtype=Angel
+cost={5}{W}{W}
+pt=5/5
+ability=Flying
+timing=main
+requires_groovy_code
+oracle=Flying\nIf you would lose the game, instead exile Exquisite Archangel and your life total becomes equal to your starting life total.

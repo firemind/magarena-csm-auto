@@ -55,12 +55,13 @@ KLD
 AER
 AKH
 HOU
+XLN
+RIX
 
 # banned: prefix with !
 !Ancient Den
 !Birthing Pod
 !Blazing Shoal
-!Bloodbraid Elf
 !Chrome Mox
 !Cloudpost
 !Dark Depths
@@ -74,7 +75,6 @@ HOU
 !Great Furnace
 !Green Sun's Zenith
 !Hypergenesis
-!Jace, the Mind Sculptor
 !Mental Misstep
 !Ponder
 !Preordain

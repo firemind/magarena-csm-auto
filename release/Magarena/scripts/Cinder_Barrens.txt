@@ -1,11 +1,11 @@
 name=Cinder Barrens
-image=https://magiccards.info/scans/en/hou/209.jpg
-image_updated=2017-09-29
+image=https://magiccards.info/scans/en/rix/205.jpg
+image_updated=2018-03-12
 value=2.500
-rarity=C
+rarity=U
 type=Land
 mana=b3r3
 ability=SN enters the battlefield tapped.;\
-        {T}: Add {B} or {R} to your mana pool.
+        {T}: Add {B} or {R}.
 timing=land
-oracle=Cinder Barrens enters the battlefield tapped.\n{T}: Add {B} or {R} to your mana pool.
+oracle=Cinder Barrens enters the battlefield tapped.\n{T}: Add {B} or {R}.

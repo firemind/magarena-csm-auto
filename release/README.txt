@@ -55,8 +55,8 @@ Thanks to
   frank for extensive play testing and bug reporting
   PalladiaMors, PhazedOut, Aunukia, nado18, Erkcan Özcan, kdesmond, a.
   benedict balbuena, spartan vi, Braullynn, mecheng, pcastellazzi, rasdel,
-  Tyrael, hong yie, ember hauler, Hector Marin, drooone, jericho.pumpkin,
-  Mike, and Guest for implementing new cards
+  Fulmene, Tyrael, hong yie, ember hauler, Hector Marin, drooone,
+  jericho.pumpkin, Mike, and Guest for implementing new cards
   ShawnieBoy for implementing new cards, the M logo, and general image enhancements
   PalladiaMors for the Portuguese UI translation
   kannikkiy for the Russian UI translation
@@ -72,6 +72,167 @@ Thanks to
   everyone on the CCGHQ forum, http://slightlymagic.net/forum/
 
 Thank you for your support and have fun!
+
+Release 1.93 (April 29, 2018)
+============
+Fulmene
+kelsioboy
+Martin Petricek
+melvin
+ShawnieBoy
+
+- remove "to mana pool" from abilities that produce mana
+
+- simplify and generalise code for parsing target choice
+
+- support abilities that trigger when a counter is put on a card, or one or
+  more counters are put
+
+- support Saga subtype, historic keyword, and legendary sorceries
+
+- added the following to the card script:
+  * trigger: Whenever you put one or more counters, <effect>
+
+- fixed the following bugs:
+  * revealed libreary cards are not tracked corrected during MCTS rollouts (issue #1506)
+  * Sequestered Stash incorrect mana cost for activated ability
+  * Deathgorge Scavenger did not exile target card from a graveyard (issue #1547)
+  * Verdant Sun's Avatar triggers for any permanent, not just creatures (issue #1547)
+  * Scrap Trawler able to return artifact card with same converted mana cost
+    as the artifact you control that is put into a graveyard from the
+    battlefield (issue #1556)
+
+- added the following cards:
+Admiral's Order, Arterial Flow, Atzal, Cave of Eternity, Blazing Hope,
+Bloodcrazed Hoplite, Brass's Bounty, Chameleon Spirit, Corpsejack Menace,
+Crashing Tide, Crypt Incursion, Custodi Soulcaller, Debt to the Deathless,
+Defiant Greatmaw, Divine Congregation, Elemental Mastery,
+Enduring Scalelord, Enter the Unknown, Fanatical Firebrand, Fathom Mage,
+Flourishing Defenses, Form of the Dinosaur, Ghalta, Primal Hunger,
+Goblin Archaeologist, Goblin Festival, Gravestorm, Hammer of Nazahn,
+Hapatra, Vizier of Poisons, Hardened Scales, Hornswoggle, Horribly Awry,
+Jadelight Ranger, Journey to Eternity, Lurking Predators, Master the Way,
+Meren of Clan Nel Toth, Molten Influence, Nazahn, Revered Bladesmith,
+Necromancer's Covenant, Nest of Scarabs, Nezahal, Primal Tide,
+Obelisk Spider, Path of Discovery, Pirate's Pillage, Pitiless Plunderer,
+Prying Questions, Radiant Kavu, Tatterkite, Temple Altisaur, Thoughtbind,
+Vizier of Remedies, Vraska's Scorn, Winding Constrictor, World Shaper
+
+Release 1.92 (March 31, 2018)
+============
+Fulmene
+kelsioboy
+Martin Petricek
+melvin
+Sergio Lo Cascio
+
+- update Italian translation
+
+- added the following to the ability property in card script:
+  * ability: Ascend
+  * effect: Ascend
+
+- configurable time limits for running AI vs AI games
+
+- fixed the following bugs:
+  * unable to transfer control of Crown of Doom to opponent (issue #1477)
+  * Death's Shadow gets +X/+X if player's life total is negative (issue #1462)
+  * Dash cost not affected by cost modification effect (issue #1479)
+  * Liberating Combustion does not return Chandra, Pyrogenius from the graveyard (issue #1466)
+
+- added the following cards:
+Aetherstorm Roc, Akuta, Born of Ash, Aleatory, Angrath's Ambusher,
+Angrath's Marauders, Aquatic Incursion, Arch of Orazca,
+Arguel's Blood Fast, Atzocan Seer, Azcanta, the Sunken Ruin,
+Baffling End, Blazing Salvo, Bombard, Bounty Hunter, Brazen Freebooter,
+Buccaneer's Bravado, Cacophodon, Canal Monitor, Cellar Door,
+Champion of Dusk, Chandra's Defeat, Chaotic Strike, Chart a Course,
+Cleansing Ray, Commune with Dinosaurs, Confront the Unknown,
+Conqueror's Foothold, Conqueror's Galleon, Consuming Vapors,
+Cranial Archive, Crested Herdcaller, Cyclopean Giant, Dark Dabbling,
+Deadeye Brawler, Deadeye Quartermaster, Deadeye Rig-Hauler,
+Deathgorge Scavenger, Deeproot Elite, Defiling Tears, Dinosaur Hunter,
+Dire Fleet Neckbreaker, Dire Fleet Poisoner, Doorkeeper, Dragon Grip,
+Dubious Challenge, Dusk Charger, Dusk Legion Zealot, Edifice of Authority,
+Elenda, the Dusk Rose, Entrancing Melody, Everdawn Champion,
+Expel from Orazca, Explorer's Scope, Exultant Skymarcher,
+Famished Paladin, Fateful Showdown, Fathom Fleet Cutthroat, Feed the Pack,
+Field of Ruin, Firecannon Blast, Fleet Swallower, Flood of Recollection,
+Forerunner of the Coalition, Forerunner of the Empire,
+Forerunner of the Heralds, Forerunner of the Legion, Frilled Deathspitter,
+Gate to the Afterlife, Gideon's Defeat, Gideon's Resolve, Gigapede,
+Giltgrove Stalker, Gleaming Barrier, God-Pharaoh's Gift,
+Golden Demise, Grasping Scoundrel, Grim Captain's Call,
+Gruesome Fate, Guul Draz Overseer, Hamletback Goliath,
+Hardy Veteran, Harvest Season, Herald of Secret Streams,
+Hostility, Hour of Devastation, Huatli, Radiant Champion,
+Huatli's Spurring, Imaginary Threats, Imminent Doom, Impale,
+Imperial Ceratops, Indulgent Tormentor, Intimidation Bolt,
+Into the Wilds, Jade Bearer, Jadecraft Artisan, Joven's Ferrets,
+Jungleborn Pioneer, Jungle Creeper, Kalitas, Bloodchief of Ghet,
+Kiora, the Crashing Wave, Kitesail Corsair, Knight of the Stampede,
+Kumena's Awakening, Kumena's Speaker, Kumena, Tyrant of Orazca,
+Learn from the Past, Legion Lieutenant, Liliana's Defeat,
+Long Road Home, Loxodon Peacekeeper, Luminous Bonds, Madcap Experiment,
+Majestic Heliopterus, Manipulate Fate, Martyr of Dusk, Mausoleum Harpy,
+Measure of Wickedness, Merfolk Mistbinder, Mist-Cloaked Herald,
+Moment of Craving, Moment of Triumph, Needletooth Raptor, Neko-Te,
+Nicol Bolas, the Deceiver, Nissa's Defeat, Oketra's Last Mercy,
+Old-Growth Dryads, Orazca Frillback, Orazca Raptor, Orazca Relic,
+Otherworldly Journey, Overgrown Armasaur, Pharika, God of Affliction,
+Polyraptor, Pride of Conquerors, Purity, Pyre Zombie, Raging Regisaur,
+Ravenous Chupacabra, Reaver Ambush, Rekindling Phoenix,
+Resplendent Griffin, River Darter, Rowdy Crew, Ruin Raider,
+Salt Road Ambushers, Sanguine Glorifier, Sanguine Sacrament, Saving Grace,
+Seafloor Oracle, Search for Azcanta, Secrets of the Golden City,
+Sekki, Seasons' Guide, Servant of the Scale, Settle the Wreckage,
+Shake the Foundations, Siegehorn Ceratops, Silverclad Ferocidons,
+Siren Reaver, Siren's Ruse, Siren Stormtamer, Skymarcher Aspirant,
+Slippery Scoundrel, Snubhorn Sentry, Sorin, Solemn Visitor,
+Soul of the Rapids, Spell Swindle, Spire Winder, Squire's Devotion,
+Stampeding Horncrest, Storm Fleet Sprinter, Storm Fleet Swashbuckler,
+Strength of the Pack, Strip Bare, Sunbird's Invocation,
+Sun-Blessed Mount, Sun-Collared Raptor, Sun-Crested Pterodon,
+Sun Sentinel, Swab Goblin, Swaggering Corsair, Swarm Intelligence,
+Swift Warden, Sword-Point Diplomacy, Sworn Guardian, Sylvan Primordial,
+Tainted Remedy, Temple of Aclazotz, Tenacious Dead, Tenacious Hunter,
+Tendershoot Dryad, Terrifying Presence, Tezzeret's Betrayal,
+The Locust God, The Scorpion God, Thran Foundry, Thrashing Brontodon,
+Thrasios, Triton Hero, Tilonalli's Crown, Tilonalli's Summoner,
+Timestream Navigator, Tishana, Voice of Thunder, Torment of Hailfire,
+Torment of Venom, Tragic Lesson, Trail of Mystery, Trapjaw Tyrant,
+Treasure Cove, Treasure Keeper, Treasure Map, Twilight Prophet, Tyrannize,
+Vampire Champion, Vampire Revenant, Vampire's Zeal, Verdant Sun's Avatar,
+Vile Manifestation, Vindictive Lich, Visage of Bolas, Vona's Hunger,
+Vraska, Scheming Gorgon, Vraska's Conquistador, Wasp of the Bitter End,
+Waterknot, Waxing Moon, Wayward Swordtooth, Wheel and Deal,
+Woebringer Demon, Wolfcaller's Howl, Yomiji, Who Bars the Way,
+Zetalpa, Primal Dawn
+
+Release 1.91 (January 27, 2017)
+============
+Fulmene
+Melody
+melvin
+ShawnieBoy
+
+- update Mac launcher to work on SE 9 and require at least SE 8
+
+- added the following cards:
+Aetherflux Reservoir, Aetherworks Marvel, Ajani Unyielding,
+Ajani, Valiant Protector, Cartouche of Strength, Combustible Gearhulk,
+Confiscation Coup, Deadlock Trap, Eager Construct, Empyreal Voyager,
+Exquisite Archangel, Fatal Push, Gideon of the Trials,
+Gonti's Machinations, Hazardous Conditions, Heart-Piercer Manticore,
+In Oketra's Name, Kari Zev's Expertise, Kefnet the Mindful,
+Liberating Combustion, Liliana's Influence, Maulfist Revolutionary,
+Metallurgic Summonings, Midnight Oil, Morbid Curiosity,
+Nissa, Vital Force, Oviya Pashiri, Sage Lifecrafter, Pia's Revolution,
+Rashmi, Eternities Crafter, Rishkar's Expertise, Scrap Trawler,
+Sequestered Stash, Skyship Plunderer, Soul-Scar Mage, Soulstinger,
+Sram's Expertise, Supernatural Stamina, Tezzeret, Master of Metal,
+Tezzeret's Simulacrum, Verdant Crescendo, Welding Sparks,
+Yahenni's Expertise
 
 Release 1.90 (October 29, 2017)
 ============

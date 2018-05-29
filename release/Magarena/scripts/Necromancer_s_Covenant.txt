@@ -1,0 +1,11 @@
+name=Necromancer's Covenant
+image=https://magiccards.info/scans/en/arb/82.jpg
+image_updated=2016-02-29
+value=3.667
+rarity=R
+type=Enchantment
+cost={3}{W}{B}{B}
+ability=Zombies you control have lifelink.
+timing=enchantment
+oracle=When Necromancer's Covenant enters the battlefield, exile all creature cards from target player's graveyard, then create a 2/2 black Zombie creature token for each card exiled this way.\nZombies you control have lifelink.
+requires_groovy_code

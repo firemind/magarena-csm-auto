@@ -1,12 +1,13 @@
 name=Guardian Idol
-image=https://magiccards.info/scans/en/5dn/128.jpg
+image=https://magiccards.info/scans/en/ima/216.jpg
+image_updated=2017-04-12
 value=3.308
-rarity=U
+rarity=C
 type=Artifact
 cost={2}
 ability=SN enters the battlefield tapped.;\
-        {T}: Add {C} to your mana pool.;\
+        {T}: Add {C}.;\
         {2}: SN becomes a 2/2 Golem artifact creature until end of turn.
 timing=artifact
 mana_or_combat
-oracle=Guardian Idol enters the battlefield tapped.\n{T}: Add {C} to your mana pool.\n{2}: Guardian Idol becomes a 2/2 Golem artifact creature until end of turn.
+oracle=Guardian Idol enters the battlefield tapped.\n{T}: Add {C}.\n{2}: Guardian Idol becomes a 2/2 Golem artifact creature until end of turn.

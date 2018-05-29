@@ -49,7 +49,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
                     ((damage.isTargetPlayer() && tfilter.acceptType(MagicTargetType.Player)) ||
                      (damage.isTargetCreature() && tfilter.acceptType(MagicTargetType.Permanent))) &&
                     tfilter.accept(permanent, permanent.getController(), damage.getTarget()) &&
-                    (isCombat == false || damage.isCombat());
+                    (!isCombat || damage.isCombat());
             }
 
             @Override
@@ -67,7 +67,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
                     damage.getSource().isPermanent() &&
                     filter.accept(permanent, permanent.getController(), damage.getSourcePermanent()) &&
                     permanent.isController(damage.getTarget()) &&
-                    (isCombat == false || damage.isCombat());
+                    (!isCombat || damage.isCombat());
             }
 
             @Override
@@ -84,7 +84,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
                 return super.accept(permanent, damage) &&
                     damage.getSource().isPermanent() &&
                     filter.accept(permanent, permanent.getController(), damage.getSourcePermanent()) &&
-                    (isCombat == false || damage.isCombat());
+                    (!isCombat || damage.isCombat());
             }
 
             @Override
@@ -101,7 +101,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
                 return super.accept(permanent, damage) &&
                     damage.isTargetCreature() &&
                     filter.accept(permanent, permanent.getController(), damage.getTargetPermanent()) &&
-                    (isCombat == false || damage.isCombat());
+                    (!isCombat || damage.isCombat());
             }
 
             @Override
@@ -163,7 +163,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
 
             @Override
             public void executeEvent(final MagicGame game, final MagicEvent event) {
-                game.doAction(new ChangeCountersAction(event.getRefPlayer(), MagicCounterType.Poison, n));
+                game.doAction(new ChangeCountersAction(event.getPlayer(), event.getRefPlayer(), MagicCounterType.Poison, n));
             }
         };
     }
@@ -176,7 +176,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
                     damage.isSource(permanent) &&
                     damage.isCombat() &&
                     damage.isTargetPlayer() &&
-                    permanent.hasState(MagicPermanentState.Renowned) == false;
+                    !permanent.hasState(MagicPermanentState.Renowned);
             }
 
             @Override
@@ -192,7 +192,7 @@ public abstract class DamageIsDealtTrigger extends MagicTrigger<MagicDamage> {
 
             @Override
             public void executeEvent(final MagicGame game, final MagicEvent event) {
-                game.doAction(new ChangeCountersAction(event.getPermanent(), MagicCounterType.PlusOne, n));
+                game.doAction(new ChangeCountersAction(event.getPlayer(), event.getPermanent(), MagicCounterType.PlusOne, n));
                 game.doAction(ChangeStateAction.Set(event.getPermanent(), MagicPermanentState.Renowned));
             }
         };

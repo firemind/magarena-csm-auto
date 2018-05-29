@@ -1,0 +1,10 @@
+name=Terrifying Presence
+image=https://magiccards.info/scans/en/avr/196.jpg
+image_updated=2016-09-12
+value=3.955
+rarity=C
+type=Instant
+cost={1}{G}
+timing=removal
+requires_groovy_code
+oracle=Prevent all combat damage that would be dealt by creatures other than target creature this turn.

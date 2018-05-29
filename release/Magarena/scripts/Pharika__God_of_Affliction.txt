@@ -1,0 +1,12 @@
+name=Pharika, God of Affliction
+image=https://magiccards.info/scans/en/jou/154.jpg
+value=3.373
+rarity=M
+type=Legendary,Enchantment,Creature
+subtype=God
+cost={1}{B}{G}
+pt=5/5
+ability=Indestructible
+timing=main
+requires_groovy_code
+oracle=Indestructible\nAs long as your devotion to black and green is less than seven, Pharika isn't a creature.\n{B}{G}: Exile target creature card from a graveyard. Its owner creates a 1/1 black and green Snake enchantment creature token with deathtouch.

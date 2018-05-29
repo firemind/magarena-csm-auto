@@ -1,5 +1,6 @@
 name=Sailor of Means
-image=https://magiccards.info/scans/en/xln/73.jpg
+image=https://magiccards.info/scans/en/rix/49.jpg
+image_updated=2018-03-12
 value=2.500
 rarity=C
 type=Creature
@@ -8,4 +9,4 @@ cost={2}{U}
 pt=1/4
 ability=When SN enters the battlefield, create a colorless Treasure artifact token.
 timing=main
-oracle=When Sailor of Means enters the battlefield, create a colorless Treasure artifact token with "{T}, Sacrifice this artifact: Add one mana of any color to your mana pool."
+oracle=When Sailor of Means enters the battlefield, create a colorless Treasure artifact token with "{T}, Sacrifice this artifact: Add one mana of any color."

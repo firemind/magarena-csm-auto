@@ -1,10 +1,11 @@
 name=Fetid Heath
-image=https://magiccards.info/scans/en/eve/176.jpg
+image=https://magiccards.info/scans/en/a25/238.jpg
+image_updated=2018-04-25
 value=4.384
 rarity=R
 type=Land
-ability={T}: Add {C} to your mana pool.;\
-        {W/B}, {T}: Add {W}{W}, {W}{B}, or {B}{B} to your mana pool.
+ability={T}: Add {C}.;\
+        {W/B}, {T}: Add {W}{W}, {W}{B}, or {B}{B}.
 timing=land
-oracle={T}: Add {C} to your mana pool.\n{W/B}, {T}: Add {W}{W}, {W}{B}, or {B}{B} to your mana pool.
+oracle={T}: Add {C}.\n{W/B}, {T}: Add {W}{W}, {W}{B}, or {B}{B}.
 status=not supported: add-multiple-mana

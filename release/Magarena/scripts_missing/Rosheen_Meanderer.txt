@@ -1,12 +1,13 @@
 name=Rosheen Meanderer
-image=https://magiccards.info/scans/en/shm/214.jpg
+image=https://magiccards.info/scans/en/ima/206.jpg
+image_updated=2017-04-12
 value=3.983
-rarity=R
+rarity=U
 type=Legendary,Creature
 subtype=Giant,Shaman
 cost={3}{R/G}
 pt=4/4
-ability={T}: Add {C}{C}{C}{C} to your mana pool. Spend this mana only on costs that contain {X}.
+ability={T}: Add {C}{C}{C}{C}. Spend this mana only on costs that contain {X}.
 timing=main
-oracle={T}: Add {C}{C}{C}{C} to your mana pool. Spend this mana only on costs that contain {X}.
+oracle={T}: Add {C}{C}{C}{C}. Spend this mana only on costs that contain {X}.
 status=not supported: add-multiple-mana

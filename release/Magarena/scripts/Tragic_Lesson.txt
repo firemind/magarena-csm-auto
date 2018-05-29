@@ -1,0 +1,9 @@
+name=Tragic Lesson
+image=https://magiccards.info/scans/en/hou/51.jpg
+value=2.500
+rarity=C
+type=Instant
+cost={2}{U}
+timing=removal
+requires_groovy_code
+oracle=Draw two cards. Then discard a card unless you return a land you control to its owner's hand.

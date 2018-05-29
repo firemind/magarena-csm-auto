@@ -31,7 +31,7 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
 
     @Override
     public List<MagicCard> filter(final MagicSource source, final MagicPlayer player, final MagicTargetHint targetHint) {
-        final List<MagicCard> targets = new ArrayList<MagicCard>();
+        final List<MagicCard> targets = new ArrayList<>();
 
         // Cards in graveyard
         if (acceptType(MagicTargetType.Graveyard)) {
@@ -63,7 +63,7 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
     }
 
     private void add(final MagicSource source, final MagicPlayer player, final List<MagicCard> cards, final List<MagicCard> targets, final boolean library) {
-        final Set<Long> added = new HashSet<Long>();
+        final Set<Long> added = new HashSet<>();
         for (final MagicCard card : cards) {
             final boolean old = card.isGameKnown();
             if (library) {
@@ -138,6 +138,11 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
             }
         };
     }
+
+    /**
+     * @param color required color
+     * @return return filter with additional condition for target having given color
+     */
     public MagicCardFilterImpl and(final MagicColor color) {
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
@@ -147,6 +152,11 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
             }
         };
     }
+
+    /**
+     * @param ability required ability
+     * @return return filter with additional condition for target having given ability
+     */
     public MagicCardFilterImpl and(final MagicAbility ability) {
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
@@ -156,6 +166,10 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
             }
         };
     }
+
+    /**
+     * @return return filter with additional condition for target being a card that defines a permanent
+     */
     public MagicCardFilterImpl permanent() {
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
@@ -165,6 +179,11 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
             }
         };
     }
+
+    /**
+     * @param n CMC limit
+     * @return return filter with additional condition for target's converted mana cost being less or equal to given limit
+     */
     public MagicCardFilterImpl cmcLEQ(final int n) {
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
@@ -174,6 +193,20 @@ public abstract class MagicCardFilterImpl implements MagicTargetFilter<MagicCard
             }
         };
     }
+    public MagicCardFilterImpl cmcLT(final int n) {
+        final MagicCardFilterImpl curr = this;
+        return new MagicCardFilterImpl() {
+            @Override
+            public boolean accept(final MagicSource source,final MagicPlayer player,final MagicCard target) {
+                return curr.accept(source, player, target) && target.getConvertedCost() < n;
+            }
+        };
+    }
+
+    /**
+     * @param n power limit
+     * @return return filter with additional condition for target's power being less or equal to given limit
+     */
     public MagicCardFilterImpl powerLEQ(final int n) {
         final MagicCardFilterImpl curr = this;
         return new MagicCardFilterImpl() {
