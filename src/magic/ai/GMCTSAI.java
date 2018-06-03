@@ -212,6 +212,7 @@ public class GMCTSAI extends MagicAI {
     }
 
     public static void logCombatSamples(MagicGame startGame, MagicPlayer scorePlayer, List<Object[]> RCHOICES, GMCTSGameTree root) {
+        UUID choiceUuid = UUID.randomUUID();
         for (final GMCTSGameTree node : root) {
           Object choice[] = RCHOICES.get(node.getChoice());
           if(choice[0] instanceof MagicDeclareAttackersResult){
@@ -221,12 +222,15 @@ public class GMCTSAI extends MagicAI {
              MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
 
              CombatScoreLog.logAttacks(
+                     choiceUuid,
                      "GMCTS",
-                    node.getV(),
+                     startGame, node.getV(),
                     node.getNumSim(),
                     node.getParent().getNumSim(),
                     scorePlayer.getLife(),
                     opp.getLife(),
+                    scorePlayer.getPoison(),
+                    opp.getPoison(),
                     (MagicDeclareAttackersResult) choice[0],
                     scorePlayer.
                             getPermanents().
@@ -247,24 +251,27 @@ public class GMCTSAI extends MagicAI {
                             filter(MagicPermanent::isUntapped).
                             count());
           }else if(choice[0] instanceof MagicDeclareBlockersResult){
-              for(Object c: choice){
-                  System.out.println(c.getClass());
-              }
               MagicPlayer opp = startGame.getPlayers()[(scorePlayer.getIndex()+1)%2];
+              if(choice.length > 1)
+                  throw new RuntimeException("Multiple blocking results given");
 
               CombatScoreLog.logBlocks(
+                      choiceUuid,
                       "GMCTS",
+                      startGame,
                       node.getV(),
                       node.getNumSim(),
                       node.getParent().getNumSim(),
                       scorePlayer.getLife(),
                       opp.getLife(),
+                      scorePlayer.getPoison(),
+                      opp.getPoison(),
                       opp.
                               getPermanents().
                               stream().
                               filter(MagicPermanent::isAttacking).
                               toArray(),
-                      Arrays.copyOf(choice, choice.length, MagicDeclareBlockersResult[].class),
+                      (MagicDeclareBlockersResult) choice[0],
                       scorePlayer.
                               getPermanents().
                               stream().

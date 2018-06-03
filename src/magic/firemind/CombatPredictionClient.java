@@ -113,7 +113,7 @@ public class CombatPredictionClient {
             }
             assert aix >= 0;
             if (b.length > 1) {
-                for (int i = 1; i < Math.min(b.length,(MAX_ATTACKER_INPUTS+1)*(MAX_BLOCKER_INPUTS)); i++) {
+                for (int i = 1; i < Math.min(b.length,MAX_BLOCKER_INPUTS); i++) {
                     MagicCombatCreature blocker = b[i];
                     int bix = -1;
                     tmp = 0;
@@ -126,8 +126,14 @@ public class CombatPredictionClient {
                     if(bix < 0){
                         throw new RuntimeException(block.toString()+"\n"+"Block not found: "+blocker.permanent.toString()+ " in " + Arrays.toString(availableBlockers));
                     }
-                    list[bix*MAX_BLOCKER_INPUTS] = 0.0f;
-                    list[bix*MAX_BLOCKER_INPUTS + (aix+1)] = 1.0f;
+                    int ix = bix*MAX_BLOCKER_INPUTS + (aix+1);
+                    if(ix < list.length) {
+                        list[bix * MAX_BLOCKER_INPUTS] = 0.0f;
+                        list[ix] = 1.0f;
+                    }else{
+                        System.err.println("Ignoring blocker at "+ix);
+
+                    }
                 }
             }
         }
