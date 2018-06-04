@@ -114,7 +114,7 @@ public class MagicBlock extends TreeMap<MagicCombatCreature, List<Entry<MagicCom
 
     public static List<Partition> getPartitions(int n, int from, int to){
         if(from > to)
-            throw new InvalidParameterException("from is grater than to");
+            throw new InvalidParameterException("from is greater than to");
         List<Partition> partitions = new ArrayList<Partition>();
         for(int i=from; from <= to; from++)
             partitions(partitions, 1, n, new MagicBlock().new Partition(), i);

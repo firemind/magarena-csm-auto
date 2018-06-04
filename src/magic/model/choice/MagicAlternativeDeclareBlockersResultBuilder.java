@@ -19,8 +19,8 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     private static final int MAX_TURN=1;
     private static final double MIN_WARN    = 1e5;
     private static final double RANDOM_THRESH = 1e5;
-    private static final double LIMIT_THRESH = 100;
-    private static final double DUP_THRESH = 1;
+    private static final double LIMIT_THRESH = 20;
+    private static final double DUP_THRESH = 0;
     private static final double NUM_SAMPLES = 1e4;
 
     private final MagicGame game;
@@ -33,12 +33,6 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     private TreeMap<MagicCombatCreature, List<MagicCombatCreature>> attackers;
     private TreeMap<MagicCombatCreature, List<MagicCombatCreature>> blockers;
     private int position;
-    private static final int[] nPartitions = new int[]{
-            1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176,
-            231, 297, 385, 490, 627, 792, 1002, 1255, 1575, 1958, 2436,
-            3010, 3718, 4565, 5604, 6842, 8349, 10143, 12310, 14883, 17977,
-            21637, 26015, 31185, 37338, 44583, 53174, 63261, 75175, 89134,
-            105558, 124754, 147273, 173525};
 
     MagicAlternativeDeclareBlockersResultBuilder(final MagicGame game,final MagicPlayer defendingPlayer,final boolean fast) {
         this.game=game;
@@ -58,12 +52,12 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
 
         //sample NUM_SAMPLES random blocks
         final MagicRandom rng = new MagicRandom(attackers.size() + blockers.size());
+        List<MagicCombatCreature> blockingSet = new ArrayList<>( blockers.keySet());
         for (int i = 0; i < NUM_SAMPLES; i++) {
-            MagicCombatCreature[] blockingSet = (MagicCombatCreature[]) blockers.keySet().toArray();
             MagicDeclareBlockersResult blockResult = new MagicDeclareBlockersResult(result, position++, 0);
             results.add(blockResult);
             rng.ints(1, blockers.size()).distinct().limit(rng.nextInt(blockers.size())).forEach(bIdx -> {
-                MagicCombatCreature blocker = blockingSet[bIdx];
+                MagicCombatCreature blocker = blockingSet.get(bIdx);
                 for(MagicCombatCreature attacker : attackers.keySet()) {
                     if (Arrays.asList(attacker.candidateBlockers).contains(blocker)) {
                         MagicCombatCreature[] block = null;
@@ -74,7 +68,7 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
                             }
                         }
                         if(block == null)
-                          block = new MagicCombatCreature[blockers.keySet().size()+1];
+                          block = new MagicCombatCreature[blockers.size()+1];
                           block[0] = attacker;
                           block[1] = blocker;
                         block[bIdx+1] = blocker;
@@ -211,11 +205,12 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
 
         if (max_blocks > RANDOM_THRESH) {
             buildBlockersFast();
-        } else if (countDups() > DUP_THRESH) {
-//            System.err.println("Found duplicates: "+dupCount);
-            buildAllBlockerCombosWithoutDups();
         } else if (max_blocks > LIMIT_THRESH) {
-            buildBlockersForAttacker(0);
+            if (countDups() > DUP_THRESH){
+                buildAllBlockerCombosWithoutDups();
+            }else {
+                buildBlockersForAttacker(0);
+            }
         } else {
             buildAllBlockerCombos();
         }
@@ -360,6 +355,8 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
                 attackPool.add(attacker);
             }
         }
+        if(totalBlockableAttackers == 0)
+            return;
         for(MagicBlock.Partition partition: MagicBlock.getPartitions(numBlockDuplicates, 1, Math.min(totalBlockableAttackers, numBlockDuplicates))){
             List<MagicBlock> toAdd = makeBlockParts(blocker, attackPool, partition.grouped());
             perBlocker.addAll(toAdd);

@@ -266,10 +266,10 @@ public class AiStrCal {
             controller.runGame();
             if (testDuel.getGamesPlayed() > played) {
                 System.err.println(
-                        deckName(deck[0]) + "\t" +
+                        deckName(deck[played % 2]) + "\t" +
                         ai[0] + "\t" +
                         str[0] + "\t" +
-                        deckName(deck[1]) + "\t" +
+                        deckName(deck[(played+1) % 2]) + "\t" +
                         ai[1] + "\t" +
                         str[1] + "\t" +
                         testDuel.getGamesTotal() + "\t" +
@@ -290,7 +290,8 @@ public class AiStrCal {
                 str[1] + "\t" +
                 gamesTotal + "\t" +
                 winTotal + "\t" +
-                (gamesTotal - winTotal)
+                (gamesTotal - winTotal) + "\t" +
+                (100*winTotal/gamesTotal)+"%"
         );
     }
     private static String deckName(String path){

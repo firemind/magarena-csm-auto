@@ -133,51 +133,12 @@ public class MagicDeclareBlockersChoice extends MagicChoice {
 
     @Override
     public Object[] getAlternativeSimulationChoiceResult(final MagicGame game, final MagicEvent event) {
-        final MagicPlayer player = event.getPlayer();
-
-        final MagicDeclareBlockersResult result=new MagicDeclareBlockersResult(0,0);
-        final MagicCombatCreatureBuilder builder=new MagicCombatCreatureBuilder(game,player.getOpponent(),player);
-
-        //check if any of the defending creatures can block
-        if (!builder.buildBlockers()) {
-            return new Object[]{result};
+        final List<Object[]> choices = getArtificialChoiceResults(game, event);
+        for(Object[] c : choices){
+            if(MagicRandom.nextRNGInt(2)== 1)
+                return c;
         }
-
-        //check if non of the attackers can be blocked
-        if (!builder.buildBlockableAttackers()) {
-            return new Object[]{result};
-        }
-
-        // check for lethal
-        // remove highest power attacker until sum remaining < life
-        // set that to min number blockers
-        // maybe consider lifelink in future?
-
-        // check for swingback lethal
-        // ignore top n creatures where n is num available blockers for attacking opponent
-        // check how many creatures are needed to swing for lethal
-        // prioritize blocks that keep them alive
-
-        final Set<MagicPermanent> blockers = builder.getCandidateBlockers();
-        for (final MagicPermanent blocker : blockers) {
-            final MagicPermanent[] attackers = builder.getBlockableAttackers(blocker).toArray(new MagicPermanent[0]);
-            // select highest value attacker that can be killed by this blocker without it dying and add it to options
-            // select highest value attacker that can be killed by this blocker (with or without dying) and add it to options
-            // if no option to trade equal or trade up is found add option to not block
-            // either option removes attacker from options to be blocked
-            // prioritize keyworded attackers (flying, shadow, horsemanship etc)
-            //choose one of the attackers or don't block
-            final int idx = MagicRandom.nextRNGInt(attackers.length + 1);
-            if (idx < attackers.length) {
-                final MagicPermanent attacker = attackers[idx];
-                attacker.addBlockingCreature(blocker);
-                blocker.setState(MagicPermanentState.Blocking);
-                blocker.setBlockedCreature(attacker);
-            }
-        }
-
-        buildResult(builder,result);
-        return new Object[]{result};
+        return choices.get(0);
     }
 
     @Override

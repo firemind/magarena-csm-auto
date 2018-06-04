@@ -1,8 +1,14 @@
 package magic.firemind;
 
 import io.grpc.ManagedChannel;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.stream.Stream;
 //import io.grpc.internal.IoUtils;
 //import io.grpc.netty.NettyChannelBuilder;
+import magic.model.MagicAbility;
+import magic.model.MagicGame;
 import magic.model.MagicPowerToughness;
 import magic.model.choice.MagicCombatCreature;
 import magic.model.choice.MagicDeclareAttackersResult;
@@ -17,6 +23,7 @@ import tensorflow.serving.PredictionServiceGrpc;
 //import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import magic.model.MagicPermanent;
+import static java.lang.Math.toIntExact;
 
 //import java.io.OutputStream;
 //import java.util.ArrayList;
@@ -30,13 +37,31 @@ public class CombatPredictionClient {
     private PredictionServiceGrpc.PredictionServiceBlockingStub blockingStub;
     private final Model.ModelSpec attackModelSpec;
     private final Model.ModelSpec blockModelSpec;
+    private final static EnumSet<MagicAbility> keywords = EnumSet.of(
+                MagicAbility.Deathtouch,
+                MagicAbility.DoubleStrike,
+                MagicAbility.FirstStrike,
+                MagicAbility.Flying,
+                MagicAbility.Indestructible,
+                MagicAbility.Lifelink,
+                MagicAbility.Trample,
+                MagicAbility.Vigilance,
+                MagicAbility.Shadow,
+                MagicAbility.Wither,
+                MagicAbility.Exalted,
+                MagicAbility.Infect,
+                MagicAbility.BattleCry,
+                MagicAbility.Afflict
+                );
     private final static int MAX_CREATURE_INPUTS = 10;
-    private final static int MAX_PT_INPUTS = MAX_CREATURE_INPUTS*2;
+    private final static int CREATURE_LENGTH = 2+toIntExact(keywords.size());
+    private final static int LENGTH_ALL_CREATURES = MAX_CREATURE_INPUTS*CREATURE_LENGTH;
     private final static int MAX_ATTACKER_INPUTS = 10;
     private final static int MAX_BLOCKER_INPUTS = 10;
 
     private TensorShapeProto.Dim lifesDim1 = TensorShapeProto.Dim.newBuilder().setSize(2).build();
-    private TensorShapeProto.Dim attackersDim1 = TensorShapeProto.Dim.newBuilder().setSize(MAX_PT_INPUTS).build();
+    private TensorShapeProto.Dim attackDim = TensorShapeProto.Dim.newBuilder().setSize(MAX_ATTACKER_INPUTS).build();
+    private TensorShapeProto.Dim attackersDim1 = TensorShapeProto.Dim.newBuilder().setSize(LENGTH_ALL_CREATURES).build();
     private TensorShapeProto.Dim blocksDim1 = TensorShapeProto.Dim.newBuilder().setSize(MAX_BLOCKER_INPUTS*(MAX_ATTACKER_INPUTS+1)).build();
 
     private org.tensorflow.framework.DataType dt = DataType.DT_FLOAT;
@@ -54,40 +79,58 @@ public class CombatPredictionClient {
                 .setName("blocks").setSignatureName("serving_default").build();
     }
 
-    public List<Float> extractPT(Object[] attackers){
-        final Float [] list = new Float[MAX_PT_INPUTS];
-        int ix=0;
-        for(Object attacker : attackers){
-            final MagicPermanent p = (MagicPermanent) attacker;
+    public List<Float> extractCreature(Object[] creatures){
+        final List<Float> list = new ArrayList<>(LENGTH_ALL_CREATURES);
+        for(Object creature : creatures){
+            final MagicPermanent p = (MagicPermanent) creature;
             final MagicPowerToughness pt = p.getPowerToughness();
-            list[ix++] = 1.0f*pt.getPositivePower();
-            list[ix++] = 1.0f*pt.getPositiveToughness();
-            if(ix >= MAX_PT_INPUTS){
+            list.add(1.0f*pt.getPositivePower());
+            list.add(1.0f*pt.getPositiveToughness());
+            keywords.forEach(kw ->{
+               list.add(p.hasAbility(kw) ? 1.0f : 0.0f);
+            });
+            if(list.size() >= LENGTH_ALL_CREATURES){
                 break;
             }
         }
-        while(ix < MAX_PT_INPUTS)
-            list[ix++] = 0.0f;
+        while(list.size() < LENGTH_ALL_CREATURES)
+            list.add(0.0f);
 
 //        System.out.println(Arrays.stream(list).map(e->e.toString()).collect(Collectors.joining(", ")));
-        return Arrays.asList(list);
+        return list;
     }
 
     public List<Float> extractPT(MagicDeclareAttackersResult attackers){
-        final Float [] list = new Float[MAX_PT_INPUTS];
-        int ix=0;
+        final List<Float> list = new ArrayList<>(LENGTH_ALL_CREATURES);
         for(MagicPermanent attacker : attackers){
             final MagicPowerToughness pt = attacker.getPowerToughness();
-            list[ix++] = 1.0f*pt.getPositivePower();
-            list[ix++] = 1.0f*pt.getPositiveToughness();
-            if(ix >= MAX_PT_INPUTS){
+            list.add(1.0f*pt.getPositivePower());
+            list.add(1.0f*pt.getPositiveToughness());
+            keywords.forEach(kw ->{
+               list.add(attacker.hasAbility(kw) ? 1.0f : 0.0f);
+            });
+            if(list.size() >= LENGTH_ALL_CREATURES){
                 break;
             }
         }
-        while(ix < MAX_PT_INPUTS)
-            list[ix++] = 0.0f;
+        while(list.size() < LENGTH_ALL_CREATURES)
+            list.add(0.0f);
 
 //        System.out.println(Arrays.stream(list).map(e->e.toString()).collect(Collectors.joining(", ")));
+        return list;
+    }
+
+    public static List<Float> encodeAttacks(MagicDeclareAttackersResult attackers, Object[] availableAttackers) {
+        List<MagicPermanent> attackerList = new ArrayList<>();
+        for(Object a: availableAttackers)
+            attackerList.add((MagicPermanent) a);
+        final Float[] list = new Float[MAX_ATTACKER_INPUTS];
+        Arrays.fill(list, 0.0f);
+        attackers.stream().limit(MAX_ATTACKER_INPUTS).forEach(e -> {
+          int i = attackerList.indexOf(e);
+          if(i < list.length)
+            list[i] = 1.0f;
+        });
         return Arrays.asList(list);
     }
 
@@ -143,8 +186,10 @@ public class CombatPredictionClient {
     public List<Float> predictAttackWin(List<AttackRep> combatReps) {
         final TensorShapeProto.Dim batchDim = TensorShapeProto.Dim.newBuilder().setSize(combatReps.size()).build();
         final TensorShapeProto lifesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(lifesDim1).build();
+        final TensorShapeProto attackShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackDim).build();
         final TensorShapeProto creaturesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackersDim1).build();
         final TensorProto.Builder lifesBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder poisonBuilder = TensorProto.newBuilder();
         final TensorProto.Builder attackersBuilder = TensorProto.newBuilder();
         final TensorProto.Builder availableAttackersBuilder = TensorProto.newBuilder();
         final TensorProto.Builder blockersBuilder = TensorProto.newBuilder();
@@ -152,8 +197,11 @@ public class CombatPredictionClient {
             lifesBuilder
                 .addFloatVal(combatRep.lifePlayer)
                 .addFloatVal(combatRep.lifeOpponent);
+            poisonBuilder
+                    .addFloatVal(combatRep.poisonPlayer)
+                    .addFloatVal(combatRep.poisonOpponent);
             attackersBuilder
-                    .addAllFloatVal(extractPT(combatRep.attackers));
+                    .addAllFloatVal(combatRep.attackers);
             availableAttackersBuilder
                     .addAllFloatVal(combatRep.availableCreatures);
             blockersBuilder
@@ -163,8 +211,10 @@ public class CombatPredictionClient {
            .setModelSpec(attackModelSpec).
                 putInputs("lifes", lifesBuilder.
                    setTensorShape(lifesShape).setDtype(dt).build()).
+                putInputs("poison", poisonBuilder.
+                        setTensorShape(lifesShape).setDtype(dt).build()).
                 putInputs("attackers", attackersBuilder
-                   .setTensorShape(creaturesShape).setDtype(dt).build()).
+                   .setTensorShape(attackShape).setDtype(dt).build()).
                 putInputs("available_attackers", availableAttackersBuilder
                    .setTensorShape(creaturesShape).setDtype(dt).build()).
                 putInputs("blockers", blockersBuilder
@@ -184,6 +234,7 @@ public class CombatPredictionClient {
         final TensorShapeProto creaturesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackersDim1).build();
         final TensorShapeProto blocksShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(blocksDim1).build();
         final TensorProto.Builder lifesBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder poisonBuilder = TensorProto.newBuilder();
         final TensorProto.Builder attackersBuilder = TensorProto.newBuilder();
         final TensorProto.Builder availableBlockersBuilder = TensorProto.newBuilder();
         final TensorProto.Builder oppCreaturesBuilder = TensorProto.newBuilder();
@@ -199,6 +250,9 @@ public class CombatPredictionClient {
             lifesBuilder
                 .addFloatVal(combatRep.lifePlayer)
                 .addFloatVal(combatRep.lifeOpponent);
+            poisonBuilder
+                    .addFloatVal(combatRep.poisonPlayer)
+                    .addFloatVal(combatRep.poisonOpponent);
             attackersBuilder
                     .addAllFloatVal(combatRep.attackers);
             availableBlockersBuilder
@@ -212,6 +266,8 @@ public class CombatPredictionClient {
            .setModelSpec(blockModelSpec).
                 putInputs("lifes", lifesBuilder.
                    setTensorShape(lifesShape).setDtype(dt).build()).
+                putInputs("poison", poisonBuilder.
+                        setTensorShape(lifesShape).setDtype(dt).build()).
                 putInputs("attackers", attackersBuilder
                    .setTensorShape(creaturesShape).setDtype(dt).build()).
                 putInputs("available_blockers", availableBlockersBuilder
@@ -231,14 +287,18 @@ public class CombatPredictionClient {
     public class AttackRep {
         private final int lifePlayer;
         private final int lifeOpponent;
-        private final MagicDeclareAttackersResult attackers;
+        private final int poisonPlayer;
+        private final int poisonOpponent;
+        private final List<Float> attackers;
         private final List<Float> availableCreatures;
         private final List<Float> blockers;
 
-        public AttackRep(int lifePlayer, int lifeOpponent, MagicDeclareAttackersResult attackers, List<Float> availableCreatures, List<Float> blockers){
+        public AttackRep(int lifePlayer, int lifeOpponent, int poisonPlayer, int poisonOpponent, List<Float> attackers, List<Float> availableCreatures, List<Float> blockers){
 
             this.lifePlayer = lifePlayer;
             this.lifeOpponent = lifeOpponent;
+            this.poisonPlayer = poisonPlayer;
+            this.poisonOpponent = poisonOpponent;
             this.attackers = attackers;
             this.availableCreatures = availableCreatures;
             this.blockers = blockers;
@@ -247,15 +307,19 @@ public class CombatPredictionClient {
     public class BlockRep {
         private final int lifePlayer;
         private final int lifeOpponent;
+        private final int poisonPlayer;
+        private final int poisonOpponent;
         private final List<Float> attackers;
         private final List<Float> availableBlockers;
         private final List<Float> oppCreatures;
         private final List<Float> blocks;
 
-        public BlockRep(int lifePlayer, int lifeOpponent, List<Float> attackers, List<Float> availableBlockers, List<Float> blocks, List<Float> oppCreatures){
+        public BlockRep(int lifePlayer, int lifeOpponent, int poisonPlayer, int poisonOpponent, List<Float> attackers, List<Float> availableBlockers, List<Float> blocks, List<Float> oppCreatures){
 
             this.lifePlayer = lifePlayer;
             this.lifeOpponent = lifeOpponent;
+            this.poisonPlayer = poisonPlayer;
+            this.poisonOpponent = poisonOpponent;
             this.attackers = attackers;
             this.availableBlockers = availableBlockers;
             this.oppCreatures = oppCreatures;

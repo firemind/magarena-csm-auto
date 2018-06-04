@@ -445,6 +445,21 @@ public class MagicEvent implements MagicCopyable {
         return res;
     }
 
+    public final Object[] getAlternativeSimulationChoiceResult(final MagicGame game) {
+        final long start = System.currentTimeMillis();
+        final Object[] res = choice.getAlternativeSimulationChoiceResult(game,this);
+        final long time = System.currentTimeMillis() - start;
+        if (time > 1000) {
+            System.err.println("WARNING. RCR:  " + choice.getDescription() + description + " time: " + time);
+            /*
+            if (getClass().desiredAssertionStatus()) {
+                throw new GameException("RCR:  " + choice.getDescription() + description + " time: " + time, game);
+            }
+            */
+        }
+        return res;
+    }
+
     public MagicTargetChoice getTargetChoice() {
         return chosen != null ? choice.getTargetChoice(chosen) : choice.getTargetChoice();
     }

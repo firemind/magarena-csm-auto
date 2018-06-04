@@ -398,7 +398,7 @@ public class MCTSAI extends MagicAI {
         final StringBuilder out = new StringBuilder();
         final long duration = System.currentTimeMillis() - START_TIME;
 
-        out.append(ALTCHOICES ? "AMCTS" : "MCTS").append("MCTS cheat=").append(CHEAT)
+        out.append(ALTCHOICES ? "AMCTS" : "MCTS").append(" cheat=").append(CHEAT)
                 .append(" index=").append(scorePlayer.getIndex())
                 .append(" life=").append(scorePlayer.getLife())
                 .append(" turn=").append(scorePlayer.getGame().getTurn())

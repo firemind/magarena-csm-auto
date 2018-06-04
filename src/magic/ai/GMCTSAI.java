@@ -61,10 +61,9 @@ public class GMCTSAI extends MagicAI {
     private static int MIN_SCORE = Integer.MAX_VALUE;
     static int MIN_SIM = Integer.MAX_VALUE;
     private static final int MAX_CHOICES = 1000;
-    static double UCB1_C = 0.4;
-    static double RATIO_K = 1.0;
+    static double UCB1_C = 5.0;
     private int sims = 0;
-    public static final String version = "0.1";
+    public static final String version = "0.2";
 
     private CombatPredictionClient combatPredictionClient;
     static {
@@ -83,10 +82,6 @@ public class GMCTSAI extends MagicAI {
             System.err.println("UCB1_C = " + UCB1_C);
         }
 
-        if (System.getProperty("ratio_k") != null) {
-            RATIO_K = Double.parseDouble(System.getProperty("ratio_k"));
-            System.err.println("RATIO_K = " + RATIO_K);
-        }
     }
 
     private final boolean CHEAT;
@@ -497,7 +492,7 @@ public class GMCTSAI extends MagicAI {
 //                    System.out.println("adding preweighted choices");
                     for (final Map.Entry<Object[], Float> scoredChoice : scoredChoices(choices, game)) {
                         final GMCTSGameTree child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
-//                        System.out.println("New UCT: "+child.getModifiedUCT());
+//                        System.err.println("New UCT: "+child.getModifiedUCT());
                         curr.addChild(child);
                     }
                     path.add(curr.first());
@@ -622,7 +617,7 @@ public class GMCTSAI extends MagicAI {
 
             //get simulation choice and execute
 //            final List<Object[]> artificialChoiceResults = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) : event.getArtificialChoiceResults(game);
-            final Object[] choice = event.getSimulationChoiceResult(game);
+              final Object[] choice = ALTCHOICES ? event.getAlternativeSimulationChoiceResult(game) : event.getSimulationChoiceResult(game);
 //            final Object[] choice = artificialChoiceResults.get(MagicRandom.nextRNGInt(artificialChoiceResults.size()));
 //            Object[] bestCombatChoice= findBestCombatChoice(game, artificialChoiceResults, 0.6);
 //            if(bestCombatChoice == null){
@@ -652,14 +647,15 @@ public class GMCTSAI extends MagicAI {
         List<Float> scores;
         if(choices.get(0)[0] instanceof magic.model.choice.MagicDeclareAttackersResult){
             final List<CombatPredictionClient.AttackRep> combatReps = new ArrayList<>(choices.size());
-            final MagicPlayer scorePlayer = game.getScorePlayer();
+            final MagicPlayer scorePlayer = game.getTurnPlayer();
             final MagicPlayer opp = game.getPlayers()[(scorePlayer.getIndex() + 1) % 2];
-            final List<Float> availableAttackersIds = combatPredictionClient.extractPT(scorePlayer.
+            Object[] avAttackers = scorePlayer.
                     getPermanents().
                     stream().
                     filter(MagicPermanent::canAttack).
-                    toArray());
-            final List<Float> blockersIds = combatPredictionClient.extractPT(opp.
+                    toArray();
+            final List<Float> availableAttackersIds = combatPredictionClient.extractCreature(avAttackers);
+            final List<Float> blockersIds = combatPredictionClient.extractCreature(opp.
                     getPermanents().
                     stream().
                     filter(MagicPermanent::canBlock).
@@ -669,7 +665,9 @@ public class GMCTSAI extends MagicAI {
                 combatReps.add(combatPredictionClient.new AttackRep(
                         scorePlayer.getLife(),
                         opp.getLife(),
-                        (MagicDeclareAttackersResult) combatChoice[0],
+                        scorePlayer.getPoison(),
+                        opp.getPoison(),
+                        CombatPredictionClient.encodeAttacks((MagicDeclareAttackersResult) combatChoice[0], avAttackers),
                         availableAttackersIds,
                         blockersIds
                 ));
@@ -696,9 +694,9 @@ public class GMCTSAI extends MagicAI {
 //                    stream().
 //                    filter(MagicPermanent::canBlock).
 //                    toArray()));
-            final List<Float> attackerIds = combatPredictionClient.extractPT(attackers);
-            final List<Float> availableBlockerIds = combatPredictionClient.extractPT(availableBlockers);
-            final List<Float> oppCreatureIds = combatPredictionClient.extractPT(opp.
+            final List<Float> attackerIds = combatPredictionClient.extractCreature(attackers);
+            final List<Float> availableBlockerIds = combatPredictionClient.extractCreature(availableBlockers);
+            final List<Float> oppCreatureIds = combatPredictionClient.extractCreature(opp.
                     getPermanents().
                     toArray());
             for (Object[] combatChoice : choices) {
@@ -706,6 +704,8 @@ public class GMCTSAI extends MagicAI {
                 combatReps.add(combatPredictionClient.new BlockRep(
                         scorePlayer.getLife(),
                         opp.getLife(),
+                        scorePlayer.getPoison(),
+                        opp.getPoison(),
                         attackerIds,
                         availableBlockerIds,
                         combatPredictionClient.extractBlock(
@@ -858,7 +858,7 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
     GMCTSGameTree(final GMCTSGameTree parent, final int choice, final double initScore) {
         this.evalScore = -1;
         // the weight in number of games
-        int initScoreWeight = 5;
+        int initScoreWeight = 20;
         this.sum = initScore* initScoreWeight;
         this.numSim = initScoreWeight;
         this.choice = choice;
