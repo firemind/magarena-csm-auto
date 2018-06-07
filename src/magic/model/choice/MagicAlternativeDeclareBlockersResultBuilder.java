@@ -19,7 +19,7 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     private static final int MAX_TURN=1;
     private static final double MIN_WARN    = 1e5;
     private static final double RANDOM_THRESH = 1e5;
-    private static final double LIMIT_THRESH = 20;
+    private static final double LIMIT_THRESH = 50;
     private static final double DUP_THRESH = 0;
     private static final double NUM_SAMPLES = 1e4;
 
@@ -48,7 +48,7 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     }
 
     private void buildBlockersFast() {
-        System.err.println("Running alt randomized blocking algorithm");
+//        System.err.println("Running alt randomized blocking algorithm");
 
         //sample NUM_SAMPLES random blocks
         final MagicRandom rng = new MagicRandom(attackers.size() + blockers.size());
@@ -199,20 +199,24 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
         result=new MagicDeclareBlockersResult(0,0);
         position=0;
 
-        if (max_blocks > MIN_WARN) {
-            System.err.println("WARNING. Number of blocking options is " + max_blocks);
-        }
+//        if (max_blocks > MIN_WARN) {
+//            System.err.println("WARNING. Number of blocking options is " + max_blocks);
+//        }
 
         if (max_blocks > RANDOM_THRESH) {
             buildBlockersFast();
         } else if (max_blocks > LIMIT_THRESH) {
-            if (countDups() > DUP_THRESH){
-                buildAllBlockerCombosWithoutDups();
-            }else {
+//            if (countDups() > DUP_THRESH && max_blocks < 50){
+//                buildAllBlockerCombosWithoutDups();
+//            }else {
                 buildBlockersForAttacker(0);
-            }
+//            }
         } else {
-            buildAllBlockerCombos();
+            if (countDups() > 0) {
+                buildAllBlockerCombosWithoutDups();
+            } else {
+                buildAllBlockerCombos();
+            }
         }
         if(results.isEmpty())
           System.err.println("Results is empty!");
@@ -220,10 +224,14 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
 
     private int countDups(){
         int dups = 0;
-        for(MagicCombatCreature a: attackers.keySet())
+        for(final MagicCombatCreature a: attackers.keySet())
             dups += (attackers.get(a).size()-1);
-        for(MagicCombatCreature b: blockers.keySet())
-            dups += (blockers.get(b).size()-1);
+        for(final MagicCombatCreature b: blockers.keySet()) {
+            if (blockers.get(b) != null) {
+              dups += (blockers.get(b).size() - 1);
+//              throw new RuntimeException("Invalid blocker config" + blockers.toString());
+            }
+        }
         return dups;
     }
     private void buildAllBlockerCombos() {

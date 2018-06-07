@@ -86,7 +86,7 @@ public class AiStrCal {
             } else if ("--ai1".equals(curr)) {
                 try { //parse CLI option
                     ai[0] = MagicAIImpl.valueOf(next);
-                    ai[0].getAI().setMaxThreads(2);
+//                    ai[0].getAI().setMaxThreads(2);
                 } catch (final IllegalArgumentException ex) {
                     System.err.println("Error: " + next + " is not valid AI");
                     validArgs = false;
@@ -94,7 +94,7 @@ public class AiStrCal {
             } else if ("--ai2".equals(curr)) {
                 try { //parse CLI option
                     ai[1] = MagicAIImpl.valueOf(next);
-                    ai[1].getAI().setMaxThreads(2);
+//                    ai[1].getAI().setMaxThreads(2);
                 } catch (final IllegalArgumentException ex) {
                     System.err.println("Error: " + next + " is not valid AI");
                     validArgs = false;

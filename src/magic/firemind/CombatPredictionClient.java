@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CombatPredictionClient {
 
-    private PredictionServiceGrpc.PredictionServiceBlockingStub blockingStub;
+    private final PredictionServiceGrpc.PredictionServiceBlockingStub blockingStub;
     private final Model.ModelSpec attackModelSpec;
     private final Model.ModelSpec blockModelSpec;
     private final static EnumSet<MagicAbility> keywords = EnumSet.of(
@@ -174,7 +174,7 @@ public class CombatPredictionClient {
                         list[bix * MAX_BLOCKER_INPUTS] = 0.0f;
                         list[ix] = 1.0f;
                     }else{
-                        System.err.println("Ignoring blocker at "+ix);
+//                        System.err.println("Ignoring blocker at "+ix);
 
                     }
                 }
@@ -221,11 +221,11 @@ public class CombatPredictionClient {
                    .setTensorShape(creaturesShape).setDtype(dt).build()
                 ).
                 build();
-        Predict.PredictResponse response = blockingStub
-                .withDeadlineAfter(1, TimeUnit.SECONDS)
-                .predict(request);
+            Predict.PredictResponse response = blockingStub
+                    .withDeadlineAfter(1, TimeUnit.SECONDS)
+                    .predict(request);
 //        System.out.println(response);
-        return response.getOutputsOrThrow("win_percentage").getFloatValList();
+            return response.getOutputsOrThrow("win_percentage").getFloatValList();
     }
 
     public List<Float> predictBlockWin(List<BlockRep> combatReps) {
@@ -278,11 +278,11 @@ public class CombatPredictionClient {
                    .setTensorShape(blocksShape).setDtype(dt).build()
                 ).
                 build();
-        Predict.PredictResponse response = blockingStub
-                .withDeadlineAfter(1, TimeUnit.SECONDS)
-                .predict(request);
+          Predict.PredictResponse response = blockingStub
+                    .withDeadlineAfter(1, TimeUnit.SECONDS)
+                    .predict(request);
 //        System.out.println(response);
-        return response.getOutputsOrThrow("win_percentage").getFloatValList();
+          return response.getOutputsOrThrow("win_percentage").getFloatValList();
     }
     public class AttackRep {
         private final int lifePlayer;

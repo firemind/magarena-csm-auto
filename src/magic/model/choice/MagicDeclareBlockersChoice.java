@@ -133,12 +133,19 @@ public class MagicDeclareBlockersChoice extends MagicChoice {
 
     @Override
     public Object[] getAlternativeSimulationChoiceResult(final MagicGame game, final MagicEvent event) {
-        final List<Object[]> choices = getArtificialChoiceResults(game, event);
-        for(Object[] c : choices){
-            if(MagicRandom.nextRNGInt(2)== 1)
-                return c;
-        }
-        return choices.get(0);
+//        final List<Object[]> choices = getArtificialChoiceResults(game, event);
+//        for(Object[] c : choices){
+//            if(MagicRandom.nextRNGInt(2)== 1)
+//                return c;
+//        }
+//        return choices.get(0);
+
+          if(MagicRandom.nextRNGInt(10)== 0){
+              // 10% chance of no blocks
+              return new Object[]{new MagicDeclareBlockersResult(0,0)};
+          }else{
+              return getSimulationChoiceResult(game, event);
+          }
     }
 
     @Override
