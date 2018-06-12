@@ -35,6 +35,12 @@ public class MagicDeclareAttackersChoice extends MagicChoice {
     }
 
     @Override
+    Collection<Object> getAlternativeArtificialOptions(final MagicGame game, final MagicEvent event) {
+        final MagicPlayer player = event.getPlayer();
+        return MagicAlternativeDeclareAttackersResultBuilder.buildResults(game,player);
+    }
+
+    @Override
     public Object[] getSimulationChoiceResult(final MagicGame game, final MagicEvent event) {
         final MagicPlayer player = event.getPlayer();
         final MagicDeclareAttackersResult result = new MagicDeclareAttackersResult();

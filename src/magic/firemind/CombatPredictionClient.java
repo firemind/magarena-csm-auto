@@ -4,11 +4,9 @@ import io.grpc.ManagedChannel;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.stream.Stream;
 //import io.grpc.internal.IoUtils;
 //import io.grpc.netty.NettyChannelBuilder;
 import magic.model.MagicAbility;
-import magic.model.MagicGame;
 import magic.model.MagicPowerToughness;
 import magic.model.choice.MagicCombatCreature;
 import magic.model.choice.MagicDeclareAttackersResult;
@@ -59,6 +57,7 @@ public class CombatPredictionClient {
     private final static int MAX_ATTACKER_INPUTS = 30;
     private final static int MAX_BLOCKER_INPUTS = 30;
 
+    private TensorShapeProto.Dim singleDim = TensorShapeProto.Dim.newBuilder().setSize(1).build();
     private TensorShapeProto.Dim lifesDim1 = TensorShapeProto.Dim.newBuilder().setSize(2).build();
     private TensorShapeProto.Dim attackDim = TensorShapeProto.Dim.newBuilder().setSize(MAX_ATTACKER_INPUTS).build();
     private TensorShapeProto.Dim attackersDim1 = TensorShapeProto.Dim.newBuilder().setSize(LENGTH_ALL_CREATURES).build();
@@ -186,9 +185,13 @@ public class CombatPredictionClient {
     public List<Float> predictAttackWin(List<AttackRep> combatReps) {
         final TensorShapeProto.Dim batchDim = TensorShapeProto.Dim.newBuilder().setSize(combatReps.size()).build();
         final TensorShapeProto lifesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(lifesDim1).build();
+        final TensorShapeProto oppHandShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(singleDim).build();
+        final TensorShapeProto oppManaShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(singleDim).build();
         final TensorShapeProto attackShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackDim).build();
         final TensorShapeProto creaturesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackersDim1).build();
         final TensorProto.Builder lifesBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder oppHandBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder oppManaBuilder = TensorProto.newBuilder();
         final TensorProto.Builder poisonBuilder = TensorProto.newBuilder();
         final TensorProto.Builder attackersBuilder = TensorProto.newBuilder();
         final TensorProto.Builder availableAttackersBuilder = TensorProto.newBuilder();
@@ -197,6 +200,10 @@ public class CombatPredictionClient {
             lifesBuilder
                 .addFloatVal(combatRep.lifePlayer)
                 .addFloatVal(combatRep.lifeOpponent);
+            oppHandBuilder
+                    .addFloatVal(combatRep.oppCardsInHand);
+            oppManaBuilder
+                    .addFloatVal(combatRep.oppOpenMana);
             poisonBuilder
                     .addFloatVal(combatRep.poisonPlayer)
                     .addFloatVal(combatRep.poisonOpponent);
@@ -213,6 +220,10 @@ public class CombatPredictionClient {
                    setTensorShape(lifesShape).setDtype(dt).build()).
                 putInputs("poison", poisonBuilder.
                         setTensorShape(lifesShape).setDtype(dt).build()).
+                putInputs("opp_hand", oppHandBuilder.
+                        setTensorShape(oppHandShape).setDtype(dt).build()).
+                putInputs("opp_mana", oppManaBuilder.
+                        setTensorShape(oppManaShape).setDtype(dt).build()).
                 putInputs("attackers", attackersBuilder
                    .setTensorShape(attackShape).setDtype(dt).build()).
                 putInputs("available_attackers", availableAttackersBuilder
@@ -222,7 +233,7 @@ public class CombatPredictionClient {
                 ).
                 build();
             Predict.PredictResponse response = blockingStub
-                    .withDeadlineAfter(1, TimeUnit.SECONDS)
+                    .withDeadlineAfter(5, TimeUnit.SECONDS)
                     .predict(request);
 //        System.out.println(response);
             return response.getOutputsOrThrow("win_percentage").getFloatValList();
@@ -231,9 +242,13 @@ public class CombatPredictionClient {
     public List<Float> predictBlockWin(List<BlockRep> combatReps) {
         final TensorShapeProto.Dim batchDim = TensorShapeProto.Dim.newBuilder().setSize(combatReps.size()).build();
         final TensorShapeProto lifesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(lifesDim1).build();
+        final TensorShapeProto oppHandShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(singleDim).build();
+        final TensorShapeProto oppManaShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(singleDim).build();
         final TensorShapeProto creaturesShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(attackersDim1).build();
         final TensorShapeProto blocksShape = TensorShapeProto.newBuilder().addDim(batchDim).addDim(blocksDim1).build();
         final TensorProto.Builder lifesBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder oppHandBuilder = TensorProto.newBuilder();
+        final TensorProto.Builder oppManaBuilder = TensorProto.newBuilder();
         final TensorProto.Builder poisonBuilder = TensorProto.newBuilder();
         final TensorProto.Builder attackersBuilder = TensorProto.newBuilder();
         final TensorProto.Builder availableBlockersBuilder = TensorProto.newBuilder();
@@ -250,6 +265,10 @@ public class CombatPredictionClient {
             lifesBuilder
                 .addFloatVal(combatRep.lifePlayer)
                 .addFloatVal(combatRep.lifeOpponent);
+            oppHandBuilder
+                .addFloatVal(combatRep.oppCardsInHand);
+            oppManaBuilder
+                    .addFloatVal(combatRep.oppOpenMana);
             poisonBuilder
                     .addFloatVal(combatRep.poisonPlayer)
                     .addFloatVal(combatRep.poisonOpponent);
@@ -266,6 +285,10 @@ public class CombatPredictionClient {
            .setModelSpec(blockModelSpec).
                 putInputs("lifes", lifesBuilder.
                    setTensorShape(lifesShape).setDtype(dt).build()).
+                putInputs("opp_hand", oppHandBuilder.
+                        setTensorShape(oppHandShape).setDtype(dt).build()).
+                putInputs("opp_mana", oppManaBuilder.
+                        setTensorShape(oppManaShape).setDtype(dt).build()).
                 putInputs("poison", poisonBuilder.
                         setTensorShape(lifesShape).setDtype(dt).build()).
                 putInputs("attackers", attackersBuilder
@@ -279,7 +302,7 @@ public class CombatPredictionClient {
                 ).
                 build();
           Predict.PredictResponse response = blockingStub
-                    .withDeadlineAfter(1, TimeUnit.SECONDS)
+                    .withDeadlineAfter(5, TimeUnit.SECONDS)
                     .predict(request);
 //        System.out.println(response);
           return response.getOutputsOrThrow("win_percentage").getFloatValList();
@@ -289,16 +312,20 @@ public class CombatPredictionClient {
         private final int lifeOpponent;
         private final int poisonPlayer;
         private final int poisonOpponent;
+        private final int oppCardsInHand;
+        private final int oppOpenMana;
         private final List<Float> attackers;
         private final List<Float> availableCreatures;
         private final List<Float> blockers;
 
-        public AttackRep(int lifePlayer, int lifeOpponent, int poisonPlayer, int poisonOpponent, List<Float> attackers, List<Float> availableCreatures, List<Float> blockers){
+        public AttackRep(int lifePlayer, int lifeOpponent, int poisonPlayer, int poisonOpponent, int oppCardsInHand, int oppOpenMana, List<Float> attackers, List<Float> availableCreatures, List<Float> blockers){
 
             this.lifePlayer = lifePlayer;
             this.lifeOpponent = lifeOpponent;
             this.poisonPlayer = poisonPlayer;
             this.poisonOpponent = poisonOpponent;
+            this.oppCardsInHand = oppCardsInHand;
+            this.oppOpenMana = oppOpenMana;
             this.attackers = attackers;
             this.availableCreatures = availableCreatures;
             this.blockers = blockers;
@@ -309,17 +336,21 @@ public class CombatPredictionClient {
         private final int lifeOpponent;
         private final int poisonPlayer;
         private final int poisonOpponent;
+        private final int oppCardsInHand;
+        private final int oppOpenMana;
         private final List<Float> attackers;
         private final List<Float> availableBlockers;
         private final List<Float> oppCreatures;
         private final List<Float> blocks;
 
-        public BlockRep(int lifePlayer, int lifeOpponent, int poisonPlayer, int poisonOpponent, List<Float> attackers, List<Float> availableBlockers, List<Float> blocks, List<Float> oppCreatures){
+        public BlockRep(int lifePlayer, int lifeOpponent, int poisonPlayer, int poisonOpponent, int oppCardsInHand, int oppOpenMana, List<Float> attackers, List<Float> availableBlockers, List<Float> blocks, List<Float> oppCreatures){
 
             this.lifePlayer = lifePlayer;
             this.lifeOpponent = lifeOpponent;
             this.poisonPlayer = poisonPlayer;
             this.poisonOpponent = poisonOpponent;
+            this.oppCardsInHand = oppCardsInHand;
+            this.oppOpenMana = oppOpenMana;
             this.attackers = attackers;
             this.availableBlockers = availableBlockers;
             this.oppCreatures = oppCreatures;

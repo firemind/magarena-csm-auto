@@ -19,7 +19,7 @@ public class MagicAlternativeDeclareBlockersResultBuilder {
     private static final int MAX_TURN=1;
     private static final double MIN_WARN    = 1e5;
     private static final double RANDOM_THRESH = 1e5;
-    private static final double LIMIT_THRESH = 75;
+    private static final double LIMIT_THRESH = 100;
     private static final double DUP_THRESH = 0;
     private static final double NUM_SAMPLES = 1e4;
 

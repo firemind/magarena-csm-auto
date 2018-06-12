@@ -60,6 +60,7 @@ Monte-Carlo Tree Search in Lines of Action
 */
 public class GMCTSAI extends MagicAI {
 
+    private static final int TF_THRESH = 4;
     private static int MIN_SCORE = Integer.MAX_VALUE;
     static int MIN_SIM = Integer.MAX_VALUE;
     private static final int MAX_CHOICES = 1000;
@@ -442,8 +443,10 @@ public class GMCTSAI extends MagicAI {
             out.append((int)(node.getV() * 100));
             out.append('/');
             out.append(node.getNumSim());
-            out.append('/');
-            out.append((int)(node.getInitialScore()*100));
+            if(node.getInitialScore() > 0) {
+                out.append('/');
+                out.append((int) (node.getInitialScore() * 100));
+            }
             out.append('/');
             if (node.isAIWin()) {
                 out.append("win");
@@ -498,7 +501,7 @@ public class GMCTSAI extends MagicAI {
             //assume we explore children of a node in increasing order of the choices
 
             if (curr.size() < choices.size()) {
-                if(choices.size() > 4 && isCombatChoice(choices)) {
+                if(choices.size() > TF_THRESH && isCombatChoice(choices)) {
 //                    System.out.println("adding preweighted choices "+curr.size()+" "+choices.size());
 //                      System.out.println(""+game.getStateId());
                     GMCTSGameTree bestChild = null;
@@ -743,6 +746,13 @@ public class GMCTSAI extends MagicAI {
                             opp.getLife(),
                             scorePlayer.getPoison(),
                             opp.getPoison(),
+                            opp.getHandSize(),
+                            (int) opp.
+                                    getPermanents().
+                                    stream().
+                                    filter(MagicPermanent::isLand).
+                                    filter(MagicPermanent::isUntapped).
+                                    count(),
                             CombatPredictionClient.encodeAttacks((MagicDeclareAttackersResult) choice[0], avAttackers),
                             availableAttackersIds,
                             blockersIds
@@ -773,6 +783,13 @@ public class GMCTSAI extends MagicAI {
                         opp.getLife(),
                         scorePlayer.getPoison(),
                         opp.getPoison(),
+                        opp.getHandSize(),
+                        (int) opp.
+                                getPermanents().
+                                stream().
+                                filter(MagicPermanent::isLand).
+                                filter(MagicPermanent::isUntapped).
+                                count(),
                         attackerIds,
                         availableBlockerIds,
                         combatPredictionClient.extractBlock(
@@ -821,6 +838,13 @@ public class GMCTSAI extends MagicAI {
                             opp.getLife(),
                             scorePlayer.getPoison(),
                             opp.getPoison(),
+                            opp.getHandSize(),
+                            (int) opp.
+                                getPermanents().
+                                stream().
+                                filter(MagicPermanent::isLand).
+                                filter(MagicPermanent::isUntapped).
+                                count(),
                             CombatPredictionClient.encodeAttacks((MagicDeclareAttackersResult) combatChoice[0], avAttackers),
                             availableAttackersIds,
                             blockersIds
@@ -860,6 +884,13 @@ public class GMCTSAI extends MagicAI {
                             opp.getLife(),
                             scorePlayer.getPoison(),
                             opp.getPoison(),
+                            opp.getHandSize(),
+                            (int) opp.
+                                getPermanents().
+                                stream().
+                                filter(MagicPermanent::isLand).
+                                filter(MagicPermanent::isUntapped).
+                                count(),
                             attackerIds,
                             availableBlockerIds,
                             combatPredictionClient.extractBlock(
