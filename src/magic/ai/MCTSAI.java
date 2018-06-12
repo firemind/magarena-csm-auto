@@ -65,7 +65,7 @@ public class MCTSAI extends MagicAI {
     static double UCB1_C = 0.4;
     static double RATIO_K = 1.0;
     private int sims = 0;
-    public static final String version = "1.0";
+    public static final String version = "1.1";
 
     static {
         if (System.getProperty("min_sim") != null) {
@@ -112,6 +112,7 @@ public class MCTSAI extends MagicAI {
 
     @Override
     public Object[] findNextEventChoiceResults(final MagicGame startGame, final MagicPlayer scorePlayer) {
+        UCB1_C = LOGCOMBAT ? 1000 : 0.4;
 
         // Determine possible choices
         final MagicGame aiGame = new MagicGame(startGame, scorePlayer);
@@ -139,7 +140,7 @@ public class MCTSAI extends MagicAI {
         //root represents the start state
         final MCTSGameTree root = MCTSGameTree.getNode(CACHE, aiGame, RCHOICES);
 
-        log("MCTS cached=" + root.getNumSim());
+//        log("MCTS cached=" + root.getNumSim());
 
         sims = 0;
         final ExecutorService executor = Executors.newFixedThreadPool(getMaxThreads());
@@ -187,7 +188,7 @@ public class MCTSAI extends MagicAI {
             logCombatSamples(startGame, scorePlayer, RCHOICES, root);
         }
 
-        log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
+        //log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
 
 
         return startGame.map(RCHOICES.get(bestC));

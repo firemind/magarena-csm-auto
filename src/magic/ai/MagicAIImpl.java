@@ -10,6 +10,7 @@ public enum MagicAIImpl {
     GMCTS("guided monte carlo tree search", new GMCTSAI(false, false, false)),
     GAMCTS("guided alt. monte carlo tree search", new GMCTSAI(false, false, true)),
     GMCTSL("guided monte carlo tree search logging", new GMCTSAI(false, true, false)),
+    GAMCTSL("guided alt. mcts logging", new GMCTSAI(false, true, true)),
     VEGAS("vegas", new VegasAI(false)),
     VEGASC("vegas (cheat)", new VegasAI(true)),
     MTDF("mtd(f)", new MTDF(false)),

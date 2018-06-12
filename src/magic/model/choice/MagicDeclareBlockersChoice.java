@@ -140,12 +140,12 @@ public class MagicDeclareBlockersChoice extends MagicChoice {
 //        }
 //        return choices.get(0);
 
-          if(MagicRandom.nextRNGInt(10)== 0){
-              // 10% chance of no blocks
-              return new Object[]{new MagicDeclareBlockersResult(0,0)};
-          }else{
+//          if(MagicRandom.nextRNGInt(10)== 0){
+//              // 10% chance of no blocks
+//              return new Object[]{new MagicDeclareBlockersResult(0,0)};
+//          }else{
               return getSimulationChoiceResult(game, event);
-          }
+//          }
     }
 
     @Override

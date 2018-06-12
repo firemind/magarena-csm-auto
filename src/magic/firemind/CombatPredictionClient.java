@@ -53,11 +53,11 @@ public class CombatPredictionClient {
                 MagicAbility.BattleCry,
                 MagicAbility.Afflict
                 );
-    private final static int MAX_CREATURE_INPUTS = 20;
+    private final static int MAX_CREATURE_INPUTS = 30;
     private final static int CREATURE_LENGTH = 2+toIntExact(keywords.size());
     private final static int LENGTH_ALL_CREATURES = MAX_CREATURE_INPUTS*CREATURE_LENGTH;
-    private final static int MAX_ATTACKER_INPUTS = 20;
-    private final static int MAX_BLOCKER_INPUTS = 20;
+    private final static int MAX_ATTACKER_INPUTS = 30;
+    private final static int MAX_BLOCKER_INPUTS = 30;
 
     private TensorShapeProto.Dim lifesDim1 = TensorShapeProto.Dim.newBuilder().setSize(2).build();
     private TensorShapeProto.Dim attackDim = TensorShapeProto.Dim.newBuilder().setSize(MAX_ATTACKER_INPUTS).build();

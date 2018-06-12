@@ -7,7 +7,9 @@ import magic.exception.GameException;
 import magic.firemind.CombatPredictionClient;
 import magic.firemind.CombatScoreLog;
 import magic.model.*;
+import magic.model.choice.MagicDeclareAttackersChoice;
 import magic.model.choice.MagicDeclareAttackersResult;
+import magic.model.choice.MagicDeclareBlockersChoice;
 import magic.model.choice.MagicDeclareBlockersResult;
 import magic.model.event.MagicEvent;
 
@@ -61,9 +63,10 @@ public class GMCTSAI extends MagicAI {
     private static int MIN_SCORE = Integer.MAX_VALUE;
     static int MIN_SIM = Integer.MAX_VALUE;
     private static final int MAX_CHOICES = 1000;
-    static double UCB1_C = 0.4;
+    static double UCB1_C;
+    static final int PREDICTION_SCORE_WEIGHT=1;
     private int sims = 0;
-    public static final String version = "0.3";
+    public static final String version = "0.4";
 
     private CombatPredictionClient combatPredictionClient;
     static {
@@ -77,10 +80,10 @@ public class GMCTSAI extends MagicAI {
             System.err.println("MIN_SCORE = " + MIN_SCORE);
         }
 
-        if (System.getProperty("ucb1_c") != null) {
-            UCB1_C = Double.parseDouble(System.getProperty("ucb1_c"));
-            System.err.println("UCB1_C = " + UCB1_C);
-        }
+//        if (System.getProperty("ucb1_c") != null) {
+//            UCB1_C = Double.parseDouble(System.getProperty("ucb1_c"));
+//            System.err.println("UCB1_C = " + UCB1_C);
+//        }
 
     }
 
@@ -90,6 +93,7 @@ public class GMCTSAI extends MagicAI {
 
     //cache nodes to reuse them in later decision
     private final LRUCache<Long, GMCTSGameTree> CACHE = new LRUCache<Long, GMCTSGameTree>(1000);
+    private final LRUCache<Long, List<Map.Entry<Object[], Float>>> SCORE_CACHE = new LRUCache<>(1000);
 
     public GMCTSAI(final boolean cheat, final boolean logcombat, final boolean altchoices) {
         CHEAT = cheat;
@@ -108,6 +112,8 @@ public class GMCTSAI extends MagicAI {
 
     @Override
     public Object[] findNextEventChoiceResults(final MagicGame startGame, final MagicPlayer scorePlayer) {
+
+        UCB1_C = LOGCOMBAT ? 1000 : 0.4;
 
         // Determine possible choices
         final MagicGame aiGame = new MagicGame(startGame, scorePlayer);
@@ -151,7 +157,7 @@ public class GMCTSAI extends MagicAI {
         //root represents the start state
         final GMCTSGameTree root = GMCTSGameTree.getNode(CACHE, aiGame, RCHOICES);
 
-        log("GMCTS cached=" + root.getNumSim());
+//        log("GMCTS cached=" + root.getNumSim());
 
         sims = 0;
         final ExecutorService executor = Executors.newFixedThreadPool(getMaxThreads());
@@ -200,7 +206,7 @@ public class GMCTSAI extends MagicAI {
             logCombatSamples(startGame, scorePlayer, RCHOICES, root);
         }
 
-        if(isCombatChoice(RCHOICES))
+//        if(isCombatChoice(RCHOICES))
           log(outputChoice(scorePlayer, root, START_TIME, bestC, sims, RCHOICES));
 
 
@@ -437,6 +443,8 @@ public class GMCTSAI extends MagicAI {
             out.append('/');
             out.append(node.getNumSim());
             out.append('/');
+            out.append((int)(node.getInitialScore()*100));
+            out.append('/');
             if (node.isAIWin()) {
                 out.append("win");
                 out.append(':');
@@ -490,66 +498,90 @@ public class GMCTSAI extends MagicAI {
             //assume we explore children of a node in increasing order of the choices
 
             if (curr.size() < choices.size()) {
-//                if(isCombatChoice(choices)) {
-////                    System.out.println("adding preweighted choices "+curr.size()+" "+choices.size());
-////                      System.out.println(""+game.getStateId());
-//                    for (final Map.Entry<Object[], Float> scoredChoice : scoredChoices(choices, game)) {
-//                        final GMCTSGameTree child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
-////                        System.err.println("New UCT: "+child.getV()+ " "+ Arrays.toString(scoredChoice.getKey()));
-//                        curr.addChild(child);
-//                        path.add(child);
-//                    }
-////                    System.out.println("added preweighted choices "+curr.size()+" "+choices.size());
-////                    path.add(curr.first());
-//
-//                }else {
+                if(choices.size() > 4 && isCombatChoice(choices)) {
+//                    System.out.println("adding preweighted choices "+curr.size()+" "+choices.size());
+//                      System.out.println(""+game.getStateId());
+                    GMCTSGameTree bestChild = null;
+                    Float bestScore = null;
+                    int ix = 0;
+                    for (final Map.Entry<Object[], Float> scoredChoice : cachedScoredChoices(choices, game)) {
+                        final GMCTSGameTree child = new GMCTSGameTree(curr, ix++, scoredChoice.getValue());
+                        if(bestScore == null || bestScore < scoredChoice.getValue()){
+                            bestChild = child;
+                            bestScore = scoredChoice.getValue();
+                        }
+//                        System.err.println("New UCT: "+child.getV()+ " "+ Arrays.toString(scoredChoice.getKey()));
+//                        if(!Arrays.toString(choices.get(ix-1)).equals(Arrays.toString(scoredChoice.getKey()) ))
+//                          System.err.println(Arrays.toString(choices.get(ix-1))+ " != "+ Arrays.toString(scoredChoice.getKey()));
+                        curr.addChild(child);
+                    }
+                    path.add(bestChild);
+//                    game.executeNextEvent(choices.get(bestChild.getChoice()));
+//                    System.out.println("added preweighted choices "+curr.size()+" "+choices.size());
+//                    path.add(curr.first());
+
+                }else {
                     final int idx = curr.size();
                     final Object[] choice = choices.get(idx);
                     final GMCTSGameTree child;
-                    if(isCombatChoice(choices)){
-                        final Map.Entry<Object[], Float> scoredChoice = scoredChoice(choice, game);
-                        child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
-                    }else{
+//                    if(isCombatChoice(choices)){
+//                        final Map.Entry<Object[], Float> scoredChoice = scoredChoice(choice, game);
+//                        child = new GMCTSGameTree(curr, choices.indexOf(scoredChoice.getKey()), scoredChoice.getValue());
+//                    }else{
                         game.executeNextEvent(choice);
                         child = new GMCTSGameTree(curr, idx, game.getScore());
-                    }
+//                    }
                     curr.addChild(child);
                     path.add(child);
-                    return path;
-//                }
+                }
+                return path;
 
             //all the children are in the tree, find the "best" child to explore
-            } else {
-
-                GMCTSGameTree next = null;
-                double bestS = Double.NEGATIVE_INFINITY ;
-                for (final GMCTSGameTree child : curr) {
-                    final double S = child.getModifiedUCT();
-                    if (S > bestS || next == null) {
-                        bestS = S;
-                        next = child;
-                    }
-                }
-
-                //move down the tree
-                curr = next;
-
-                //update the game state and path
-                try {
-
-                    if(choices.size() <= curr.getChoice()) {
-                        System.out.println("Choices " + choices.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
-                        System.out.println("Curr: " + curr.getChoice());
-                    }
-                    game.executeNextEvent(choices.get(curr.getChoice()));
-                } catch (final IndexOutOfBoundsException ex) {
-                    throw new GameException(ex, game);
-                }
-                path.add(curr);
             }
+
+            GMCTSGameTree next = null;
+            double bestS = Double.NEGATIVE_INFINITY ;
+            for (final GMCTSGameTree child : curr) {
+                final double S = child.getModifiedUCT();
+                if (S > bestS || next == null) {
+                    bestS = S;
+                    next = child;
+                }
+            }
+
+            //move down the tree
+            curr = next;
+
+            //update the game state and path
+            try {
+
+                if(choices.size() <= curr.getChoice()) {
+                    System.out.println("Choices " + choices.stream().map(Arrays::toString).collect(Collectors.joining(", ")));
+                    System.out.println("Curr: " + curr.getChoice());
+                }
+                game.executeNextEvent(choices.get(curr.getChoice()));
+            } catch (final IndexOutOfBoundsException ex) {
+                throw new GameException(ex, game);
+            }
+            path.add(curr);
         }
 
         return path;
+    }
+
+    private Iterable<? extends Map.Entry<Object[],Float>> cachedScoredChoices(List<Object[]> choices, MagicGame game) {
+        final long gid = game.getStateId();
+        List<Map.Entry<Object[], Float>> candidate = SCORE_CACHE.get(gid);
+
+        if (candidate == null) {
+//            System.out.println("adding preweighted choices "+gid);
+            candidate = scoredChoices(choices, game);
+//            for(Map.Entry<Object[],Float> scoredChoice :candidate)
+//                System.err.println("New UCT: "+scoredChoice.getValue()+ " "+ Arrays.toString(scoredChoice.getKey()));
+            SCORE_CACHE.put(gid, candidate);
+        }
+        return candidate;
+
     }
 
 //    private List<Object[]> nextOrderedChoices(MagicGame game, List<Object[]> RCHOICES) {
@@ -576,9 +608,21 @@ public class GMCTSAI extends MagicAI {
         }
         final int[] counts = runSimulation(game);
 
-        //System.err.println("COUNTS:\t" + counts[0] + "\t" + counts[1]);
+//        System.err.println("COUNTS:\t" + counts[0] + "\t" + counts[1]);
 
         if (!game.isFinished()) {
+
+            final MagicEvent event = game.getNextEvent();
+            System.err.println(event.getChoice().getClass().toString());
+            if(event.getChoice() instanceof MagicDeclareBlockersChoice || event.getChoice() instanceof MagicDeclareAttackersChoice){
+               final List<Object[]> choices = ALTCHOICES ? event.getAlternativeArtificialChoiceResults(game) :  event.getArtificialChoiceResults(game);
+               float sum = 0;
+               for (final Map.Entry<Object[], Float> scoredChoice : cachedScoredChoices(choices, game)) {
+                   sum += scoredChoice.getValue();
+               }
+               System.out.println("Averaged");
+               return sum / choices.size();
+            }
             return 0.5;
         } else if (game.getLosingPlayer() == game.getScorePlayer()) {
             // bias losing simulations towards ones where opponent makes more choices
@@ -958,6 +1002,7 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
     private int evalScore;
     private int steps;
     private double sum;
+    private double initialScore;
 //    private double S;
 
     //min sim for using robust max
@@ -972,11 +1017,15 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
     GMCTSGameTree(final GMCTSGameTree parent, final int choice, final double initScore) {
         this.evalScore = -1;
         // the weight in number of games
-        int initScoreWeight = 100;
-        this.sum = initScore* initScoreWeight;
-        this.numSim = initScoreWeight;
+        this.sum = initScore* GMCTSAI.PREDICTION_SCORE_WEIGHT;
+        this.numSim = GMCTSAI.PREDICTION_SCORE_WEIGHT;
         this.choice = choice;
+        this.initialScore = initScore;
         this.parent = parent;
+    }
+
+    public double getInitialScore(){
+        return initialScore;
     }
 
     private static boolean log(final String message) {
@@ -1121,9 +1170,11 @@ class GMCTSGameTree implements Iterable<GMCTSGameTree> {
         if (isAIWin()) {
             return BOOST + getNumSim();
         } else if (isAILose()) {
-            return getV()*Math.sqrt(numSim);
+//            return getV()*Math.sqrt(numSim);
+            return getNumSim();
         } else {
-            return getV()*Math.sqrt(numSim);
+//            return getV()*Math.sqrt(numSim);
+            return getNumSim();
         }
     }
 

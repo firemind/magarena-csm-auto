@@ -223,11 +223,11 @@ public class AiStrCal {
         final MagicDuel testDuel = setupDuel();
 
         System.out.println(
-                 "#deck1" +
-                "\tai1" +
+                padDeckLeft("deck1") +
+                "\t"+padAILeft("ai1") +
                 "\tstr1" +
-                "\tdeck2" +
-                "\tai2" +
+                "\t"+padDeckLeft("deck2") +
+                "\t"+padAILeft("ai2") +
                 "\tstr2" +
                 "\tgames" +
                 "\td1win"+
@@ -266,11 +266,11 @@ public class AiStrCal {
             controller.runGame();
             if (testDuel.getGamesPlayed() > played) {
                 System.err.println(
-                        deckName(deck[played % 2]) + "\t" +
-                        ai[0] + "\t" +
+                        padDeckLeft(deckName(deck[played % 2])) + "\t" +
+                        padAILeft(ai[0].toString()) + "\t" +
                         str[0] + "\t" +
-                        deckName(deck[(played+1) % 2]) + "\t" +
-                        ai[1] + "\t" +
+                        padDeckLeft(deckName(deck[(played+1) % 2])) + "\t" +
+                        padAILeft(ai[1].toString()) + "\t" +
                         str[1] + "\t" +
                         testDuel.getGamesTotal() + "\t" +
                         testDuel.getGamesWon() + "\t" +
@@ -282,11 +282,11 @@ public class AiStrCal {
         winTotal += testDuel.getGamesWon();
         gamesTotal += testDuel.getGamesTotal();
         System.out.println(
-                "all" + "\t" +
-                ai[0] + "\t" +
+                padDeckLeft("all")+ "\t" +
+                padAILeft(ai[0].toString()) + "\t" +
                 str[0] + "\t" +
-                "all" + "\t" +
-                ai[1] + "\t" +
+                padDeckLeft("all") + "\t" +
+                padAILeft(ai[1].toString()) + "\t" +
                 str[1] + "\t" +
                 gamesTotal + "\t" +
                 winTotal + "\t" +
@@ -297,5 +297,15 @@ public class AiStrCal {
     private static String deckName(String path){
         String[] bits = path.split("/");
         return bits[bits.length-1];
+    }
+
+    public static String padAILeft(String s) {
+        int n = 25;
+        return String.format("%1$" + n + "s", s.substring(0, Math.min(s.length(), n)));
+    }
+
+    public static String padDeckLeft(String s) {
+        int n = 25;
+        return String.format("%1$" + n + "s", s.substring(0, Math.min(s.length(), n)));
     }
 }
