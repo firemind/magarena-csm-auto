@@ -1,0 +1,11 @@
+name=Show and Tell
+image=https://magiccards.info/scans/en/cn2/121.jpg
+image_updated=2017-08-29
+value=4.593
+rarity=M
+type=Sorcery
+cost={2}{U}
+timing=main
+requires_groovy_code
+oracle=Each player may put an artifact, creature, enchantment, or land card from his or her hand onto the battlefield.
+status=needs groovy
