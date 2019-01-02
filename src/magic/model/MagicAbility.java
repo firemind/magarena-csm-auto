@@ -512,11 +512,11 @@ public enum MagicAbility {
             card.add(MagicHandCastActivation.reduction(cardDef, ARG.number(arg), cond));
         }
     },
-    YourCardLessToCast(ARG.WORDRUN + " you cast cost \\{" + ARG.NUMBER + "\\} less to cast\\.", 10) {
+    YourCardLessToCast(ARG.WORDRUN + " you cast cost " + ARG.MANACOST + " less to cast\\.", 10) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             final String cards = ARG.wordrun(arg).replaceAll("[Ss]pells", "cards") + " from your hand";
-            card.add(MagicStatic.YourCostReduction(MagicTargetFilterFactory.Card(cards), ARG.number(arg)));
+            card.add(MagicStatic.YourCostReduction(MagicTargetFilterFactory.Card(cards), MagicManaCost.create(ARG.manacost(arg))));
         }
     },
     YourCardMoreToCast(ARG.WORDRUN + " you cast cost " + ARG.MANACOST + " more to cast\\.", 10) {
@@ -647,6 +647,19 @@ public enum MagicAbility {
             for (int chapter : chapters) {
                 card.add(SagaChapterTrigger.create(chapter, sourceEvent));
             }
+        }
+    },
+    Mentor("mentor", 0) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(ThisAttacksTrigger.Mentor);
+        }
+    },
+    JumpStart("jump-start", 0) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            final MagicCardDefinition cardDef = (MagicCardDefinition)card;
+            card.add(new MagicJumpStartActivation(cardDef));
         }
     },
 
@@ -1416,6 +1429,15 @@ public enum MagicAbility {
             ));
         }
     },
+    WhenYouTargeted("When(ever)? you become the target of (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(BecomesTargetTrigger.createYou(
+                MagicTargetFilterFactory.ItemOnStack(ARG.wordrun(arg)),
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
     WhenTargeted("When(ever)? " + ARG.WORDRUN2 + " becomes the target of (?<wordrun>[^\\,]*), " + ARG.EFFECT, 0) {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
@@ -1479,6 +1501,14 @@ public enum MagicAbility {
         @Override
         protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
             card.add(YouScryTrigger.create(
+                MagicRuleEventAction.create(ARG.effect(arg))
+            ));
+        }
+    },
+    WhenYouSurveil("Whenever you surveil, " + ARG.EFFECT, 0) {
+        @Override
+        protected void addAbilityImpl(final MagicAbilityStore card, final Matcher arg) {
+            card.add(YouSurveilTrigger.create(
                 MagicRuleEventAction.create(ARG.effect(arg))
             ));
         }

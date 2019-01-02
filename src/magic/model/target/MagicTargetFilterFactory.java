@@ -2281,6 +2281,16 @@ public class MagicTargetFilterFactory {
         }
     };
 
+    public static final MagicPermanentFilterImpl MENTOR = new MagicPermanentFilterImpl() {
+        @Override
+        public boolean accept(final MagicSource source, final MagicPlayer player, final MagicPermanent target) {
+            final MagicPermanent mentor = (MagicPermanent)source;
+            return target.isCreature() &&
+                target.isAttacking() &&
+                target.getPower() < mentor.getPower();
+        }
+    };
+
     /**
      * Single texts completely specifying the targeting condition.
      */
@@ -2384,6 +2394,7 @@ public class MagicTargetFilterFactory {
 
         // <color|type|subtype> card from an opponent's graveyard
         add("card from an opponent's graveyard", CARD_FROM_OPPONENTS_GRAVEYARD);
+        add("card in an opponent's graveyard", CARD_FROM_OPPONENTS_GRAVEYARD);
         add("creature card in an opponent's graveyard", CREATURE_CARD_FROM_OPPONENTS_GRAVEYARD);
 
         // <color|type|subtype> card from your hand
